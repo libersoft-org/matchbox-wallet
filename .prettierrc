@@ -1,0 +1,17 @@
+{
+	"tabWidth": 1,
+	"useTabs": true,
+	"semi": true,
+	"singleQuote": false,
+	"printWidth": 80,
+	"overrides": [
+		{
+			"files": "*.qml",
+			"options": {
+				"parser": "babel",
+				"tabWidth": 1,
+				"useTabs": true
+			}
+		}
+	]
+}
