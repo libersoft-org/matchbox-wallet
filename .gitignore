@@ -1,3 +1,4 @@
 build/
 .secret_git
 **/*-formatting-tmp.qml~
+*.log

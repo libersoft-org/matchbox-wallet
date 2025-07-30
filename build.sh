@@ -1,5 +1,7 @@
 #!/bin/bash
 
+apt update && apt install -y cmake qt6-declarative-dev
+
 echo "Building Yellow Matchbox Wallet..."
 if [ -d "build" ]; then
  rm -rf build
