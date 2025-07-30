@@ -1,6 +1,26 @@
 #!/bin/bash
 
-apt update && apt install -y cmake qt6-declarative-dev
+echo "Checking dependencies..."
+is_installed() {
+ dpkg -l "$1" 2>/dev/null | grep -q "^ii"
+}
+PACKAGES=("cmake" "qt6-base-dev" "qt6-declarative-dev")
+MISSING_PACKAGES=()
+
+for package in "${PACKAGES[@]}"; do
+ if ! is_installed "$package"; then
+  MISSING_PACKAGES+=("$package")
+  echo "Missing: $package"
+ else
+  echo "Already installed: $package"
+ fi
+done
+if [ ${#MISSING_PACKAGES[@]} -gt 0 ]; then
+ echo "Installing missing packages: ${MISSING_PACKAGES[*]}"
+ apt update && apt install -y "${MISSING_PACKAGES[@]}"
+else
+ echo "All dependencies are already installed."
+fi
 
 echo "Building Yellow Matchbox Wallet..."
 if [ -d "build" ]; then
