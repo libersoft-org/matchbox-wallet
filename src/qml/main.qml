@@ -1,13 +1,15 @@
 import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
+import "components"
+import "pages"
 
 ApplicationWindow {
  id: window
  width: 800
  height: 600
  visible: true
- title: qsTr("Main Menu App")
+ title: qsTr("Yellow Matchbox Wallet")
 
  // Center the window on screen
  Component.onCompleted: {
@@ -38,7 +40,7 @@ ApplicationWindow {
  // Settings page component
  Component {
   id: settingsPageComponent
-  SettingsPage {
+  Settings {
    onBackRequested: {
 	stackView.pop();
    }
@@ -51,7 +53,7 @@ ApplicationWindow {
  // System settings page component
  Component {
   id: systemSettingsPageComponent
-  SystemSettingsPage {
+  SettingsSystem {
    onBackRequested: {
 	stackView.pop();
    }
@@ -64,7 +66,7 @@ ApplicationWindow {
  // WiFi settings page component
  Component {
   id: wifiSettingsPageComponent
-  WiFiSettingsPage {
+  SettingsSystemWiFi {
    onBackRequested: {
 	stackView.pop();
    }

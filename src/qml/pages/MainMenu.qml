@@ -1,6 +1,7 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
+import "../components"
 
 Rectangle {
  id: root
@@ -16,7 +17,7 @@ Rectangle {
 
   // App title
   Text {
-   text: qsTr("Main Menu")
+   text: qsTr("Yellow Matchbox Wallet")
    font.pointSize: Math.max(18, Math.min(36, root.width * 0.04))
    font.bold: true
    color: "#333333"
