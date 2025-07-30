@@ -9,6 +9,7 @@ Rectangle {
 
  signal settingsRequested
  signal powerOffRequested
+ signal fontDemoRequested
 
  ColumnLayout {
   anchors.fill: parent
@@ -18,6 +19,7 @@ Rectangle {
   // App title
   Text {
    text: qsTr("Yellow Matchbox Wallet")
+   font.family: "Droid Sans"
    font.pointSize: Math.max(18, Math.min(36, root.width * 0.04))
    font.bold: true
    color: "#333333"
@@ -61,6 +63,13 @@ Rectangle {
 	text: qsTr("System Info")
 	backgroundColor: "#17a2b8"
 	onClicked: console.log("System Info clicked")
+   }
+
+   // Font Demo button
+   MenuButton {
+	text: qsTr("Available Fonts")
+	backgroundColor: "#6f42c1"
+	onClicked: root.fontDemoRequested()
    }
 
    // Disabled button example

@@ -13,20 +13,11 @@
 	},
 	"[json]": {
 		"editor.defaultFormatter": "vscode.json-language-features",
-		"editor.formatOnSave": true,
-		"editor.insertSpaces": false,
-		"editor.tabSize": 1
 	},
 	"[jsonc]": {
 		"editor.defaultFormatter": "vscode.json-language-features",
-		"editor.formatOnSave": true,
-		"editor.insertSpaces": false,
-		"editor.tabSize": 1
 	},
 	"[qml]": {
 		"editor.defaultFormatter": null,
-		"editor.insertSpaces": false,
-		"editor.tabSize": 1,
-		"editor.formatOnSave": false
 	}
 }

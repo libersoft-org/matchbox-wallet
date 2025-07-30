@@ -10,6 +10,9 @@ ApplicationWindow {
  height: 600
  visible: true
  title: qsTr("Yellow Matchbox Wallet")
+ 
+ // Set global font for the entire application
+ font.family: "Droid Sans"
 
  // Center the window on screen
  Component.onCompleted: {
@@ -33,6 +36,9 @@ ApplicationWindow {
    }
    onSettingsRequested: {
 	stackView.push(settingsPageComponent);
+   }
+   onFontDemoRequested: {
+	stackView.push(fontDemoPageComponent);
    }
   }
  }
@@ -67,6 +73,16 @@ ApplicationWindow {
  Component {
   id: wifiSettingsPageComponent
   SettingsSystemWiFi {
+   onBackRequested: {
+	stackView.pop();
+   }
+  }
+ }
+
+ // Font demo page component
+ Component {
+  id: fontDemoPageComponent
+  FontDemo {
    onBackRequested: {
 	stackView.pop();
    }
