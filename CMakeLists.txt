@@ -23,6 +23,9 @@ target_include_directories(Wallet PRIVATE
 qt_add_qml_module(Wallet
  URI WalletModule
  VERSION 1.0
+ NO_GENERATE_QMLTYPES
+ NO_CACHEGEN
+ NO_LINT
  QML_FILES 
   src/qml/main.qml
 		src/qml/MainMenu.qml
@@ -40,6 +43,9 @@ target_link_libraries(Wallet PRIVATE
 # Platform specific settings
 if(WIN32)
  set_property(TARGET Wallet PROPERTY WIN32_EXECUTABLE TRUE)
+ set_target_properties(Wallet PROPERTIES OUTPUT_NAME "wallet")
+else()
+ # Linux/Unix - set output name to lowercase
  set_target_properties(Wallet PROPERTIES OUTPUT_NAME "wallet")
 endif()
 

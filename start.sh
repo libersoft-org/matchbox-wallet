@@ -9,6 +9,7 @@ if [ -f "build/linux/wallet" ]; then
 		echo "Using Wayland platform"
 	elif [ -e "/dev/fb0" ] || [ -e "/dev/fb" ]; then
 		export QT_QPA_PLATFORM=linuxfb
+		export QT_QPA_FB="/dev/fb0"
 		echo "Using Linux Framebuffer (console mode)"
 	else
 		export QT_QPA_PLATFORM=xcb
