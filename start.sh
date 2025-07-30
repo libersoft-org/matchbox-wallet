@@ -1,5 +1,20 @@
 #!/bin/bash
 
+is_installed() {
+ dpkg -l "$1" 2>/dev/null | grep -q "^ii"
+}
+PACKAGES=("qt6-base" "qt6-declarative" "libgl1-mesa-glx" "libegl1-mesa")
+MISSING_PACKAGES=()
+for package in "${PACKAGES[@]}"; do
+ if ! is_installed "$package"; then
+  MISSING_PACKAGES+=("$package")
+  echo "Missing: $package"
+ fi
+done
+if [ ${#MISSING_PACKAGES[@]} -gt 0 ]; then
+ echo "Installing missing packages: ${MISSING_PACKAGES[*]}"
+ apt update && apt install -y "${MISSING_PACKAGES[@]}"
+fi
 if [ -f "build/linux/wallet" ]; then
 	if [ -n "$DISPLAY" ] && command -v xset >/dev/null 2>&1 && xset q >/dev/null 2>&1; then
 		export QT_QPA_PLATFORM=xcb

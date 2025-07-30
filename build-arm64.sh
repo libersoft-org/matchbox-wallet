@@ -59,8 +59,8 @@ echo "Building with $CORES parallel jobs..."
 cmake --build . --config Release --parallel $CORES
 
 if [ $? -ne 0 ]; then
-    echo "Build failed!"
-    exit 1
+ echo "Build failed!"
+ exit 1
 fi
 
 echo "ARM64 cross-compilation complete!"
