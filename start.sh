@@ -3,7 +3,7 @@
 is_installed() {
  dpkg -l "$1" 2>/dev/null | grep -q "^ii"
 }
-PACKAGES=("qt6-base" "qt6-declarative" "libgl1-mesa-glx" "libegl1-mesa")
+PACKAGES=("libqt6core6" "libqt6gui6" "libqt6qml6" "libqt6quick6" "libgl1-mesa-glx" "libegl1-mesa")
 MISSING_PACKAGES=()
 for package in "${PACKAGES[@]}"; do
  if ! is_installed "$package"; then
