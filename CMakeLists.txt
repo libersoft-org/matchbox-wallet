@@ -28,11 +28,11 @@ qt_add_qml_module(Wallet
  NO_LINT
  QML_FILES 
   src/qml/main.qml
-		src/qml/MainMenu.qml
-		src/qml/MenuButton.qml
-		src/qml/SettingsPage.qml
-		src/qml/SystemSettingsPage.qml
-		src/qml/WiFiSettingsPage.qml
+		src/qml/pages/MainMenu.qml
+		src/qml/components/MenuButton.qml
+		src/qml/pages/Settings.qml
+		src/qml/pages/SettingsSystem.qml
+		src/qml/pages/SettingsSystemWiFi.qml
 )
 
 target_link_libraries(Wallet PRIVATE

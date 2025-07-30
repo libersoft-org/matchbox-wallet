@@ -25,8 +25,6 @@ for package in "${PACKAGES[@]}"; do
 	if ! is_installed "$package"; then
 		MISSING_PACKAGES+=("$package")
 		echo "Missing: $package"
-	else
-		echo "Already installed: $package"
 	fi
 done
 
