@@ -1,88 +1,88 @@
 {
- "version": "2.0.0",
- "tasks": [
-  {
-   "label": "Build Qt App",
-   "type": "shell",
-   "command": "./build.sh",
-   "group": {
-    "kind": "build",
-    "isDefault": true
-   },
-   "options": {
-    "cwd": "${workspaceFolder}"
-   },
-   "presentation": {
-    "echo": true,
-    "reveal": "always",
-    "focus": false,
-    "panel": "shared"
-   },
-   "problemMatcher": []
-  },
-  {
-   "label": "Run Qt App",
-   "type": "shell",
-   "command": "./build/MainMenuApp",
-   "group": "test",
-   "options": {
-    "cwd": "${workspaceFolder}"
-   },
-   "dependsOn": "Build Qt App",
-   "presentation": {
-    "echo": true,
-    "reveal": "always",
-    "focus": false,
-    "panel": "shared"
-   }
-  },
-  {
-   "label": "Clean Build",
-   "type": "shell",
-   "command": "rm -rf build",
-   "group": "build",
-   "options": {
-    "cwd": "${workspaceFolder}"
-   },
-   "presentation": {
-    "echo": true,
-    "reveal": "always",
-    "focus": false,
-    "panel": "shared"
-   }
-  },
-  {
-   "label": "Dev Mode - Watch and Restart",
-   "type": "shell",
-   "command": "./watch.sh",
-   "group": "build",
-   "isBackground": true,
-   "options": {
-    "cwd": "${workspaceFolder}"
-   },
-   "presentation": {
-    "echo": true,
-    "reveal": "always",
-    "focus": false,
-    "panel": "shared"
-   },
-   "problemMatcher": []
-  },
-  {
-   "label": "Dev Mode - Simple",
-   "type": "shell",
-   "command": "./dev.sh",
-   "group": "test",
-   "options": {
-    "cwd": "${workspaceFolder}"
-   },
-   "presentation": {
-    "echo": true,
-    "reveal": "always",
-    "focus": false,
-    "panel": "shared"
-   },
-   "problemMatcher": []
-  }
- ]
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Build Qt App",
+			"type": "shell",
+			"command": "./build.sh",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "shared"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Run Qt App",
+			"type": "shell",
+			"command": "./build/linux/wallet",
+			"group": "test",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"dependsOn": "Build Qt App",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "shared"
+			}
+		},
+		{
+			"label": "Clean Build",
+			"type": "shell",
+			"command": "rm -rf build",
+			"group": "build",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "shared"
+			}
+		},
+		{
+			"label": "Dev Mode - Watch and Restart",
+			"type": "shell",
+			"command": "./watch.sh",
+			"group": "build",
+			"isBackground": true,
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "shared"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Dev Mode - Simple",
+			"type": "shell",
+			"command": "./dev.sh",
+			"group": "test",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "shared"
+			},
+			"problemMatcher": []
+		}
+	]
 }

@@ -10,13 +10,13 @@ int main(int argc, char* argv[]) {
  app.setApplicationVersion("0.0.1");
  app.setOrganizationName("LiberSoft");
  // Register QML types
- qmlRegisterType<WiFiManager>("MainMenuAppModule", 1, 0, "WiFiManager");
+ qmlRegisterType<WiFiManager>("WalletModule", 1, 0, "WiFiManager");
  QQmlApplicationEngine engine;
  // Register QML context properties if needed
  // clang-format off
  engine.rootContext()->setContextProperty("applicationVersion", app.applicationVersion());
  // clang-format on
- const QUrl url(QStringLiteral("qrc:/MainMenuAppModule/src/qml/main.qml"));
+ const QUrl url(QStringLiteral("qrc:/WalletModule/src/qml/main.qml"));
  QObject::connect(
 		&engine,
 		&QQmlApplicationEngine::objectCreated,
