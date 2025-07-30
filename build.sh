@@ -6,7 +6,6 @@ is_installed() {
 }
 PACKAGES=("cmake" "qt6-base-dev" "qt6-declarative-dev")
 MISSING_PACKAGES=()
-
 for package in "${PACKAGES[@]}"; do
  if ! is_installed "$package"; then
   MISSING_PACKAGES+=("$package")
@@ -21,7 +20,6 @@ if [ ${#MISSING_PACKAGES[@]} -gt 0 ]; then
 else
  echo "All dependencies are already installed."
 fi
-
 echo "Building Yellow Matchbox Wallet..."
 if [ -d "build" ]; then
  rm -rf build
@@ -33,7 +31,6 @@ if [ $? -ne 0 ]; then
  echo "CMAKE configuration failed!"
  exit 1
 fi
-
 CORES=$(nproc)
 echo "Building with $CORES parallel jobs..."
 cmake --build . --config Release --parallel $CORES
@@ -41,6 +38,5 @@ if [ $? -ne 0 ]; then
  echo "Build failed!"
  exit 1
 fi
-
 echo "Build complete!"
-echo "Run with: ./build/linux/wallet"
+echo "Run with: ./start.sh"
