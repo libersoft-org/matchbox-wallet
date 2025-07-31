@@ -2,3 +2,4 @@ build/
 .secret_git
 **/*-formatting-tmp.qml~
 *.log
+build-and-start.ps1

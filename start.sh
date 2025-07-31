@@ -1,9 +1,11 @@
 #!/bin/bash
 
+cd "$(dirname "$0")"
+
 is_installed() {
  dpkg -l "$1" 2>/dev/null | grep -q "^ii"
 }
-PACKAGES=("libqt6core6" "libqt6gui6" "libqt6qml6" "libqt6quick6" "libgl1-mesa-glx" "libegl1-mesa" "fonts-droid-fallback")
+PACKAGES=("libqt6core6" "libqt6gui6" "libqt6qml6" "libqt6quick6" "libgl1-mesa-glx" "libegl1-mesa" "fonts-droid-fallback" "qml6-module-qtquick" "qml6-module-qtquick-controls" "qml6-module-qtquick-templates" "qml6-module-qtquick-window" "qml6-module-qtquick-layouts" "qml6-module-qtqml-workerscript")
 MISSING_PACKAGES=()
 for package in "${PACKAGES[@]}"; do
  if ! is_installed "$package"; then

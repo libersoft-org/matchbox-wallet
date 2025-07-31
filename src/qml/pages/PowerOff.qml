@@ -6,17 +6,19 @@ import "../components"
 Rectangle {
  id: root
  color: "#f0f0f0"
- signal settingsRequested
- signal powerOffRequested
+ signal backRequested
+ signal exitRequested
+ signal rebootRequested
+ signal shutdownRequested
 
  ColumnLayout {
   anchors.fill: parent
   anchors.margins: Math.max(20, root.width * 0.05)
   spacing: Math.max(20, root.height * 0.03)
 
-  // App title
+  // Page title
   Text {
-   text: qsTr("Yellow Matchbox Wallet")
+   text: qsTr("Power Options")
    font.pointSize: Math.max(18, Math.min(36, root.width * 0.04))
    font.bold: true
    color: "#333333"
@@ -32,36 +34,32 @@ Rectangle {
    Layout.rightMargin: 15
    spacing: Math.max(15, root.height * 0.05)
 
-   // Settings button
+   // Exit Application button
    MenuButton {
-	text: qsTr("Settings")
-	onClicked: root.settingsRequested()
+    text: qsTr("Exit Application")
+    backgroundColor: "#dc3545"
+    onClicked: root.exitRequested()
    }
 
+   // Reboot button
    MenuButton {
-				text: qsTr("Green button")
-				backgroundColor: "#080"
-				onClicked: console.log("Green button clicked");
+    text: qsTr("Reboot System")
+    backgroundColor: "#fd7e14"
+    onClicked: root.rebootRequested()
    }
 
+   // Shutdown button
    MenuButton {
-	text: qsTr("Yellow button")
-	backgroundColor: "#fd1"
-	onClicked: console.log("Yellow button clicked")
+    text: qsTr("Shutdown System")
+    backgroundColor: "#6c757d"
+    onClicked: root.shutdownRequested()
    }
 
+   // Back button
    MenuButton {
-	text: qsTr("Disabled button")
-	backgroundColor: "#0000FF"
-	textColor: "#212529"
-	enabled: false
-   }
-
-   // Power off button
-   MenuButton {
-	text: qsTr("Power off")
-	backgroundColor: "#dc3545"
-	onClicked: root.powerOffRequested()
+    text: qsTr("Back to Menu")
+    backgroundColor: "#28a745"
+    onClicked: root.backRequested()
    }
   }
  }

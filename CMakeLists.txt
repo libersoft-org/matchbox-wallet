@@ -26,7 +26,7 @@ qt_add_qml_module(Wallet
 		src/qml/pages/Settings.qml
 		src/qml/pages/SettingsSystem.qml
 		src/qml/pages/SettingsSystemWiFi.qml
-		src/qml/pages/FontDemo.qml
+		src/qml/pages/PowerOff.qml
 )
 target_link_libraries(Wallet PRIVATE
  Qt6::Core

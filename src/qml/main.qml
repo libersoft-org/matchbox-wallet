@@ -32,13 +32,10 @@ ApplicationWindow {
   id: mainMenuComponent
   MainMenu {
    onPowerOffRequested: {
-	Qt.quit();
+	stackView.push(powerOffPageComponent);
    }
    onSettingsRequested: {
 	stackView.push(settingsPageComponent);
-   }
-   onFontDemoRequested: {
-	stackView.push(fontDemoPageComponent);
    }
   }
  }
@@ -79,12 +76,23 @@ ApplicationWindow {
   }
  }
 
- // Font demo page component
+ // Power off page component
  Component {
-  id: fontDemoPageComponent
-  FontDemo {
+  id: powerOffPageComponent
+  PowerOff {
    onBackRequested: {
 	stackView.pop();
+   }
+   onExitRequested: {
+	Qt.quit();
+   }
+   onRebootRequested: {
+	console.log("Reboot system requested - would execute system reboot command");
+	// In real implementation: QProcess.startDetached("reboot");
+   }
+   onShutdownRequested: {
+	console.log("Shutdown system requested - would execute system shutdown command");
+	// In real implementation: QProcess.startDetached("shutdown", ["-h", "now"]);
    }
   }
  }

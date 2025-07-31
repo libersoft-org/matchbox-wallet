@@ -4,7 +4,7 @@ import QtQuick.Layouts 1.15
 
 Button {
 	id: control
-	// Vlastní properties
+	// Custom properties
 	property color backgroundColor: "#007bff"
 	property color hoverColor: Qt.lighter(backgroundColor, 1.3)
 	property color pressedColor: Qt.darker(backgroundColor, 1.2)
@@ -12,10 +12,9 @@ Button {
 	property color textColor: "white"
 	// Layout properties
 	Layout.fillWidth: true
-	Layout.preferredHeight: Math.max(50, parent.height * 0.08)
-	Layout.maximumHeight: 80
-
-	// Defaultní enabled je true
+	Layout.preferredHeight: Math.max(50, parent.height * 0.10)
+	Layout.maximumHeight: 120
+	// Default enabled is true
 	enabled: true
 
 	background: Rectangle {
@@ -24,7 +23,7 @@ Button {
 		border.color: control.enabled ? control.borderColor : "#999999"
 		border.width: 1
 
-		// Animace pro hover efekt
+		// Animation for hover effect
 		Behavior on color {
 			ColorAnimation {
 				duration: 150
@@ -34,13 +33,12 @@ Button {
 
 	contentItem: Text {
 		text: control.text
-		font.family: "Droid Sans"
-		font.pointSize: Math.max(10, Math.min(16, control.height * 0.25))
+		font.pointSize: Math.max(10, Math.min(16, control.height * 0.75))
 		color: control.enabled ? control.textColor : "#666666"
 		horizontalAlignment: Text.AlignHCenter
 		verticalAlignment: Text.AlignVCenter
 
-		// Animace pro disabled stav
+		// Animation for disabled state
 		Behavior on color {
 			ColorAnimation {
 				duration: 150
