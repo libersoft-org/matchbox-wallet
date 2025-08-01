@@ -14,21 +14,21 @@ qt_add_executable(Wallet
 target_include_directories(Wallet PRIVATE
  src
 )
+# Automatically find all QML files and make them relative to src/qml
+file(GLOB_RECURSE QML_FILES_ABSOLUTE "src/qml/*.qml")
+set(QML_FILES)
+foreach(qml_file ${QML_FILES_ABSOLUTE})
+ file(RELATIVE_PATH qml_file_rel ${CMAKE_CURRENT_SOURCE_DIR} ${qml_file})
+ list(APPEND QML_FILES ${qml_file_rel})
+endforeach()
+
 qt_add_qml_module(Wallet
  URI WalletModule
  VERSION 1.0
  NO_GENERATE_QMLTYPES
  NO_CACHEGEN
  NO_LINT
- QML_FILES 
-  src/qml/main.qml
-		src/qml/pages/MainMenu.qml
-		src/qml/components/MenuButton.qml
-		src/qml/pages/Settings.qml
-		src/qml/pages/SettingsSystem.qml
-		src/qml/pages/SettingsSystemWiFi.qml
-		src/qml/pages/PowerOff.qml
-		src/qml/pages/CameraPreview.qml
+ QML_FILES ${QML_FILES}
 )
 target_link_libraries(Wallet PRIVATE
  Qt6::Core
