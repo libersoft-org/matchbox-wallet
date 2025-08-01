@@ -37,6 +37,9 @@ ApplicationWindow {
    onSettingsRequested: {
 	stackView.push(settingsPageComponent);
    }
+   onCameraPreviewRequested: {
+	stackView.push(cameraPreviewPageComponent);
+   }
   }
  }
 
@@ -93,6 +96,16 @@ ApplicationWindow {
    onShutdownRequested: {
 	console.log("Shutdown system requested - would execute system shutdown command");
 	// In real implementation: QProcess.startDetached("shutdown", ["-h", "now"]);
+   }
+  }
+ }
+
+ // Camera preview page component
+ Component {
+  id: cameraPreviewPageComponent
+  CameraPreview {
+   onBackRequested: {
+	stackView.pop();
    }
   }
  }

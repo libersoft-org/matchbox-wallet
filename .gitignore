@@ -3,3 +3,4 @@ build/
 **/*-formatting-tmp.qml~
 *.log
 build-and-start.ps1
+build-and-start.sh

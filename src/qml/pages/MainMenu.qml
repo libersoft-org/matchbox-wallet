@@ -8,6 +8,7 @@ Rectangle {
  color: "#f0f0f0"
  signal settingsRequested
  signal powerOffRequested
+ signal cameraPreviewRequested
 
  ColumnLayout {
   anchors.fill: parent
@@ -39,9 +40,9 @@ Rectangle {
    }
 
    MenuButton {
-				text: qsTr("Green button")
-				backgroundColor: "#080"
-				onClicked: console.log("Green button clicked");
+				text: qsTr("Test camera")
+				backgroundColor: "#008800"
+				onClicked: root.cameraPreviewRequested()
    }
 
    MenuButton {
