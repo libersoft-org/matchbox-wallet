@@ -6,7 +6,7 @@ import "../components"
 BaseMenu {
 	id: root
 	title: qsTr("Matchbox Wallet")
-	showBackButton: false
+	property bool showBackButton: false
 	property var settingsComponent
 	property var powerOffComponent  
 	property var cameraPreviewComponent

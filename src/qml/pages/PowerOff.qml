@@ -7,7 +7,7 @@ import "../components"
 BaseMenu {
 	id: root
 	title: qsTr("Power options")
-	showPowerButton: false
+	property bool showPowerButton: false
 	
 	property SystemManager systemManager: SystemManager { }
 	

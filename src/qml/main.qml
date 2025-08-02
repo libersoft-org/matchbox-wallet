@@ -44,8 +44,8 @@ ApplicationWindow {
   anchors.right: parent.right
   height: window.height * 0.1
   title: stackView.currentItem ? stackView.currentItem.title || "" : ""
-  showBackButton: stackView.currentItem.showBackButton
-  showPowerButton: stackView.currentItem.showPowerButton
+  showBackButton: stackView.currentItem && stackView.currentItem.hasOwnProperty("showBackButton") ? stackView.currentItem.showBackButton : true
+  showPowerButton: stackView.currentItem && stackView.currentItem.hasOwnProperty("showPowerButton") ? stackView.currentItem.showPowerButton : true
   onBackRequested: window.goBack()
   onPowerOffRequested: window.goPage(powerOffPageComponent)
  }
