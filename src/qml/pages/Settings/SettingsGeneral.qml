@@ -43,20 +43,21 @@ Rectangle {
 				spacing: root.height * 0.02
 				
 				// Fiat currency selection
-				RowLayout {
+				ColumnLayout {
 					Layout.fillWidth: true
-					Layout.preferredHeight: root.height * 0.08
+					spacing: root.height * 0.02
 					
 					Text {
 						text: qsTr("Fiat currency:")
 						font.pixelSize: 18
 						font.bold: true
 						color: AppConstants.primaryForeground
-						Layout.preferredWidth: parent.width * 0.4
+						Layout.fillWidth: true
 					}
 					
 					MenuButton {
 						Layout.fillWidth: true
+						Layout.preferredHeight: root.height * 0.08
 						text: root.selectedCurrency
 						onClicked: {
 							root.currencySelectionRequested();
@@ -72,7 +73,8 @@ Rectangle {
 				// Back button
 				MenuButton {
 					Layout.fillWidth: true
-					text: qsTr("← Back")
+					Layout.preferredHeight: root.height * 0.08
+					text: qsTr("Back")
 					onClicked: {
 						root.backRequested();
 					}

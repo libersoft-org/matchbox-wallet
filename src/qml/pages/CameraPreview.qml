@@ -88,7 +88,7 @@ Rectangle {
             
             // Back button
             Button {
-                text: "← Back"
+                text: "Back"
                 font.pointSize: 14
                 Layout.preferredWidth: 100
                 Layout.preferredHeight: 40

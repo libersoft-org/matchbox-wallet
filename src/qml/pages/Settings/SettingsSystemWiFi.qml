@@ -41,7 +41,7 @@ Rectangle {
 	id: backButton
 	Layout.preferredWidth: 80
 	Layout.preferredHeight: 40
-	text: qsTr("← Back")
+	text: qsTr("Back")
 
 	background: Rectangle {
 	 color: backButton.pressed ? "#e0e0e0" : (backButton.hovered ? "#f0f0f0" : "#f8f9fa")

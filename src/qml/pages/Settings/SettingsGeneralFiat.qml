@@ -10,44 +10,22 @@ BaseMenu {
 	
 	signal backRequested
 	signal currencySelected(string currency)
-
-	MenuButton {
-		text: "USD"
-		onClicked: {
-			root.currencySelected("USD");
+	
+	property var currencies: ["USD", "EUR", "GBP", "CHF", "CZK", "PLN", "HUF"]
+	
+	Repeater {
+		model: root.currencies
+		
+		MenuButton {
+			text: modelData
+			onClicked: {
+				root.currencySelected(modelData);
+			}
 		}
 	}
 
 	MenuButton {
-		text: "EUR"
-		onClicked: {
-			root.currencySelected("EUR");
-		}
-	}
-
-	MenuButton {
-		text: "GBP"
-		onClicked: {
-			root.currencySelected("GBP");
-		}
-	}
-
-	MenuButton {
-		text: "CHF"
-		onClicked: {
-			root.currencySelected("CHF");
-		}
-	}
-
-	MenuButton {
-		text: "CZK"
-		onClicked: {
-			root.currencySelected("CZK");
-		}
-	}
-
-	MenuButton {
-		text: qsTr("← Back")
+		text: qsTr("Back")
 		onClicked: {
 			root.backRequested();
 		}

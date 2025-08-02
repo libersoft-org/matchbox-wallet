@@ -43,11 +43,26 @@ Item {
 		anchors.right: parent.right
 		anchors.bottom: parent.bottom
 		
-		Column {
-			id: buttonsContainer
-			anchors.centerIn: parent
-			width: parent.width - (parent.width * 0.1)
-			spacing: root.height * 0.02
+		ScrollView {
+			id: scrollView
+			anchors.fill: parent
+			anchors.leftMargin: parent.width * 0.05
+			anchors.rightMargin: parent.width * 0.05
+			ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+			ScrollBar.vertical.policy: ScrollBar.AsNeeded
+			
+			// Debug background
+			Rectangle {
+				anchors.fill: parent
+				color: "red"
+				opacity: 0.3
+			}
+			
+			Column {
+				id: buttonsContainer
+				width: scrollView.availableWidth
+				spacing: root.height * 0.03
+			}
 		}
 	}
 }

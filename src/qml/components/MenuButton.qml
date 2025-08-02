@@ -20,7 +20,7 @@ Button {
 	enabled: true
 	background: Rectangle {
 		color: control.enabled ? (control.pressed ? control.pressedColor : (control.hovered ? control.hoverColor : control.backgroundColor)) : AppConstants.disabledBackground
-		radius: parent.parent.height	* 0.05
+		radius: control.height * 0.2
 		border.color: control.enabled ? control.borderColor : AppConstants.disabledForeground
 		border.width: 1
 		Behavior on color {
