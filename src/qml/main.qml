@@ -13,6 +13,10 @@ ApplicationWindow {
  visible: true
  title: qsTr("Yellow Matchbox Wallet")
  font.family: AppConstants.fontFamily
+ 
+ background: Rectangle {
+  color: AppConstants.primaryForeground
+ }
 
  Component.onCompleted: {
   x = (Screen.width - width) / 2;
