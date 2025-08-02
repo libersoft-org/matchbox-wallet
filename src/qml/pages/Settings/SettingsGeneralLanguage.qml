@@ -6,21 +6,22 @@ import "../../components"
 
 BaseMenu {
 	id: root
-	title: qsTr("Language Selection")
-	
-	signal languageSelected(string language)
+	anchors.fill: parent
+	title: tr("settings.general.language.title")
 	
 	MenuButton {
-		text: qsTr("English")
+		id: englishButton
+		text: "English"
 		onClicked: {
-			root.languageSelected("en");
+			parent.parent.languageSelected("en");
 		}
 	}
 	
 	MenuButton {
-		text: qsTr("Czech")
+		id: czechButton
+		text: "Czech"
 		onClicked: {
-			root.languageSelected("cz");
+			parent.parent.languageSelected("cz");
 		}
 	}
 }

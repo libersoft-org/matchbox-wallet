@@ -7,5 +7,5 @@ import "../components"
 
 Rectangle {
 	id: root
- property string title: qsTr("Camera preview")
+ property string title: "Camera test"
 }

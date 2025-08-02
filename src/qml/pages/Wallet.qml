@@ -1,30 +1,31 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
+import WalletModule 1.0
 import "../components"
 
 BaseMenu {
 	id: root
-	title: qsTr("Wallet")
+	title: tr("wallet.title")
 	property var goPageFunction
 
 	MenuButton {
-		text: qsTr("Balance")
+		text: tr("wallet.balance")
 		enabled: false
 	}
 	
 	MenuButton {
-		text: qsTr("Send")
+		text: tr("wallet.send")
 		enabled: false
 	}
 
 	MenuButton {
-		text: qsTr("Receive")
+		text: tr("wallet.receive")
 		enabled: false
 	}
 
 	MenuButton {
-		text: qsTr("Addressbook")
+		text: tr("wallet.addressbook")
 		enabled: false
 	}
 }

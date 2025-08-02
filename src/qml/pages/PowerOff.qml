@@ -6,23 +6,23 @@ import "../components"
 
 BaseMenu {
 	id: root
-	title: qsTr("Power options")
+	title: tr("power.title")
 	property bool showPowerButton: false
 	
 	property SystemManager systemManager: SystemManager { }
 	
 	MenuButton {
-		text: qsTr("Exit application")
+		text: tr("power.quit")
 		onClicked: Qt.quit()
 	}
 
 	MenuButton {
-		text: qsTr("Reboot")
+		text: tr("power.reboot")
 		onClicked: systemManager.rebootSystem()
 	}
 
 	MenuButton {
-		text: qsTr("Power off")
+		text: tr("power.shutdown")
 		onClicked: systemManager.shutdownSystem()
 	}
 }

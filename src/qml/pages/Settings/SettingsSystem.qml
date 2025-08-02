@@ -6,16 +6,33 @@ import "../../components"
 
 BaseMenu {
 	id: root
-	title: qsTr("System Settings")
+	title: tr("settings.system.title")
 	signal wifiSettingsRequested
+	signal languageSelectionRequested
+	
+	property string selectedLanguage: "en"
+	
+	function getLanguageDisplayName(langCode) {
+		switch(langCode) {
+			case "en": return "English"
+			case "cz": return "Czech"
+			default: return langCode
+		}
+	}
 
 	MenuButton {
-		text: qsTr("WiFi")
+		id: languageButton
+		text: tr("settings.system.language", getLanguageDisplayName(root.selectedLanguage))
+		onClicked: root.languageSelectionRequested();
+	}
+
+	MenuButton {
+		text: tr("settings.system.wifi")
 		onClicked: root.wifiSettingsRequested();
 	}
 
 	MenuButton {
-		text: qsTr("LoRa")
+		text: tr("settings.system.lora")
 		enabled: false
 		onClicked: console.log("LoRa settings clicked - not implemented yet");
 	}

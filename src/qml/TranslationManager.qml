@@ -6,56 +6,74 @@ QtObject {
 	
 	property string currentLanguage: "en"
 	property var translations: ({})
+	property int languageVersion: 0  // This will trigger binding updates
 	
 	signal languageChanged()
+	
+	// Watch for currentLanguage changes
+	onCurrentLanguageChanged: {
+		loadTranslations(currentLanguage)
+	}
 	
 	Component.onCompleted: {
 		loadTranslations(currentLanguage)
 	}
 	
 	function loadTranslations(language) {
+		// Load from JSON files
 		var xhr = new XMLHttpRequest()
-		xhr.open("GET", Qt.resolvedUrl("translations/" + language + ".json"), false)
-		xhr.send()
+		var url = Qt.resolvedUrl("translations/" + language + ".json")
+		console.log("Loading translations from:", url)
 		
-		if (xhr.status === 200) {
-			try {
-				translations = JSON.parse(xhr.responseText)
-				currentLanguage = language
-				languageChanged()
-			} catch (e) {
-				console.log("Error parsing translations:", e)
+				xhr.onreadystatechange = function() {
+			if (xhr.readyState === XMLHttpRequest.DONE) {
+				console.log("XHR finished with status:", xhr.status)
+				if (xhr.status === 200) {
+					try {
+						translations = JSON.parse(xhr.responseText)
+						languageVersion++  // Trigger binding updates
+						languageChanged()
+						console.log("Language loaded:", language)
+					} catch (e) {
+						console.log("Error parsing translations:", e)
+					}
+				} else {
+					console.log("Error loading translations for", language, "status:", xhr.status)
+				}
 			}
-		} else {
-			console.log("Error loading translations for", language)
-		}
+		}		xhr.open("GET", url, true)
+		xhr.send()
 	}
 	
-	function setLanguage(language) {
-		loadTranslations(language)
-	}
-	
-	function tr(section, key, ...args) {
-		if (!translations[section] || !translations[section][key]) {
-			console.log("Missing translation:", section + "." + key)
+	function tr(key) {
+		// This property access ensures binding updates when translations change
+		var dummy = languageVersion
+		
+		var parts = key.split('.')
+		if (parts.length !== 2) {
+			console.log("Invalid translation key format:", key)
 			return key
 		}
 		
-		var text = translations[section][key]
+		var section = parts[0]
+		var subkey = parts[1]
+		
+		if (!translations[section] || !translations[section][subkey]) {
+			console.log("Missing translation:", key)
+			return subkey
+		}
+		
+		var text = translations[section][subkey]
 		
 		// Simple argument substitution for %1, %2, etc.
-		for (var i = 0; i < args.length; i++) {
-			text = text.replace("%" + (i + 1), args[i])
+		for (var i = 1; i < arguments.length; i++) {
+			text = text.replace("%" + i, arguments[i])
 		}
 		
 		return text
 	}
 	
-	function getLanguageDisplayName(language) {
-		switch (language) {
-			case "en": return tr("settingsGeneralLanguage", "english")
-			case "cz": return tr("settingsGeneralLanguage", "czech")
-			default: return language
-		}
+	function setLanguage(language) {
+		currentLanguage = language
 	}
 }

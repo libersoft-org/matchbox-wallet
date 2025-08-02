@@ -11,7 +11,7 @@ ApplicationWindow {
  width: 480
  height: 640
  visible: true
- title: qsTr("Matchbox Wallet")
+ title: tr("mainMenu.title")
  font.family: AppConstants.fontFamily
  property string iconSource: "qrc:/WalletModule/src/img/wallet.svg"
  readonly property int animationDuration: 500
@@ -20,6 +20,37 @@ ApplicationWindow {
  // Global currency setting
  property string selectedCurrency: "USD"
  property string selectedLanguage: "en"
+ 
+ // Global translation function
+ function tr(key) {
+  try {
+   if (typeof TranslationManager !== 'undefined' && TranslationManager && TranslationManager.translations) {
+    // Force binding to languageVersion for reactive updates
+    var dummy = TranslationManager.languageVersion
+    
+    var parts = key.split('.')
+    if (parts.length !== 2) {
+     return key
+    }
+    var section = parts[0]
+    var subkey = parts[1]
+    var translations = TranslationManager.translations
+    if (translations && translations[section] && translations[section][subkey]) {
+     var text = translations[section][subkey]
+     // Simple argument substitution for %1, %2, etc.
+     for (var i = 1; i < arguments.length; i++) {
+      text = text.replace("%" + i, arguments[i])
+     }
+     return text
+    }
+    return subkey
+   }
+   return key
+  } catch (e) {
+   console.log("Translation error:", e, "for key:", key)
+   return key
+  }
+ }
 	background: Rectangle {
   color: AppConstants.primaryBackground
  }
@@ -127,9 +158,7 @@ ApplicationWindow {
   id: generalSettingsPageComponent
   SettingsGeneral {
    selectedCurrency: window.selectedCurrency
-   selectedLanguage: window.selectedLanguage
    onCurrencySelectionRequested: window.goPage(settingsGeneralFiatPageComponent)
-   onLanguageSelectionRequested: window.goPage(settingsGeneralLanguagePageComponent)
   }
  }
 
@@ -144,23 +173,13 @@ ApplicationWindow {
   }
  }
 
- // Language selection page
- Component {
-  id: settingsGeneralLanguagePageComponent
-  SettingsGeneralLanguage {
-   onLanguageSelected: function(language) {
-    window.selectedLanguage = language;
-    TranslationManager.setLanguage(language);
-    window.goBack();
-   }
-  }
- }
-
  // System settings page
  Component {
   id: systemSettingsPageComponent
   SettingsSystem {
+   selectedLanguage: window.selectedLanguage
    onWifiSettingsRequested: window.goPage(wifiSettingsPageComponent)
+   onLanguageSelectionRequested: window.goPage(settingsSystemLanguagePageComponent)
   }
  }
 

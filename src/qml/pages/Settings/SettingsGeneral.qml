@@ -6,25 +6,16 @@ import "../../components"
 
 BaseMenu {
 	id: root
-	title: qsTr("General settings")
-	
+	title: tr("settings.general.title")
+
 	signal currencySelectionRequested
-	signal languageSelectionRequested
 	
 	property string selectedCurrency: "USD"
-	property string selectedLanguage: "en"
 	
 	MenuButton {
-		text: qsTr("Fiat Currency: %1").arg(root.selectedCurrency)
+		text: tr("settings.general.fiat", root.selectedCurrency)
 		onClicked: {
 			root.currencySelectionRequested();
-		}
-	}
-	
-	MenuButton {
-		text: qsTr("Language: %1").arg(TranslationManager.getLanguageDisplayName(root.selectedLanguage))
-		onClicked: {
-			root.languageSelectionRequested();
 		}
 	}
 }

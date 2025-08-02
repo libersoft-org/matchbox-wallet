@@ -2,8 +2,7 @@
 	"mainMenu": {
 		"title": "Matchbox peněženka",
 		"wallet": "Peněženka",
-		"settings": "Nastavení",
-		"testCamera": "Zkouška kamery"
+		"settings": "Nastavení"
 	},
 	"wallet": {
 		"title": "Peněženka",
@@ -19,7 +18,7 @@
 	},
 	"settingsGeneral": {
 		"title": "Obecné nastavení",
-		"fiatCurrency": "Fiat měna: %1",
+		"fiat": "Fiat měna: %1",
 		"language": "Jazyk: %1"
 	},
 	"settingsGeneralFiat": {
@@ -46,15 +45,11 @@
 		"connect": "Připojit",
 		"disconnect": "Odpojit"
 	},
-	"powerOff": {
-		"title": "Vypnutí",
-		"confirmShutdown": "Opravdu chcete vypnout zařízení?",
-		"shutdown": "Vypnout",
-		"cancel": "Zrušit"
-	},
-	"camera": {
-		"title": "Náhled kamery",
-		"noCamera": "Kamera není dostupná"
+	"power": {
+		"title": "Ukončení",
+		"quit": "Ukončit aplikaci",
+		"reboot": "Restartovat",
+		"shutdown": "Vypnout"
 	},
 	"common": {
 		"back": "Zpět",

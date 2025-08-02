@@ -7,8 +7,7 @@ import "../../components"
 Rectangle {
 	id: root
 	color: AppConstants.primaryBackground
-	property string title: qsTr("WiFi networks")
-	
+	property string title: tr("settings.system.wifi.title")
 	signal backRequested
 	signal powerOffRequested
 
@@ -51,7 +50,7 @@ Rectangle {
 				id: refreshButton
 				Layout.preferredWidth: 120
 				Layout.preferredHeight: 35
-				text: wifiManager.isScanning ? qsTr("Scanning...") : qsTr("🔄 Refresh")
+				text: wifiManager.isScanning ? tr("settings.system.wifi.scanning") : tr("settings.system.wifi.refresh")
 				Layout.alignment: Qt.AlignRight
 				enabled: !wifiManager.isScanning
 
@@ -162,7 +161,7 @@ Rectangle {
 								}
 
 								Text {
-									text: modelData.connected ? qsTr("Connected") : qsTr("Available")
+									text: modelData.connected ? tr("settings.system.wifi.connected") : tr("settings.system.wifi.available")
 									font.pointSize: 10
 									color: modelData.connected ? "#28a745" : "#6c757d"
 								}
@@ -189,7 +188,7 @@ Rectangle {
 	// WiFi connection dialog
 	Dialog {
 		id: connectDialog
-		title: qsTr("Connect to WiFi")
+		title: tr("settings.system.wifi.connect.title")
 		modal: true
 		anchors.centerIn: parent
 		width: 350
@@ -207,7 +206,7 @@ Rectangle {
 				spacing: 15
 
 				Text {
-					text: qsTr("Connect to network: %1").arg(connectDialog.networkName)
+					text: tr("settings.system.wifi.connect.network", connectDialog.networkName)
 					wrapMode: Text.WordWrap
 					Layout.fillWidth: true
 					font.bold: true
@@ -220,7 +219,7 @@ Rectangle {
 					spacing: 5
 
 					Text {
-						text: qsTr("Password:")
+						text: tr("settings.system.wifi.connect.password")
 						font.pointSize: 10
 					}
 
@@ -228,12 +227,12 @@ Rectangle {
 						id: passwordField
 						Layout.fillWidth: true
 						echoMode: TextInput.Password
-						placeholderText: qsTr("Enter password...")
+						placeholderText: tr("settings.system.wifi.connect.password.placeholder")
 					}
 				}
 
 				Text {
-					text: connectDialog.isSecured ? "" : qsTr("This is an open network.")
+					text: connectDialog.isSecured ? "" : tr("settings.system.wifi.connect.open")
 					visible: !connectDialog.isSecured
 					font.pointSize: 10
 					color: "#6c757d"
@@ -244,7 +243,7 @@ Rectangle {
 					spacing: 10
 
 					Button {
-						text: qsTr("Cancel")
+						text: tr("common.cancel")
 						onClicked: {
 							passwordField.text = "";
 							connectDialog.close();
@@ -259,7 +258,7 @@ Rectangle {
 					}
 
 					Button {
-						text: qsTr("Connect")
+						text: tr("settings.system.wifi.connect")
 						onClicked: {
 							wifiManager.connectToNetwork(connectDialog.networkName, passwordField.text);
 							passwordField.text = "";
