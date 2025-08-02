@@ -5,19 +5,19 @@ import WalletModule 1.0
 Item {
 	id: root
 	default property alias content: contentItem.children
-	
 	property real topMargin: height * 0.05
 	property real bottomMargin: height * 0.05
 	property real leftMargin: width * 0.1
 	property real rightMargin: width * 0.1
 	
-	// Debug background (can be removed later)
+	// Debug background
+	/*
 	Rectangle {
 		anchors.fill: parent
 		color: "#800"
 		opacity: 0.2
-		visible: false // Set to true for debugging
 	}
+	*/
 	
 	Flickable {
 		id: flickable
