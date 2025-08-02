@@ -99,8 +99,16 @@ ApplicationWindow {
  Component {
   id: mainMenuComponent
   MainMenu {
+   walletComponent: walletPageComponent
    settingsComponent: settingsPageComponent
    cameraPreviewComponent: cameraPreviewPageComponent
+   goPageFunction: window.goPage
+  }
+ }
+
+ Component {
+  id: walletPageComponent
+  Wallet {
    goPageFunction: window.goPage
   }
  }

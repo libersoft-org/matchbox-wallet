@@ -7,10 +7,16 @@ BaseMenu {
 	id: root
 	title: qsTr("Matchbox Wallet")
 	property bool showBackButton: false
+	property var walletComponent
 	property var settingsComponent
 	property var powerOffComponent  
 	property var cameraPreviewComponent
 	property var goPageFunction
+
+	MenuButton {
+		text: qsTr("Wallet")
+		onClicked: goPageFunction(walletComponent)
+	}
 	
 	MenuButton {
 		text: qsTr("Settings")

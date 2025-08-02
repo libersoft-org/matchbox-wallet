@@ -17,6 +17,18 @@ BaseMenu {
 	}
 
 	MenuButton {
+		text: qsTr("Wallets")
+		onClicked: console.log("Wallets settings clicked");
+		enabled:	false
+	}
+
+	MenuButton {
+		text: qsTr("Networks")
+		onClicked: console.log("Networks settings clicked");
+		enabled: false
+	}
+
+	MenuButton {
 		text: qsTr("System")
 		onClicked: root.systemSettingsRequested();
 	}
