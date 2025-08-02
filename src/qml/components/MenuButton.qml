@@ -17,7 +17,7 @@ Button {
 	
 	// Layout properties
 	Layout.fillWidth: true
-	Layout.preferredHeight: Math.max(50, windowHeight * 0.08)
+	implicitHeight: Math.max(50, windowHeight * 0.08)
 	Layout.maximumHeight: windowHeight * 0.12
 	// Default enabled is true
 	enabled: true
