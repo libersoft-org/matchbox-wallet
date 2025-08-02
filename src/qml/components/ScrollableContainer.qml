@@ -52,18 +52,16 @@ Item {
 		visible: flickable.moving || flickable.dragging || pressed
 		
 		size: flickable.visibleArea.heightRatio
-		position: flickable.visibleArea.yPosition
 		
 		contentItem: Rectangle {
 			color: AppConstants.primaryForeground
 			opacity: 0.2
 			radius: parent.width * 0.5
 		}
-		
-		onPositionChanged: {
-			if (pressed && size < 1.0) {
-				flickable.contentY = position * (flickable.contentHeight - flickable.height)
-			}
-		}
+	}
+	
+	// Connect the scrollbar to the flickable
+	Component.onCompleted: {
+		flickable.ScrollBar.vertical = externalScrollBar
 	}
 }
