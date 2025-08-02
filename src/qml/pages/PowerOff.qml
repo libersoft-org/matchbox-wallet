@@ -6,6 +6,7 @@ import "../components"
 BaseMenu {
 	id: root
 	title: qsTr("Power options")
+	signal backRequested
 	
 	function exitApplication() {
 		Qt.quit();
@@ -17,14 +18,6 @@ BaseMenu {
 	
 	function shutdownSystem() {
 		QProcess.startDetached("shutdown", ["-h", "now"]);
-	}
-	
-	function goBack() {
-		let stackView = root.parent;
-		while (stackView && !stackView.hasOwnProperty('pop')) {
-			stackView = stackView.parent;
-		}
-		if (stackView) stackView.pop();
 	}
 
 	MenuButton {
@@ -44,6 +37,6 @@ BaseMenu {
 
 	MenuButton {
 		text: qsTr("Back to main menu")
-		onClicked: root.goBack()
+		onClicked: root.backRequested()
 	}
 }

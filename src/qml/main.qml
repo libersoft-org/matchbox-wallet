@@ -12,48 +12,36 @@ ApplicationWindow {
  height: 640
  visible: true
  title: qsTr("Yellow Matchbox Wallet")
- 
- // Set global font for the entire application
  font.family: AppConstants.fontFamily
 
- // Center the window on screen
  Component.onCompleted: {
   x = (Screen.width - width) / 2;
   y = (Screen.height - height) / 2;
  }
 
- // Stack view for navigation
  StackView {
   id: stackView
   anchors.fill: parent
   initialItem: mainMenuComponent
  }
 
- // Main menu component
  Component {
   id: mainMenuComponent
   MainMenu {
-   onPowerOffRequested: {
-	stackView.push(powerOffPageComponent);
-   }
-   onSettingsRequested: {
-	stackView.push(settingsPageComponent);
-   }
-   onCameraPreviewRequested: {
-	stackView.push(cameraPreviewPageComponent);
-   }
+   settingsComponent: settingsPageComponent
+   powerOffComponent: powerOffPageComponent
+   cameraPreviewComponent: cameraPreviewPageComponent
   }
  }
 
- // Settings page component
  Component {
   id: settingsPageComponent
   Settings {
    onBackRequested: {
-	stackView.pop();
+   	stackView.pop();
    }
    onSystemSettingsRequested: {
-	stackView.push(systemSettingsPageComponent);
+	   stackView.push(systemSettingsPageComponent);
    }
   }
  }
@@ -85,7 +73,9 @@ ApplicationWindow {
  Component {
   id: powerOffPageComponent
   PowerOff {
-   // No signal handlers needed anymore - functions are defined directly in PowerOff
+   onBackRequested: {
+    stackView.pop();
+   }
   }
  }
 
