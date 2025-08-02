@@ -1,6 +1,6 @@
 #!/bin/sh
 
-REPO="yellow-matchbox-wallet.git"
+REPO="matchbox-wallet.git"
 NAME="LiberSoft"
 BRANCH="main"
 EMAIL="info@libersoft.org"
