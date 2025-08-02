@@ -23,7 +23,6 @@ Button {
 		radius: parent.parent.height	* 0.05
 		border.color: control.enabled ? control.borderColor : AppConstants.disabledForeground
 		border.width: 1
-		// Animation for hover effect
 		Behavior on color {
 			ColorAnimation {
 				duration: 150
@@ -38,7 +37,6 @@ Button {
 		color: control.enabled ? control.textColor : AppConstants.disabledForeground
 		horizontalAlignment: Text.AlignHCenter
 		verticalAlignment: Text.AlignVCenter
-		// Animation for disabled state
 		Behavior on color {
 			ColorAnimation {
 				duration: 150

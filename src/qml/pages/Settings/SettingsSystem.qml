@@ -13,23 +13,17 @@ BaseMenu {
 
 	MenuButton {
 		text: qsTr("WiFi")
-		onClicked: {
-			root.wifiSettingsRequested();
-		}
+		onClicked: root.wifiSettingsRequested();
 	}
 
 	MenuButton {
 		text: qsTr("LoRa")
 		enabled: false
-		onClicked: {
-			console.log("LoRa settings clicked - not implemented yet");
-		}
+		onClicked: console.log("LoRa settings clicked - not implemented yet");
 	}
 
 	MenuButton {
-		text: qsTr("← Back")
-		onClicked: {
-			root.backRequested();
-		}
+		text: qsTr("Back")
+		onClicked: root.backRequested();
 	}
 }

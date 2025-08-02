@@ -14,9 +14,7 @@ BaseMenu {
 	MenuButton {
 		text: qsTr("Wallet")
 		enabled: false
-		onClicked: {
-			console.log("Wallets settings clicked - not implemented yet");
-		}
+		onClicked: console.log("Wallets settings clicked - not implemented yet");
 	}
 
 	MenuButton {
