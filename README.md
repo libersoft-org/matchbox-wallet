@@ -1,6 +1,6 @@
-# Yellow Client
+# Matchbox Wallet
 
-[![Created Badge](https://badges.pufler.dev/created/libersoft-org/yellow-matchbox-wallet)](https://badges.pufler.dev) [![Updated Badge](https://badges.pufler.dev/updated/libersoft-org/yellow-matchbox-wallet)](https://badges.pufler.dev) [![Visits Badge](https://badges.pufler.dev/visits/libersoft-org/yellow-matchbox-wallet)](https://badges.pufler.dev)
+[![Created Badge](https://badges.pufler.dev/created/libersoft-org/matchbox-wallet)](https://badges.pufler.dev) [![Updated Badge](https://badges.pufler.dev/updated/libersoft-org/matchbox-wallet)](https://badges.pufler.dev) [![Visits Badge](https://badges.pufler.dev/visits/libersoft-org/matchbox-wallet)](https://badges.pufler.dev)
 
 ## Table of contents
 
@@ -14,13 +14,13 @@
 
 ## About
 
-Official website: **https://yellow.libersoft.org**
+Official website: **https://matchbox.libersoft.org**
 
-This is the crypto wallet software for Yellow Matchbox device.
+This is the crypto wallet software for Matchbox device.
 
 ## Screenshot
 
-![Yellow](./screenshot.webp)
+![Matchbox](./screenshot.webp)
 
 ## Installation
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env pwsh
 
-Write-Host "Building Yellow Matchbox Wallet..."
+Write-Host "Building Matchbox Wallet..."
 
 # Check if CMake is available
 if (-not (Get-Command cmake -ErrorAction SilentlyContinue)) {

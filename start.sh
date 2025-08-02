@@ -53,7 +53,7 @@ if [ -f "build/linux/wallet" ]; then
 		export QT_QPA_PLATFORM=xcb
 		echo "No display detected, trying X11 (xcb) as fallback"
 	fi
-	echo "Starting Yellow Matchbox Wallet..."
+	echo "Starting Matchbox Wallet..."
 	./build/linux/wallet
 else
 	echo "Error: Application not found. Please build the project first by running:"

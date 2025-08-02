@@ -9,10 +9,7 @@ BaseMenu {
 	title: qsTr("Power options")
 	showPowerButton: false
 	
-	property var goBackFunction
 	property SystemManager systemManager: SystemManager { }
-	
-	onBackRequested: goBackFunction()
 	
 	MenuButton {
 		text: qsTr("Exit application")
@@ -27,10 +24,5 @@ BaseMenu {
 	MenuButton {
 		text: qsTr("Power off")
 		onClicked: systemManager.shutdownSystem()
-	}
-
-	MenuButton {
-		text: qsTr("Back")
-		onClicked: goBackFunction()
 	}
 }

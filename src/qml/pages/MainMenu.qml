@@ -5,7 +5,7 @@ import "../components"
 
 BaseMenu {
 	id: root
-	title: qsTr("Yellow Matchbox Wallet")
+	title: qsTr("Matchbox Wallet")
 	showBackButton: false
 	property var settingsComponent
 	property var powerOffComponent  

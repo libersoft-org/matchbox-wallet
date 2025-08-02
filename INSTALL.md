@@ -1,15 +1,15 @@
-# Yellow Matchbox Wallet - installation
+# Matchbox Wallet - installation
 
-## 1. Download the latest version of this software on your Yellow Matchbox device
+## 1. Download the latest version of this software on your Matchbox device
 
-Log in as "root" on your Yellow Matchbox and run the following commands to download the necessary dependencies and the latest version of this software from GitHub:
+Log in as "root" on your Matchbox and run the following commands to download the necessary dependencies and the latest version of this software from GitHub:
 
 ```sh
 apt update
 apt -y upgrade
 apt -y install git openssl
-git clone https://github.com/libersoft-org/yellow-matchbox-wallet.git
-cd yellow-matchbox-wallet/
+git clone https://github.com/libersoft-org/matchbox-wallet.git
+cd matchbox-wallet/
 ```
 
 ## 2. Build the software from source codes

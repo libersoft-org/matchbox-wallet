@@ -18,7 +18,7 @@ if [ ${#MISSING_PACKAGES[@]} -gt 0 ]; then
 else
  echo "All dependencies are already installed."
 fi
-echo "Building Yellow Matchbox Wallet..."
+echo "Building Matchbox Wallet..."
 if [ -d "build" ]; then
  rm -rf build
 fi

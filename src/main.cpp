@@ -8,7 +8,7 @@
 int main(int argc, char *argv[])
 {
  QGuiApplication app(argc, argv);
- app.setApplicationName("Yellow Matchbox Wallet");
+ app.setApplicationName("Matchbox Wallet");
  app.setApplicationVersion("0.0.1");
  app.setOrganizationName("LiberSoft");
  // Register QML types

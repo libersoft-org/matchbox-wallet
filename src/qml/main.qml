@@ -11,7 +11,7 @@ ApplicationWindow {
  width: 480
  height: 640
  visible: true
- title: qsTr("Yellow Matchbox Wallet")
+ title: qsTr("Matchbox Wallet")
  font.family: AppConstants.fontFamily
  
  background: Rectangle {
@@ -99,7 +99,7 @@ ApplicationWindow {
  Component {
   id: powerOffPageComponent
   PowerOff {
-   goBackFunction: window.goBack
+   onBackRequested: window.goBack()
   }
  }
 
