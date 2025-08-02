@@ -19,6 +19,7 @@ ApplicationWindow {
  
  // Global currency setting
  property string selectedCurrency: "USD"
+ property string selectedLanguage: "en"
 	background: Rectangle {
   color: AppConstants.primaryBackground
  }
@@ -126,7 +127,9 @@ ApplicationWindow {
   id: generalSettingsPageComponent
   SettingsGeneral {
    selectedCurrency: window.selectedCurrency
+   selectedLanguage: window.selectedLanguage
    onCurrencySelectionRequested: window.goPage(settingsGeneralFiatPageComponent)
+   onLanguageSelectionRequested: window.goPage(settingsGeneralLanguagePageComponent)
   }
  }
 
@@ -136,6 +139,18 @@ ApplicationWindow {
   SettingsGeneralFiat {
    onCurrencySelected: function(currency) {
     window.selectedCurrency = currency;
+    window.goBack();
+   }
+  }
+ }
+
+ // Language selection page
+ Component {
+  id: settingsGeneralLanguagePageComponent
+  SettingsGeneralLanguage {
+   onLanguageSelected: function(language) {
+    window.selectedLanguage = language;
+    TranslationManager.setLanguage(language);
     window.goBack();
    }
   }

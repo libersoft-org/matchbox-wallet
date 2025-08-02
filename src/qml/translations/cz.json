@@ -1,0 +1,67 @@
+{
+	"mainMenu": {
+		"title": "Matchbox peněženka",
+		"wallet": "Peněženka",
+		"settings": "Nastavení",
+		"testCamera": "Zkouška kamery"
+	},
+	"wallet": {
+		"title": "Peněženka",
+		"balance": "Zůstatek",
+		"send": "Odeslat",
+		"receive": "Přijmout",
+		"addressbook": "Adresář"
+	},
+	"settings": {
+		"title": "Nastavení",
+		"general": "Obecné",
+		"system": "Systém"
+	},
+	"settingsGeneral": {
+		"title": "Obecné nastavení",
+		"fiatCurrency": "Fiat měna: %1",
+		"language": "Jazyk: %1"
+	},
+	"settingsGeneralFiat": {
+		"title": "Výběr měny",
+		"selectCurrency": "Vyberte měnu"
+	},
+	"settingsGeneralLanguage": {
+		"title": "Výběr jazyka",
+		"selectLanguage": "Vyberte jazyk",
+		"english": "Angličtina",
+		"czech": "Čeština"
+	},
+	"settingsSystem": {
+		"title": "Systémová nastavení",
+		"wifi": "WiFi nastavení"
+	},
+	"settingsSystemWifi": {
+		"title": "WiFi nastavení",
+		"availableNetworks": "Dostupné sítě",
+		"connecting": "Připojování...",
+		"connected": "Připojeno",
+		"disconnected": "Odpojeno",
+		"password": "Heslo",
+		"connect": "Připojit",
+		"disconnect": "Odpojit"
+	},
+	"powerOff": {
+		"title": "Vypnutí",
+		"confirmShutdown": "Opravdu chcete vypnout zařízení?",
+		"shutdown": "Vypnout",
+		"cancel": "Zrušit"
+	},
+	"camera": {
+		"title": "Náhled kamery",
+		"noCamera": "Kamera není dostupná"
+	},
+	"common": {
+		"back": "Zpět",
+		"ok": "OK",
+		"cancel": "Zrušit",
+		"yes": "Ano",
+		"no": "Ne",
+		"loading": "Načítání..."
+	}
+}
