@@ -8,6 +8,7 @@ import "../components"
 Rectangle {
     id: root
     color: "#000000"
+    property string title: qsTr("Camera Preview")
     
     signal backRequested
     signal powerOffRequested

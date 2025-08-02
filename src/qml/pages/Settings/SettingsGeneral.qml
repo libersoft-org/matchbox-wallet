@@ -6,7 +6,7 @@ import "../../components"
 
 BaseMenu {
 	id: root
-	title: qsTr("General Settings")
+	title: qsTr("General settings")
 	
 	signal currencySelectionRequested
 	

@@ -7,6 +7,7 @@ import "../../components"
 Rectangle {
 	id: root
 	color: AppConstants.primaryBackground
+	property string title: qsTr("WiFi networks")
 	
 	signal backRequested
 	signal powerOffRequested

@@ -4,29 +4,30 @@ import QtQuick.Layouts 1.15
 import WalletModule 1.0
 import "../../components"
 
-BaseMenu {
+Item {
 	id: root
-	title: qsTr("Select Currency")
+	property string title: qsTr("Fiat currency")
 	
 	signal currencySelected(string currency)
+	signal backRequested
 	
 	property var currencies: ["USD", "EUR", "GBP", "CHF", "CZK", "PLN", "HUF"]
 	
-	Repeater {
-		model: root.currencies
+	MenuContainer {
+		anchors.fill: parent
+		anchors.leftMargin: root.width * 0.05
+		anchors.rightMargin: root.width * 0.05
+		anchors.topMargin: root.height * 0.03
 		
-		MenuButton {
-			text: modelData
-			onClicked: {
-				root.currencySelected(modelData);
+		Repeater {
+			model: root.currencies
+			
+			MenuButton {
+				text: modelData
+				onClicked: {
+					root.currencySelected(modelData);
+				}
 			}
-		}
-	}
-
-	MenuButton {
-		text: qsTr("Back")
-		onClicked: {
-			root.backRequested();
 		}
 	}
 }

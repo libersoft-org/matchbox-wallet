@@ -6,6 +6,8 @@ import WalletModule 1.0
 Item {
 	id: root
 	property string title: ""
+	property bool showBackButton: true
+	property bool showPowerButton: true
 	default property alias buttons: menuContainer.buttons
 	signal backRequested
 	signal powerOffRequested

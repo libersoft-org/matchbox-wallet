@@ -20,9 +20,4 @@ BaseMenu {
 		text: qsTr("System")
 		onClicked: root.systemSettingsRequested();
 	}
-
-	MenuButton {
-		text: qsTr("Back")
-		onClicked: root.backRequested();
-	}
 }

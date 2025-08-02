@@ -16,6 +16,9 @@ ApplicationWindow {
  property string iconSource: "qrc:/WalletModule/src/img/wallet.svg"
  readonly property int animationDuration: 500
  readonly property var animationEasing: Easing.OutCubic
+ 
+ // Global currency setting
+ property string selectedCurrency: "USD"
 	background: Rectangle {
   color: AppConstants.primaryBackground
  }
@@ -41,8 +44,8 @@ ApplicationWindow {
   anchors.right: parent.right
   height: window.height * 0.1
   title: stackView.currentItem ? stackView.currentItem.title || "" : ""
-  showBackButton: stackView.depth > 1
-  showPowerButton: true
+  showBackButton: stackView.currentItem.showBackButton
+  showPowerButton: stackView.currentItem.showPowerButton
   onBackRequested: window.goBack()
   onPowerOffRequested: window.goPage(powerOffPageComponent)
  }
@@ -95,196 +98,78 @@ ApplicationWindow {
 
  Component {
   id: mainMenuComponent
-  Item {
-   property string title: qsTr("Matchbox Wallet")
-   
-   MenuContainer {
-    anchors.fill: parent
-    anchors.leftMargin: parent.width * 0.05
-    anchors.rightMargin: parent.width * 0.05
-    anchors.topMargin: parent.height * 0.03
-    
-    MenuButton {
-     text: qsTr("Settings")
-     onClicked: window.goPage(settingsPageComponent)
-    }
-
-    MenuButton {
-     text: qsTr("Test camera")
-     onClicked: window.goPage(cameraPreviewPageComponent)
-    }
-   }
+  MainMenu {
+   settingsComponent: settingsPageComponent
+   cameraPreviewComponent: cameraPreviewPageComponent
+   powerOffComponent: powerOffPageComponent
+   goPageFunction: window.goPage
   }
  }
 
  Component {
   id: settingsPageComponent
-  Item {
-   property string title: qsTr("Settings")
-   
-   MenuContainer {
-    anchors.fill: parent
-    anchors.leftMargin: parent.width * 0.05
-    anchors.rightMargin: parent.width * 0.05
-    anchors.topMargin: parent.height * 0.03
-    
-    MenuButton {
-     text: qsTr("General")
-     onClicked: window.goPage(generalSettingsPageComponent)
-    }
-
-    MenuButton {
-     text: qsTr("System")
-     onClicked: window.goPage(systemSettingsPageComponent)
-    }
-
-    MenuButton {
-     text: qsTr("Back")
-     onClicked: window.goBack()
-    }
-   }
+  Settings {
+   onGeneralSettingsRequested: window.goPage(generalSettingsPageComponent)
+   onSystemSettingsRequested: window.goPage(systemSettingsPageComponent)
+   onBackRequested: window.goBack()
   }
  }
 
  // General settings page
  Component {
   id: generalSettingsPageComponent
-  Item {
-   property string title: qsTr("General Settings")
-   property string selectedCurrency: "USD"
-   
-   MenuContainer {
-    anchors.fill: parent
-    anchors.leftMargin: parent.width * 0.05
-    anchors.rightMargin: parent.width * 0.05
-    anchors.topMargin: parent.height * 0.03
-    
-    MenuButton {
-     text: qsTr("Fiat Currency: %1").arg(parent.parent.selectedCurrency)
-     onClicked: window.goPage(settingsGeneralFiatPageComponent)
-    }
-   }
+  SettingsGeneral {
+   selectedCurrency: window.selectedCurrency
+   onCurrencySelectionRequested: window.goPage(settingsGeneralFiatPageComponent)
   }
  }
 
  // Currency selection page
  Component {
   id: settingsGeneralFiatPageComponent
-  Item {
-   property string title: qsTr("Select Currency")
-   property var currencies: ["USD", "EUR", "GBP", "CHF", "CZK", "PLN", "HUF"]
-   
-   MenuContainer {
-    anchors.fill: parent
-    anchors.leftMargin: parent.width * 0.05
-    anchors.rightMargin: parent.width * 0.05
-    anchors.topMargin: parent.height * 0.03
-    
-    Repeater {
-     model: parent.parent.currencies
-     
-     MenuButton {
-      text: modelData
-      onClicked: {
-       console.log("Currency selected:", modelData);
-       window.goBack();
-      }
-     }
-    }
-
-    MenuButton {
-     text: qsTr("Back")
-     onClicked: window.goBack()
-    }
+  SettingsGeneralFiat {
+   onCurrencySelected: function(currency) {
+    window.selectedCurrency = currency;
+    window.goBack();
    }
+   onBackRequested: window.goBack()
   }
  }
 
  // System settings page
  Component {
   id: systemSettingsPageComponent
-  Item {
-   property string title: qsTr("System Settings")
-   
-   MenuContainer {
-    anchors.fill: parent
-    anchors.leftMargin: parent.width * 0.05
-    anchors.rightMargin: parent.width * 0.05
-    anchors.topMargin: parent.height * 0.03
-    
-    MenuButton {
-     text: qsTr("WiFi")
-     onClicked: window.goPage(wifiSettingsPageComponent)
-    }
-
-    MenuButton {
-     text: qsTr("LoRa")
-     enabled: false
-     onClicked: console.log("LoRa settings clicked - not implemented yet")
-    }
-   }
+  SettingsSystem {
+   onWifiSettingsRequested: window.goPage(wifiSettingsPageComponent)
+   onBackRequested: window.goBack()
   }
  }
 
  // WiFi settings page
  Component {
   id: wifiSettingsPageComponent
-  Item {
-   property string title: qsTr("WiFi Networks")
-   
-   SettingsSystemWiFi {
-    anchors.fill: parent
-    onBackRequested: window.goBack()
-    onPowerOffRequested: window.goPage(powerOffPageComponent)
-   }
+  SettingsSystemWiFi {
+   onBackRequested: window.goBack()
+   onPowerOffRequested: window.goPage(powerOffPageComponent)
   }
  }
 
  // Power off page
  Component {
   id: powerOffPageComponent
-  Item {
-   property string title: qsTr("Power options")
-   property SystemManager systemManager: SystemManager { }
-   
-   MenuContainer {
-    anchors.fill: parent
-    anchors.leftMargin: parent.width * 0.05
-    anchors.rightMargin: parent.width * 0.05
-    anchors.topMargin: parent.height * 0.03
-    
-    MenuButton {
-     text: qsTr("Exit application")
-     onClicked: Qt.quit()
-    }
-
-    MenuButton {
-     text: qsTr("Reboot")
-     onClicked: parent.parent.systemManager.rebootSystem()
-    }
-
-    MenuButton {
-     text: qsTr("Power off")
-     onClicked: parent.parent.systemManager.shutdownSystem()
-    }
-   }
+  PowerOff {
   }
  }
 
  // Camera preview page
  Component {
   id: cameraPreviewPageComponent
-  Item {
-   property string title: qsTr("Camera Preview")
-   
-   CameraPreview {
-    anchors.fill: parent
-    onBackRequested: {
-     // Stop camera before going back
-     window.goBack()
-    }
-    onPowerOffRequested: window.goPage(powerOffPageComponent)
+  CameraPreview {
+   onBackRequested: {
+    // Stop camera before going back
+    window.goBack()
    }
+   onPowerOffRequested: window.goPage(powerOffPageComponent)
   }
  }
 }
