@@ -12,8 +12,6 @@ BaseMenu {
 	property var cameraPreviewComponent
 	property var goPageFunction
 	
-	onPowerOffRequested: goPageFunction(powerOffComponent)
-
 	MenuButton {
 		text: qsTr("Settings")
 		onClicked: goPageFunction(settingsComponent)

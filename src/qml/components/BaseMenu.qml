@@ -10,7 +10,6 @@ Item {
 	property bool showPowerButton: true
 	default property alias buttons: menuContainer.buttons
 	signal backRequested
-	signal powerOffRequested
 
 	MenuContainer {
 		id: menuContainer

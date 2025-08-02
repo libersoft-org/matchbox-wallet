@@ -101,7 +101,6 @@ ApplicationWindow {
   MainMenu {
    settingsComponent: settingsPageComponent
    cameraPreviewComponent: cameraPreviewPageComponent
-   powerOffComponent: powerOffPageComponent
    goPageFunction: window.goPage
   }
  }
@@ -111,7 +110,6 @@ ApplicationWindow {
   Settings {
    onGeneralSettingsRequested: window.goPage(generalSettingsPageComponent)
    onSystemSettingsRequested: window.goPage(systemSettingsPageComponent)
-   onBackRequested: window.goBack()
   }
  }
 
@@ -132,7 +130,6 @@ ApplicationWindow {
     window.selectedCurrency = currency;
     window.goBack();
    }
-   onBackRequested: window.goBack()
   }
  }
 
@@ -141,7 +138,6 @@ ApplicationWindow {
   id: systemSettingsPageComponent
   SettingsSystem {
    onWifiSettingsRequested: window.goPage(wifiSettingsPageComponent)
-   onBackRequested: window.goBack()
   }
  }
 
@@ -149,8 +145,6 @@ ApplicationWindow {
  Component {
   id: wifiSettingsPageComponent
   SettingsSystemWiFi {
-   onBackRequested: window.goBack()
-   onPowerOffRequested: window.goPage(powerOffPageComponent)
   }
  }
 
@@ -165,11 +159,7 @@ ApplicationWindow {
  Component {
   id: cameraPreviewPageComponent
   CameraPreview {
-   onBackRequested: {
-    // Stop camera before going back
-    window.goBack()
-   }
-   onPowerOffRequested: window.goPage(powerOffPageComponent)
+   // Stop camera before going back - this will be handled by NavigationBar
   }
  }
 }
