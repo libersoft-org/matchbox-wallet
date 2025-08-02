@@ -10,6 +10,7 @@ PACKAGES=(
  "qt6-base-dev:arm64"
  "qt6-declarative-dev:arm64"
  "qt6-multimedia-dev:arm64"
+ "qt6-svg-dev:arm64"
  "libgstreamer1.0-dev:arm64"
  "libgstreamer-plugins-base1.0-dev:arm64"
  "libgl1-mesa-dev:arm64"

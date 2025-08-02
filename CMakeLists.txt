@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 project(Wallet VERSION 1.0.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-find_package(Qt6 REQUIRED COMPONENTS Core Quick)
+find_package(Qt6 REQUIRED COMPONENTS Core Quick Svg)
 find_package(Qt6 QUIET COMPONENTS Multimedia)
 set(QT_QML_GENERATE_QMLLS_INI ON)
 qt_standard_project_setup()
@@ -27,7 +27,7 @@ set_source_files_properties(src/qml/AppConstants.qml
 file(GLOB_RECURSE QML_FILES_LIST RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "src/qml/*.qml")
 
 # Find all SVG files in img directory
-file(GLOB_RECURSE SVG_FILES_LIST RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "src/qml/img/*.svg")
+file(GLOB_RECURSE SVG_FILES_LIST RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "src/img/*.svg")
 
 # Add QML module to the executable
 qt_add_qml_module(Wallet
@@ -42,6 +42,7 @@ qt_add_qml_module(Wallet
 target_link_libraries(Wallet PRIVATE
  Qt6::Core
  Qt6::Quick
+ Qt6::Svg
 )
 
 # Link Qt6::Multimedia if available

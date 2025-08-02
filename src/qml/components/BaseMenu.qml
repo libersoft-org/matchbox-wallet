@@ -52,7 +52,7 @@ Item {
 			
 			contentItem: Image {
 				anchors.fill: parent
-				source: "../../img/back.svg"
+				source: "qrc:/WalletModule/src/img/back.svg"
 				fillMode: Image.PreserveAspectFit
 				sourceSize.width: parent.width
 				sourceSize.height: parent.height
@@ -90,7 +90,7 @@ Item {
 			
 			contentItem: Image {
 				anchors.fill: parent
-				source: "../../img/power.svg"
+				source: "qrc:/WalletModule/src/img/power.svg"
 				fillMode: Image.PreserveAspectFit
 				sourceSize.width: parent.width
 				sourceSize.height: parent.height
