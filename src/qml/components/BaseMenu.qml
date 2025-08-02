@@ -15,6 +15,9 @@ Item {
 			if (buttons[i].hasOwnProperty('windowHeight')) {
 				buttons[i].windowHeight = Qt.binding(function() { return root.height; });
 			}
+			if (buttons[i].hasOwnProperty('flickableHeight')) {
+				buttons[i].flickableHeight = Qt.binding(function() { return flickable.height; });
+			}
 		}
 	}
 	
@@ -43,13 +46,35 @@ Item {
 		anchors.right: parent.right
 		anchors.bottom: parent.bottom
 		
-		ScrollView {
-			id: scrollView
+		Flickable {
+			id: flickable
 			anchors.fill: parent
 			anchors.leftMargin: parent.width * 0.05
 			anchors.rightMargin: parent.width * 0.05
-			ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
-			ScrollBar.vertical.policy: ScrollBar.AsNeeded
+			contentWidth: width
+			boundsBehavior: Flickable.StopAtBounds
+			
+			// Explicitní výpočet contentHeight
+			property real calculatedContentHeight: {
+				var totalHeight = 0;
+				for (var i = 0; i < buttonsContainer.children.length; i++) {
+					var child = buttonsContainer.children[i];
+					if (child && child.height) {
+						totalHeight += child.height;
+					}
+				}
+				if (buttonsContainer.children.length > 1) {
+					totalHeight += (buttonsContainer.children.length - 1) * buttonsContainer.spacing;
+				}
+				return totalHeight;
+			}
+			
+			contentHeight: Math.max(calculatedContentHeight, height)
+			
+			// Scrollbar
+			ScrollBar.vertical: ScrollBar {
+				policy: ScrollBar.AsNeeded
+			}
 			
 			// Debug background
 			Rectangle {
@@ -60,7 +85,7 @@ Item {
 			
 			Column {
 				id: buttonsContainer
-				width: scrollView.availableWidth
+				width: flickable.width
 				spacing: root.height * 0.03
 			}
 		}

@@ -12,10 +12,11 @@ Button {
 	property color borderColor: Qt.darker(backgroundColor, 1.1)
 	property color textColor: AppConstants.primaryBackground
 	property int windowHeight: 640 // default fallback
+	property real flickableHeight: 400 // default fallback
 
 	// Layout properties
 	width: parent.width
-	height: parent.parent.height * 0.15
+	height: flickableHeight * 0.15
 	// Default enabled is true
 	enabled: true
 	background: Rectangle {
