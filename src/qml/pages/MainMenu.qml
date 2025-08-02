@@ -36,18 +36,21 @@ Rectangle {
    // Settings button
    MenuButton {
 	text: qsTr("Settings")
+	windowHeight: root.height
 	onClicked: root.settingsRequested()
    }
 
    MenuButton {
 				text: qsTr("Test camera")
 				backgroundColor: "#008800"
+				windowHeight: root.height
 				onClicked: root.cameraPreviewRequested()
    }
 
    MenuButton {
 	text: qsTr("Yellow button")
 	backgroundColor: "#fd1"
+	windowHeight: root.height
 	onClicked: console.log("Yellow button clicked")
    }
 
@@ -55,6 +58,7 @@ Rectangle {
 	text: qsTr("Disabled button")
 	backgroundColor: "#0000FF"
 	textColor: "#212529"
+	windowHeight: root.height
 	enabled: false
    }
 
@@ -62,6 +66,7 @@ Rectangle {
    MenuButton {
 	text: qsTr("Power off")
 	backgroundColor: "#dc3545"
+	windowHeight: root.height
 	onClicked: root.powerOffRequested()
    }
   }

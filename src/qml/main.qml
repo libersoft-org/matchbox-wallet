@@ -4,6 +4,7 @@ import QtQuick.Controls 2.15
 import WalletModule 1.0
 import "components"
 import "pages"
+import "pages/Settings"
 
 ApplicationWindow {
  id: window

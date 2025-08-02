@@ -38,6 +38,7 @@ Rectangle {
    MenuButton {
     text: qsTr("Exit Application")
     backgroundColor: "#dc3545"
+    windowHeight: root.height
     onClicked: root.exitRequested()
    }
 
@@ -45,6 +46,7 @@ Rectangle {
    MenuButton {
     text: qsTr("Reboot System")
     backgroundColor: "#fd7e14"
+    windowHeight: root.height
     onClicked: root.rebootRequested()
    }
 
@@ -52,6 +54,7 @@ Rectangle {
    MenuButton {
     text: qsTr("Shutdown System")
     backgroundColor: "#6c757d"
+    windowHeight: root.height
     onClicked: root.shutdownRequested()
    }
 
@@ -59,6 +62,7 @@ Rectangle {
    MenuButton {
     text: qsTr("Back to Menu")
     backgroundColor: "#28a745"
+    windowHeight: root.height
     onClicked: root.backRequested()
    }
   }
