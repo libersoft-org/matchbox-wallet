@@ -8,7 +8,6 @@ BaseMenu {
 	id: root
 	title: qsTr("Select Currency")
 	
-	signal backRequested
 	signal currencySelected(string currency)
 	
 	property var currencies: ["USD", "EUR", "GBP", "CHF", "CZK", "PLN", "HUF"]

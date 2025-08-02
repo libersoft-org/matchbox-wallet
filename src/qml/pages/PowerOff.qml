@@ -7,9 +7,12 @@ import "../components"
 BaseMenu {
 	id: root
 	title: qsTr("Power options")
+	showPowerButton: false
 	
 	property var goBackFunction
 	property SystemManager systemManager: SystemManager { }
+	
+	onBackRequested: goBackFunction()
 	
 	MenuButton {
 		text: qsTr("Exit application")

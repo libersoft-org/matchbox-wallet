@@ -8,7 +8,6 @@ BaseMenu {
 	id: root
 	title: qsTr("Settings")
 	
-	signal backRequested
 	signal systemSettingsRequested
 	signal generalSettingsRequested
 

@@ -6,10 +6,13 @@ import "../components"
 BaseMenu {
 	id: root
 	title: qsTr("Yellow Matchbox Wallet")
+	showBackButton: false
 	property var settingsComponent
 	property var powerOffComponent  
 	property var cameraPreviewComponent
 	property var goPageFunction
+	
+	onPowerOffRequested: goPageFunction(powerOffComponent)
 
 	MenuButton {
 		text: qsTr("Settings")
@@ -26,12 +29,5 @@ BaseMenu {
 		backgroundColor: "#00f"
 		textColor: "#fff"
 		enabled: false
-	}
-
-	MenuButton {
-		text: qsTr("Power off")
-		backgroundColor: "#800"
-		textColor: "#fff"
-		onClicked: goPageFunction(powerOffComponent)
 	}
 }

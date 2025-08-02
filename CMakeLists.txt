@@ -26,6 +26,9 @@ set_source_files_properties(src/qml/AppConstants.qml
 # Automatically find all QML files with relative paths
 file(GLOB_RECURSE QML_FILES_LIST RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "src/qml/*.qml")
 
+# Find all SVG files in img directory
+file(GLOB_RECURSE SVG_FILES_LIST RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "src/qml/img/*.svg")
+
 # Add QML module to the executable
 qt_add_qml_module(Wallet
  URI WalletModule
@@ -34,6 +37,7 @@ qt_add_qml_module(Wallet
  NO_CACHEGEN
  NO_LINT
  QML_FILES ${QML_FILES_LIST}
+ RESOURCES ${SVG_FILES_LIST}
 )
 target_link_libraries(Wallet PRIVATE
  Qt6::Core

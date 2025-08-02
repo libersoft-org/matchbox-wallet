@@ -5,9 +5,12 @@ import WalletModule 1.0
 
 Item {
 	id: root
-
 	property string title: ""
+	property bool showBackButton: true
+	property bool showPowerButton: true
 	default property alias buttons: buttonsContainer.children
+	signal backRequested
+	signal powerOffRequested
 	
 	// Automatically set windowHeight for all MenuButton children
 	onButtonsChanged: {
@@ -29,12 +32,71 @@ Item {
 		anchors.right: parent.right
 		height: parent.height * 0.1
 
+		// Back button (left)
+		Button {
+			id: backButton
+			visible: root.showBackButton
+			anchors.left: parent.left
+			anchors.verticalCenter: parent.verticalCenter
+			anchors.leftMargin: parent.width * 0.05
+			width: parent.height * 0.8
+			height: parent.height * 0.8
+			
+			background: Rectangle {
+				color: "lightblue"
+				opacity: 0.3
+				radius: width * 0.1
+				border.color: "blue"
+				border.width: 2
+			}
+			
+			contentItem: Image {
+				anchors.fill: parent
+				source: "../../img/back.svg"
+				fillMode: Image.PreserveAspectFit
+				sourceSize.width: parent.width
+				sourceSize.height: parent.height
+			}
+			
+			onClicked: root.backRequested()
+		}
+
+		// Title text (center)
 		Text {
 			anchors.centerIn: parent
 			text: root.title
 			font.pixelSize: parent.height * 0.5
 			font.bold: true
 			color: AppConstants.primaryForeground
+		}
+		
+		// Power button (right)
+		Button {
+			id: powerButton
+			visible: root.showPowerButton
+			anchors.right: parent.right
+			anchors.verticalCenter: parent.verticalCenter
+			anchors.rightMargin: parent.width * 0.05
+			width: parent.height * 0.8
+			height: parent.height * 0.8
+			
+			background: Rectangle {
+				color: "lightgreen"
+				opacity: 0.3
+				radius: width * 0.1
+				border.color: "green"
+				border.width: 2
+			}
+			
+			contentItem: Image {
+				anchors.fill: parent
+				source: "../../img/power.svg"
+				fillMode: Image.PreserveAspectFit
+				sourceSize.width: parent.width
+				sourceSize.height: parent.height
+			}
+			
+			onClicked: root.powerOffRequested()
 		}
 	}
 	

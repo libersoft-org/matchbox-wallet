@@ -8,7 +8,6 @@ BaseMenu {
 	id: root
 	title: qsTr("System Settings")
 	
-	signal backRequested
 	signal wifiSettingsRequested
 
 	MenuButton {
@@ -20,10 +19,5 @@ BaseMenu {
 		text: qsTr("LoRa")
 		enabled: false
 		onClicked: console.log("LoRa settings clicked - not implemented yet");
-	}
-
-	MenuButton {
-		text: qsTr("Back")
-		onClicked: root.backRequested();
 	}
 }
