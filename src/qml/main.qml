@@ -51,6 +51,7 @@ ApplicationWindow {
   id: settingsPageComponent
   Settings {
    onBackRequested: window.goBack()
+   onPowerOffRequested: window.goPage(powerOffPageComponent)
    onSystemSettingsRequested: window.goPage(systemSettingsPageComponent);
    onGeneralSettingsRequested: window.goPage(generalSettingsPageComponent);
   }
@@ -61,6 +62,7 @@ ApplicationWindow {
   id: generalSettingsPageComponent
   SettingsGeneral {
    onBackRequested: window.goBack()
+   onPowerOffRequested: window.goPage(powerOffPageComponent)
    onCurrencySelectionRequested: window.goPage(settingsGeneralFiatPageComponent);
   }
  }
@@ -70,6 +72,7 @@ ApplicationWindow {
   id: settingsGeneralFiatPageComponent
   SettingsGeneralFiat {
    onBackRequested: window.goBack()
+   onPowerOffRequested: window.goPage(powerOffPageComponent)
    onCurrencySelected: function(currency) {
     // TODO: Update selected currency in SettingsGeneral
     console.log("Currency selected:", currency);
@@ -83,6 +86,7 @@ ApplicationWindow {
   id: systemSettingsPageComponent
   SettingsSystem {
    onBackRequested: window.goBack()
+   onPowerOffRequested: window.goPage(powerOffPageComponent)
    onWifiSettingsRequested: window.goPage(wifiSettingsPageComponent);
   }
  }
@@ -92,6 +96,7 @@ ApplicationWindow {
   id: wifiSettingsPageComponent
   SettingsSystemWiFi {
    onBackRequested: window.goBack()
+   onPowerOffRequested: window.goPage(powerOffPageComponent)
   }
  }
 
@@ -108,6 +113,7 @@ ApplicationWindow {
   id: cameraPreviewPageComponent
   CameraPreview {
    onBackRequested: window.goBack()
+   onPowerOffRequested: window.goPage(powerOffPageComponent)
   }
  }
 }

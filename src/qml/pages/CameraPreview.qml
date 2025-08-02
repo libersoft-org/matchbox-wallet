@@ -2,6 +2,7 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 import QtMultimedia 6.0
+import WalletModule 1.0
 import "../components"
 
 Rectangle {
@@ -9,6 +10,7 @@ Rectangle {
     color: "#000000"
     
     signal backRequested
+    signal powerOffRequested
     
     // Camera and capture session for Qt6
     CaptureSession {
@@ -73,70 +75,29 @@ Rectangle {
         visible: false
     }
     
-    // Top overlay with title and back button
+    // Top overlay with navigation bar
     Rectangle {
         id: topOverlay
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
-        height: 60
+        height: root.height * 0.1
         color: "#80000000"
         
-        RowLayout {
+        NavigationBar {
             anchors.fill: parent
-            anchors.margins: 10
+            title: qsTr("Camera Preview")
+            showBackButton: true
+            showPowerButton: true
             
-            // Back button
-            Button {
-                text: "Back"
-                font.pointSize: 14
-                Layout.preferredWidth: 100
-                Layout.preferredHeight: 40
-                
-                background: Rectangle {
-                    color: parent.pressed ? "#444444" : "#666666"
-                    radius: 5
-                }
-                
-                contentItem: Text {
-                    text: parent.text
-                    color: "white"
-                    font: parent.font
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                }
-                
-                onClicked: {
-                    camera.active = false
-                    root.backRequested()
-                }
+            onBackRequested: {
+                camera.active = false
+                root.backRequested()
             }
             
-            // Title
-            Text {
-                text: "Camera Preview"
-                color: "white"
-                font.pointSize: 18
-                font.bold: true
-                Layout.fillWidth: true
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-            }
-            
-            // Camera status indicator
-            Rectangle {
-                Layout.preferredWidth: 100
-                Layout.preferredHeight: 40
-                color: camera.active ? "#008800" : "#880000"
-                radius: 5
-                
-                Text {
-                    anchors.centerIn: parent
-                    text: camera.active ? "LIVE" : "OFF"
-                    color: "white"
-                    font.pointSize: 12
-                    font.bold: true
-                }
+            onPowerOffRequested: {
+                camera.active = false
+                root.powerOffRequested()
             }
         }
     }
