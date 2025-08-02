@@ -11,6 +11,7 @@ qt_add_executable(Wallet
  src/include/wifimanager.h
  src/wifimanager.cpp
 )
+
 target_include_directories(Wallet PRIVATE
  src
 )
@@ -20,23 +21,17 @@ set_source_files_properties(src/qml/AppConstants.qml
  PROPERTIES QT_QML_SINGLETON_TYPE TRUE
 )
 
-# List QML files explicitly for better control
+# Automatically find all QML files with relative paths
+file(GLOB_RECURSE QML_FILES_LIST RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "src/qml/*.qml")
+
+# Add QML module to the executable
 qt_add_qml_module(Wallet
  URI WalletModule
  VERSION 1.0
  NO_GENERATE_QMLTYPES
  NO_CACHEGEN
  NO_LINT
- QML_FILES 
-  src/qml/main.qml
-  src/qml/AppConstants.qml
-  src/qml/pages/MainMenu.qml
-  src/qml/components/MenuButton.qml
-  src/qml/pages/Settings.qml
-  src/qml/pages/SettingsSystem.qml
-  src/qml/pages/SettingsSystemWiFi.qml
-  src/qml/pages/PowerOff.qml
-  src/qml/pages/CameraPreview.qml
+ QML_FILES ${QML_FILES_LIST}
 )
 target_link_libraries(Wallet PRIVATE
  Qt6::Core
