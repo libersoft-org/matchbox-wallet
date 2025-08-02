@@ -74,35 +74,9 @@ Rectangle {
         font.bold: true
         visible: false
     }
+   
     
-    // Top overlay with navigation bar
-    Rectangle {
-        id: topOverlay
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.right: parent.right
-        height: root.height * 0.1
-        color: "#80000000"
-        
-        NavigationBar {
-            anchors.fill: parent
-            title: qsTr("Camera Preview")
-            showBackButton: true
-            showPowerButton: true
-            
-            onBackRequested: {
-                camera.active = false
-                root.backRequested()
-            }
-            
-            onPowerOffRequested: {
-                camera.active = false
-                root.powerOffRequested()
-            }
-        }
-    }
-    
-    // Bottom overlay with camera controls
+    // Camera controls
     Rectangle {
         id: bottomOverlay
         anchors.bottom: parent.bottom

@@ -4,6 +4,7 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QtQml>
+#include <QIcon>
 
 int main(int argc, char *argv[])
 {
@@ -11,6 +12,10 @@ int main(int argc, char *argv[])
  app.setApplicationName("Matchbox Wallet");
  app.setApplicationVersion("0.0.1");
  app.setOrganizationName("LiberSoft");
+
+ // Set application icon
+ app.setWindowIcon(QIcon(":/WalletModule/src/img/wallet.svg"));
+
  // Register QML types
  qmlRegisterType<WiFiManager>("WalletModule", 1, 0, "WiFiManager");
  qmlRegisterType<SystemManager>("WalletModule", 1, 0, "SystemManager");

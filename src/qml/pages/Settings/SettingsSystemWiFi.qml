@@ -30,26 +30,9 @@ Rectangle {
 		wifiManager.scanNetworks();
 	}
 
-	// Navigation bar - fixed at top
-	NavigationBar {
-		id: navigationBar
-		anchors.top: parent.top
-		anchors.left: parent.left
-		anchors.right: parent.right
-		height: root.height * 0.1
-		title: qsTr("WiFi Networks")
-		showBackButton: true
-		showPowerButton: true
-		onBackRequested: root.backRequested()
-		onPowerOffRequested: root.powerOffRequested()
-	}
-
-	// WiFi list container - below navigation bar
+	// WiFi list container - full area (no navigation bar here)
 	Rectangle {
-		anchors.top: navigationBar.bottom
-		anchors.left: parent.left
-		anchors.right: parent.right
-		anchors.bottom: parent.bottom
+		anchors.fill: parent
 		anchors.margins: root.width * 0.05
 		anchors.topMargin: root.height * 0.03
 		color: "white"

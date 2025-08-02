@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Matchbox Wallet
+Comment=Cryptocurrency wallet for Raspberry Pi
+Exec=/root/matchbox-wallet/build/linux/wallet
+Icon=/root/matchbox-wallet/src/img/wallet.svg
+Terminal=false
+Type=Application
+Categories=Finance;
+StartupNotify=true
