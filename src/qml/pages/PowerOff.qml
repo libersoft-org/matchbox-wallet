@@ -27,7 +27,7 @@ BaseMenu {
 	}
 
 	MenuButton {
-		text: qsTr("Back to main menu")
+		text: qsTr("Back")
 		onClicked: goBackFunction()
 	}
 }

@@ -10,11 +10,11 @@ BaseMenu {
 	
 	signal backRequested
 	signal systemSettingsRequested
+	signal generalSettingsRequested
 
 	MenuButton {
-		text: qsTr("Wallet")
-		enabled: false
-		onClicked: console.log("Wallets settings clicked - not implemented yet");
+		text: qsTr("General")
+		onClicked: root.generalSettingsRequested();
 	}
 
 	MenuButton {

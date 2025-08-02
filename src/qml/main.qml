@@ -15,7 +15,7 @@ ApplicationWindow {
  font.family: AppConstants.fontFamily
  
  background: Rectangle {
-  color: AppConstants.primaryForeground
+  color: AppConstants.primaryBackground
  }
 
  Component.onCompleted: {
@@ -52,6 +52,29 @@ ApplicationWindow {
   Settings {
    onBackRequested: window.goBack()
    onSystemSettingsRequested: window.goPage(systemSettingsPageComponent);
+   onGeneralSettingsRequested: window.goPage(generalSettingsPageComponent);
+  }
+ }
+
+ // General settings page
+ Component {
+  id: generalSettingsPageComponent
+  SettingsGeneral {
+   onBackRequested: window.goBack()
+   onCurrencySelectionRequested: window.goPage(settingsGeneralFiatPageComponent);
+  }
+ }
+
+ // Currency selection page
+ Component {
+  id: settingsGeneralFiatPageComponent
+  SettingsGeneralFiat {
+   onBackRequested: window.goBack()
+   onCurrencySelected: function(currency) {
+    // TODO: Update selected currency in SettingsGeneral
+    console.log("Currency selected:", currency);
+    window.goBack();
+   }
   }
  }
 

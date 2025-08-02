@@ -31,7 +31,7 @@ Item {
 			text: root.title
 			font.pixelSize: parent.height * 0.5
 			font.bold: true
-			color: AppConstants.primaryBackground
+			color: AppConstants.primaryForeground
 		}
 	}
 	

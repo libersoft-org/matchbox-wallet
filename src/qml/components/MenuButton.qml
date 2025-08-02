@@ -6,11 +6,11 @@ import WalletModule 1.0
 
 Button {
 	id: control
-	property color backgroundColor: AppConstants.primaryBackground
+	property color backgroundColor: AppConstants.primaryForeground
 	property color hoverColor: Qt.darker(backgroundColor, 1.3)
 	property color pressedColor: Qt.darker(backgroundColor, 1.2)
 	property color borderColor: Qt.darker(backgroundColor, 1.1)
-	property color textColor: AppConstants.primaryForeground
+	property color textColor: AppConstants.primaryBackground
 	property int windowHeight: 640 // default fallback
 
 	// Layout properties
