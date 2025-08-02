@@ -10,6 +10,8 @@ qt_add_executable(Wallet
  src/main.cpp
  src/include/wifimanager.h
  src/wifimanager.cpp
+ src/include/systemmanager.h
+ src/systemmanager.cpp
 )
 
 target_include_directories(Wallet PRIVATE
