@@ -21,11 +21,4 @@ BaseMenu {
 		text: qsTr("Test camera")
 		onClicked: goPageFunction(cameraPreviewComponent)
 	}
-
-	MenuButton {
-		text: qsTr("Disabled button")
-		backgroundColor: "#00f"
-		textColor: "#fff"
-		enabled: false
-	}
 }

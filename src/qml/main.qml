@@ -37,8 +37,8 @@ ApplicationWindow {
  }
 
  // Fixed navigation bar at top
- NavigationBar {
-  id: fixedNavigationBar
+ Navbar {
+  id: fixedNavbar
   anchors.top: parent.top
   anchors.left: parent.left
   anchors.right: parent.right
@@ -53,7 +53,7 @@ ApplicationWindow {
  // Content area with animations - this part animates
  StackView {
   id: stackView
-  anchors.top: fixedNavigationBar.bottom
+  anchors.top: fixedNavbar.bottom
   anchors.left: parent.left
   anchors.right: parent.right
   anchors.bottom: parent.bottom
@@ -158,8 +158,6 @@ ApplicationWindow {
  // Camera preview page
  Component {
   id: cameraPreviewPageComponent
-  CameraPreview {
-   // Stop camera before going back - this will be handled by NavigationBar
-  }
+  CameraPreview { }
  }
 }

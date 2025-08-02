@@ -7,7 +7,6 @@ import "../../components"
 BaseMenu {
 	id: root
 	title: qsTr("System Settings")
-	
 	signal wifiSettingsRequested
 
 	MenuButton {
