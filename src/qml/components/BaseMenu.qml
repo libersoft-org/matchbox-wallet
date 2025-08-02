@@ -12,8 +12,5 @@ Item {
 	MenuContainer {
 		id: menuContainer
 		anchors.fill: parent
-		anchors.leftMargin: root.width * 0.05
-		anchors.rightMargin: root.width * 0.05
-		anchors.topMargin: root.height * 0.03
 	}
 }

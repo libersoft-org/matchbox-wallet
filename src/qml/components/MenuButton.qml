@@ -13,11 +13,8 @@ Button {
 	property color textColor: AppConstants.primaryBackground
 	property int windowHeight: 640 // default fallback
 	property real flickableHeight: 480 // default fallback
-
-	// Layout properties
 	width: parent.width
-	height: flickableHeight * 0.15
-	// Default enabled is true
+	height: flickableHeight * 0.2
 	enabled: true
 	background: Rectangle {
 		color: control.enabled ? (control.pressed ? control.pressedColor : (control.hovered ? control.hoverColor : control.backgroundColor)) : AppConstants.disabledBackground
@@ -33,7 +30,7 @@ Button {
 
 	contentItem: Text {
 		text: control.text
-		font.pixelSize: control.height * 0.4
+		font.pixelSize: control.height * 0.3
 		font.bold: true
 		color: control.enabled ? control.textColor : AppConstants.disabledForeground
 		horizontalAlignment: Text.AlignHCenter
