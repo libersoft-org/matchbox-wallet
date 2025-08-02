@@ -13,11 +13,10 @@ ApplicationWindow {
  visible: true
  title: qsTr("Matchbox Wallet")
  font.family: AppConstants.fontFamily
- 
- // Set window icon
  property string iconSource: "qrc:/WalletModule/src/img/wallet.svg"
- 
- background: Rectangle {
+ readonly property int animationDuration: 500
+ readonly property var animationEasing: Easing.OutCubic
+	background: Rectangle {
   color: AppConstants.primaryBackground
  }
 
@@ -34,10 +33,6 @@ ApplicationWindow {
   stackView.pop();
  }
 
- // Animation constants
- readonly property int animationDuration: 500
- readonly property var animationEasing: Easing.OutCubic
-
  // Fixed navigation bar at top
  NavigationBar {
   id: fixedNavigationBar
@@ -52,7 +47,7 @@ ApplicationWindow {
   onPowerOffRequested: window.goPage(powerOffPageComponent)
  }
 
- // Content area with animations - only this part animates
+ // Content area with animations - this part animates
  StackView {
   id: stackView
   anchors.top: fixedNavigationBar.bottom
@@ -60,7 +55,6 @@ ApplicationWindow {
   anchors.right: parent.right
   anchors.bottom: parent.bottom
   initialItem: mainMenuComponent
-  
   pushEnter: Transition {
    PropertyAnimation {
     property: "x"
@@ -70,7 +64,6 @@ ApplicationWindow {
     easing.type: window.animationEasing
    }
   }
-  
   pushExit: Transition {
    PropertyAnimation {
     property: "x"
@@ -80,7 +73,6 @@ ApplicationWindow {
     easing.type: window.animationEasing
    }
   }
-  
   popEnter: Transition {
    PropertyAnimation {
     property: "x"
@@ -90,7 +82,6 @@ ApplicationWindow {
     easing.type: window.animationEasing
    }
   }
-  
   popExit: Transition {
    PropertyAnimation {
     property: "x"
@@ -121,13 +112,6 @@ ApplicationWindow {
     MenuButton {
      text: qsTr("Test camera")
      onClicked: window.goPage(cameraPreviewPageComponent)
-    }
-
-    MenuButton {
-     text: qsTr("Disabled button")
-     backgroundColor: "#00f"
-     textColor: "#fff"
-     enabled: false
     }
    }
   }
