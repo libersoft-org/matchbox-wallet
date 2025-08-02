@@ -50,8 +50,6 @@ Item {
 			anchors.rightMargin: parent.width * 0.05
 			ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
 			ScrollBar.vertical.policy: ScrollBar.AsNeeded
-			contentWidth: availableWidth
-			contentHeight: buttonsContainer.implicitHeight
 			
 			// Debug background
 			Rectangle {
