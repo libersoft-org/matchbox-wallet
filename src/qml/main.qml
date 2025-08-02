@@ -23,34 +23,10 @@ ApplicationWindow {
  
  // Global translation function
  function tr(key) {
-  try {
-   if (typeof TranslationManager !== 'undefined' && TranslationManager && TranslationManager.translations) {
-    // Force binding to languageVersion for reactive updates
-    var dummy = TranslationManager.languageVersion
-    
-    var parts = key.split('.')
-    if (parts.length !== 2) {
-     return key
-    }
-    var section = parts[0]
-    var subkey = parts[1]
-    var translations = TranslationManager.translations
-    if (translations && translations[section] && translations[section][subkey]) {
-     var text = translations[section][subkey]
-     // Simple argument substitution for %1, %2, etc.
-     for (var i = 1; i < arguments.length; i++) {
-      text = text.replace("%" + i, arguments[i])
-     }
-     return text
-    }
-    return subkey
-   }
-   return key
-  } catch (e) {
-   console.log("Translation error:", e, "for key:", key)
-   return key
-  }
+		console.log("Translating key:", key)
+  return TranslationManager.tr.apply(TranslationManager, arguments)
  }
+	
 	background: Rectangle {
   color: AppConstants.primaryBackground
  }
