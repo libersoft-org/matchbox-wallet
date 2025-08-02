@@ -12,7 +12,7 @@ Rectangle {
     
     // Automatically set windowHeight for all MenuButton children
     onButtonsChanged: {
-        for (var i = 0; i < buttons.length; i++) {
+        for (let i = 0; i < buttons.length; i++) {
             if (buttons[i].hasOwnProperty('windowHeight')) {
                 buttons[i].windowHeight = Qt.binding(function() { return root.height; });
             }

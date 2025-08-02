@@ -19,6 +19,14 @@ ApplicationWindow {
   y = (Screen.height - height) / 2;
  }
 
+ function goPage(component) {
+		if (stackView && component) stackView.push(component);
+	}
+
+ function goBack() {
+  stackView.pop();
+ }
+
  StackView {
   id: stackView
   anchors.fill: parent
@@ -31,61 +39,48 @@ ApplicationWindow {
    settingsComponent: settingsPageComponent
    powerOffComponent: powerOffPageComponent
    cameraPreviewComponent: cameraPreviewPageComponent
+   goPageFunction: window.goPage
   }
  }
 
  Component {
   id: settingsPageComponent
   Settings {
-   onBackRequested: {
-   	stackView.pop();
-   }
-   onSystemSettingsRequested: {
-	   stackView.push(systemSettingsPageComponent);
-   }
+   onBackRequested: window.goBack()
+   onSystemSettingsRequested: window.goPage(systemSettingsPageComponent);
   }
  }
 
- // System settings page component
+ // System settings page
  Component {
   id: systemSettingsPageComponent
   SettingsSystem {
-   onBackRequested: {
-	stackView.pop();
-   }
-   onWifiSettingsRequested: {
-	stackView.push(wifiSettingsPageComponent);
-   }
+   onBackRequested: window.goBack()
+   onWifiSettingsRequested: window.goPage(wifiSettingsPageComponent);
   }
  }
 
- // WiFi settings page component
+ // WiFi settings page
  Component {
   id: wifiSettingsPageComponent
   SettingsSystemWiFi {
-   onBackRequested: {
-	stackView.pop();
-   }
+   onBackRequested: window.goBack()
   }
  }
 
- // Power off page component
+ // Power off page
  Component {
   id: powerOffPageComponent
   PowerOff {
-   onBackRequested: {
-    stackView.pop();
-   }
+   goBackFunction: window.goBack
   }
  }
 
- // Camera preview page component
+ // Camera preview page
  Component {
   id: cameraPreviewPageComponent
   CameraPreview {
-   onBackRequested: {
-	stackView.pop();
-   }
+   onBackRequested: window.goBack()
   }
  }
 }

@@ -6,7 +6,9 @@ import "../components"
 BaseMenu {
 	id: root
 	title: qsTr("Power options")
-	signal backRequested
+	
+	// Property to hold reference to goBack function from parent
+	property var goBackFunction
 	
 	function exitApplication() {
 		Qt.quit();
@@ -37,6 +39,10 @@ BaseMenu {
 
 	MenuButton {
 		text: qsTr("Back to main menu")
-		onClicked: root.backRequested()
+		onClicked: {
+			if (goBackFunction) {
+				goBackFunction();
+			}
+		}
 	}
 }

@@ -6,43 +6,26 @@ import "../components"
 BaseMenu {
     id: root
     title: qsTr("Yellow Matchbox Wallet")
-    
-    // Properties to hold references to components (will be set from parent)
     property var settingsComponent
     property var powerOffComponent  
     property var cameraPreviewComponent
+    property var goPageFunction
     
-    // Define functions directly in this component
     function openSettings() {
-        // Get the parent StackView and push Settings page
-        var stackView = root.parent;
-        while (stackView && !stackView.hasOwnProperty('push')) {
-            stackView = stackView.parent;
-        }
-        if (stackView && settingsComponent) {
-            stackView.push(settingsComponent);
+        if (goPageFunction && settingsComponent) {
+            goPageFunction(settingsComponent);
         }
     }
     
     function openPowerOff() {
-        // Get the parent StackView and push PowerOff page
-        var stackView = root.parent;
-        while (stackView && !stackView.hasOwnProperty('push')) {
-            stackView = stackView.parent;
-        }
-        if (stackView && powerOffComponent) {
-            stackView.push(powerOffComponent);
+        if (goPageFunction && powerOffComponent) {
+            goPageFunction(powerOffComponent);
         }
     }
     
     function openCameraPreview() {
-        // Get the parent StackView and push CameraPreview page
-        var stackView = root.parent;
-        while (stackView && !stackView.hasOwnProperty('push')) {
-            stackView = stackView.parent;
-        }
-        if (stackView && cameraPreviewComponent) {
-            stackView.push(cameraPreviewComponent);
+        if (goPageFunction && cameraPreviewComponent) {
+            goPageFunction(cameraPreviewComponent);
         }
     }
 
