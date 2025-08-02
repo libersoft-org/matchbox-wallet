@@ -85,20 +85,7 @@ ApplicationWindow {
  Component {
   id: powerOffPageComponent
   PowerOff {
-   onBackRequested: {
-	stackView.pop();
-   }
-   onExitRequested: {
-	Qt.quit();
-   }
-   onRebootRequested: {
-	console.log("Reboot system requested - would execute system reboot command");
-	// In real implementation: QProcess.startDetached("reboot");
-   }
-   onShutdownRequested: {
-	console.log("Shutdown system requested - would execute system shutdown command");
-	// In real implementation: QProcess.startDetached("shutdown", ["-h", "now"]);
-   }
+   // No signal handlers needed anymore - functions are defined directly in PowerOff
   }
  }
 
