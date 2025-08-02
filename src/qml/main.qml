@@ -1,18 +1,19 @@
 import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
+import WalletModule 1.0
 import "components"
 import "pages"
 
 ApplicationWindow {
  id: window
- width: 800
- height: 600
+ width: 480
+ height: 640
  visible: true
  title: qsTr("Yellow Matchbox Wallet")
  
  // Set global font for the entire application
- font.family: "Droid Sans"
+ font.family: AppConstants.fontFamily
 
  // Center the window on screen
  Component.onCompleted: {
