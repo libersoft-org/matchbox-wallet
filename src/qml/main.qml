@@ -31,10 +31,54 @@ ApplicationWindow {
   stackView.pop();
  }
 
+ // Animation constants
+ readonly property int animationDuration: 500
+ readonly property var animationEasing: Easing.OutCubic
+
  StackView {
   id: stackView
   anchors.fill: parent
   initialItem: mainMenuComponent
+  
+  pushEnter: Transition {
+   PropertyAnimation {
+    property: "x"
+    from: stackView.width
+    to: 0
+    duration: window.animationDuration
+    easing.type: window.animationEasing
+   }
+  }
+  
+  pushExit: Transition {
+   PropertyAnimation {
+    property: "x"
+    from: 0
+    to: -stackView.width
+    duration: window.animationDuration
+    easing.type: window.animationEasing
+   }
+  }
+  
+  popEnter: Transition {
+   PropertyAnimation {
+    property: "x"
+    from: -stackView.width
+    to: 0
+    duration: window.animationDuration
+    easing.type: window.animationEasing
+   }
+  }
+  
+  popExit: Transition {
+   PropertyAnimation {
+    property: "x"
+    from: 0
+    to: stackView.width
+    duration: window.animationDuration
+    easing.type: window.animationEasing
+   }
+  }
  }
 
  Component {
