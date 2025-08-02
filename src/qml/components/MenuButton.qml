@@ -11,19 +11,16 @@ Button {
 	property color pressedColor: Qt.darker(backgroundColor, 1.2)
 	property color borderColor: Qt.darker(backgroundColor, 1.1)
 	property color textColor: AppConstants.primaryForeground
-	
-	// Accept window dimensions from parent to avoid binding loops
 	property int windowHeight: 640 // default fallback
-	
+
 	// Layout properties
-	Layout.fillWidth: true
-	implicitHeight: Math.max(50, windowHeight * 0.08)
-	Layout.maximumHeight: windowHeight * 0.12
+	width: parent.width
+	height: parent.parent.height * 0.15
 	// Default enabled is true
 	enabled: true
 	background: Rectangle {
 		color: control.enabled ? (control.pressed ? control.pressedColor : (control.hovered ? control.hoverColor : control.backgroundColor)) : AppConstants.disabledBackground
-		radius: 10
+		radius: parent.parent.height	* 0.05
 		border.color: control.enabled ? control.borderColor : AppConstants.disabledForeground
 		border.width: 1
 		// Animation for hover effect
@@ -36,7 +33,7 @@ Button {
 
 	contentItem: Text {
 		text: control.text
-		font.pixelSize: control.height * 0.5
+		font.pixelSize: control.height * 0.4
 		font.bold: true
 		color: control.enabled ? control.textColor : AppConstants.disabledForeground
 		horizontalAlignment: Text.AlignHCenter

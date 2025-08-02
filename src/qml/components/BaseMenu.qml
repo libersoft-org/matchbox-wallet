@@ -43,14 +43,11 @@ Item {
 		anchors.right: parent.right
 		anchors.bottom: parent.bottom
 		
-		ColumnLayout {
+		Column {
 			id: buttonsContainer
-			anchors.fill: parent
-			anchors.leftMargin: parent.width * 0.05
-			anchors.rightMargin: parent.width * 0.05
-			anchors.topMargin: 10
-			anchors.bottomMargin: 10
-			spacing: Math.max(15, root.height * 0.05)
+			anchors.centerIn: parent
+			width: parent.width - (parent.width * 0.1)
+			spacing: root.height * 0.02
 		}
 	}
 }
