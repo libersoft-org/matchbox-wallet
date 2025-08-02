@@ -22,9 +22,10 @@ ApplicationWindow {
  property string selectedLanguage: "en"
  
  // Global translation function
- function tr(key) {
+ function tr(key, args) {
 		console.log("Translating key:", key)
-  return TranslationManager.tr.apply(TranslationManager, arguments)
+		console.log("Arguments:", args)
+  return TranslationManager.tr(key, args)
  }
 	
 	background: Rectangle {
