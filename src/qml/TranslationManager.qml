@@ -16,6 +16,7 @@ QtObject {
 	}
 	
 	Component.onCompleted: {
+		console.log("TranslationManager singleton initializing...")
 		loadTranslations(currentLanguage)
 	}
 	
@@ -46,6 +47,7 @@ QtObject {
 	}
 	
 	function tr(key) {
+		console.log("TranslationManager.tr called with:", key)
 		// This property access ensures binding updates when translations change
 		var dummy = languageVersion
 		

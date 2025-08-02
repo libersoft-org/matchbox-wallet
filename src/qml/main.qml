@@ -21,11 +21,18 @@ ApplicationWindow {
  property string selectedCurrency: "USD"
  property string selectedLanguage: "en"
  
- // Global translation function
- function tr(key, args) {
-		console.log("Translating key:", key)
-		console.log("Arguments:", args)
-  return TranslationManager.tr(key, args)
+ // Global translation function - available to all child components
+ function tr(key) {
+  console.log("main.tr called with:", key, "TranslationManager exists:", !!TranslationManager)
+  try {
+   if (TranslationManager && TranslationManager.tr) {
+    return TranslationManager.tr(key)
+   }
+  } catch (e) {
+   console.log("Translation error:", e)
+  }
+  // Fallback - return key
+  return key
  }
 	
 	background: Rectangle {
