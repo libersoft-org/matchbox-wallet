@@ -36,7 +36,8 @@ Button {
 
 	contentItem: Text {
 		text: control.text
-		font.pointSize: Math.max(10, Math.min(18, control.windowHeight * 0.025))
+		font.pixelSize: control.height * 0.5
+		font.bold: true
 		color: control.enabled ? control.textColor : AppConstants.disabledForeground
 		horizontalAlignment: Text.AlignHCenter
 		verticalAlignment: Text.AlignVCenter

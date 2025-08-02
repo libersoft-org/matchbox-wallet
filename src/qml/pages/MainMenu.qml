@@ -48,24 +48,17 @@ Rectangle {
    }
 
    MenuButton {
-	text: qsTr("Yellow button")
-	backgroundColor: "#fd1"
-	windowHeight: root.height
-	onClicked: console.log("Yellow button clicked")
-   }
-
-   MenuButton {
 	text: qsTr("Disabled button")
-	backgroundColor: "#0000FF"
-	textColor: "#212529"
+	backgroundColor: "#0000ff"
+	textColor: "#fff"
 	windowHeight: root.height
 	enabled: false
    }
 
-   // Power off button
    MenuButton {
 	text: qsTr("Power off")
-	backgroundColor: "#dc3545"
+	backgroundColor: "#880000"
+	textColor: "#fff"
 	windowHeight: root.height
 	onClicked: root.powerOffRequested()
    }
