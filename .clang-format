@@ -12,6 +12,6 @@ AllowShortLoopsOnASingleLine: true
 AllowShortFunctionsOnASingleLine: Empty
 AlignConsecutiveAssignments: false
 AlignConsecutiveDeclarations: false
-ColumnLimit: 120
+ColumnLimit: 10000
 ---
 

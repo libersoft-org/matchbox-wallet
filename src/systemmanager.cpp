@@ -1,17 +1,17 @@
 #include "include/systemmanager.h"
-#include <QProcess>
+
 #include <QDebug>
 #include <QDir>
 #include <QFile>
+#include <QProcess>
 #include <QTextStream>
 
-SystemManager::SystemManager(QObject *parent)
- : QObject(parent), m_batteryLevel(100), m_hasBattery(true), m_currentWifiStrength(0) {
+SystemManager::SystemManager(QObject *parent) : QObject(parent), m_batteryLevel(100), m_hasBattery(true), m_currentWifiStrength(0) {
  // Timer for periodic status updates
  m_statusTimer = new QTimer(this);
  connect(m_statusTimer, &QTimer::timeout, this, &SystemManager::updateSystemStatus);
- m_statusTimer->start(5000); // Update every 5 seconds
- 
+ m_statusTimer->start(5000);  // Update every 5 seconds
+
  // Initial status check
  updateSystemStatus();
 }

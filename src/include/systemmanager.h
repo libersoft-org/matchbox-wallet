@@ -1,12 +1,12 @@
 #ifndef SYSTEMMANAGER_H
 #define SYSTEMMANAGER_H
 
-#include <QObject>
-#include <QTimer>
 #include <qqmlintegration.h>
 
-class SystemManager : public QObject
-{
+#include <QObject>
+#include <QTimer>
+
+class SystemManager : public QObject {
  Q_OBJECT
  QML_ELEMENT
 
@@ -17,9 +17,15 @@ class SystemManager : public QObject
 public:
  explicit SystemManager(QObject *parent = nullptr);
 
- int batteryLevel() const { return m_batteryLevel; }
- bool hasBattery() const { return m_hasBattery; }
- int currentWifiStrength() const { return m_currentWifiStrength; }
+ int batteryLevel() const {
+  return m_batteryLevel;
+ }
+ bool hasBattery() const {
+  return m_hasBattery;
+ }
+ int currentWifiStrength() const {
+  return m_currentWifiStrength;
+ }
 
 public slots:
  void rebootSystem();
@@ -42,4 +48,4 @@ private:
  QTimer *m_statusTimer;
 };
 
-#endif // SYSTEMMANAGER_H
+#endif  // SYSTEMMANAGER_H

@@ -1,14 +1,14 @@
 #include "include/wifimanager.h"
+
 #include <QDebug>
 #include <QRegularExpression>
 #include <QVariantMap>
 
-WiFiManager::WiFiManager(QObject* parent) : QObject(parent), m_isScanning(false), m_scanProcess(nullptr), m_connectProcess(nullptr) {
-}
+WiFiManager::WiFiManager(QObject* parent) : QObject(parent), m_isScanning(false), m_scanProcess(nullptr), m_connectProcess(nullptr) {}
 
 void WiFiManager::scanNetworks() {
  if (m_isScanning) {
-		return;
+  return;
  }
 
  m_isScanning = true;
@@ -24,18 +24,18 @@ void WiFiManager::scanNetworks() {
 
  // Wait a bit for rescan to complete, then get the list
  QTimer::singleShot(2000, this, [this]() {
-		if (m_scanProcess) {
-			m_scanProcess->kill();
-			m_scanProcess->deleteLater();
-		}
+  if (m_scanProcess) {
+   m_scanProcess->kill();
+   m_scanProcess->deleteLater();
+  }
 
-		m_scanProcess = new QProcess(this);
-		connect(m_scanProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, &WiFiManager::onScanFinished);
+  m_scanProcess = new QProcess(this);
+  connect(m_scanProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, &WiFiManager::onScanFinished);
 
-		// Get WiFi list with specific fields
-		QStringList args;
-		args << "-t" << "-f" << "SSID,SIGNAL,SECURITY,ACTIVE" << "device" << "wifi" << "list";
-		m_scanProcess->start("nmcli", args);
+  // Get WiFi list with specific fields
+  QStringList args;
+  args << "-t" << "-f" << "SSID,SIGNAL,SECURITY,ACTIVE" << "device" << "wifi" << "list";
+  m_scanProcess->start("nmcli", args);
  });
 }
 
@@ -46,18 +46,18 @@ void WiFiManager::onScanFinished(int exitCode, QProcess::ExitStatus exitStatus) 
  emit isScanningChanged();
 
  if (exitCode == 0) {
-		QString output = m_scanProcess->readAllStandardOutput();
-		parseNetworks(output);
+  QString output = m_scanProcess->readAllStandardOutput();
+  parseNetworks(output);
  } else {
-		qDebug() << "WiFi scan failed:" << m_scanProcess->readAllStandardError();
-		// Provide some fallback data
-		QVariantMap network;
-		network["name"] = "No networks found";
-		network["strength"] = 0;
-		network["secured"] = false;
-		network["connected"] = false;
-		m_networks.append(network);
-		emit networksChanged();
+  qDebug() << "WiFi scan failed:" << m_scanProcess->readAllStandardError();
+  // Provide some fallback data
+  QVariantMap network;
+  network["name"] = "No networks found";
+  network["strength"] = 0;
+  network["secured"] = false;
+  network["connected"] = false;
+  m_networks.append(network);
+  emit networksChanged();
  }
 
  m_scanProcess->deleteLater();
@@ -69,28 +69,28 @@ void WiFiManager::parseNetworks(const QString& output) {
  QStringList seenNetworks;
 
  for (const QString& line : lines) {
-		QStringList parts = line.split(':');
-		if (parts.size() >= 4) {
-			QString ssid = parts[0].trimmed();
-			QString signalStr = parts[1].trimmed();
-			QString security = parts[2].trimmed();
-			QString active = parts[3].trimmed();
+  QStringList parts = line.split(':');
+  if (parts.size() >= 4) {
+   QString ssid = parts[0].trimmed();
+   QString signalStr = parts[1].trimmed();
+   QString security = parts[2].trimmed();
+   QString active = parts[3].trimmed();
 
-			// Skip empty SSIDs and duplicates
-			if (ssid.isEmpty() || ssid == "--" || seenNetworks.contains(ssid)) {
-				continue;
-			}
+   // Skip empty SSIDs and duplicates
+   if (ssid.isEmpty() || ssid == "--" || seenNetworks.contains(ssid)) {
+    continue;
+   }
 
-			seenNetworks.append(ssid);
+   seenNetworks.append(ssid);
 
-			QVariantMap network;
-			network["name"] = ssid;
-			network["strength"] = signalStrengthToBars(signalStr.toInt());
-			network["secured"] = !security.isEmpty() && security != "--";
-			network["connected"] = (active == "yes");
+   QVariantMap network;
+   network["name"] = ssid;
+   network["strength"] = signalStrengthToBars(signalStr.toInt());
+   network["secured"] = !security.isEmpty() && security != "--";
+   network["connected"] = (active == "yes");
 
-			m_networks.append(network);
-		}
+   m_networks.append(network);
+  }
  }
 
  // Sort by signal strength (strongest first)
@@ -101,24 +101,21 @@ void WiFiManager::parseNetworks(const QString& output) {
 
 int WiFiManager::signalStrengthToBars(int signalLevel) const {
  // Convert signal percentage to bars (1-4)
- if (signalLevel >= 75)
-		return 4;
- if (signalLevel >= 50)
-		return 3;
- if (signalLevel >= 25)
-		return 2;
+ if (signalLevel >= 75) return 4;
+ if (signalLevel >= 50) return 3;
+ if (signalLevel >= 25) return 2;
  return 1;
 }
 
 void WiFiManager::connectToNetwork(const QString& ssid, const QString& password) {
  if (m_connectProcess && m_connectProcess->state() != QProcess::NotRunning) {
-		return;
+  return;
  }
 
  m_connectingSsid = ssid;
 
  if (m_connectProcess) {
-		m_connectProcess->deleteLater();
+  m_connectProcess->deleteLater();
  }
 
  m_connectProcess = new QProcess(this);
@@ -128,7 +125,7 @@ void WiFiManager::connectToNetwork(const QString& ssid, const QString& password)
  args << "device" << "wifi" << "connect" << ssid;
 
  if (!password.isEmpty()) {
-		args << "password" << password;
+  args << "password" << password;
  }
 
  qDebug() << "Connecting to" << ssid << "with nmcli";
@@ -142,12 +139,12 @@ void WiFiManager::onConnectFinished(int exitCode, QProcess::ExitStatus exitStatu
  QString error;
 
  if (!success) {
-		error = m_connectProcess->readAllStandardError();
-		qDebug() << "Connection failed:" << error;
+  error = m_connectProcess->readAllStandardError();
+  qDebug() << "Connection failed:" << error;
  } else {
-		qDebug() << "Successfully connected to" << m_connectingSsid;
-		// Refresh networks to show new connection status
-		QTimer::singleShot(1000, this, &WiFiManager::scanNetworks);
+  qDebug() << "Successfully connected to" << m_connectingSsid;
+  // Refresh networks to show new connection status
+  QTimer::singleShot(1000, this, &WiFiManager::scanNetworks);
  }
 
  emit connectionResult(m_connectingSsid, success, error);
