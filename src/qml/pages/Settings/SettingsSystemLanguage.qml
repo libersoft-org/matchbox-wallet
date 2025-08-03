@@ -6,22 +6,23 @@ import "../../components"
 
 BaseMenu {
 	id: root
-	anchors.fill: parent
-	title: tr("settings.general.language.title")
+	title: tr("settings.system.language.title")
+	
+	signal languageSelected(string languageCode)
 	
 	MenuButton {
 		id: englishButton
 		text: "English"
 		onClicked: {
-			parent.parent.languageSelected("en");
+			root.languageSelected("en");
 		}
 	}
 	
 	MenuButton {
 		id: czechButton
-		text: "Czech"
+		text: "Čeština"
 		onClicked: {
-			parent.parent.languageSelected("cz");
+			root.languageSelected("cz");
 		}
 	}
 }

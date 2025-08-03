@@ -25,15 +25,14 @@
 		"title": "Výběr měny",
 		"selectCurrency": "Vyberte měnu"
 	},
-	"settingsGeneralLanguage": {
-		"title": "Výběr jazyka",
-		"selectLanguage": "Vyberte jazyk",
-		"english": "Angličtina",
-		"czech": "Čeština"
-	},
 	"settingsSystem": {
 		"title": "Systémová nastavení",
-		"wifi": "WiFi nastavení"
+		"wifi": "WiFi nastavení",
+		"language": "Jazyk: %1"
+	},
+	"settingsSystemLanguage": {
+		"title": "Výběr jazyka",
+		"selectLanguage": "Vyberte jazyk"
 	},
 	"settingsSystemWifi": {
 		"title": "WiFi nastavení",

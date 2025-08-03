@@ -175,6 +175,17 @@ ApplicationWindow {
   }
  }
 
+ // System language selection page
+ Component {
+  id: settingsSystemLanguagePageComponent
+  SettingsSystemLanguage {
+   onLanguageSelected: function(languageCode) {
+    window.selectedLanguage = languageCode;
+    window.goBack();
+   }
+  }
+ }
+
  // Power off page
  Component {
   id: powerOffPageComponent

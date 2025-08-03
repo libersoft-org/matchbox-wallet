@@ -18,22 +18,21 @@
 	},
 	"settingsGeneral": {
 		"title": "General settings",
-		"fiat": "Fiat Currency: %1",
+		"fiat": "Fiat currency: %1",
 		"language": "Language: %1"
 	},
 	"settingsGeneralFiat": {
 		"title": "Currency Selection",
 		"selectCurrency": "Select Currency"
 	},
-	"settingsGeneralLanguage": {
-		"title": "Language Selection",
-		"selectLanguage": "Select Language",
-		"english": "English",
-		"czech": "Czech"
-	},
 	"settingsSystem": {
 		"title": "System settings",
-		"wifi": "WiFi settings"
+		"wifi": "WiFi settings",
+		"language": "Language: %1"
+	},
+	"settingsSystemLanguage": {
+		"title": "Language Selection",
+		"selectLanguage": "Select Language"
 	},
 	"settingsSystemWifi": {
 		"title": "WiFi settings",
