@@ -72,7 +72,7 @@ ApplicationWindow {
   hasBattery: systemManager.hasBattery
   
   // Mock values for LoRa and GSM (not implemented yet)
-  loraStrength: 2
+  loraStrength: 0
   gsmStrength: 0  // 0 means no signal/not available
  }
 

@@ -84,39 +84,62 @@ void SystemManager::checkBatteryStatus() {
 }
 
 void SystemManager::checkWifiStatus() {
- // Get current WiFi connection strength using nmcli
- QProcess process;
- process.start("nmcli", QStringList() << "-t" << "-f" << "SIGNAL" << "device" << "wifi" << "list" << "--rescan" << "no");
- process.waitForFinished(3000);
+ // First check if we have an active WiFi connection
+ QProcess connectionProcess;
+ connectionProcess.start("nmcli", QStringList() << "-t" << "-f" << "TYPE,STATE" << "connection" << "show" << "--active");
+ connectionProcess.waitForFinished(2000);
 
- if (process.exitCode() == 0) {
-  QString output = process.readAllStandardOutput();
+ bool hasActiveWifi = false;
+ if (connectionProcess.exitCode() == 0) {
+  QString output = connectionProcess.readAllStandardOutput();
   QStringList lines = output.split('\n', Qt::SkipEmptyParts);
 
-  int maxSignal = 0;
   for (const QString &line : lines) {
-   bool ok;
-   int signal = line.trimmed().toInt(&ok);
-   if (ok && signal > maxSignal) {
-    maxSignal = signal;
+   QStringList parts = line.split(':');
+   if (parts.size() >= 2 && parts[0].contains("802-11-wireless") && parts[1].contains("activated")) {
+    hasActiveWifi = true;
+    break;
    }
   }
+ }
 
-  // Convert signal percentage to bars (0-4)
-  int newStrength = 0;
-  if (maxSignal >= 75)
-   newStrength = 4;
-  else if (maxSignal >= 50)
-   newStrength = 3;
-  else if (maxSignal >= 25)
-   newStrength = 2;
-  else if (maxSignal > 0)
-   newStrength = 1;
+ int newStrength = 0;
 
-  if (newStrength != m_currentWifiStrength) {
-   m_currentWifiStrength = newStrength;
-   emit currentWifiStrengthChanged();
+ if (hasActiveWifi) {
+  // Get signal strength of active connection
+  QProcess signalProcess;
+  signalProcess.start("nmcli", QStringList() << "-t" << "-f" << "SIGNAL" << "device" << "wifi" << "list" << "--rescan" << "no");
+  signalProcess.waitForFinished(3000);
+
+  if (signalProcess.exitCode() == 0) {
+   QString output = signalProcess.readAllStandardOutput();
+   QStringList lines = output.split('\n', Qt::SkipEmptyParts);
+
+   int maxSignal = 0;
+   for (const QString &line : lines) {
+    bool ok;
+    int signal = line.trimmed().toInt(&ok);
+    if (ok && signal > maxSignal) {
+     maxSignal = signal;
+    }
+   }
+
+   // Convert signal percentage to bars (1-4) only if connected
+   if (maxSignal >= 75)
+    newStrength = 4;
+   else if (maxSignal >= 50)
+    newStrength = 3;
+   else if (maxSignal >= 25)
+    newStrength = 2;
+   else if (maxSignal > 0)
+    newStrength = 1;
   }
+ }
+ // If no active WiFi connection, newStrength stays 0
+
+ if (newStrength != m_currentWifiStrength) {
+  m_currentWifiStrength = newStrength;
+  emit currentWifiStrengthChanged();
  }
 }
 

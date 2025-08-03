@@ -48,10 +48,21 @@ Rectangle {
                 font.bold: true
                 anchors.verticalCenter: parent.verticalCenter
             }
-            SignalStrength {
+            Item {
                 width: statusBar.height * 0.65
                 height: statusBar.height * 0.4
-                strength: statusBar.wifiStrength
+                anchors.verticalCenter: parent.verticalCenter
+                
+                SignalStrength {
+                    anchors.fill: parent
+                    strength: statusBar.wifiStrength
+                }
+                
+                // Cross for no WiFi signal
+                CrossOut {
+                    anchors.fill: parent
+                    visible: statusBar.wifiStrength === 0
+                }
             }
         }
         
@@ -66,10 +77,21 @@ Rectangle {
                 font.bold: true
                 anchors.verticalCenter: parent.verticalCenter
             }
-            SignalStrength {
+            Item {
                 width: statusBar.height * 0.65
                 height: statusBar.height * 0.4
-                strength: statusBar.loraStrength
+                anchors.verticalCenter: parent.verticalCenter
+                
+                SignalStrength {
+                    anchors.fill: parent
+                    strength: statusBar.loraStrength
+                }
+                
+                // Cross for no LoRa signal
+                CrossOut {
+                    anchors.fill: parent
+                    visible: statusBar.loraStrength === 0
+                }
             }
         }
         
@@ -84,10 +106,21 @@ Rectangle {
                 font.bold: true
                 anchors.verticalCenter: parent.verticalCenter
             }
-            SignalStrength {
+            Item {
                 width: statusBar.height * 0.65
                 height: statusBar.height * 0.4
-                strength: statusBar.gsmStrength
+                anchors.verticalCenter: parent.verticalCenter
+                
+                SignalStrength {
+                    anchors.fill: parent
+                    strength: statusBar.gsmStrength
+                }
+                
+                // Cross for no GSM signal
+                CrossOut {
+                    anchors.fill: parent
+                    visible: statusBar.gsmStrength === 0
+                }
             }
         }
     }
@@ -134,20 +167,8 @@ Rectangle {
                 }
                 
                 // Cross for no battery
-                Rectangle {
-                    anchors.centerIn: parent
-                    width: parent.width * 0.8
-                    height: Math.max(2, statusBar.height * 0.06)
-                    color: "red"
-                    rotation: 45
-                    visible: !statusBar.hasBattery
-                }
-                Rectangle {
-                    anchors.centerIn: parent
-                    width: parent.width * 0.8
-                    height: Math.max(2, statusBar.height * 0.06)
-                    color: "red"
-                    rotation: -45
+                CrossOut {
+                    anchors.fill: parent
                     visible: !statusBar.hasBattery
                 }
             }
