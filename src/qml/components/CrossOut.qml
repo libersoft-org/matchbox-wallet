@@ -1,4 +1,5 @@
 import QtQuick 2.15
+import WalletModule 1.0
 
 Item {
     id: root
@@ -8,7 +9,7 @@ Item {
         anchors.centerIn: parent
         width: parent.width * 0.8
         height: Math.max(2, parent.height * 0.15)
-        color: "red"
+        color: Colors.error
         rotation: 45
         opacity: 0.9
     }
@@ -16,7 +17,7 @@ Item {
         anchors.centerIn: parent
         width: parent.width * 0.8
         height: Math.max(2, parent.height * 0.15) 
-        color: "red"
+        color: Colors.error
         rotation: -45
         opacity: 0.9
     }

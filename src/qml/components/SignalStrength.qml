@@ -1,5 +1,5 @@
 import QtQuick 2.15
-import "../"
+import WalletModule 1.0
 
 Item {
 	id: root
