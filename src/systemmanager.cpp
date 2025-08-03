@@ -1,9 +1,124 @@
 #include "include/systemmanager.h"
-
-#include <QDebug>
 #include <QProcess>
+#include <QDebug>
+#include <QDir>
+#include <QFile>
+#include <QTextStream>
 
-SystemManager::SystemManager(QObject *parent) : QObject(parent) {}
+SystemManager::SystemManager(QObject *parent)
+ : QObject(parent), m_batteryLevel(100), m_hasBattery(true), m_currentWifiStrength(0) {
+ // Timer for periodic status updates
+ m_statusTimer = new QTimer(this);
+ connect(m_statusTimer, &QTimer::timeout, this, &SystemManager::updateSystemStatus);
+ m_statusTimer->start(5000); // Update every 5 seconds
+ 
+ // Initial status check
+ updateSystemStatus();
+}
+
+void SystemManager::updateSystemStatus() {
+ checkBatteryStatus();
+ checkWifiStatus();
+}
+
+void SystemManager::checkBatteryStatus() {
+ // Check if battery exists
+ QDir batteryDir("/sys/class/power_supply");
+ QStringList batteries = batteryDir.entryList(QStringList() << "BAT*", QDir::Dirs);
+
+ if (batteries.isEmpty()) {
+  // No battery found
+  if (m_hasBattery) {
+   m_hasBattery = false;
+   emit hasBatteryChanged();
+  }
+  return;
+ }
+
+ // Battery found
+ if (!m_hasBattery) {
+  m_hasBattery = true;
+  emit hasBatteryChanged();
+ }
+
+ // Read battery level from first available battery
+ QString batteryPath = "/sys/class/power_supply/" + batteries.first();
+ QFile capacityFile(batteryPath + "/capacity");
+
+ if (capacityFile.open(QIODevice::ReadOnly)) {
+  QTextStream in(&capacityFile);
+  QString capacityStr = in.readLine().trimmed();
+  bool ok;
+  int newLevel = capacityStr.toInt(&ok);
+
+  if (ok && newLevel != m_batteryLevel) {
+   m_batteryLevel = qBound(0, newLevel, 100);
+   emit batteryLevelChanged();
+  }
+ } else {
+  // Fallback: try to use upower if available
+  QProcess process;
+  process.start("upower", QStringList() << "-i" << "/org/freedesktop/UPower/devices/battery_BAT0");
+  process.waitForFinished(2000);
+
+  if (process.exitCode() == 0) {
+   QString output = process.readAllStandardOutput();
+   QStringList lines = output.split('\n');
+
+   for (const QString &line : lines) {
+    if (line.contains("percentage")) {
+     QString percentStr = line.split(':').last().trimmed();
+     percentStr = percentStr.remove('%');
+     bool ok;
+     int newLevel = percentStr.toInt(&ok);
+
+     if (ok && newLevel != m_batteryLevel) {
+      m_batteryLevel = qBound(0, newLevel, 100);
+      emit batteryLevelChanged();
+     }
+     break;
+    }
+   }
+  }
+ }
+}
+
+void SystemManager::checkWifiStatus() {
+ // Get current WiFi connection strength using nmcli
+ QProcess process;
+ process.start("nmcli", QStringList() << "-t" << "-f" << "SIGNAL" << "device" << "wifi" << "list" << "--rescan" << "no");
+ process.waitForFinished(3000);
+
+ if (process.exitCode() == 0) {
+  QString output = process.readAllStandardOutput();
+  QStringList lines = output.split('\n', Qt::SkipEmptyParts);
+
+  int maxSignal = 0;
+  for (const QString &line : lines) {
+   bool ok;
+   int signal = line.trimmed().toInt(&ok);
+   if (ok && signal > maxSignal) {
+    maxSignal = signal;
+   }
+  }
+
+  // Convert signal percentage to bars (0-4)
+  int newStrength = 0;
+  if (maxSignal >= 75)
+   newStrength = 4;
+  else if (maxSignal >= 50)
+   newStrength = 3;
+  else if (maxSignal >= 25)
+   newStrength = 2;
+  else if (maxSignal > 0)
+   newStrength = 1;
+
+  if (newStrength != m_currentWifiStrength) {
+   m_currentWifiStrength = newStrength;
+   emit currentWifiStrengthChanged();
+  }
+ }
+}
 
 void SystemManager::rebootSystem() {
  qDebug() << "Rebooting system...";
