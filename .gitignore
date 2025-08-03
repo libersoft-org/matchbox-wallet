@@ -4,3 +4,5 @@ build/
 *.log
 build-and-start.ps1
 build-and-start.sh
+build-and-deploy.ps1
+build-and-deploy.sh
