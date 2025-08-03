@@ -21,6 +21,11 @@ ApplicationWindow {
  property string selectedCurrency: "USD"
  property string selectedLanguage: "en"
  
+ // System manager for real-time system data
+ SystemManager {
+  id: systemManager
+ }
+ 
  // Global translation function - available to all child components
  function tr(key) {
   console.log("main.tr called with:", key, "TranslationManager exists:", !!TranslationManager)
@@ -53,10 +58,28 @@ ApplicationWindow {
   stackView.pop();
  }
 
- // Fixed navigation bar at top
+ // Status bar at the very top
+ StatusBar {
+  id: statusBar
+  anchors.top: parent.top
+  anchors.left: parent.left
+  anchors.right: parent.right
+  height: window.height * 0.1
+  
+  // Real system values
+  wifiStrength: systemManager.currentWifiStrength
+  batteryLevel: systemManager.batteryLevel
+  hasBattery: systemManager.hasBattery
+  
+  // Mock values for LoRa and GSM (not implemented yet)
+  loraStrength: 2
+  gsmStrength: 0  // 0 means no signal/not available
+ }
+
+ // Fixed navigation bar below status bar
  Navbar {
   id: fixedNavbar
-  anchors.top: parent.top
+  anchors.top: statusBar.bottom
   anchors.left: parent.left
   anchors.right: parent.right
   height: window.height * 0.1

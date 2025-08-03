@@ -1,0 +1,17 @@
+---
+Language: Cpp
+# Based on Google style but with opening braces on same line
+BasedOnStyle: Google
+IndentWidth: 1
+TabWidth: 1
+UseTab: Never
+BreakBeforeBraces: Attach
+# Attach means opening braces go on the same line
+AllowShortIfStatementsOnASingleLine: true
+AllowShortLoopsOnASingleLine: true
+AllowShortFunctionsOnASingleLine: Empty
+AlignConsecutiveAssignments: false
+AlignConsecutiveDeclarations: false
+ColumnLimit: 120
+---
+
