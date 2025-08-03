@@ -17,11 +17,8 @@ Rectangle {
 		id: wifiManager
 
 		onConnectionResult: function (ssid, success, error) {
-			if (success) {
-				console.log("Successfully connected to", ssid);
-			} else {
-				console.log("Failed to connect to", ssid, "Error:", error);
-			}
+			if (success) console.log("Successfully connected to", ssid);
+			else console.log("Failed to connect to", ssid, "Error:", error);
 		}
 	}
 
@@ -80,7 +77,7 @@ Rectangle {
 						text: {
 							for (let i = 0; i < wifiManager.networks.length; i++) {
 								if (wifiManager.networks[i].connected) {
-									return tr("settings.system.wifi.connected.to", wifiManager.networks[i].name);
+									return tr("settings.system.wifi.connected.to") + ':';
 								}
 							}
 							return tr("settings.system.wifi.not.connected");
@@ -89,10 +86,10 @@ Rectangle {
 						color: {
 							for (let i = 0; i < wifiManager.networks.length; i++) {
 								if (wifiManager.networks[i].connected) {
-									return "#28a745";
+									return "#080";
 								}
 							}
-							return "#6c757d";
+							return "#555";
 						}
 						Layout.alignment: Qt.AlignHCenter
 						horizontalAlignment: Text.AlignHCenter
@@ -100,10 +97,37 @@ Rectangle {
 						Layout.fillWidth: true
 					}
 
-					// Signal strength for connected network
-					Row {
-						spacing: 3
+					Text {
+						id:	connectedNetworkText
+						text: {
+							for (let i = 0; i < wifiManager.networks.length; i++) {
+								if (wifiManager.networks[i].connected) {
+									return wifiManager.networks[i].name;
+								}
+							}
+						}
+						font.pointSize: 20
+						font.bold: true
 						Layout.alignment: Qt.AlignHCenter
+						horizontalAlignment: Text.AlignHCenter
+						wrapMode: Text.WordWrap
+						Layout.fillWidth: true
+						color: AppConstants.primaryText
+					}
+
+					// Signal strength for connected network
+					SignalStrength {
+						Layout.alignment: Qt.AlignHCenter
+						Layout.preferredWidth: 50
+						Layout.preferredHeight: 16
+						strength: {
+							for (let i = 0; i < wifiManager.networks.length; i++) {
+								if (wifiManager.networks[i].connected) return wifiManager.networks[i].strength;
+							}
+							return 0;
+						}
+						activeColor: "#080"
+						inactiveColor: "#aaa"
 						visible: {
 							for (let i = 0; i < wifiManager.networks.length; i++) {
 								if (wifiManager.networks[i].connected) {
@@ -111,23 +135,6 @@ Rectangle {
 								}
 							}
 							return false;
-						}
-
-						Repeater {
-							model: 4
-							Rectangle {
-								width: 8
-								height: (index + 1) * 4
-								color: {
-									for (let i = 0; i < wifiManager.networks.length; i++) {
-										if (wifiManager.networks[i].connected) {
-											return index < wifiManager.networks[i].strength ? "#28a745" : "#dee2e6";
-										}
-									}
-									return "#dee2e6";
-								}
-								radius: 2
-							}
 						}
 					}
 				}
