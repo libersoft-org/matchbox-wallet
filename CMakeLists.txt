@@ -18,8 +18,8 @@ target_include_directories(Wallet PRIVATE
  src
 )
 
-# Mark AppConstants.qml as singleton BEFORE qt_add_qml_module
-set_source_files_properties(src/qml/AppConstants.qml
+# Mark Colors.qml as singleton BEFORE qt_add_qml_module
+set_source_files_properties(src/qml/Colors.qml
  PROPERTIES QT_QML_SINGLETON_TYPE TRUE
 )
 

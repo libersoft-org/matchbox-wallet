@@ -14,7 +14,7 @@ Item {
 	/*
 	Rectangle {
 		anchors.fill: parent
-		color: "#800"
+		color: Colors.error
 		opacity: 0.2
 	}
 	*/
@@ -54,7 +54,7 @@ Item {
 		size: flickable.visibleArea.heightRatio
 		
 		contentItem: Rectangle {
-			color: AppConstants.primaryForeground
+			color: Colors.primaryForeground
 			opacity: 0.2
 			radius: parent.width * 0.5
 		}

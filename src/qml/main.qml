@@ -12,7 +12,7 @@ ApplicationWindow {
  height: 640
  visible: true
  title: tr("mainMenu.title")
- font.family: AppConstants.fontFamily
+ font.family: "Droid Sans"
  property string iconSource: "qrc:/WalletModule/src/img/wallet.svg"
  readonly property int animationDuration: 500
  readonly property var animationEasing: Easing.OutCubic
@@ -42,7 +42,7 @@ ApplicationWindow {
  }
 	
 	background: Rectangle {
-  color: AppConstants.primaryBackground
+  color: Colors.primaryBackground
  }
 
  Component.onCompleted: {

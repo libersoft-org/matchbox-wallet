@@ -6,7 +6,7 @@ import "../../components"
 
 Rectangle {
 	id: root
-	color: AppConstants.primaryBackground
+	color: Colors.primaryBackground
 	property string title: tr("settings.system.wifi.list.title")
 	signal backRequested
 	signal powerOffRequested
@@ -39,7 +39,6 @@ Rectangle {
 		MenuButton {
 			text: wifiManager.isScanning ? tr("settings.system.wifi.scanning") : tr("settings.system.wifi.refresh")
 			enabled: !wifiManager.isScanning
-			backgroundColor: enabled ? "#007bff" : "#6c757d"
 			onClicked: {
 				wifiManager.scanNetworks();
 			}
@@ -48,11 +47,9 @@ Rectangle {
 		// WiFi networks - dynamically create MenuButtons
 		Repeater {
 			model: wifiManager.networks
-
 			MenuButton {
 				text: modelData.name + (modelData.connected ? " ✓" : "") + (modelData.secured ? " 🔒" : " 🔓")
-				backgroundColor: modelData.connected ? "#28a745" : "#007bff"
-				
+				backgroundColor: modelData.connected ? Colors.success : Colors.primaryBackground
 				onClicked: {
 					if (!modelData.connected) {
 						connectDialog.networkName = modelData.name;
@@ -114,7 +111,7 @@ Rectangle {
 					text: connectDialog.isSecured ? "" : tr("settings.system.wifi.connect.open")
 					visible: !connectDialog.isSecured
 					font.pointSize: 10
-					color: "#6c757d"
+					color: Colors.disabledForeground
 				}
 
 				RowLayout {

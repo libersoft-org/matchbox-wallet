@@ -1,11 +1,12 @@
 import QtQuick 2.15
+import "../"
 
 Item {
 	id: root
 	property int strength: 0  // Signal strength (0-4)
-	property color activeColor: "#080"
-	property color inactiveColor: "#aaa"
-	
+	property color activeColor: Colors.success
+	property color inactiveColor: Colors.disabledForeground
+
 	Row {
 		anchors.centerIn: parent
 		spacing: parent.width * 0.1

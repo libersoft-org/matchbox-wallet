@@ -4,7 +4,7 @@ import "../"
 
 Rectangle {
     id: statusBar
-    color: Qt.darker(AppConstants.primaryBackground)
+    color: Qt.darker(Colors.primaryBackground)
     height: 32  // Default height, can be overridden by parent
     
     // Properties for connection states
@@ -43,7 +43,7 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
             Text {
                 text: "W"
-                color: AppConstants.primaryForeground
+                color: Colors.primaryForeground
                 font.pixelSize: statusBar.height * 0.4
                 font.bold: true
                 anchors.verticalCenter: parent.verticalCenter
@@ -72,7 +72,7 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
             Text {
                 text: "L"
-                color: AppConstants.primaryForeground
+                color: Colors.primaryForeground
                 font.pixelSize: statusBar.height * 0.4
                 font.bold: true
                 anchors.verticalCenter: parent.verticalCenter
@@ -101,7 +101,7 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
             Text {
                 text: "G"
-                color: AppConstants.primaryForeground
+                color: Colors.primaryForeground
                 font.pixelSize: statusBar.height * 0.4
                 font.bold: true
                 anchors.verticalCenter: parent.verticalCenter
@@ -160,7 +160,7 @@ Rectangle {
                 Rectangle {
                     anchors.fill: parent
                     anchors.margins: Math.max(1, statusBar.height * 0.06)
-                    color: statusBar.batteryLevel > 20 ? "#080" : "#800"
+                    color: statusBar.batteryLevel > 20 ? Colors.success : Colors.error
                     radius: statusBar.height * 0.03
                     width: parent.width * (statusBar.batteryLevel / 100.0)
                     visible: statusBar.hasBattery
@@ -176,7 +176,7 @@ Rectangle {
             // Battery percentage
             Text {
                 text: statusBar.hasBattery ? statusBar.batteryLevel + "%" : "N/A"
-                color: AppConstants.primaryForeground
+                color: Colors.primaryForeground
                 font.pixelSize: statusBar.height * 0.35
                 anchors.verticalCenter: parent.verticalCenter
             }
@@ -185,7 +185,7 @@ Rectangle {
         // Time
         Text {
             text: statusBar.currentTime
-            color: AppConstants.primaryForeground
+            color: Colors.primaryForeground
             font.pixelSize: statusBar.height * 0.4
             font.bold: true
             anchors.verticalCenter: parent.verticalCenter
