@@ -10,6 +10,7 @@ Rectangle {
 	property string title: tr("settings.system.wifi.title")
 	signal backRequested
 	signal powerOffRequested
+	signal wifiListRequested
 
 	// WiFi Manager instance
 	WiFiManager {
@@ -20,17 +21,16 @@ Rectangle {
 				console.log("Successfully connected to", ssid);
 			} else {
 				console.log("Failed to connect to", ssid, "Error:", error);
-				// You could show an error dialog here
 			}
 		}
 	}
 
-	// Scan on component load
+	// Scan on component load to get current connection status
 	Component.onCompleted: {
 		wifiManager.scanNetworks();
 	}
 
-	// WiFi list container - full area (no navigation bar here)
+	// Main WiFi status container
 	Rectangle {
 		anchors.fill: parent
 		anchors.margins: root.width * 0.05
@@ -42,243 +42,122 @@ Rectangle {
 
 		ColumnLayout {
 			anchors.fill: parent
-			anchors.margins: 20
-			spacing: 10
+			anchors.margins: 30
+			spacing: 30
 
-			// Refresh button
+			// Current connection status
+			Rectangle {
+				Layout.fillWidth: true
+				Layout.preferredHeight: root.height * 0.4
+				color: "#f8f9fa"
+				border.color: "#dee2e6"
+				border.width: 1
+				radius: 10
+
+				ColumnLayout {
+					anchors.fill: parent
+					anchors.margins: 20
+					spacing: 15
+
+					Text {
+						text: tr("settings.system.wifi.current.status")
+						font.pointSize: 14
+						font.bold: true
+						color: "#333333"
+						Layout.alignment: Qt.AlignHCenter
+					}
+
+					// WiFi icon
+					Text {
+						text: "📶"
+						font.pointSize: 32
+						Layout.alignment: Qt.AlignHCenter
+					}
+
+					// Connection status text
+					Text {
+						id: statusText
+						text: {
+							for (let i = 0; i < wifiManager.networks.length; i++) {
+								if (wifiManager.networks[i].connected) {
+									return tr("settings.system.wifi.connected.to", wifiManager.networks[i].name);
+								}
+							}
+							return tr("settings.system.wifi.not.connected");
+						}
+						font.pointSize: 12
+						color: {
+							for (let i = 0; i < wifiManager.networks.length; i++) {
+								if (wifiManager.networks[i].connected) {
+									return "#28a745";
+								}
+							}
+							return "#6c757d";
+						}
+						Layout.alignment: Qt.AlignHCenter
+						horizontalAlignment: Text.AlignHCenter
+						wrapMode: Text.WordWrap
+						Layout.fillWidth: true
+					}
+
+					// Signal strength for connected network
+					Row {
+						spacing: 3
+						Layout.alignment: Qt.AlignHCenter
+						visible: {
+							for (let i = 0; i < wifiManager.networks.length; i++) {
+								if (wifiManager.networks[i].connected) {
+									return true;
+								}
+							}
+							return false;
+						}
+
+						Repeater {
+							model: 4
+							Rectangle {
+								width: 8
+								height: (index + 1) * 4
+								color: {
+									for (let i = 0; i < wifiManager.networks.length; i++) {
+										if (wifiManager.networks[i].connected) {
+											return index < wifiManager.networks[i].strength ? "#28a745" : "#dee2e6";
+										}
+									}
+									return "#dee2e6";
+								}
+								radius: 2
+							}
+						}
+					}
+				}
+			}
+
+			// Search button
 			Button {
-				id: refreshButton
-				Layout.preferredWidth: 120
-				Layout.preferredHeight: 35
-				text: wifiManager.isScanning ? tr("settings.system.wifi.scanning") : tr("settings.system.wifi.refresh")
-				Layout.alignment: Qt.AlignRight
-				enabled: !wifiManager.isScanning
+				id: searchButton
+				Layout.fillWidth: true
+				Layout.preferredHeight: root.height * 0.15
+				text: tr("settings.system.wifi.search")
 
 				background: Rectangle {
-					color: refreshButton.enabled ? (refreshButton.pressed ? "#0066cc" : (refreshButton.hovered ? "#3399ff" : "#007bff")) : "#6c757d"
-					radius: 6
+					color: searchButton.pressed ? "#0066cc" : (searchButton.hovered ? "#3399ff" : "#007bff")
+					radius: 10
 					border.color: "#0056b3"
 					border.width: 1
 				}
 
 				contentItem: Text {
-					text: refreshButton.text
-					font.pointSize: 10
+					text: searchButton.text
+					font.pointSize: 14
+					font.bold: true
 					color: "white"
 					horizontalAlignment: Text.AlignHCenter
 					verticalAlignment: Text.AlignVCenter
 				}
 
 				onClicked: {
-					wifiManager.scanNetworks();
-				}
-			}
-
-			// WiFi networks list
-			ScrollView {
-				Layout.fillWidth: true
-				Layout.fillHeight: true
-
-				ListView {
-					id: wifiListView
-					model: wifiManager.networks
-					spacing: 5
-
-					delegate: Rectangle {
-						width: wifiListView.width
-						height: 70
-						color: mouseArea.pressed ? "#f0f8ff" : (mouseArea.containsMouse ? "#f8f9fa" : "white")
-						border.color: modelData.connected ? "#28a745" : "#dee2e6"
-						border.width: modelData.connected ? 2 : 1
-						radius: 6
-
-						MouseArea {
-							id: mouseArea
-							anchors.fill: parent
-							hoverEnabled: true
-
-							onClicked: {
-								if (!modelData.connected) {
-									connectDialog.networkName = modelData.name;
-									connectDialog.isSecured = modelData.secured;
-									connectDialog.open();
-								}
-							}
-						}
-
-						RowLayout {
-							anchors.fill: parent
-							anchors.margins: 15
-							spacing: 15
-
-							// WiFi icon and signal strength
-							Column {
-								Layout.preferredWidth: 40
-								spacing: 2
-
-								Text {
-									text: "📶"
-									font.pointSize: 16
-									anchors.horizontalCenter: parent.horizontalCenter
-								}
-
-								// Signal strength indicator
-								Row {
-									spacing: 2
-									anchors.horizontalCenter: parent.horizontalCenter
-
-									Repeater {
-										model: 4
-										Rectangle {
-											width: 3
-											height: (index + 1) * 3
-											color: index < modelData.strength ? "#28a745" : "#dee2e6"
-										}
-									}
-								}
-							}
-
-							// Network info
-							Column {
-								Layout.fillWidth: true
-								spacing: 5
-
-								RowLayout {
-									Layout.fillWidth: true
-
-									Text {
-										text: modelData.name
-										font.pointSize: 12
-										font.bold: modelData.connected
-										color: "#333333"
-										Layout.fillWidth: true
-									}
-
-									Text {
-										text: modelData.secured ? "🔒" : "🔓"
-										font.pointSize: 12
-									}
-								}
-
-								Text {
-									text: modelData.connected ? tr("settings.system.wifi.connected") : tr("settings.system.wifi.available")
-									font.pointSize: 10
-									color: modelData.connected ? "#28a745" : "#6c757d"
-								}
-							}
-
-							// Connect button or status
-							Item {
-								Layout.preferredWidth: 80
-
-								Text {
-									text: modelData.connected ? "✓" : "→"
-									font.pointSize: 16
-									color: modelData.connected ? "#28a745" : "#007bff"
-									anchors.centerIn: parent
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-
-	// WiFi connection dialog
-	Dialog {
-		id: connectDialog
-		title: tr("settings.system.wifi.connect.title")
-		modal: true
-		anchors.centerIn: parent
-		width: 350
-		height: isSecured ? 200 : 150
-
-		property string networkName: ""
-		property bool isSecured: false
-
-		contentItem: Rectangle {
-			color: "white"
-
-			ColumnLayout {
-				anchors.fill: parent
-				anchors.margins: 20
-				spacing: 15
-
-				Text {
-					text: tr("settings.system.wifi.connect.network", connectDialog.networkName)
-					wrapMode: Text.WordWrap
-					Layout.fillWidth: true
-					font.bold: true
-				}
-
-				// Password field (only for secured networks)
-				ColumnLayout {
-					Layout.fillWidth: true
-					visible: connectDialog.isSecured
-					spacing: 5
-
-					Text {
-						text: tr("settings.system.wifi.connect.password")
-						font.pointSize: 10
-					}
-
-					TextField {
-						id: passwordField
-						Layout.fillWidth: true
-						echoMode: TextInput.Password
-						placeholderText: tr("settings.system.wifi.connect.password.placeholder")
-					}
-				}
-
-				Text {
-					text: connectDialog.isSecured ? "" : tr("settings.system.wifi.connect.open")
-					visible: !connectDialog.isSecured
-					font.pointSize: 10
-					color: "#6c757d"
-				}
-
-				RowLayout {
-					Layout.alignment: Qt.AlignHCenter
-					spacing: 10
-
-					Button {
-						text: tr("common.cancel")
-						onClicked: {
-							passwordField.text = "";
-							connectDialog.close();
-						}
-
-						background: Rectangle {
-							color: parent.pressed ? "#e0e0e0" : (parent.hovered ? "#f0f0f0" : "#f8f9fa")
-							radius: 4
-							border.color: "#6c757d"
-							border.width: 1
-						}
-					}
-
-					Button {
-						text: tr("settings.system.wifi.connect")
-						onClicked: {
-							wifiManager.connectToNetwork(connectDialog.networkName, passwordField.text);
-							passwordField.text = "";
-							connectDialog.close();
-						}
-
-						background: Rectangle {
-							color: parent.pressed ? "#0066cc" : (parent.hovered ? "#3399ff" : "#007bff")
-							radius: 4
-							border.color: "#0056b3"
-							border.width: 1
-						}
-
-						contentItem: Text {
-							text: parent.text
-							color: "white"
-							horizontalAlignment: Text.AlignHCenter
-							verticalAlignment: Text.AlignVCenter
-						}
-					}
+					root.wifiListRequested();
 				}
 			}
 		}

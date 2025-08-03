@@ -36,12 +36,37 @@
 	},
 	"settingsSystemWifi": {
 		"title": "WiFi settings",
+		"current": {
+			"status": "Current Connection"
+		},
+		"connected": {
+			"to": "Connected to: %1"
+		},
+		"not": {
+			"connected": "Not connected to any network"
+		},
+		"search": "Search...",
+		"list": {
+			"title": "Available WiFi Networks"
+		},
 		"availableNetworks": "Available networks",
+		"scanning": "Scanning...",
+		"refresh": "Refresh",
 		"connecting": "Connecting...",
-		"connected": "Connected",
-		"disconnected": "Disconnected",
+		"status": {
+			"connected": "Connected",
+			"disconnected": "Disconnected",
+			"available": "Available"
+		},
 		"password": "Password",
-		"connect": "Connect",
+		"connect": {
+			"title": "Connect to Network",
+			"network": "Connect to: %1",
+			"password": "Password:",
+			"password.placeholder": "Enter password",
+			"open": "This is an open network",
+			"button": "Connect"
+		},
 		"disconnect": "Disconnect"
 	},
 	"power": {

@@ -36,12 +36,37 @@
 	},
 	"settingsSystemWifi": {
 		"title": "WiFi nastavení",
+		"current": {
+			"status": "Aktuální připojení"
+		},
+		"connected": {
+			"to": "Připojeno k: %1"
+		},
+		"not": {
+			"connected": "Nepřipojeno k žádné síti"
+		},
+		"search": "Hledat...",
+		"list": {
+			"title": "Dostupné WiFi sítě"
+		},
 		"availableNetworks": "Dostupné sítě",
+		"scanning": "Hledání...",
+		"refresh": "Aktualizovat",
 		"connecting": "Připojování...",
-		"connected": "Připojeno",
-		"disconnected": "Odpojeno",
+		"status": {
+			"connected": "Připojeno",
+			"disconnected": "Odpojeno",
+			"available": "Dostupné"
+		},
 		"password": "Heslo",
-		"connect": "Připojit",
+		"connect": {
+			"title": "Připojit k síti",
+			"network": "Připojit k: %1",
+			"password": "Heslo:",
+			"password.placeholder": "Zadejte heslo",
+			"open": "Toto je otevřená síť",
+			"button": "Připojit"
+		},
 		"disconnect": "Odpojit"
 	},
 	"power": {

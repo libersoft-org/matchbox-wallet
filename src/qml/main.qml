@@ -172,6 +172,14 @@ ApplicationWindow {
  Component {
   id: wifiSettingsPageComponent
   SettingsSystemWiFi {
+   onWifiListRequested: window.goPage(wifiListPageComponent)
+  }
+ }
+
+ // WiFi list page
+ Component {
+  id: wifiListPageComponent
+  SettingsSystemWiFiList {
   }
  }
 
