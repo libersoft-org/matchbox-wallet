@@ -13,7 +13,10 @@ BaseMenu {
 	property string selectedCurrency: "USD"
 	
 	MenuButton {
-		text: tr("menu.settings.general.fiat.button", root.selectedCurrency)
+		text: {
+			var template = tr("menu.settings.general.fiat.button")
+			return template.replace("%1", root.selectedCurrency)
+		}
 		onClicked: {
 			root.currencySelectionRequested();
 		}

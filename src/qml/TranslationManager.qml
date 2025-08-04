@@ -63,9 +63,6 @@ QtObject {
 	}
 	
 	function tr(key) {
-		console.log("TranslationManager.tr called with:", key)
-		console.log("Current translations object:", JSON.stringify(translations))
-		console.log("Current translation keys:", Object.keys(translations))
 		// This property access ensures binding updates when translations change
 		var dummy = languageVersion
 		var parts = key.split('.')

@@ -6,13 +6,13 @@ import "../../components"
 
 BaseMenu {
 	id: root
-	title: tr("menu.settings.general.system.language.title")
+	title: tr("menu.settings.system.language.title")
 	
 	signal languageSelected(string languageCode)
 	
 	MenuButton {
 		id: englishButton
-		text: "English"
+		text: tr("common.languages.english")
 		onClicked: {
 			root.languageSelected("en");
 		}
@@ -20,7 +20,7 @@ BaseMenu {
 	
 	MenuButton {
 		id: czechButton
-		text: "Čeština"
+		text: tr("common.languages.czech")
 		onClicked: {
 			root.languageSelected("cz");
 		}

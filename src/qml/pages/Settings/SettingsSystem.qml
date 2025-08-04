@@ -14,15 +14,19 @@ BaseMenu {
 	
 	function getLanguageDisplayName(langCode) {
 		switch(langCode) {
-			case "en": return "English"
-			case "cz": return "Czech"
+			case "en": return tr("common.languages.english")
+			case "cz": return tr("common.languages.czech")
 			default: return langCode
 		}
 	}
 
 	MenuButton {
 		id: languageButton
-		text: tr("menu.settings.system.language.button", getLanguageDisplayName(root.selectedLanguage))
+		text: {
+			var displayName = getLanguageDisplayName(root.selectedLanguage)
+			var template = tr("menu.settings.system.language.button")
+			return template.replace("%1", displayName)
+		}
 		onClicked: root.languageSelectionRequested();
 	}
 

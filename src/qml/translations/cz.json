@@ -59,6 +59,10 @@
 		"cancel": "Zrušit",
 		"yes": "Ano",
 		"no": "Ne",
-		"loading": "Načítání..."
+		"loading": "Načítání...",
+		"languages": {
+			"english": "Angličtina",
+			"czech": "Čeština"
+		}
 	}
 }

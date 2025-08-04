@@ -59,6 +59,10 @@
 		"cancel": "Cancel",
 		"yes": "Yes",
 		"no": "No",
-		"loading": "Loading..."
+		"loading": "Loading...",
+		"languages": {
+			"english": "English",
+			"czech": "Czech"
+		}
 	}
 }
