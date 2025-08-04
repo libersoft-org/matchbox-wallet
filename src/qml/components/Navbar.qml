@@ -21,11 +21,13 @@ Item {
 	*/
 
 	// Back button (left)
-	NavbarButton {
+	Icon {
 		id: backButton
 		visible: root.showBackButton
 		anchors.left: parent.left
 		anchors.verticalCenter: parent.verticalCenter
+		width: parent.height
+		height: parent.height
 		img: "qrc:/WalletModule/src/img/back.svg"
 		onClicked: root.backRequested()
 	}
@@ -40,11 +42,13 @@ Item {
 	}
 	
 	// Power button (right)
-	NavbarButton {
+	Icon {
 		id: powerButton
 		visible: root.showPowerButton
 		anchors.right: parent.right
 		anchors.verticalCenter: parent.verticalCenter
+		width: parent.height
+		height: parent.height
 		img: "qrc:/WalletModule/src/img/power.svg"
 		onClicked: root.powerOffRequested()
 	}

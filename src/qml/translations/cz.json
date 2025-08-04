@@ -3,7 +3,31 @@
 		"title": "Matchbox peněženka",
 		"wallet": {
 			"button": "Peněženka",
-			"title": "Peněženka"
+			"title": "Peněženka",
+			"balance": {
+				"button": "Zůstatek",
+				"title": "Zůstatek peněženky"
+			},
+			"send": {
+				"button": "Odeslat",
+				"title": "Odeslat platbu"
+			},
+			"receive": {
+				"button": "Přijmout",
+				"title": "Přijmout platbu"
+			},
+			"addressbook": {
+				"button": "Adresář",
+				"title": "Adresář peněženky"
+			},
+			"network": {
+				"button": "Změnit síť",
+				"title": "Výběr sítě"
+			},
+			"address": {
+				"button": "Změnit adresy",
+				"title": "Výběr peněženky"
+			}
 		},
 		"settings": {
 			"button": "Nastavení",

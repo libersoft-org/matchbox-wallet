@@ -3,7 +3,31 @@
 		"title": "Matchbox Wallet",
 		"wallet": {
 			"button": "Wallet",
-			"title": "Wallet"
+			"title": "Wallet",
+			"balance": {
+				"button": "Balance",
+				"title": "Wallet balance"
+			},
+			"send": {
+				"button": "Send",
+				"title": "Send payment"
+			},
+			"receive": {
+				"button": "Receive",
+				"title": "Receive payment"
+			},
+			"addressbook": {
+				"button": "Address book",
+				"title": "Address book"
+			},
+			"network": {
+				"button": "Change network",
+				"title": "Select network"
+			},
+			"address": {
+				"button": "Addresses",
+				"title": "Select wallet"
+			}
 		},
 		"settings": {
 			"button": "Settings",
