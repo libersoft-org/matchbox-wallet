@@ -1,11 +1,22 @@
 {
 	"menu": {
 		"title": "Matchbox peněženka",
-		"wallet": "Peněženka",
+		"wallet": {
+			"button": "Peněženka",
+			"title": "Peněženka"
+		},
 		"settings": {
 			"button": "Nastavení",
 			"title": "Nastavení",
-			"wallet": {
+			"general": {
+				"button": "Obecné",
+				"title": "Obecné nastavení",
+				"fiat": {
+					"button": "Fiat měna: %1",
+					"title": "Výběr fiat měny"
+				}
+			},
+			"wallets": {
 				"button": "Peněženka",
 				"title": "Peněženka",
 				"balance": "Zůstatek",
@@ -13,45 +24,42 @@
 				"receive": "Přijmout",
 				"addressbook": "Adresář"
 			},
-			"general": {
-				"button": "Obecné",
-				"title": "Obecné nastavení",
-				"fiat": {
-					"button": "Fiat měna: %1",
-					"title": "Výběr fiat měny"
+			"networks": {
+				"button": "Sítě",
+				"title": "Nastavení sítí"
+			},
+			"system": {
+				"button": "Systém",
+				"title": "Systémová nastavení",
+				"language": {
+					"button": "Jazyk: %1",
+					"title": "Výběr jazyka",
+					"selectLanguage": "Vyberte jazyk"
 				},
-				"system": {
-					"button": "Systém",
-					"title": "Systémová nastavení",
-					"language": {
-						"button": "Jazyk: %1",
-						"title": "Výběr jazyka",
-						"selectLanguage": "Vyberte jazyk"
-					},
-					"wifi": {
-						"button": "WiFi",
-						"title": "WiFi nastavení"
-					},
-					"lora": {
-						"button": "LoRa",
-						"title": "LoRa nastavení"
-					}
+				"wifi": {
+					"button": "WiFi",
+					"title": "WiFi nastavení"
+				},
+				"lora": {
+					"button": "LoRa",
+					"title": "LoRa nastavení"
 				}
 			}
-		},
-		"power": {
-			"title": "Vypnout",
-			"quit": "Ukončit aplikaci",
-			"reboot": "Restartovat",
-			"shutdown": "Vypnout zařízení"
 		}
 	},
-	"common": {
-		"back": "Zpět",
-		"ok": "OK",
-		"cancel": "Zrušit",
-		"yes": "Ano",
-		"no": "Ne",
-		"loading": "Načítání..."
+	"power": {
+		"title": "Vypnout",
+		"quit": "Ukončit aplikaci",
+		"reboot": "Restartovat",
+		"shutdown": "Vypnout zařízení"
 	}
+},
+"common": {
+	"back": "Zpět",
+	"ok": "OK",
+	"cancel": "Zrušit",
+	"yes": "Ano",
+	"no": "Ne",
+	"loading": "Načítání..."
+}
 }

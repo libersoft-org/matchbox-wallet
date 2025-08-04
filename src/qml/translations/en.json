@@ -1,11 +1,22 @@
 {
 	"menu": {
 		"title": "Matchbox Wallet",
-		"wallet": "Wallet",
+		"wallet": {
+			"button": "Wallet",
+			"title": "Wallet"
+		},
 		"settings": {
 			"button": "Settings",
 			"title": "Settings",
-			"wallet": {
+			"general": {
+				"button": "General",
+				"title": "General settings",
+				"fiat": {
+					"button": "Fiat currency: %1",
+					"title": "Currency Selection"
+				}
+			},
+			"wallets": {
 				"button": "Wallet",
 				"title": "Wallet",
 				"balance": "Balance",
@@ -13,38 +24,34 @@
 				"receive": "Receive",
 				"addressbook": "Addressbook"
 			},
-			"general": {
-				"button": "General",
-				"title": "General settings",
-				"fiat": {
-					"button": "Fiat currency: %1",
-					"title": "Currency Selection"
+			"networks": {
+				"button": "Networks",
+				"title": "Network settings"
+			},
+			"system": {
+				"button": "System",
+				"title": "System settings",
+				"language": {
+					"button": "Language: %1",
+					"title": "Language Selection",
+					"selectLanguage": "Select Language"
 				},
-				"system": {
-					"button": "System",
-					"title": "System settings",
-					"language": {
-						"button": "Language: %1",
-						"title": "Language Selection",
-						"selectLanguage": "Select Language"
-					},
-					"wifi": {
-						"button": "WiFi",
-						"title": "WiFi settings"
-					},
-					"lora": {
-						"button": "LoRa",
-						"title": "LoRa settings"
-					}
+				"wifi": {
+					"button": "WiFi",
+					"title": "WiFi settings"
+				},
+				"lora": {
+					"button": "LoRa",
+					"title": "LoRa settings"
 				}
 			}
-		},
-		"power": {
-			"title": "Power Off",
-			"quit": "Exit application",
-			"reboot": "Reboot",
-			"shutdown": "Shutdown"
 		}
+	},
+	"power": {
+		"title": "Power Off",
+		"quit": "Exit application",
+		"reboot": "Reboot",
+		"shutdown": "Shutdown"
 	},
 	"common": {
 		"back": "Back",

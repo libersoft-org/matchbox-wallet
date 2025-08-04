@@ -15,12 +15,12 @@ BaseMenu {
 	property var goPageFunction
 
 	MenuButton {
-		text: tr("menu.wallet")
+		text: tr("menu.wallet.button")
 		onClicked: goPageFunction(walletComponent)
 	}
 	
 	MenuButton {
-		text: tr("menu.settings")
+		text: tr("menu.settings.button")
 		onClicked: goPageFunction(settingsComponent)
 	}
 

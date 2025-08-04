@@ -6,30 +6,30 @@ import "../../components"
 
 BaseMenu {
 	id: root
-	title: tr("settings.title")
+	title: tr("menu.settings.title")
 	
 	signal systemSettingsRequested
 	signal generalSettingsRequested
 
 	MenuButton {
-		text: tr("settings.general")
+		text: tr("menu.settings.general.button")
 		onClicked: root.generalSettingsRequested();
 	}
 
 	MenuButton {
-		text: tr("settings.wallets")
+		text: tr("menu.settings.wallets.button")
 		onClicked: console.log("Wallets settings clicked");
 		enabled:	false
 	}
 
 	MenuButton {
-		text: tr("settings.networks")
+		text: tr("menu.settings.networks.button")
 		onClicked: console.log("Networks settings clicked");
 		enabled: false
 	}
 
 	MenuButton {
-		text: tr("settings.system")
+		text: tr("menu.settings.system.button")
 		onClicked: root.systemSettingsRequested();
 	}
 }
