@@ -1,79 +1,50 @@
 {
-	"mainMenu": {
+	"menu": {
 		"title": "Matchbox peněženka",
 		"wallet": "Peněženka",
-		"settings": "Nastavení"
-	},
-	"wallet": {
-		"title": "Peněženka",
-		"balance": "Zůstatek",
-		"send": "Odeslat",
-		"receive": "Přijmout",
-		"addressbook": "Adresář"
-	},
-	"settings": {
-		"title": "Nastavení",
-		"general": "Obecné",
-		"system": "Systém"
-	},
-	"settingsGeneral": {
-		"title": "Obecné nastavení",
-		"fiat": "Fiat měna: %1",
-		"language": "Jazyk: %1"
-	},
-	"settingsGeneralFiat": {
-		"title": "Výběr měny",
-		"selectCurrency": "Vyberte měnu"
-	},
-	"settingsSystem": {
-		"title": "Systémová nastavení",
-		"wifi": "WiFi nastavení",
-		"language": "Jazyk: %1"
-	},
-	"settingsSystemLanguage": {
-		"title": "Výběr jazyka",
-		"selectLanguage": "Vyberte jazyk"
-	},
-	"settingsSystemWifi": {
-		"title": "WiFi nastavení",
-		"current": {
-			"status": "Aktuální připojení"
+		"settings": {
+			"button": "Nastavení",
+			"title": "Nastavení",
+			"wallet": {
+				"button": "Peněženka",
+				"title": "Peněženka",
+				"balance": "Zůstatek",
+				"send": "Odeslat",
+				"receive": "Přijmout",
+				"addressbook": "Adresář"
+			},
+			"general": {
+				"button": "Obecné",
+				"title": "Obecné nastavení",
+				"fiat": {
+					"button": "Fiat měna: %1",
+					"title": "Výběr fiat měny"
+				},
+				"system": {
+					"button": "Systém",
+					"title": "Systémová nastavení",
+					"language": {
+						"button": "Jazyk: %1",
+						"title": "Výběr jazyka",
+						"selectLanguage": "Vyberte jazyk"
+					},
+					"wifi": {
+						"button": "WiFi",
+						"title": "WiFi nastavení"
+					},
+					"lora": {
+						"button": "LoRa",
+						"title": "LoRa nastavení"
+					}
+				}
+			}
 		},
-		"connected": {
-			"to": "Připojeno k: %1"
-		},
-		"not": {
-			"connected": "Nepřipojeno k žádné síti"
-		},
-		"search": "Hledat...",
-		"list": {
-			"title": "Dostupné WiFi sítě"
-		},
-		"availableNetworks": "Dostupné sítě",
-		"scanning": "Hledání...",
-		"refresh": "Aktualizovat",
-		"connecting": "Připojování...",
-		"status": {
-			"connected": "Připojeno",
-			"disconnected": "Odpojeno",
-			"available": "Dostupné"
-		},
-		"password": "Heslo",
-		"connect": {
-			"title": "Připojit k síti",
-			"network": "Připojit k: %1",
-			"password": "Heslo:",
-			"password.placeholder": "Zadejte heslo",
-			"open": "Toto je otevřená síť",
-			"button": "Připojit"
-		},
-		"disconnect": "Odpojit"
-	},
-	"power": {
-		"title": "Ukončení",
-		"quit": "Ukončit aplikaci",
-		"reboot": "Restartovat",
-		"shutdown": "Vypnout"
+		"power": {
+			"title": "Vypnout",
+			"quit": "Ukončit aplikaci",
+			"reboot": "Restartovat",
+			"shutdown": "Vypnout zařízení"
+		}
 	},
 	"common": {
 		"back": "Zpět",

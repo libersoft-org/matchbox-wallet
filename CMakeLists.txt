@@ -27,6 +27,10 @@ set_source_files_properties(src/qml/TranslationManager.qml
  PROPERTIES QT_QML_SINGLETON_TYPE TRUE
 )
 
+set_source_files_properties(src/qml/SettingsManager.qml
+ PROPERTIES QT_QML_SINGLETON_TYPE TRUE
+)
+
 # Automatically find all QML files with relative paths
 file(GLOB_RECURSE QML_FILES_LIST RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "src/qml/*.qml")
 

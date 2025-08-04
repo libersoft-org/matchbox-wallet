@@ -1,3 +1,4 @@
 module WalletModule
 singleton Colors 1.0 Colors.qml
 singleton TranslationManager 1.0 TranslationManager.qml
+singleton SettingsManager 1.0 SettingsManager.qml

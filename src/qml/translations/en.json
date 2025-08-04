@@ -1,79 +1,50 @@
 {
-	"mainMenu": {
+	"menu": {
 		"title": "Matchbox Wallet",
 		"wallet": "Wallet",
-		"settings": "Settings"
-	},
-	"wallet": {
-		"title": "Wallet",
-		"balance": "Balance",
-		"send": "Send",
-		"receive": "Receive",
-		"addressbook": "Addressbook"
-	},
-	"settings": {
-		"title": "Settings",
-		"general": "General",
-		"system": "System"
-	},
-	"settingsGeneral": {
-		"title": "General settings",
-		"fiat": "Fiat currency: %1",
-		"language": "Language: %1"
-	},
-	"settingsGeneralFiat": {
-		"title": "Currency Selection",
-		"selectCurrency": "Select Currency"
-	},
-	"settingsSystem": {
-		"title": "System settings",
-		"wifi": "WiFi settings",
-		"language": "Language: %1"
-	},
-	"settingsSystemLanguage": {
-		"title": "Language Selection",
-		"selectLanguage": "Select Language"
-	},
-	"settingsSystemWifi": {
-		"title": "WiFi settings",
-		"current": {
-			"status": "Current Connection"
+		"settings": {
+			"button": "Settings",
+			"title": "Settings",
+			"wallet": {
+				"button": "Wallet",
+				"title": "Wallet",
+				"balance": "Balance",
+				"send": "Send",
+				"receive": "Receive",
+				"addressbook": "Addressbook"
+			},
+			"general": {
+				"button": "General",
+				"title": "General settings",
+				"fiat": {
+					"button": "Fiat currency: %1",
+					"title": "Currency Selection"
+				},
+				"system": {
+					"button": "System",
+					"title": "System settings",
+					"language": {
+						"button": "Language: %1",
+						"title": "Language Selection",
+						"selectLanguage": "Select Language"
+					},
+					"wifi": {
+						"button": "WiFi",
+						"title": "WiFi settings"
+					},
+					"lora": {
+						"button": "LoRa",
+						"title": "LoRa settings"
+					}
+				}
+			}
 		},
-		"connected": {
-			"to": "Connected to: %1"
-		},
-		"not": {
-			"connected": "Not connected to any network"
-		},
-		"search": "Search...",
-		"list": {
-			"title": "Available WiFi Networks"
-		},
-		"availableNetworks": "Available networks",
-		"scanning": "Scanning...",
-		"refresh": "Refresh",
-		"connecting": "Connecting...",
-		"status": {
-			"connected": "Connected",
-			"disconnected": "Disconnected",
-			"available": "Available"
-		},
-		"password": "Password",
-		"connect": {
-			"title": "Connect to Network",
-			"network": "Connect to: %1",
-			"password": "Password:",
-			"password.placeholder": "Enter password",
-			"open": "This is an open network",
-			"button": "Connect"
-		},
-		"disconnect": "Disconnect"
-	},
-	"power": {
-		"title": "Power Off",
-		"quit": "Exit application",
-		"reboot": "Reboot",
-		"shutdown": "Shutdown"
+		"power": {
+			"title": "Power Off",
+			"quit": "Exit application",
+			"reboot": "Reboot",
+			"shutdown": "Shutdown"
+		}
 	},
 	"common": {
 		"back": "Back",

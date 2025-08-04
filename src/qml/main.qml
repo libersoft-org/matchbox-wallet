@@ -11,15 +11,15 @@ ApplicationWindow {
  width: 480
  height: 640
  visible: true
- title: tr("mainMenu.title")
+ title: tr("menu.title")
  font.family: "Droid Sans"
  property string iconSource: "qrc:/WalletModule/src/img/wallet.svg"
  readonly property int animationDuration: 500
  readonly property var animationEasing: Easing.OutCubic
  
- // Global currency setting
- property string selectedCurrency: "USD"
- property string selectedLanguage: "en"
+ // Global settings - use SettingsManager
+ property string selectedCurrency: SettingsManager.selectedCurrency
+ property string selectedLanguage: SettingsManager.selectedLanguage
  
  // System manager for real-time system data
  SystemManager {
@@ -44,6 +44,9 @@ ApplicationWindow {
  Component.onCompleted: {
   x = (Screen.width - width) / 2;
   y = (Screen.height - height) / 2;
+  
+  // Initialize TranslationManager with saved language
+  TranslationManager.setLanguage(SettingsManager.selectedLanguage);
  }
 
  function goPage(component) {
@@ -171,7 +174,7 @@ ApplicationWindow {
   id: settingsGeneralFiatPageComponent
   SettingsGeneralFiat {
    onCurrencySelected: function(currency) {
-    window.selectedCurrency = currency;
+    SettingsManager.saveCurrency(currency);
     window.goBack();
    }
   }
@@ -207,7 +210,8 @@ ApplicationWindow {
   id: settingsSystemLanguagePageComponent
   SettingsSystemLanguage {
    onLanguageSelected: function(languageCode) {
-    window.selectedLanguage = languageCode;
+    SettingsManager.saveLanguage(languageCode);
+    TranslationManager.setLanguage(languageCode);
     window.goBack();
    }
   }

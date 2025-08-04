@@ -6,7 +6,7 @@ import "../../components"
 
 BaseMenu {
 	id: root
-	title: tr("settings.system.language.title")
+	title: tr("menu.settings.general.system.language.title")
 	
 	signal languageSelected(string languageCode)
 	

@@ -72,34 +72,36 @@ QtObject {
 		var dummy = languageVersion
 		
 		var parts = key.split('.')
-		if (parts.length !== 2) {
+		if (parts.length < 2) {
 			console.log("Invalid translation key format:", key)
 			return key
 		}
 		
-		var section = parts[0]
-		var subkey = parts[1]
-		
-		console.log("Looking for section:", section, "subkey:", subkey)
-		console.log("Section exists:", !!translations[section])
-		if (translations[section]) {
-			console.log("Section keys:", Object.keys(translations[section]))
-			console.log("Subkey exists:", !!translations[section][subkey])
+		// Navigate through the nested object structure
+		var current = translations
+		for (var i = 0; i < parts.length; i++) {
+			if (!current || !current.hasOwnProperty(parts[i])) {
+				console.log("Missing translation path at:", parts.slice(0, i + 1).join('.'))
+				console.log("Available keys at this level:", current ? Object.keys(current) : "null")
+				return parts[parts.length - 1] // Return the last part as fallback
+			}
+			current = current[parts[i]]
 		}
 		
-		if (!translations[section] || !translations[section][subkey]) {
-			console.log("Missing translation:", key)
-			return subkey
+		// If we found a string, use it
+		if (typeof current === 'string') {
+			var text = current
+			
+			// Simple argument substitution for %1, %2, etc.
+			for (var i = 1; i < arguments.length; i++) {
+				text = text.replace("%" + i, arguments[i])
+			}
+			
+			return text
 		}
 		
-		var text = translations[section][subkey]
-		
-		// Simple argument substitution for %1, %2, etc.
-		for (var i = 1; i < arguments.length; i++) {
-			text = text.replace("%" + i, arguments[i])
-		}
-		
-		return text
+		console.log("Translation key points to non-string value:", key, typeof current)
+		return parts[parts.length - 1] // Return the last part as fallback
 	}
 	
 	function setLanguage(language) {

@@ -6,7 +6,7 @@ import "../components"
 
 BaseMenu {
 	id: root
-	title: tr("mainMenu.title")
+	title: tr("menu.title")
 	property bool showBackButton: false
 	property var walletComponent
 	property var settingsComponent
@@ -15,12 +15,12 @@ BaseMenu {
 	property var goPageFunction
 
 	MenuButton {
-		text: tr("mainMenu.wallet")
+		text: tr("menu.wallet")
 		onClicked: goPageFunction(walletComponent)
 	}
 	
 	MenuButton {
-		text: tr("mainMenu.settings")
+		text: tr("menu.settings")
 		onClicked: goPageFunction(settingsComponent)
 	}
 
