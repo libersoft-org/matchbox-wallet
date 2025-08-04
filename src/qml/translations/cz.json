@@ -45,13 +45,13 @@
 					"title": "LoRa nastavení"
 				}
 			}
+		},
+		"power": {
+			"title": "Vypnout",
+			"quit": "Ukončit aplikaci",
+			"reboot": "Restartovat",
+			"shutdown": "Vypnout zařízení"
 		}
-	},
-	"power": {
-		"title": "Vypnout",
-		"quit": "Ukončit aplikaci",
-		"reboot": "Restartovat",
-		"shutdown": "Vypnout zařízení"
 	},
 	"common": {
 		"back": "Zpět",

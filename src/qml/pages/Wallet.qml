@@ -6,26 +6,26 @@ import "../components"
 
 BaseMenu {
 	id: root
-	title: tr("wallet.title")
+	title: tr("menu.settings.wallet.title")
 	property var goPageFunction
 
 	MenuButton {
-		text: tr("wallet.balance")
+		text: tr("menu.settings.wallet.balance")
 		enabled: false
 	}
 	
 	MenuButton {
-		text: tr("wallet.send")
+		text: tr("menu.settings.wallet.send")
 		enabled: false
 	}
 
 	MenuButton {
-		text: tr("wallet.receive")
+		text: tr("menu.settings.wallet.receive")
 		enabled: false
 	}
 
 	MenuButton {
-		text: tr("wallet.addressbook")
+		text: tr("menu.settings.wallet.addressbook")
 		enabled: false
 	}
 }

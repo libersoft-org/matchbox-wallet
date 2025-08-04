@@ -34,7 +34,7 @@ Item {
 	Text {
 		anchors.centerIn: parent
 		text: root.title
-		font.pixelSize: parent.height * 0.5
+		font.pixelSize: parent.height * 0.4
 		font.bold: true
 		color: Colors.primaryForeground
 	}

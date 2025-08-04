@@ -45,13 +45,13 @@
 					"title": "LoRa settings"
 				}
 			}
+		},
+		"power": {
+			"title": "Power Off",
+			"quit": "Exit application",
+			"reboot": "Reboot",
+			"shutdown": "Shutdown"
 		}
-	},
-	"power": {
-		"title": "Power Off",
-		"quit": "Exit application",
-		"reboot": "Reboot",
-		"shutdown": "Shutdown"
 	},
 	"common": {
 		"back": "Back",
