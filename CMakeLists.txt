@@ -33,6 +33,9 @@ file(GLOB_RECURSE QML_FILES_LIST RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "src/qml
 # Find all SVG files in img directory
 file(GLOB_RECURSE SVG_FILES_LIST RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "src/img/*.svg")
 
+# Find all JSON translation files
+file(GLOB_RECURSE JSON_FILES_LIST RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "src/qml/translations/*.json")
+
 # Add QML module to the executable
 qt_add_qml_module(Wallet
  URI WalletModule
@@ -41,7 +44,7 @@ qt_add_qml_module(Wallet
  NO_CACHEGEN
  NO_LINT
  QML_FILES ${QML_FILES_LIST}
- RESOURCES ${SVG_FILES_LIST}
+ RESOURCES ${SVG_FILES_LIST} ${JSON_FILES_LIST}
 )
 target_link_libraries(Wallet PRIVATE
  Qt6::Core

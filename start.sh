@@ -53,6 +53,9 @@ if [ -f "build/linux/wallet" ]; then
 		export QT_QPA_PLATFORM=xcb
 		echo "No display detected, trying X11 (xcb) as fallback"
 	fi
+	
+	# Enable QML XMLHttpRequest file reading for translations
+	export QML_XHR_ALLOW_FILE_READ=1
 	echo "Starting Matchbox Wallet..."
 	./build/linux/wallet
 else

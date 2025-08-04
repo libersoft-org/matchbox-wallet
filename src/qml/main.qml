@@ -28,12 +28,8 @@ ApplicationWindow {
  
  // Global translation function - available to all child components
  function tr(key) {
-  console.log("main.tr called with:", key, "TranslationManager exists:", !!TranslationManager)
-		console.log(TranslationManager.tr);
   try {
-   if (TranslationManager && TranslationManager.tr) {
-    return TranslationManager.tr(key)
-   }
+   if (TranslationManager && TranslationManager.tr) return TranslationManager.tr(key)
   } catch (e) {
    console.log("Translation error:", e)
   }
