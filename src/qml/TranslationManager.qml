@@ -32,7 +32,6 @@ QtObject {
 		var xhr = new XMLHttpRequest()
 		var url = Qt.resolvedUrl("translations/" + language + ".json")
 		console.log("Loading translations from:", url)
-		
 		xhr.onreadystatechange = function() {
 			console.log("XHR state changed, readyState:", xhr.readyState, "status:", xhr.status)
 			if (xhr.readyState === XMLHttpRequest.DONE) {
@@ -67,41 +66,34 @@ QtObject {
 		console.log("TranslationManager.tr called with:", key)
 		console.log("Current translations object:", JSON.stringify(translations))
 		console.log("Current translation keys:", Object.keys(translations))
-		
 		// This property access ensures binding updates when translations change
 		var dummy = languageVersion
-		
 		var parts = key.split('.')
 		if (parts.length < 2) {
 			console.log("Invalid translation key format:", key)
 			return key
 		}
-		
 		// Navigate through the nested object structure
 		var current = translations
 		for (var i = 0; i < parts.length; i++) {
 			if (!current || !current.hasOwnProperty(parts[i])) {
 				console.log("Missing translation path at:", parts.slice(0, i + 1).join('.'))
 				console.log("Available keys at this level:", current ? Object.keys(current) : "null")
-				return parts[parts.length - 1] // Return the last part as fallback
+				return key // Return the full key as fallback
 			}
 			current = current[parts[i]]
 		}
-		
 		// If we found a string, use it
 		if (typeof current === 'string') {
 			var text = current
-			
 			// Simple argument substitution for %1, %2, etc.
 			for (var i = 1; i < arguments.length; i++) {
 				text = text.replace("%" + i, arguments[i])
 			}
-			
 			return text
 		}
-		
 		console.log("Translation key points to non-string value:", key, typeof current)
-		return parts[parts.length - 1] // Return the last part as fallback
+		return key // Return the full key as fallback
 	}
 	
 	function setLanguage(language) {

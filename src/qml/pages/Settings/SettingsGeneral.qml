@@ -6,14 +6,14 @@ import "../../components"
 
 BaseMenu {
 	id: root
-	title: tr("settings.general.title")
+	title: tr("menu.settings.general.title")
 
 	signal currencySelectionRequested
 	
 	property string selectedCurrency: "USD"
 	
 	MenuButton {
-		text: tr("settings.general.fiat", root.selectedCurrency)
+		text: tr("menu.settings.general.fiat.button", root.selectedCurrency)
 		onClicked: {
 			root.currencySelectionRequested();
 		}

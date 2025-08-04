@@ -52,14 +52,13 @@
 		"quit": "Ukončit aplikaci",
 		"reboot": "Restartovat",
 		"shutdown": "Vypnout zařízení"
+	},
+	"common": {
+		"back": "Zpět",
+		"ok": "OK",
+		"cancel": "Zrušit",
+		"yes": "Ano",
+		"no": "Ne",
+		"loading": "Načítání..."
 	}
-},
-"common": {
-	"back": "Zpět",
-	"ok": "OK",
-	"cancel": "Zrušit",
-	"yes": "Ano",
-	"no": "Ne",
-	"loading": "Načítání..."
-}
 }

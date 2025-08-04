@@ -6,7 +6,7 @@ import "../../components"
 
 BaseMenu {
 	id: root
-	title: tr("settings.general.fiat.title")
+	title: tr("menu.settings.general.fiat.title")
 	signal currencySelected(string currency)
 	property var currencies: ["USD", "EUR", "GBP", "CHF", "CZK", "PLN", "HUF"]
 

@@ -7,7 +7,7 @@ import "../../components"
 Rectangle {
 	id: root
 	color: Colors.primaryBackground
-	property string title: tr("settings.system.wifi.title")
+	property string title: tr("menu.settings.system.wifi.title")
 	signal backRequested
 	signal powerOffRequested
 	signal wifiListRequested

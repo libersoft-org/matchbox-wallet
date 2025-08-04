@@ -6,7 +6,7 @@ import "../../components"
 
 BaseMenu {
 	id: root
-	title: tr("settings.system.title")
+	title: tr("menu.settings.system.title")
 	signal wifiSettingsRequested
 	signal languageSelectionRequested
 	
@@ -22,17 +22,17 @@ BaseMenu {
 
 	MenuButton {
 		id: languageButton
-		text: tr("settings.system.language", getLanguageDisplayName(root.selectedLanguage))
+		text: tr("menu.settings.system.language.button", getLanguageDisplayName(root.selectedLanguage))
 		onClicked: root.languageSelectionRequested();
 	}
 
 	MenuButton {
-		text: tr("settings.system.wifi")
+		text: tr("menu.settings.system.wifi.button")
 		onClicked: root.wifiSettingsRequested();
 	}
 
 	MenuButton {
-		text: tr("settings.system.lora")
+		text: tr("menu.settings.system.lora.button")
 		enabled: false
 		onClicked: console.log("LoRa settings clicked - not implemented yet");
 	}
