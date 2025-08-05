@@ -15,7 +15,7 @@ BaseMenu {
 	// Current time display as Item
 	Item {
 		width: parent.width
-		height: 50
+		height: root.height * 0.15
 		
 		// Timer to update current time every second
 		Timer {
@@ -30,20 +30,20 @@ BaseMenu {
 		
 		Rectangle {
 			anchors.fill: parent
-			anchors.margins: 10
-			color: "red"
+			anchors.margins: root.height * 0.01
+			color: Colors.primaryBackground
 			radius: height * 0.2
 			border.color: Colors.primaryForeground
-			border.width: 2
+			border.width: Math.max(1, root.height * 0.003)
 			
 			Column {
 				anchors.centerIn: parent
-				spacing: 5
+				spacing: height * 0.1
 				
 				Text {
 					text: Qt.formatTime(root.currentTime, "hh:mm:ss")
 					color: Colors.primaryForeground
-					font.pixelSize: 32
+					font.pixelSize: parent.parent.height * 0.4
 					font.bold: true
 					font.family: "monospace"
 					anchors.horizontalCenter: parent.horizontalCenter
@@ -52,7 +52,7 @@ BaseMenu {
 				Text {
 					text: root.currentTime.toLocaleDateString(Qt.locale(), Locale.ShortFormat)
 					color: Colors.primaryForeground
-					font.pixelSize: 16
+					font.pixelSize: parent.parent.height * 0.2
 					anchors.horizontalCenter: parent.horizontalCenter
 				}
 			}
