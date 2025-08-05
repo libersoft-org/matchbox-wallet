@@ -187,6 +187,7 @@ ApplicationWindow {
    selectedLanguage: window.selectedLanguage
    onWifiSettingsRequested: window.goPage(wifiSettingsPageComponent)
    onLanguageSelectionRequested: window.goPage(settingsSystemLanguagePageComponent)
+   onTimeSettingsRequested: window.goPage(settingsSystemTimePageComponent)
   }
  }
 
@@ -212,6 +213,18 @@ ApplicationWindow {
    onLanguageSelected: function(languageCode) {
     SettingsManager.saveLanguage(languageCode);
     TranslationManager.setLanguage(languageCode);
+    window.goBack();
+   }
+  }
+ }
+
+ // System time settings page
+ Component {
+  id: settingsSystemTimePageComponent
+  SettingsSystemTime {
+   onTimeChanged: function(timeString) {
+    console.log("Time changed to:", timeString);
+    // TODO: Implement actual system time setting
     window.goBack();
    }
   }

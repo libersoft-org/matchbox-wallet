@@ -50,7 +50,6 @@ void SystemManager::checkBatteryStatus() {
   QString capacityStr = in.readLine().trimmed();
   bool ok;
   int newLevel = capacityStr.toInt(&ok);
-
   if (ok && newLevel != m_batteryLevel) {
    m_batteryLevel = qBound(0, newLevel, 100);
    emit batteryLevelChanged();
@@ -71,7 +70,6 @@ void SystemManager::checkBatteryStatus() {
      percentStr = percentStr.remove('%');
      bool ok;
      int newLevel = percentStr.toInt(&ok);
-
      if (ok && newLevel != m_batteryLevel) {
       m_batteryLevel = qBound(0, newLevel, 100);
       emit batteryLevelChanged();
@@ -156,11 +154,9 @@ void SystemManager::rebootSystem() {
 
 void SystemManager::shutdownSystem() {
  qDebug() << "Shutting down system...";
-#ifdef Q_OS_UNIX
- QProcess::startDetached("shutdown", QStringList() << "-h" << "now");
-#elif defined(Q_OS_WIN)
+#if defined(Q_OS_WIN)
  QProcess::startDetached("shutdown", QStringList() << "/s" << "/t" << "0");
 #else
- qDebug() << "Shutdown not implemented for this platform";
+ QProcess::startDetached("sudo shutdown", QStringList() << "-h" << "now");
 #endif
 }

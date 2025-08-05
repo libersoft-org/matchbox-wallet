@@ -41,8 +41,8 @@
 				}
 			},
 			"wallets": {
-				"button": "Wallet",
-				"title": "Wallet",
+				"button": "Wallets",
+				"title": "Your wallets",
 				"balance": "Balance",
 				"send": "Send",
 				"receive": "Receive",
@@ -63,6 +63,16 @@
 				"wifi": {
 					"button": "WiFi",
 					"title": "WiFi settings"
+				},
+				"time": {
+					"button": "Time & Date",
+					"title": "Time & Date Settings",
+					"setTime": "Set Time",
+					"hour": "Hour",
+					"minute": "Minute", 
+					"second": "Second",
+					"setTimeButton": "Set Time",
+					"syncButton": "Sync with Internet"
 				},
 				"lora": {
 					"button": "LoRa",

@@ -9,6 +9,7 @@ BaseMenu {
 	title: tr("menu.settings.system.title")
 	signal wifiSettingsRequested
 	signal languageSelectionRequested
+	signal timeSettingsRequested
 	
 	property string selectedLanguage: "en"
 	
@@ -28,6 +29,11 @@ BaseMenu {
 			return template.replace("%1", displayName)
 		}
 		onClicked: root.languageSelectionRequested();
+	}
+
+	MenuButton {
+		text: tr("menu.settings.system.time.button")
+		onClicked: root.timeSettingsRequested();
 	}
 
 	MenuButton {

@@ -41,8 +41,8 @@
 				}
 			},
 			"wallets": {
-				"button": "Peněženka",
-				"title": "Peněženka",
+				"button": "Peněženky",
+				"title": "Vaše peněženky",
 				"balance": "Zůstatek",
 				"send": "Odeslat",
 				"receive": "Přijmout",
@@ -63,6 +63,16 @@
 				"wifi": {
 					"button": "WiFi",
 					"title": "WiFi nastavení"
+				},
+				"time": {
+					"button": "Čas a datum",
+					"title": "Nastavení času a data",
+					"setTime": "Nastavit čas",
+					"hour": "Hodina",
+					"minute": "Minuta",
+					"second": "Sekunda",
+					"setTimeButton": "Nastavit čas",
+					"syncButton": "Synchronizovat s internetem"
 				},
 				"lora": {
 					"button": "LoRa",
