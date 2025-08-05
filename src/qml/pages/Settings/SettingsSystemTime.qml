@@ -31,7 +31,7 @@ BaseMenu {
 		Rectangle {
 			anchors.fill: parent
 			anchors.margins: 10
-			color: Colors.primaryBackground
+			color: "red"
 			radius: height * 0.2
 			border.color: Colors.primaryForeground
 			border.width: 2
@@ -41,7 +41,7 @@ BaseMenu {
 				spacing: 5
 				
 				Text {
-					text: root.currentTime.toLocaleDateString(Qt.locale(), Locale.ShortFormat)
+					text: Qt.formatTime(root.currentTime, "hh:mm:ss")
 					color: Colors.primaryForeground
 					font.pixelSize: 32
 					font.bold: true
