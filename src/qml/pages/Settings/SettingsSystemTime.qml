@@ -16,7 +16,6 @@ BaseMenu {
 	Item {
 		width: parent.width
 		height: 50
-		color: "red"
 		
 		// Timer to update current time every second
 		Timer {
@@ -42,7 +41,7 @@ BaseMenu {
 				spacing: 5
 				
 				Text {
-					text: Qt.formatTime(root.currentTime, "hh:mm:ss")
+					text: root.currentTime.toLocaleDateString(Qt.locale(), Locale.ShortFormat)
 					color: Colors.primaryForeground
 					font.pixelSize: 32
 					font.bold: true
@@ -51,7 +50,7 @@ BaseMenu {
 				}
 				
 				Text {
-					text: Qt.formatDate(root.currentTime, "dddd, MMMM d, yyyy")
+					text: root.currentTime.toLocaleDateString(Qt.locale(), Locale.ShortFormat)
 					color: Colors.primaryForeground
 					font.pixelSize: 16
 					anchors.horizontalCenter: parent.horizontalCenter
@@ -62,7 +61,7 @@ BaseMenu {
 	
 	// Time setting buttons
 	MenuButton {
-		text: tr("menu.settings.system.time.setTime")
+		text: tr("menu.settings.system.time.set")
 		onClicked: {
 			// TODO: Show time setting dialog
 			console.log("Set time clicked")
@@ -70,7 +69,7 @@ BaseMenu {
 	}
 	
 	MenuButton {
-		text: tr("menu.settings.system.time.syncButton")
+		text: tr("menu.settings.system.time.sync")
 		onClicked: {
 			// TODO: Implement NTP sync
 			console.log("Syncing time with internet")

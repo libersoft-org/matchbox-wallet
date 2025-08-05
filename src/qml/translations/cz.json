@@ -65,14 +65,10 @@
 					"title": "WiFi nastavení"
 				},
 				"time": {
-					"button": "Čas a datum",
-					"title": "Nastavení času a data",
-					"setTime": "Nastavit čas",
-					"hour": "Hodina",
-					"minute": "Minuta",
-					"second": "Sekunda",
-					"setTimeButton": "Nastavit čas",
-					"syncButton": "Synchronizovat s internetem"
+					"button": "Datum a čas",
+					"title": "Nastavení data a času",
+					"set": "Nastavit čas",
+					"sync": "Synchr. s internetem"
 				},
 				"lora": {
 					"button": "LoRa",
