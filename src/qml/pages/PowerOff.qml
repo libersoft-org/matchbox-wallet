@@ -15,11 +15,11 @@ BaseMenu {
 
  MenuButton {
   text: tr("menu.power.reboot")
-  onClicked: systemManager.rebootSystem()
+  onClicked: SystemManager.rebootSystem()
  }
 
  MenuButton {
   text: tr("menu.power.shutdown")
-  onClicked: systemManager.shutdownSystem()
+  onClicked: SystemManager.shutdownSystem()
  }
 }

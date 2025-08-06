@@ -5,6 +5,9 @@
 #include <QFile>
 #include <QProcess>
 #include <QTextStream>
+#ifdef Q_OS_UNIX
+#include <unistd.h>  // for getuid()
+#endif
 
 SystemManager::SystemManager(QObject *parent) : QObject(parent), m_batteryLevel(100), m_hasBattery(true), m_currentWifiStrength(0) {
  // Timer for periodic status updates
@@ -144,7 +147,17 @@ void SystemManager::checkWifiStatus() {
 void SystemManager::rebootSystem() {
  qDebug() << "Rebooting system...";
 #ifdef Q_OS_UNIX
- QProcess::startDetached("reboot");
+ // Try different approaches based on available tools and permissions
+ if (QProcess::execute("which", QStringList() << "systemctl") == 0) {
+  // systemd system
+  QProcess::startDetached("systemctl", QStringList() << "reboot");
+ } else if (getuid() == 0) {
+  // Running as root, use direct reboot command
+  QProcess::startDetached("reboot");
+ } else {
+  // Running as user, try with sudo
+  QProcess::startDetached("sudo", QStringList() << "reboot");
+ }
 #elif defined(Q_OS_WIN)
  QProcess::startDetached("shutdown", QStringList() << "/r" << "/t" << "0");
 #else
@@ -154,9 +167,19 @@ void SystemManager::rebootSystem() {
 
 void SystemManager::shutdownSystem() {
  qDebug() << "Shutting down system...";
-#if defined(Q_OS_WIN)
+#ifdef Q_OS_WIN
  QProcess::startDetached("shutdown", QStringList() << "/s" << "/t" << "0");
 #else
- QProcess::startDetached("sudo shutdown", QStringList() << "-h" << "now");
+ // Try different approaches based on available tools and permissions
+ if (QProcess::execute("which", QStringList() << "systemctl") == 0) {
+  // systemd system
+  QProcess::startDetached("systemctl", QStringList() << "poweroff");
+ } else if (getuid() == 0) {
+  // Running as root, use direct shutdown command
+  QProcess::startDetached("shutdown", QStringList() << "-h" << "now");
+ } else {
+  // Running as user, try with sudo
+  QProcess::startDetached("sudo", QStringList() << "shutdown" << "-h" << "now");
+ }
 #endif
 }
