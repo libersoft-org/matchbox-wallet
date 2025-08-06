@@ -20,11 +20,8 @@ QtObject {
 
  Component.onCompleted: {
   console.log("TranslationManager singleton initializing...");
-  loadTranslations(currentLanguage, function (data) {
-	console.log("Initial translations loaded successfully");
-   }, function (error) {
-	console.log("Failed to load initial translations:", error);
-   });
+  // Don't load translations immediately - wait for setLanguage call
+  console.log("TranslationManager ready, waiting for language to be set");
  }
 
  function loadTranslations(language, onSuccess, onError) {
@@ -96,6 +93,12 @@ QtObject {
  }
 
  function setLanguage(language) {
+  console.log("Setting language to:", language);
   currentLanguage = language;
+  loadTranslations(language, function (data) {
+	console.log("Translations loaded successfully for language:", language);
+   }, function (error) {
+	console.log("Failed to load translations for language:", language, error);
+   });
  }
 }

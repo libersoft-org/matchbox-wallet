@@ -28,6 +28,10 @@ ApplicationWindow {
 
  SettingsManager {
   id: settingsManagerObj
+  onSettingsLoaded: {
+   console.log("Settings loaded, setting language to:", selectedLanguage);
+   translationManager.setLanguage(selectedLanguage);
+  }
  }
 
  TranslationManager {
@@ -61,8 +65,7 @@ ApplicationWindow {
   x = (Screen.width - width) / 2;
   y = (Screen.height - height) / 2;
   console.log("ApplicationWindow completed");
-  // Initialize TranslationManager with saved language
-  translationManager.setLanguage(settingsManager.selectedLanguage);
+  // Language initialization is now handled by settingsManager.onSettingsLoaded
  }
 
  function goPage(component) {

@@ -9,6 +9,7 @@ QtObject {
 
  signal languageChanged
  signal currencyChanged
+ signal settingsLoaded
 
  Component.onCompleted: {
   loadSettings();
@@ -38,6 +39,8 @@ QtObject {
 	 console.log("No currency setting found, using default:", selectedCurrency);
 	}
    });
+  // Signal that settings have been loaded
+  settingsLoaded();
  }
 
  function saveLanguage(language) {
