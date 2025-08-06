@@ -1,11 +1,10 @@
 import QtQuick 2.15
-import WalletModule 1.0
 
 Item {
  id: root
  property int strength: 0  // Signal strength (0-4)
- property color activeColor: Colors.success
- property color inactiveColor: Colors.disabledForeground
+ property color activeColor: window.colors.success
+ property color inactiveColor: window.colors.disabledForeground
 
  Row {
   anchors.centerIn: parent

@@ -1,6 +1,6 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
-import WalletModule 1.0
+import QtQuick.Layouts 1.15
 
 Item {
  id: root
@@ -14,7 +14,7 @@ Item {
  /*
 	Rectangle {
 		anchors.fill: parent
-		color: Colors.error
+		color: window.colors.error
 		opacity: 0.2
 	}
 	*/
@@ -53,7 +53,7 @@ Item {
   size: flickable.visibleArea.heightRatio
 
   contentItem: Rectangle {
-   color: Colors.primaryForeground
+   color: window.colors.primaryForeground
    opacity: 0.2
    radius: parent.width * 0.5
   }

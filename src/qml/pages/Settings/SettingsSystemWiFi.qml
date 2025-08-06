@@ -1,7 +1,6 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
-import WalletModule 1.0
 import "../../components"
 
 Rectangle {
@@ -12,11 +11,11 @@ Rectangle {
  signal powerOffRequested
  signal wifiListRequested
 
- // WiFi Manager instance
- WiFiManager {
-  id: wifiManager
-
-  onConnectionResult: function (ssid, success, error) {
+ // WiFi Manager is available as global context property
+ // Connect to its signals
+ Connections {
+  target: WiFiManager
+  function onConnectionResult(ssid, success, error) {
    if (success)
 	console.log("Successfully connected to", ssid);
    else
@@ -26,7 +25,7 @@ Rectangle {
 
  // Scan on component load to get current connection status
  Component.onCompleted: {
-  wifiManager.scanNetworks();
+  WiFiManager.scanNetworks();
  }
 
  ColumnLayout {
@@ -35,8 +34,8 @@ Rectangle {
   spacing: 30
 
   ColumnLayout {
-   anchors.fill: parent
-   anchors.margins: 20
+   Layout.fillWidth: true
+   Layout.fillHeight: true
    spacing: 15
 
    Text {
@@ -58,8 +57,8 @@ Rectangle {
    Text {
 	id: statusText
 	text: {
-	 for (let i = 0; i < wifiManager.networks.length; i++) {
-	  if (wifiManager.networks[i].connected) {
+	 for (let i = 0; i < WiFiManager.networks.length; i++) {
+	  if (WiFiManager.networks[i].connected) {
 	   return tr("settings.system.wifi.connected.to") + ':';
 	  }
 	 }
@@ -67,8 +66,8 @@ Rectangle {
 	}
 	font.pointSize: 12
 	color: {
-	 for (let i = 0; i < wifiManager.networks.length; i++) {
-	  if (wifiManager.networks[i].connected) {
+	 for (let i = 0; i < WiFiManager.networks.length; i++) {
+	  if (WiFiManager.networks[i].connected) {
 	   return Colors.success;
 	  }
 	 }
@@ -83,9 +82,9 @@ Rectangle {
    Text {
 	id: connectedNetworkText
 	text: {
-	 for (let i = 0; i < wifiManager.networks.length; i++) {
-	  if (wifiManager.networks[i].connected) {
-	   return wifiManager.networks[i].name;
+	 for (let i = 0; i < WiFiManager.networks.length; i++) {
+	  if (WiFiManager.networks[i].connected) {
+	   return WiFiManager.networks[i].name;
 	  }
 	 }
 	}
@@ -104,17 +103,17 @@ Rectangle {
 	Layout.preferredWidth: 50
 	Layout.preferredHeight: 16
 	strength: {
-	 for (let i = 0; i < wifiManager.networks.length; i++) {
-	  if (wifiManager.networks[i].connected)
-	   return wifiManager.networks[i].strength;
+	 for (let i = 0; i < WiFiManager.networks.length; i++) {
+	  if (WiFiManager.networks[i].connected)
+	   return WiFiManager.networks[i].strength;
 	 }
 	 return 0;
 	}
 	activeColor: Colors.success
 	inactiveColor: Colors.disabledForeground
 	visible: {
-	 for (let i = 0; i < wifiManager.networks.length; i++) {
-	  if (wifiManager.networks[i].connected) {
+	 for (let i = 0; i < WiFiManager.networks.length; i++) {
+	  if (WiFiManager.networks[i].connected) {
 	   return true;
 	  }
 	 }

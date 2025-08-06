@@ -1,6 +1,5 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
-import WalletModule 1.0
 
 Item {
  id: root
@@ -38,7 +37,7 @@ Item {
   text: root.title
   font.pixelSize: parent.height * 0.4
   font.bold: true
-  color: Colors.primaryForeground
+  color: window.colors.primaryForeground
  }
 
  // Power button (right)

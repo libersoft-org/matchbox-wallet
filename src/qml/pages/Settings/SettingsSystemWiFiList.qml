@@ -1,7 +1,6 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
-import WalletModule 1.0
 import "../../components"
 
 Rectangle {
@@ -11,11 +10,11 @@ Rectangle {
  signal backRequested
  signal powerOffRequested
 
- // WiFi Manager instance
- WiFiManager {
-  id: wifiManager
-
-  onConnectionResult: function (ssid, success, error) {
+ // WiFi Manager is available as global context property
+ // Connect to its signals
+ Connections {
+  target: WiFiManager
+  function onConnectionResult(ssid, success, error) {
    if (success) {
 	console.log("Successfully connected to", ssid);
 	// Go back to main WiFi page after successful connection
@@ -28,7 +27,7 @@ Rectangle {
 
  // Scan on component load
  Component.onCompleted: {
-  wifiManager.scanNetworks();
+  WiFiManager.scanNetworks();
  }
 
  BaseMenu {
@@ -37,16 +36,16 @@ Rectangle {
 
   // Refresh button
   MenuButton {
-   text: wifiManager.isScanning ? tr("settings.system.wifi.scanning") : tr("settings.system.wifi.refresh")
-   enabled: !wifiManager.isScanning
+   text: WiFiManager.isScanning ? tr("settings.system.wifi.scanning") : tr("settings.system.wifi.refresh")
+   enabled: !WiFiManager.isScanning
    onClicked: {
-	wifiManager.scanNetworks();
+	WiFiManager.scanNetworks();
    }
   }
 
   // WiFi networks - dynamically create MenuButtons
   Repeater {
-   model: wifiManager.networks
+   model: WiFiManager.networks
    MenuButton {
 	text: modelData.name + (modelData.connected ? " ✓" : "") + (modelData.secured ? " 🔒" : " 🔓")
 	backgroundColor: modelData.connected ? Colors.success : Colors.primaryBackground
@@ -136,7 +135,7 @@ Rectangle {
 	 Button {
 	  text: tr("settings.system.wifi.connect.button")
 	  onClicked: {
-	   wifiManager.connectToNetwork(connectDialog.networkName, passwordField.text);
+	   WiFiManager.connectToNetwork(connectDialog.networkName, passwordField.text);
 	   passwordField.text = "";
 	   connectDialog.close();
 	  }

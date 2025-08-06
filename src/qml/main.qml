@@ -1,7 +1,7 @@
 import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
-import WalletModule 1.0
+import "singletons"
 import "components"
 import "pages"
 import "pages/Settings"
@@ -17,75 +17,35 @@ ApplicationWindow {
  readonly property int animationDuration: 500
  readonly property var animationEasing: Easing.OutCubic
 
- // Load singletons
- Loader {
-  id: colorsLoader
-  source: "singletons/Colors.qml"
- }
- 
- Loader {
-  id: settingsManagerLoader
-  source: "singletons/SettingsManager.qml"
-  onLoaded: checkInitialization()
- }
- 
- Loader {
-  id: translationManagerLoader
-  source: "singletons/TranslationManager.qml"
-  onLoaded: {
-   console.log("TranslationManager loaded");
-   // Connect to languageChanged signal to update UI when translations are loaded
-   if (item) {
-    item.languageChanged.connect(function() {
-     console.log("Language changed signal received");
-     forceUIUpdate();
-    });
-   }
-   checkInitialization();
-  }
+ // Create instances of our "singleton" objects
+ property var colors: colorsObj
+ property var settingsManager: settingsManagerObj  
+ property var translationManager: translationManagerObj
+
+ Colors {
+  id: colorsObj
  }
 
- // Track initialization state
- property bool isInitialized: false
- 
- function checkInitialization() {
-  if (settingsManagerLoader.item && translationManagerLoader.item && !isInitialized) {
-   isInitialized = true;
-   console.log("All singletons loaded, initializing...");
-   // Initialize TranslationManager with saved language
-   translationManagerLoader.item.setLanguage(settingsManagerLoader.item.selectedLanguage);
-  }
+ SettingsManager {
+  id: settingsManagerObj
  }
- 
- function forceUIUpdate() {
-  // Force UI update by incrementing a dummy property
-  uiUpdateCounter++;
+
+ TranslationManager {
+  id: translationManagerObj
  }
- 
- property int uiUpdateCounter: 0
 
- // Global aliases for easier access - use lowercase for QML compliance
- property alias colors: colorsLoader.item
- property alias settingsManager: settingsManagerLoader.item
- property alias translationManager: translationManagerLoader.item
+ // Global settings - use SettingsManager instance
+ property string selectedCurrency: settingsManager.selectedCurrency
+ property string selectedLanguage: settingsManager.selectedLanguage
 
- // Global settings - use SettingsManager
- property string selectedCurrency: settingsManager ? settingsManager.selectedCurrency : "USD"
- property string selectedLanguage: settingsManager ? settingsManager.selectedLanguage : "en"
-
- // System manager for real-time system data
- SystemManager {
-  id: systemManager
- }
+ // SystemManager is now available as global context property
+ // No need to create instance - it's injected from C++
 
  // Global translation function - available to all child components
  function tr(key) {
-  // Force binding update when translations change
-  var dummy = uiUpdateCounter;
-  
   try {
    if (translationManager && translationManager.tr)
-	return translationManager.tr(key);
+    return translationManager.tr(key);
   } catch (e) {
    console.log("Translation error:", e);
   }
@@ -94,14 +54,15 @@ ApplicationWindow {
  }
 
  background: Rectangle {
-  color: colors ? colors.primaryBackground : "#222"
+  color: colors.primaryBackground
  }
 
  Component.onCompleted: {
   x = (Screen.width - width) / 2;
   y = (Screen.height - height) / 2;
-  
   console.log("ApplicationWindow completed");
+  // Initialize TranslationManager with saved language
+  translationManager.setLanguage(settingsManager.selectedLanguage);
  }
 
  function goPage(component) {
@@ -122,9 +83,9 @@ ApplicationWindow {
   height: window.height * 0.1
 
   // Real system values
-  wifiStrength: systemManager.currentWifiStrength
-  batteryLevel: systemManager.batteryLevel
-  hasBattery: systemManager.hasBattery
+  wifiStrength: SystemManager.currentWifiStrength
+  batteryLevel: SystemManager.batteryLevel
+  hasBattery: SystemManager.hasBattery
 
   // Mock values for LoRa and GSM (not implemented yet)
   loraStrength: 0
@@ -230,8 +191,8 @@ ApplicationWindow {
   id: settingsGeneralFiatPageComponent
   SettingsGeneralFiat {
    onCurrencySelected: function (currency) {
-	settingsManager.saveCurrency(currency);
-	window.goBack();
+    window.settingsManager.saveCurrency(currency);
+    window.goBack();
    }
   }
  }
@@ -267,9 +228,9 @@ ApplicationWindow {
   id: settingsSystemLanguagePageComponent
   SettingsSystemLanguage {
    onLanguageSelected: function (languageCode) {
-	settingsManager.saveLanguage(languageCode);
-	translationManager.setLanguage(languageCode);
-	window.goBack();
+    window.settingsManager.saveLanguage(languageCode);
+    window.translationManager.setLanguage(languageCode);
+    window.goBack();
    }
   }
  }

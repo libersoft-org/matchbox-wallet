@@ -16,21 +16,23 @@ int main(int argc, char *argv[]) {
  // Set application icon
  app.setWindowIcon(QIcon(":/WalletModule/src/img/wallet.svg"));
 
- // Register QML types
- qmlRegisterType<WiFiManager>("WalletModule", 1, 0, "WiFiManager");
- qmlRegisterType<SystemManager>("WalletModule", 1, 0, "SystemManager");
+ // Create global instances for context properties
+ SystemManager *systemManager = new SystemManager();
+ WiFiManager *wifiManager = new WiFiManager();
+
  QQmlApplicationEngine engine;
- // Register QML context properties if needed
- // clang-format off
+
+ // Register context properties instead of QML types
+ engine.rootContext()->setContextProperty("SystemManager", systemManager);
+ engine.rootContext()->setContextProperty("WiFiManager", wifiManager);
  engine.rootContext()->setContextProperty("applicationVersion", app.applicationVersion());
- // clang-format on
  const QUrl url(QStringLiteral("qrc:/WalletModule/src/qml/main.qml"));
  QObject::connect(
-     &engine, &QQmlApplicationEngine::objectCreated, &app,
-     [url](QObject *obj, const QUrl &objUrl) {
-      if (!obj && url == objUrl) QCoreApplication::exit(-1);
-     },
-     Qt::QueuedConnection);
+					&engine, &QQmlApplicationEngine::objectCreated, &app,
+					[url](QObject *obj, const QUrl &objUrl) {
+						if (!obj && url == objUrl) QCoreApplication::exit(-1);
+					},
+					Qt::QueuedConnection);
  engine.load(url);
  return app.exec();
 }

@@ -18,19 +18,6 @@ target_include_directories(Wallet PRIVATE
  src
 )
 
-# Mark Colors.qml as singleton BEFORE qt_add_qml_module
-set_source_files_properties(src/qml/singletons/Colors.qml
- PROPERTIES QT_QML_SINGLETON_TYPE TRUE
-)
-
-set_source_files_properties(src/qml/singletons/TranslationManager.qml
- PROPERTIES QT_QML_SINGLETON_TYPE TRUE
-)
-
-set_source_files_properties(src/qml/singletons/SettingsManager.qml
- PROPERTIES QT_QML_SINGLETON_TYPE TRUE
-)
-
 # Automatically find all QML files with relative paths
 file(GLOB_RECURSE QML_FILES_LIST RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "src/qml/*.qml")
 

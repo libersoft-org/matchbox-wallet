@@ -1,4 +1,3 @@
-pragma Singleton
 import QtQuick 2.15
 import QtQuick.LocalStorage 2.15
 
