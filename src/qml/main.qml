@@ -17,9 +17,61 @@ ApplicationWindow {
  readonly property int animationDuration: 500
  readonly property var animationEasing: Easing.OutCubic
 
+ // Load singletons
+ Loader {
+  id: colorsLoader
+  source: "singletons/Colors.qml"
+ }
+ 
+ Loader {
+  id: settingsManagerLoader
+  source: "singletons/SettingsManager.qml"
+  onLoaded: checkInitialization()
+ }
+ 
+ Loader {
+  id: translationManagerLoader
+  source: "singletons/TranslationManager.qml"
+  onLoaded: {
+   console.log("TranslationManager loaded");
+   // Connect to languageChanged signal to update UI when translations are loaded
+   if (item) {
+    item.languageChanged.connect(function() {
+     console.log("Language changed signal received");
+     forceUIUpdate();
+    });
+   }
+   checkInitialization();
+  }
+ }
+
+ // Track initialization state
+ property bool isInitialized: false
+ 
+ function checkInitialization() {
+  if (settingsManagerLoader.item && translationManagerLoader.item && !isInitialized) {
+   isInitialized = true;
+   console.log("All singletons loaded, initializing...");
+   // Initialize TranslationManager with saved language
+   translationManagerLoader.item.setLanguage(settingsManagerLoader.item.selectedLanguage);
+  }
+ }
+ 
+ function forceUIUpdate() {
+  // Force UI update by incrementing a dummy property
+  uiUpdateCounter++;
+ }
+ 
+ property int uiUpdateCounter: 0
+
+ // Global aliases for easier access - use lowercase for QML compliance
+ property alias colors: colorsLoader.item
+ property alias settingsManager: settingsManagerLoader.item
+ property alias translationManager: translationManagerLoader.item
+
  // Global settings - use SettingsManager
- property string selectedCurrency: SettingsManager.selectedCurrency
- property string selectedLanguage: SettingsManager.selectedLanguage
+ property string selectedCurrency: settingsManager ? settingsManager.selectedCurrency : "USD"
+ property string selectedLanguage: settingsManager ? settingsManager.selectedLanguage : "en"
 
  // System manager for real-time system data
  SystemManager {
@@ -28,9 +80,12 @@ ApplicationWindow {
 
  // Global translation function - available to all child components
  function tr(key) {
+  // Force binding update when translations change
+  var dummy = uiUpdateCounter;
+  
   try {
-   if (TranslationManager && TranslationManager.tr)
-	return TranslationManager.tr(key);
+   if (translationManager && translationManager.tr)
+	return translationManager.tr(key);
   } catch (e) {
    console.log("Translation error:", e);
   }
@@ -39,15 +94,14 @@ ApplicationWindow {
  }
 
  background: Rectangle {
-  color: Colors.primaryBackground
+  color: colors ? colors.primaryBackground : "#222"
  }
 
  Component.onCompleted: {
   x = (Screen.width - width) / 2;
   y = (Screen.height - height) / 2;
-
-  // Initialize TranslationManager with saved language
-  TranslationManager.setLanguage(SettingsManager.selectedLanguage);
+  
+  console.log("ApplicationWindow completed");
  }
 
  function goPage(component) {
@@ -176,7 +230,7 @@ ApplicationWindow {
   id: settingsGeneralFiatPageComponent
   SettingsGeneralFiat {
    onCurrencySelected: function (currency) {
-	SettingsManager.saveCurrency(currency);
+	settingsManager.saveCurrency(currency);
 	window.goBack();
    }
   }
@@ -213,8 +267,8 @@ ApplicationWindow {
   id: settingsSystemLanguagePageComponent
   SettingsSystemLanguage {
    onLanguageSelected: function (languageCode) {
-	SettingsManager.saveLanguage(languageCode);
-	TranslationManager.setLanguage(languageCode);
+	settingsManager.saveLanguage(languageCode);
+	translationManager.setLanguage(languageCode);
 	window.goBack();
    }
   }

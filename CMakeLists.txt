@@ -19,15 +19,15 @@ target_include_directories(Wallet PRIVATE
 )
 
 # Mark Colors.qml as singleton BEFORE qt_add_qml_module
-set_source_files_properties(src/qml/Colors.qml
+set_source_files_properties(src/qml/singletons/Colors.qml
  PROPERTIES QT_QML_SINGLETON_TYPE TRUE
 )
 
-set_source_files_properties(src/qml/TranslationManager.qml
+set_source_files_properties(src/qml/singletons/TranslationManager.qml
  PROPERTIES QT_QML_SINGLETON_TYPE TRUE
 )
 
-set_source_files_properties(src/qml/SettingsManager.qml
+set_source_files_properties(src/qml/singletons/SettingsManager.qml
  PROPERTIES QT_QML_SINGLETON_TYPE TRUE
 )
 
