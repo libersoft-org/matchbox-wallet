@@ -4,7 +4,7 @@ Language: Cpp
 BasedOnStyle: Google
 IndentWidth: 1
 TabWidth: 1
-UseTab: Never
+UseTab: Always
 BreakBeforeBraces: Attach
 # Attach means opening braces go on the same line
 AllowShortIfStatementsOnASingleLine: true

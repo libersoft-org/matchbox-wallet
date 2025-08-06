@@ -4,13 +4,27 @@
 	"editor.formatOnSave": true,
 	"editor.detectIndentation": false,
 	"[cpp]": {
-		"editor.defaultFormatter": "ms-vscode.cpptools"
+		"editor.defaultFormatter": "xaver.clang-format",
+		"editor.formatOnSave": true,
+		"editor.codeActionsOnSave": {
+			"source.fixAll": "explicit"
+		}
 	},
 	"[c]": {
-		"editor.defaultFormatter": "ms-vscode.cpptools"
+		"editor.defaultFormatter": "xaver.clang-format",
+		"editor.formatOnSave": true,
+		"editor.codeActionsOnSave": {
+			"source.fixAll": "explicit"
+		}
 	},
 	"C_Cpp.clang_format_style": "file",
 	"C_Cpp.clang_format_fallbackStyle": "Google",
+	"C_Cpp.intelliSenseEngine": "disabled",
+	"C_Cpp.errorSquiggles": "disabled",
+	"C_Cpp.autocomplete": "disabled",
+	"editor.formatOnSaveMode": "file",
+	"clang-format.executable": "clang-format",
+	"clang-format.style": "file",
 	"[javascript]": {
 		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
