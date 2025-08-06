@@ -5,45 +5,48 @@ import WalletModule 1.0
 import "../../components"
 
 BaseMenu {
-	id: root
-	title: tr("menu.settings.system.title")
-	signal wifiSettingsRequested
-	signal languageSelectionRequested
-	signal timeSettingsRequested
-	
-	property string selectedLanguage: "en"
-	
-	function getLanguageDisplayName(langCode) {
-		switch(langCode) {
-			case "en": return tr("common.languages.english")
-			case "cz": return tr("common.languages.czech")
-			default: return langCode
-		}
-	}
+ id: root
+ title: tr("menu.settings.system.title")
+ signal wifiSettingsRequested
+ signal languageSelectionRequested
+ signal timeSettingsRequested
 
-	MenuButton {
-		id: languageButton
-		text: {
-			var displayName = getLanguageDisplayName(root.selectedLanguage)
-			var template = tr("menu.settings.system.language.button")
-			return template.replace("%1", displayName)
-		}
-		onClicked: root.languageSelectionRequested();
-	}
+ property string selectedLanguage: "en"
 
-	MenuButton {
-		text: tr("menu.settings.system.time.button")
-		onClicked: root.timeSettingsRequested();
-	}
+ function getLanguageDisplayName(langCode) {
+  switch (langCode) {
+  case "en":
+   return tr("common.languages.english");
+  case "cz":
+   return tr("common.languages.czech");
+  default:
+   return langCode;
+  }
+ }
 
-	MenuButton {
-		text: tr("menu.settings.system.wifi.button")
-		onClicked: root.wifiSettingsRequested();
-	}
+ MenuButton {
+  id: languageButton
+  text: {
+   var displayName = getLanguageDisplayName(root.selectedLanguage);
+   var template = tr("menu.settings.system.language.button");
+   return template.replace("%1", displayName);
+  }
+  onClicked: root.languageSelectionRequested()
+ }
 
-	MenuButton {
-		text: tr("menu.settings.system.lora.button")
-		enabled: false
-		onClicked: console.log("LoRa settings clicked - not implemented yet");
-	}
+ MenuButton {
+  text: tr("menu.settings.system.time.button")
+  onClicked: root.timeSettingsRequested()
+ }
+
+ MenuButton {
+  text: tr("menu.settings.system.wifi.button")
+  onClicked: root.wifiSettingsRequested()
+ }
+
+ MenuButton {
+  text: tr("menu.settings.system.lora.button")
+  enabled: false
+  onClicked: console.log("LoRa settings clicked - not implemented yet")
+ }
 }

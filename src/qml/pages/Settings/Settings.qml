@@ -5,31 +5,31 @@ import WalletModule 1.0
 import "../../components"
 
 BaseMenu {
-	id: root
-	title: tr("menu.settings.title")
-	
-	signal systemSettingsRequested
-	signal generalSettingsRequested
+ id: root
+ title: tr("menu.settings.title")
 
-	MenuButton {
-		text: tr("menu.settings.general.button")
-		onClicked: root.generalSettingsRequested();
-	}
+ signal systemSettingsRequested
+ signal generalSettingsRequested
 
-	MenuButton {
-		text: tr("menu.settings.wallets.button")
-		onClicked: console.log("Wallets settings clicked");
-		enabled:	false
-	}
+ MenuButton {
+  text: tr("menu.settings.general.button")
+  onClicked: root.generalSettingsRequested()
+ }
 
-	MenuButton {
-		text: tr("menu.settings.networks.button")
-		onClicked: console.log("Networks settings clicked");
-		enabled: false
-	}
+ MenuButton {
+  text: tr("menu.settings.wallets.button")
+  onClicked: console.log("Wallets settings clicked")
+  enabled: false
+ }
 
-	MenuButton {
-		text: tr("menu.settings.system.button")
-		onClicked: root.systemSettingsRequested();
-	}
+ MenuButton {
+  text: tr("menu.settings.networks.button")
+  onClicked: console.log("Networks settings clicked")
+  enabled: false
+ }
+
+ MenuButton {
+  text: tr("menu.settings.system.button")
+  onClicked: root.systemSettingsRequested()
+ }
 }
