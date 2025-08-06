@@ -4,6 +4,10 @@ import QtQuick.Layouts 1.15
 
 Item {
  id: root
+
+ // Local alias for easier access to colors
+ property var colors: window.colors
+
  default property alias content: contentItem.children
  property real topMargin: height * 0.05
  property real bottomMargin: height * 0.05
@@ -14,7 +18,7 @@ Item {
  /*
 	Rectangle {
 		anchors.fill: parent
-		color: window.colors.error
+		color: colors.error
 		opacity: 0.2
 	}
 	*/
@@ -53,7 +57,7 @@ Item {
   size: flickable.visibleArea.heightRatio
 
   contentItem: Rectangle {
-   color: window.colors.primaryForeground
+   color: colors.primaryForeground
    opacity: 0.2
    radius: parent.width * 0.5
   }

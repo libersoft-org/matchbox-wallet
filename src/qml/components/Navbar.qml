@@ -3,6 +3,10 @@ import QtQuick.Controls 2.15
 
 Item {
  id: root
+
+ // Local alias for easier access to colors
+ property var colors: window.colors
+
  property string title: ""
  property bool showBackButton: true
  property bool showPowerButton: true
@@ -37,7 +41,7 @@ Item {
   text: root.title
   font.pixelSize: parent.height * 0.4
   font.bold: true
-  color: window.colors.primaryForeground
+  color: colors.primaryForeground
  }
 
  // Power button (right)

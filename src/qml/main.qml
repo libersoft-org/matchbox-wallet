@@ -19,7 +19,7 @@ ApplicationWindow {
 
  // Create instances of our "singleton" objects
  property var colors: colorsObj
- property var settingsManager: settingsManagerObj  
+ property var settingsManager: settingsManagerObj
  property var translationManager: translationManagerObj
 
  Colors {
@@ -45,7 +45,7 @@ ApplicationWindow {
  function tr(key) {
   try {
    if (translationManager && translationManager.tr)
-    return translationManager.tr(key);
+	return translationManager.tr(key);
   } catch (e) {
    console.log("Translation error:", e);
   }
@@ -191,8 +191,8 @@ ApplicationWindow {
   id: settingsGeneralFiatPageComponent
   SettingsGeneralFiat {
    onCurrencySelected: function (currency) {
-    window.settingsManager.saveCurrency(currency);
-    window.goBack();
+	window.settingsManager.saveCurrency(currency);
+	window.goBack();
    }
   }
  }
@@ -228,9 +228,9 @@ ApplicationWindow {
   id: settingsSystemLanguagePageComponent
   SettingsSystemLanguage {
    onLanguageSelected: function (languageCode) {
-    window.settingsManager.saveLanguage(languageCode);
-    window.translationManager.setLanguage(languageCode);
-    window.goBack();
+	window.settingsManager.saveLanguage(languageCode);
+	window.translationManager.setLanguage(languageCode);
+	window.goBack();
    }
   }
  }

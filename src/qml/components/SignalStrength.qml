@@ -2,9 +2,13 @@ import QtQuick 2.15
 
 Item {
  id: root
+
+ // Local alias for easier access to colors
+ property var colors: window.colors
+
  property int strength: 0  // Signal strength (0-4)
- property color activeColor: window.colors.success
- property color inactiveColor: window.colors.disabledForeground
+ property color activeColor: colors.success
+ property color inactiveColor: colors.disabledForeground
 
  Row {
   anchors.centerIn: parent
