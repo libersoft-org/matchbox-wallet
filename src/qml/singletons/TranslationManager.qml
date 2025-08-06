@@ -32,7 +32,8 @@ QtObject {
    console.log("XHR state changed, readyState:", xhr.readyState, "status:", xhr.status);
    if (xhr.readyState === XMLHttpRequest.DONE) {
 	console.log("XHR finished - Status:", xhr.status, "Response length:", xhr.responseText.length);
-	if (xhr.status >= 200 && xhr.status < 300 || xhr.status === 0) { // status 0 for local files
+	if (xhr.status >= 200 && xhr.status < 300 || xhr.status === 0) {
+	 // status 0 for local files
 	 try {
 	  var parsed = JSON.parse(xhr.responseText);
 	  console.log("JSON parsed successfully, keys:", Object.keys(parsed));
