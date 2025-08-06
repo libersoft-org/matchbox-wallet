@@ -6,6 +6,6 @@ import WalletModule 1.0
 import "../components"
 
 Rectangle {
-	id: root
+ id: root
  property string title: "Camera test"
 }

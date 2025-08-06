@@ -5,24 +5,24 @@ import WalletModule 1.0
 import "../../components"
 
 BaseMenu {
-	id: root
-	title: tr("menu.settings.system.language.title")
-	
-	signal languageSelected(string languageCode)
-	
-	MenuButton {
-		id: englishButton
-		text: tr("common.languages.english")
-		onClicked: {
-			root.languageSelected("en");
-		}
-	}
-	
-	MenuButton {
-		id: czechButton
-		text: tr("common.languages.czech")
-		onClicked: {
-			root.languageSelected("cz");
-		}
-	}
+ id: root
+ title: tr("menu.settings.system.language.title")
+
+ signal languageSelected(string languageCode)
+
+ MenuButton {
+  id: englishButton
+  text: tr("common.languages.english")
+  onClicked: {
+   root.languageSelected("en");
+  }
+ }
+
+ MenuButton {
+  id: czechButton
+  text: tr("common.languages.czech")
+  onClicked: {
+   root.languageSelected("cz");
+  }
+ }
 }

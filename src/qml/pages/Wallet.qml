@@ -6,68 +6,68 @@ import "../components"
 import "Wallet"
 
 BaseMenu {
-	id: root
-	title: tr("menu.wallet.title")
-	property var goPageFunction
+ id: root
+ title: tr("menu.wallet.title")
+ property var goPageFunction
 
-	// Component definitions
-	property Component balanceComponent: Component {
-		Balance {
-		}
-	}
-	
-	property Component sendComponent: Component {
-		Send {
-		}
-	}
-	
-	property Component receiveComponent: Component {
-		Receive {
-		}
-	}
-	
-	property Component addressBookComponent: Component {
-		AddressBook {
-		}
-	}
-	
-	property Component networkComponent: Component {
-		Network {
-		}
-	}
-	
-	property Component addressComponent: Component {
-		Address {
-		}
-	}
+ // Component definitions
+ property Component balanceComponent: Component {
+  Balance {
+  }
+ }
 
-	MenuButton {
-		text: tr("menu.wallet.balance.button")
-		onClicked: goPageFunction(root.balanceComponent)
-	}
-	
-	MenuButton {
-		text: tr("menu.wallet.send.button")
-		onClicked: goPageFunction(root.sendComponent)
-	}
+ property Component sendComponent: Component {
+  Send {
+  }
+ }
 
-	MenuButton {
-		text: tr("menu.wallet.receive.button")
-		onClicked: goPageFunction(root.receiveComponent)
-	}
+ property Component receiveComponent: Component {
+  Receive {
+  }
+ }
 
-	MenuButton {
-		text: tr("menu.wallet.addressbook.button")
-		onClicked: goPageFunction(root.addressBookComponent)
-	}
+ property Component addressBookComponent: Component {
+  AddressBook {
+  }
+ }
 
-	MenuButton {
-		text: tr("menu.wallet.network.button")
-		onClicked: goPageFunction(root.networkComponent)
-	}
+ property Component networkComponent: Component {
+  Network {
+  }
+ }
 
-	MenuButton {
-		text: tr("menu.wallet.address.button")
-		onClicked: goPageFunction(root.addressComponent)
-	}
+ property Component addressComponent: Component {
+  Address {
+  }
+ }
+
+ MenuButton {
+  text: tr("menu.wallet.balance.button")
+  onClicked: goPageFunction(root.balanceComponent)
+ }
+
+ MenuButton {
+  text: tr("menu.wallet.send.button")
+  onClicked: goPageFunction(root.sendComponent)
+ }
+
+ MenuButton {
+  text: tr("menu.wallet.receive.button")
+  onClicked: goPageFunction(root.receiveComponent)
+ }
+
+ MenuButton {
+  text: tr("menu.wallet.addressbook.button")
+  onClicked: goPageFunction(root.addressBookComponent)
+ }
+
+ MenuButton {
+  text: tr("menu.wallet.network.button")
+  onClicked: goPageFunction(root.networkComponent)
+ }
+
+ MenuButton {
+  text: tr("menu.wallet.address.button")
+  onClicked: goPageFunction(root.addressComponent)
+ }
 }

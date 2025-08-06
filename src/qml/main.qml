@@ -16,41 +16,43 @@ ApplicationWindow {
  property string iconSource: "qrc:/WalletModule/src/img/wallet.svg"
  readonly property int animationDuration: 500
  readonly property var animationEasing: Easing.OutCubic
- 
+
  // Global settings - use SettingsManager
  property string selectedCurrency: SettingsManager.selectedCurrency
  property string selectedLanguage: SettingsManager.selectedLanguage
- 
+
  // System manager for real-time system data
  SystemManager {
   id: systemManager
  }
- 
+
  // Global translation function - available to all child components
  function tr(key) {
   try {
-   if (TranslationManager && TranslationManager.tr) return TranslationManager.tr(key)
+   if (TranslationManager && TranslationManager.tr)
+	return TranslationManager.tr(key);
   } catch (e) {
-   console.log("Translation error:", e)
+   console.log("Translation error:", e);
   }
   // Fallback - return key
-  return key
+  return key;
  }
-	
-	background: Rectangle {
+
+ background: Rectangle {
   color: Colors.primaryBackground
  }
 
  Component.onCompleted: {
   x = (Screen.width - width) / 2;
   y = (Screen.height - height) / 2;
-  
+
   // Initialize TranslationManager with saved language
   TranslationManager.setLanguage(SettingsManager.selectedLanguage);
  }
 
  function goPage(component) {
-  if (stackView && component) stackView.push(component);
+  if (stackView && component)
+   stackView.push(component);
  }
 
  function goBack() {
@@ -64,12 +66,12 @@ ApplicationWindow {
   anchors.left: parent.left
   anchors.right: parent.right
   height: window.height * 0.1
-  
+
   // Real system values
   wifiStrength: systemManager.currentWifiStrength
   batteryLevel: systemManager.batteryLevel
   hasBattery: systemManager.hasBattery
-  
+
   // Mock values for LoRa and GSM (not implemented yet)
   loraStrength: 0
   gsmStrength: 0  // 0 means no signal/not available
@@ -99,38 +101,38 @@ ApplicationWindow {
   initialItem: mainMenuComponent
   pushEnter: Transition {
    PropertyAnimation {
-    property: "x"
-    from: stackView.width
-    to: 0
-    duration: window.animationDuration
-    easing.type: window.animationEasing
+	property: "x"
+	from: stackView.width
+	to: 0
+	duration: window.animationDuration
+	easing.type: window.animationEasing
    }
   }
   pushExit: Transition {
    PropertyAnimation {
-    property: "x"
-    from: 0
-    to: -stackView.width
-    duration: window.animationDuration
-    easing.type: window.animationEasing
+	property: "x"
+	from: 0
+	to: -stackView.width
+	duration: window.animationDuration
+	easing.type: window.animationEasing
    }
   }
   popEnter: Transition {
    PropertyAnimation {
-    property: "x"
-    from: -stackView.width
-    to: 0
-    duration: window.animationDuration
-    easing.type: window.animationEasing
+	property: "x"
+	from: -stackView.width
+	to: 0
+	duration: window.animationDuration
+	easing.type: window.animationEasing
    }
   }
   popExit: Transition {
    PropertyAnimation {
-    property: "x"
-    from: 0
-    to: stackView.width
-    duration: window.animationDuration
-    easing.type: window.animationEasing
+	property: "x"
+	from: 0
+	to: stackView.width
+	duration: window.animationDuration
+	easing.type: window.animationEasing
    }
   }
  }
@@ -173,9 +175,9 @@ ApplicationWindow {
  Component {
   id: settingsGeneralFiatPageComponent
   SettingsGeneralFiat {
-   onCurrencySelected: function(currency) {
-    SettingsManager.saveCurrency(currency);
-    window.goBack();
+   onCurrencySelected: function (currency) {
+	SettingsManager.saveCurrency(currency);
+	window.goBack();
    }
   }
  }
@@ -210,10 +212,10 @@ ApplicationWindow {
  Component {
   id: settingsSystemLanguagePageComponent
   SettingsSystemLanguage {
-   onLanguageSelected: function(languageCode) {
-    SettingsManager.saveLanguage(languageCode);
-    TranslationManager.setLanguage(languageCode);
-    window.goBack();
+   onLanguageSelected: function (languageCode) {
+	SettingsManager.saveLanguage(languageCode);
+	TranslationManager.setLanguage(languageCode);
+	window.goBack();
    }
   }
  }
@@ -222,10 +224,10 @@ ApplicationWindow {
  Component {
   id: settingsSystemTimePageComponent
   SettingsSystemTime {
-   onTimeChanged: function(timeString) {
-    console.log("Time changed to:", timeString);
-    // TODO: Implement actual system time setting
-    window.goBack();
+   onTimeChanged: function (timeString) {
+	console.log("Time changed to:", timeString);
+	// TODO: Implement actual system time setting
+	window.goBack();
    }
   }
  }
@@ -240,6 +242,7 @@ ApplicationWindow {
  // Camera preview page
  Component {
   id: cameraPreviewPageComponent
-  CameraPreview { }
+  CameraPreview {
+  }
  }
 }

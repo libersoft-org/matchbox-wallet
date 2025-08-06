@@ -5,27 +5,27 @@ import WalletModule 1.0
 import "../components"
 
 BaseMenu {
-	id: root
-	title: tr("menu.title")
-	property bool showBackButton: false
-	property var walletComponent
-	property var settingsComponent
-	property var powerOffComponent  
-	property var cameraPreviewComponent
-	property var goPageFunction
+ id: root
+ title: tr("menu.title")
+ property bool showBackButton: false
+ property var walletComponent
+ property var settingsComponent
+ property var powerOffComponent
+ property var cameraPreviewComponent
+ property var goPageFunction
 
-	MenuButton {
-		text: tr("menu.wallet.button")
-		onClicked: goPageFunction(walletComponent)
-	}
-	
-	MenuButton {
-		text: tr("menu.settings.button")
-		onClicked: goPageFunction(settingsComponent)
-	}
+ MenuButton {
+  text: tr("menu.wallet.button")
+  onClicked: goPageFunction(walletComponent)
+ }
 
-	MenuButton {
-		text: "Camera test"
-		onClicked: goPageFunction(cameraPreviewComponent)
-	}
+ MenuButton {
+  text: tr("menu.settings.button")
+  onClicked: goPageFunction(settingsComponent)
+ }
+
+ MenuButton {
+  text: "Camera test"
+  onClicked: goPageFunction(cameraPreviewComponent)
+ }
 }

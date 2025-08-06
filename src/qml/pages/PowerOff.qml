@@ -5,24 +5,25 @@ import WalletModule 1.0
 import "../components"
 
 BaseMenu {
-	id: root
-	title: tr("menu.power.title")
-	property bool showPowerButton: false
-	
-	property SystemManager systemManager: SystemManager { }
-	
-	MenuButton {
-		text: tr("menu.power.quit")
-		onClicked: Qt.quit()
-	}
+ id: root
+ title: tr("menu.power.title")
+ property bool showPowerButton: false
 
-	MenuButton {
-		text: tr("menu.power.reboot")
-		onClicked: systemManager.rebootSystem()
-	}
+ property SystemManager systemManager: SystemManager {
+ }
 
-	MenuButton {
-		text: tr("menu.power.shutdown")
-		onClicked: systemManager.shutdownSystem()
-	}
+ MenuButton {
+  text: tr("menu.power.quit")
+  onClicked: Qt.quit()
+ }
+
+ MenuButton {
+  text: tr("menu.power.reboot")
+  onClicked: systemManager.rebootSystem()
+ }
+
+ MenuButton {
+  text: tr("menu.power.shutdown")
+  onClicked: systemManager.shutdownSystem()
+ }
 }
