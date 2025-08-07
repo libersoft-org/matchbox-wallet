@@ -183,7 +183,7 @@ bool NodeJS::loadJSEntryPoint() {
     QString wrappedCode = jsCode;
     
     // Set up proper working directory for module resolution
-    QString jsDir = QDir(QDir(appDir).absoluteFilePath("../src/js")).absolutePath();
+    QString jsDir = QDir(QDir(appDir).absoluteFilePath("../../src/js")).absolutePath();
     qDebug() << "Setting Node.js working directory to:" << jsDir;
     
     // Set up the require function that can load files from disk, then execute our code
