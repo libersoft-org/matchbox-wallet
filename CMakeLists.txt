@@ -5,8 +5,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(Qt6 REQUIRED COMPONENTS Core Quick Svg)
 find_package(Qt6 QUIET COMPONENTS Multimedia)
 
-# Find Node.js for embedding
-find_path(NODEJS_INCLUDE_DIR 
+find_path(NODEJS_INCLUDE_DIR
     NAMES node.h
     HINTS /usr/include/node /usr/local/include/node /opt/homebrew/include/node
     PATH_SUFFIXES nodejs node
@@ -48,6 +47,11 @@ endif()
 
 message(STATUS "Found Node.js headers: ${NODEJS_INCLUDE_DIR}")
 message(STATUS "Found Node.js library: ${NODEJS_LIBRARY}")
+
+# TODO: Felgo doesnt work on ARM
+#find_package(FelgoHotReload REQUIRED)
+#target_link_libraries(appCppBackendCharts PRIVATE FelgoHotReload)
+
 set(QT_QML_GENERATE_QMLLS_INI ON)
 qt_standard_project_setup()
 qt_add_executable(Wallet
