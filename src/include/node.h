@@ -10,6 +10,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QObject>
+#include <QTimer>
 #include <functional>
 #include <memory>
 
@@ -35,6 +36,9 @@ public:
 signals:
  void messageResponse(const QJsonObject &result);
 
+private slots:
+ void spinEventLoop();
+
 private:
  bool initializeNodePlatform();
  bool setupEnvironment();
@@ -50,6 +54,8 @@ private:
  node::Environment *m_env;
  v8::Global<v8::Function> m_handleMessageFunction;
  bool m_initialized;
+
+ QTimer *m_eventLoopTimer;
 
  static NodeJS *s_instance;
  std::function<void(const QJsonObject &)> m_currentCallback;

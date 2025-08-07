@@ -17,6 +17,7 @@ NodeJS::NodeJS(QObject *parent)
     , m_isolate(nullptr)
     , m_env(nullptr)
     , m_initialized(false)
+    , m_eventLoopTimer(nullptr)
 {
     s_instance = this;
 }
@@ -338,12 +339,15 @@ void NodeJS::messageCallback(const v8::FunctionCallbackInfo<v8::Value> &args) {
 }
 
 void NodeJS::msg(const QString &name, const QJsonObject &params, std::function<void(const QJsonObject&)> callback) {
+    qDebug() << "msg() called with action:" << name;
+    
     if (!m_initialized || !m_isolate || !m_env) {
         qWarning() << "Node.js not initialized";
         callback(QJsonObject{{"status", "error"}, {"message", "Node.js not initialized"}});
         return;
     }
     
+    qDebug() << "msg() proceeding with Node.js call";
     m_currentCallback = callback;
     
     v8::Locker locker(m_isolate);
@@ -393,14 +397,18 @@ void NodeJS::msg(const QString &name, const QJsonObject &params, std::function<v
     }
     
     // Call handleMessage function
+    qDebug() << "msg() calling handleMessage function";
     v8::Local<v8::Function> handleMessage = m_handleMessageFunction.Get(m_isolate);
     v8::Local<v8::Value> args[] = { jsValue };
     
     v8::Local<v8::Value> result;
     if (!handleMessage->Call(context, context->Global(), 1, args).ToLocal(&result)) {
+        qDebug() << "msg() handleMessage call failed";
         callback(QJsonObject{{"status", "error"}, {"message", "Failed to call handleMessage"}});
         return;
     }
+    
+    qDebug() << "msg() handleMessage call completed successfully";
 }
 
 // QML version with callback
@@ -431,13 +439,69 @@ void NodeJS::msg(const QString &name, const QJsonObject &params) {
 }
 
 void NodeJS::startEventLoop() {
-    qDebug() << "Node.js embedded - using built-in libuv event loop";
-    // Node.js/libuv handles its own threading internally
-    // No need for separate Qt thread which causes lock contention
+    qDebug() << "Setting up Qt Timer for Node.js event loop integration";
+    
+    // Create and configure the event loop timer
+    m_eventLoopTimer = new QTimer(this);
+    m_eventLoopTimer->setInterval(100); // 100ms interval
+    m_eventLoopTimer->setSingleShot(false);
+    
+    // Connect timer to our event loop processing slot
+    connect(m_eventLoopTimer, &QTimer::timeout, this, &NodeJS::spinEventLoop);
+    
+    // Start the timer
+    m_eventLoopTimer->start();
+    qDebug() << "Node.js event loop timer started (100ms interval)";
+}
+
+void NodeJS::spinEventLoop() {
+
+	qDebug() << "spinEventLoop...";
+
+    if (!m_env || !m_isolate) {
+        qDebug() << "spinEventLoop: env or isolate is null, skipping";
+        return;
+    }
+    
+    static int callCount = 0;
+    callCount++;
+    
+    // Log every 50 calls (5 seconds at 100ms interval) to avoid spam
+    if (callCount % 5 == 1) {
+        qDebug() << "spinEventLoop: Processing Node.js event loop (call #" << callCount << ")";
+    }
+    
+    // Process the Node.js event loop
+    v8::Locker locker(m_isolate);
+    v8::Isolate::Scope isolate_scope(m_isolate);
+    v8::HandleScope handle_scope(m_isolate);
+    
+    // Spin the event loop once to process pending async operations
+    auto result = node::SpinEventLoop(m_env);
+    qDebug() << "spinEventLoop: SpinEventLoop returned" << (result.IsNothing() ? "nothing" : "a value");
+    
+    // Check if SpinEventLoop returned something meaningful
+    if (result.IsNothing()) {
+        if (callCount % 50 == 1) {
+            qDebug() << "spinEventLoop: SpinEventLoop returned nothing";
+        }
+    } else {
+        if (callCount % 50 == 1) {
+            qDebug() << "spinEventLoop: SpinEventLoop returned value";
+        }
+    }
 }
 
 void NodeJS::stopEventLoop() {
-    // Node.js handles its own event loop cleanup
+    // Stop the Qt timer first
+    if (m_eventLoopTimer) {
+        m_eventLoopTimer->stop();
+        m_eventLoopTimer->deleteLater();
+        m_eventLoopTimer = nullptr;
+        qDebug() << "Node.js event loop timer stopped";
+    }
+    
+    // Signal Node.js to stop
     if (m_env) {
         node::Stop(m_env);
     }
