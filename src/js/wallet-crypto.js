@@ -133,12 +133,12 @@ class CryptoHandler {
         
         try {
             console.log('Testing fetch functionality...');
-            const testResponse = await fetch('http://127.0.0.1/');
+            const testResponse = await fetch('https://httpbin.org/json');
             const testData = await testResponse.json();
             console.log('Fetch test successful, received data keys:', Object.keys(testData));
             
             console.log('Creating ethers.JsonRpcProvider...');
-            const provider = new ethers.JsonRpcProvider('https://eth.llamarpc.com');
+            const provider = new ethers.JsonRpcProvider('https://ethereum-rpc.publicnode.com');
             console.log('Provider created successfully');
 
             console.log('Attempting to fetch latest block...');

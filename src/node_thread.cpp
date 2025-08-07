@@ -294,9 +294,16 @@ void NodeThread::processMessages() {
             v8::HandleScope handle_scope(m_isolate);
             
 
-            // Use the proper Node.js event loop that handles timers correctly
-            qDebug() << "NodeThread: Using node::SpinEventLoop";
-            node::SpinEventLoop(m_env);
+            // Add the missing Context::Scope to make GetCurrentEventLoop work
+            v8::Context::Scope context_scope(m_setup->context());
+            
+            // Now GetCurrentEventLoop should work because we have all required scopes
+            uv_loop_t* loop = node::GetCurrentEventLoop(m_isolate);
+            if (loop) {
+                uv_run(loop, UV_RUN_NOWAIT);
+            } else {
+                qDebug() << "NodeThread: GetCurrentEventLoop still returns null";
+            }
         }
         
         // Sleep briefly to prevent busy waiting
