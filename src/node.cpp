@@ -5,6 +5,9 @@
 #include <QJsonDocument>
 #include <QFile>
 #include <QTextStream>
+#include <QJSValue>
+#include <QQmlEngine>
+#include <QJSEngine>
 
 const char* NodeJS::JS_ENTRY_PATH = "src/js/index.js";
 NodeJS* NodeJS::s_instance = nullptr;
@@ -398,6 +401,26 @@ void NodeJS::msg(const QString &name, const QJsonObject &params, std::function<v
     if (!handleMessage->Call(context, context->Global(), 1, args).ToLocal(&result)) {
         callback(QJsonObject{{"status", "error"}, {"message", "Failed to call handleMessage"}});
         return;
+    }
+}
+
+// QML version with callback
+void NodeJS::msg(const QString &name, const QJsonObject &params, const QJSValue &callback) {
+    if (callback.isCallable()) {
+        msg(name, params, [callback](const QJsonObject& result) mutable {
+            // Convert QJsonObject to JSON string and let QML parse it
+            QJsonDocument doc(result);
+            QString jsonString = doc.toJson(QJsonDocument::Compact);
+            
+            // Call the JavaScript callback with the JSON string
+            QJSValue callResult = callback.call({QJSValue(jsonString)});
+            if (callResult.isError()) {
+                qWarning() << "JavaScript callback error:" << callResult.toString();
+            }
+        });
+    } else {
+        // Fall back to signal if callback is not callable
+        msg(name, params);
     }
 }
 

@@ -13,6 +13,14 @@ BaseMenu {
  property var powerOffComponent
  property var cameraPreviewComponent
  property var goPageFunction
+ 
+ // Wrapper function that handles JSON parsing
+ function msg(action, params, callback) {
+  NodeJS.msg(action, params, function(resultJson) {
+   var result = JSON.parse(resultJson)
+   callback(result)
+  })
+ }
 
  MenuButton {
   text: tr("menu.wallet.button")
@@ -32,11 +40,7 @@ BaseMenu {
  MenuButton {
   text: "Test Ping"
   onClicked: {
-   var message = {
-    "action": "ping",
-    "data": {}
-   }
-   NodeJS.msg(message, function(result) {
+   msg("ping", {}, function(result) {
     console.log("Ping result:", JSON.stringify(result))
    })
   }
@@ -45,13 +49,7 @@ BaseMenu {
  MenuButton {
   text: "Test Hash"
   onClicked: {
-   var message = {
-    "action": "hash",
-    "data": {
-     "input": "Hello World"
-    }
-   }
-   NodeJS.msg(message, function(result) {
+   msg("hash", {"input": "Hello World"}, function(result) {
     console.log("Hash result:", JSON.stringify(result))
    })
   }
@@ -60,11 +58,7 @@ BaseMenu {
  MenuButton {
   text: "Generate Key Pair"
   onClicked: {
-   var message = {
-    "action": "generateKeyPair",
-    "data": {}
-   }
-   NodeJS.msg(message, function(result) {
+   msg("generateKeyPair", {}, function(result) {
     console.log("Key pair result:", JSON.stringify(result))
    })
   }
@@ -73,30 +67,16 @@ BaseMenu {
  MenuButton {
   text: "Random Bytes"
   onClicked: {
-   var message = {
-    "action": "generateRandomBytes",
-    "data": {
-     "length": 16
-    }
-   }
-   NodeJS.msg(message, function(result) {
+   msg("generateRandomBytes", {"length": 16}, function(result) {
     console.log("Random bytes result:", JSON.stringify(result))
    })
   }
  }
 
  MenuButton {
-  text: "Test HMAC"
+  text: "Test HMAC"  
   onClicked: {
-   var message = {
-    "action": "hmac",
-    "data": {
-     "data": "Hello World",
-     "key": "secret_key",
-     "algorithm": "sha256"
-    }
-   }
-   NodeJS.msg(message, function(result) {
+   msg("hmac", {"data": "Hello World", "key": "secret_key", "algorithm": "sha256"}, function(result) {
     console.log("HMAC result:", JSON.stringify(result))
    })
   }

@@ -8,6 +8,7 @@
 #include <functional>
 #include <memory>
 #include <atomic>
+#include <QJSValue>
 #include <node.h>
 #include <uv.h>
 #include <v8.h>
@@ -23,7 +24,10 @@ public:
     Q_INVOKABLE bool initialize();
     Q_INVOKABLE void shutdown();
     
-    // Generic message function for both C++ and QML
+    // Generic message function for QML with callback
+    Q_INVOKABLE void msg(const QString &name, const QJsonObject &params, const QJSValue &callback);
+    
+    // Generic message function for QML without callback (uses signal)
     Q_INVOKABLE void msg(const QString &name, const QJsonObject &params = QJsonObject());
     
     // For C++ usage with callbacks (overload)
