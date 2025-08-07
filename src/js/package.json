@@ -6,8 +6,14 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["wallet", "embedded", "node"],
+  "keywords": [
+    "wallet",
+    "embedded",
+    "node"
+  ],
   "author": "LiberSoft",
   "license": "ISC",
-  "dependencies": {}
+  "dependencies": {
+    "ethers": "^6.15.0"
+  }
 }

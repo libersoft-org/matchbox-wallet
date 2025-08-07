@@ -75,4 +75,32 @@ BaseMenu {
    })
   }
  }
+
+ MenuButton {
+  text: "Create Wallet"
+  onClicked: {
+   Node.msg("createWallet", {}, function(result) {
+    console.log("Create wallet result:", JSON.stringify(result))
+   })
+  }
+ }
+
+
+ MenuButton {
+  text: "Validate bad Address"
+  onClicked: {
+   Node.msg("validateAddress", {"address": "0x742d35cc6b4C16a5b9C9C9b3dB0B6b1b3b0C5a6e"}, function(result) {
+    console.log("Validate address result:", JSON.stringify(result))
+   })
+  }
+ }
+
+ MenuButton {
+  text: "Validate good Address"
+  onClicked: {
+   Node.msg("validateAddress", {"address": "0x39E54b2Ca6535b51333e1Ea4Ef43B4038d23adB4"}, function(result) {
+    console.log("Validate address result:", JSON.stringify(result))
+   })
+  }
+ }
 }

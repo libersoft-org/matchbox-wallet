@@ -20,47 +20,39 @@ global.handleMessage = function(message, callback) {
                 break;
                 
             case 'hash':
-                try {
-                    result = CryptoHandler.hash(data?.input);
-                } catch (error) {
-                    result = { 
-                        status: 'error', 
-                        message: error.message 
-                    };
-                }
+                result = CryptoHandler.hash(data?.input);
                 break;
                 
             case 'generateKeyPair':
-                try {
-                    result = CryptoHandler.generateKeyPair();
-                } catch (error) {
-                    result = { 
-                        status: 'error', 
-                        message: error.message 
-                    };
-                }
+                result = CryptoHandler.generateKeyPair();
                 break;
                 
             case 'generateRandomBytes':
-                try {
-                    result = CryptoHandler.generateRandomBytes(data?.length);
-                } catch (error) {
-                    result = { 
-                        status: 'error', 
-                        message: error.message 
-                    };
-                }
+                result = CryptoHandler.generateRandomBytes(data?.length);
                 break;
                 
             case 'hmac':
-                try {
-                    result = CryptoHandler.hmac(data?.data, data?.key, data?.algorithm);
-                } catch (error) {
-                    result = { 
-                        status: 'error', 
-                        message: error.message 
-                    };
-                }
+                result = CryptoHandler.hmac(data?.data, data?.key, data?.algorithm);
+                break;
+                
+            case 'createWallet':
+                result = CryptoHandler.createWallet();
+                break;
+                
+            case 'walletFromMnemonic':
+                result = CryptoHandler.walletFromMnemonic(data?.mnemonic);
+                break;
+                
+            case 'walletFromPrivateKey':
+                result = CryptoHandler.walletFromPrivateKey(data?.privateKey);
+                break;
+                
+            case 'validateAddress':
+                result = CryptoHandler.validateAddress(data?.address);
+                break;
+                
+            case 'keccak256':
+                result = CryptoHandler.keccak256(data?.input);
                 break;
                 
             default:
@@ -88,4 +80,4 @@ global.handleMessage = function(message, callback) {
 };
 
 console.log('Matchbox Wallet JavaScript runtime initialized');
-console.log('Available actions: ping, hash, generateKeyPair, generateRandomBytes, hmac');
+console.log('Available actions: ping, hash, generateKeyPair, generateRandomBytes, hmac, createWallet, walletFromMnemonic, walletFromPrivateKey, validateAddress, keccak256');
