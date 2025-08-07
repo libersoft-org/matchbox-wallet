@@ -19,6 +19,22 @@ global.handleMessage = async function(message, callback) {
                 };
                 break;
                 
+            case 'delayedPing':
+                const delay = data?.delay || 2000;
+                console.log(`Starting delayed ping with ${delay}ms delay...`);
+                result = await new Promise(resolve => {
+                    setTimeout(() => {
+                        console.log('Delayed ping completed!');
+                        resolve({
+                            status: 'success',
+                            message: 'delayed pong',
+                            timestamp: Date.now(),
+                            delay: delay
+                        });
+                    }, delay);
+                });
+                break;
+                
             case 'hash':
                 result = CryptoHandler.hash(data?.input);
                 break;
@@ -89,4 +105,4 @@ global.handleMessage = async function(message, callback) {
 };
 
 console.log('Matchbox Wallet JavaScript runtime initialized');
-console.log('Available actions: ping, hash, generateKeyPair, generateRandomBytes, hmac, createWallet, walletFromMnemonic, walletFromPrivateKey, validateAddress, keccak256, getLatestBlock, getBalance');
+console.log('Available actions: ping, delayedPing, hash, generateKeyPair, generateRandomBytes, hmac, createWallet, walletFromMnemonic, walletFromPrivateKey, validateAddress, keccak256, getLatestBlock, getBalance');
