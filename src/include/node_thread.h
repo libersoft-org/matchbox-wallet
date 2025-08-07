@@ -12,11 +12,14 @@
 #include <QWaitCondition>
 #include <QQueue>
 #include <QJsonObject>
+#include <QUuid>
+#include <QMap>
 #include <memory>
 #include <functional>
 #include <atomic>
 
 struct NodeMessage {
+    QString messageId;
     QString action;
     QJsonObject params;
     std::function<void(const QJsonObject&)> callback;
@@ -62,8 +65,9 @@ private:
     QQueue<NodeMessage> m_messageQueue;
     std::atomic<bool> m_running;
     
-    // Current callback for native callback mechanism
-    std::function<void(const QJsonObject&)> m_currentCallback;
+    // Callback storage for concurrent messages
+    QMap<QString, std::function<void(const QJsonObject&)>> m_callbacks;
+    QMutex m_callbackMutex;
     
     static const char* JS_ENTRY_PATH;
     static NodeThread* s_instance;

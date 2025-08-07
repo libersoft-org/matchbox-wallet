@@ -7,7 +7,7 @@ global.handleMessage = async function(message, callback) {
     console.log('node.js handleMessage ', JSON.stringify(message, null, 2));
     
     try {
-        const { action, data } = message;
+        const { messageId, action, data } = message;
         let result = {};
         
         switch (action) {
@@ -88,7 +88,7 @@ global.handleMessage = async function(message, callback) {
         }
         
         if (typeof __nativeCallback === 'function') {
-            __nativeCallback(result);
+            __nativeCallback(messageId, result);
         }
         
     } catch (error) {
@@ -99,7 +99,7 @@ global.handleMessage = async function(message, callback) {
         };
         
         if (typeof __nativeCallback === 'function') {
-            __nativeCallback(errorResult);
+            __nativeCallback(messageId, errorResult);
         }
     }
 };

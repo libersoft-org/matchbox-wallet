@@ -282,7 +282,7 @@ ApplicationWindow {
 	}
 
     // Timer for delayed ping
-    /*Timer {
+    Timer {
         id: pingTimer
         interval: 300
         running: true
@@ -293,7 +293,7 @@ ApplicationWindow {
                 console.log("delayedPing result:", JSON.stringify(result));
             });
         }
-    }*/
+    }
 
 	// Timer for delayed block fetch
 	Timer {

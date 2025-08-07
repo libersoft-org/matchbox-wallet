@@ -47,16 +47,26 @@ void NodeThread::shutdown() {
 }
 
 void NodeThread::sendMessage(const QString &action, const QJsonObject &params, std::function<void(const QJsonObject&)> callback) {
+    // Generate unique message ID
+    QString messageId = QUuid::createUuid().toString();
+    
+    // Store callback with message ID
+    {
+        QMutexLocker callbackLocker(&m_callbackMutex);
+        m_callbacks[messageId] = callback;
+    }
+    
     NodeMessage message;
+    message.messageId = messageId;
     message.action = action;
     message.params = params;
-    message.callback = callback;
+    message.callback = callback; // Keep for compatibility, but we'll use the map
     
     QMutexLocker locker(&m_messageMutex);
     m_messageQueue.enqueue(message);
     m_messageCondition.wakeAll();
     
-    qDebug() << "NodeThread: Queued message with action:" << action;
+    qDebug() << "NodeThread: Queued message" << messageId << "with action:" << action;
 }
 
 void NodeThread::run() {
@@ -274,7 +284,7 @@ void NodeThread::processMessages() {
     
     while (m_running) {
 
-        qDebug() << "NodeThread: loop";
+        //qDebug() << "NodeThread: loop";
 
         {
             QMutexLocker locker(&m_messageMutex);
@@ -326,10 +336,9 @@ void NodeThread::handleNodeMessage(const NodeMessage &message) {
     
     v8::Local<v8::Context> context = m_setup->context();
     
-    m_currentCallback = message.callback;
-    
-    // Create message object
+    // Create message object with messageId
     QJsonObject jsObject;
+    jsObject["messageId"] = message.messageId;
     jsObject["action"] = message.action;
     jsObject["data"] = message.params;
     
@@ -380,18 +389,33 @@ void NodeThread::handleNodeMessage(const NodeMessage &message) {
 }
 
 void NodeThread::nativeCallback(const v8::FunctionCallbackInfo<v8::Value> &args) {
-    if (!s_instance || !s_instance->m_currentCallback) {
+    if (!s_instance) {
         return;
     }
     
     v8::Isolate* isolate = args.GetIsolate();
     v8::HandleScope handle_scope(isolate);
     
-    if (args.Length() > 0 && args[0]->IsObject()) {
+    if (args.Length() > 1 && args[0]->IsString() && args[1]->IsObject()) {
         v8::Local<v8::Context> context = isolate->GetCurrentContext();
-        v8::Local<v8::Object> obj = args[0]->ToObject(context).ToLocalChecked();
         
-        // Convert to JSON
+        // Get messageId from first argument
+        v8::String::Utf8Value messageIdStr(isolate, args[0]);
+        QString messageId = QString(*messageIdStr);
+        
+        // Find the callback for this message
+        std::function<void(const QJsonObject&)> callback;
+        {
+            QMutexLocker locker(&s_instance->m_callbackMutex);
+            if (s_instance->m_callbacks.contains(messageId)) {
+                callback = s_instance->m_callbacks.take(messageId); // Remove after taking
+            } else {
+                qWarning() << "NodeThread: No callback found for messageId:" << messageId;
+                return;
+            }
+        }
+        
+        // Convert result object to JSON
         v8::Local<v8::Value> jsonObj;
         if (!context->Global()->Get(context, 
             v8::String::NewFromUtf8(isolate, "JSON").ToLocalChecked()).ToLocal(&jsonObj)) {
@@ -406,7 +430,7 @@ void NodeThread::nativeCallback(const v8::FunctionCallbackInfo<v8::Value> &args)
         }
         
         v8::Local<v8::Function> stringify = stringifyFunc.As<v8::Function>();
-        v8::Local<v8::Value> argv[] = { args[0] };
+        v8::Local<v8::Value> argv[] = { args[1] }; // Use second argument (result object)
         v8::Local<v8::Value> result;
         if (!stringify->Call(context, json, 1, argv).ToLocal(&result)) {
             return;
@@ -418,9 +442,7 @@ void NodeThread::nativeCallback(const v8::FunctionCallbackInfo<v8::Value> &args)
         QJsonDocument doc = QJsonDocument::fromJson(QByteArray(*jsonStr), &error);
         
         if (error.error == QJsonParseError::NoError && doc.isObject()) {
-            s_instance->m_currentCallback(doc.object());
+            callback(doc.object());
         }
     }
-    
-    s_instance->m_currentCallback = nullptr;
 }
