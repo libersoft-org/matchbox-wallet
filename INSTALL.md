@@ -9,7 +9,9 @@ apt update
 apt -y upgrade
 apt -y install git openssl
 git clone https://github.com/libersoft-org/matchbox-wallet.git
-cd matchbox-wallet/
+cd matchbox-wallet/src/js
+npm i
+cd ../../
 ```
 
 ## 2. Build the software from source codes
@@ -22,14 +24,6 @@ If you'd like to build this software from source code:
 
 ## 3. Run the software
 
-If you'd like to run it on X / Wayland:
-
 ```sh
 ./start.sh
-```
-
-or if you'd like to run it from shell (without X / Wayland):
-
-```sh
-./start-fb.sh
 ```
