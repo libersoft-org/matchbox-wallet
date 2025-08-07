@@ -5,6 +5,7 @@ import "singletons"
 import "components"
 import "pages"
 import "pages/Settings"
+import "utils/NodeUtils.js" as Node
 
 ApplicationWindow {
  id: window
@@ -31,6 +32,13 @@ ApplicationWindow {
   onSettingsLoaded: {
    console.log("Settings loaded, setting language to:", selectedLanguage);
    translationManager.setLanguage(selectedLanguage);
+
+
+   // Use QML Timer instead of setTimeout
+   blockTimer.start()
+
+
+
   }
  }
 
@@ -261,6 +269,19 @@ ApplicationWindow {
  Component {
   id: cameraPreviewPageComponent
   CameraPreview {
+  }
+ }
+
+ // Timer for delayed block fetch
+ Timer {
+  id: blockTimer
+  interval: 1000
+  repeat: false
+  onTriggered: {
+   console.log("Fetching latest block...")
+   Node.msg("getLatestBlock", {}, function(result) {
+    console.log("Latest block result:", JSON.stringify(result))
+   })
   }
  }
 }

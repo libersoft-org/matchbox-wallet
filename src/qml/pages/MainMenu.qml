@@ -103,4 +103,24 @@ BaseMenu {
    })
   }
  }
+
+ MenuButton {
+  text: "Get Latest Block"
+  onClicked: {
+   console.log("Fetching latest block...")
+   Node.msg("getLatestBlock", {}, function(result) {
+    console.log("Latest block result:", JSON.stringify(result))
+   })
+  }
+ }
+
+ MenuButton {
+  text: "Get ETH Balance"
+  onClicked: {
+   console.log("Fetching ETH balance...")
+   Node.msg("getBalance", {"address": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"}, function(result) {
+    console.log("Balance result:", JSON.stringify(result))
+   })
+  }
+ }
 }

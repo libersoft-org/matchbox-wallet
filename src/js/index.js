@@ -3,8 +3,8 @@ const CryptoHandler = require('./wallet-crypto');
 const fs = require('fs');
 const path = require('path');
 
-global.handleMessage = function(message, callback) {
-    console.log('Received message from C++:', JSON.stringify(message, null, 2));
+global.handleMessage = async function(message, callback) {
+    console.log('node.js handleMessage ', JSON.stringify(message, null, 2));
     
     try {
         const { action, data } = message;
@@ -55,6 +55,15 @@ global.handleMessage = function(message, callback) {
                 result = CryptoHandler.keccak256(data?.input);
                 break;
                 
+            case 'getLatestBlock':
+                console.log('CryptoHandler.getLatestBlock...:', data?.rpcUrl);
+                result = await CryptoHandler.getLatestBlock(data?.rpcUrl);
+                break;
+                
+            case 'getBalance':
+                result = await CryptoHandler.getBalance(data?.address, data?.rpcUrl);
+                break;
+                
             default:
                 result = { 
                     status: 'error', 
@@ -80,4 +89,4 @@ global.handleMessage = function(message, callback) {
 };
 
 console.log('Matchbox Wallet JavaScript runtime initialized');
-console.log('Available actions: ping, hash, generateKeyPair, generateRandomBytes, hmac, createWallet, walletFromMnemonic, walletFromPrivateKey, validateAddress, keccak256');
+console.log('Available actions: ping, hash, generateKeyPair, generateRandomBytes, hmac, createWallet, walletFromMnemonic, walletFromPrivateKey, validateAddress, keccak256, getLatestBlock, getBalance');

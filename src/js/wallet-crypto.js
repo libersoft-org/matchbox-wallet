@@ -121,6 +121,48 @@ class CryptoHandler {
             hash: hash
         };
     }
+    
+    // Async function to get latest block from Ethereum mainnet
+    static async getLatestBlock(rpcUrl) {
+        console.log('new ethers.JsonRpcProvider...');
+        const provider = new ethers.JsonRpcProvider('https://eth.llamarpc.com');
+        console.log(`Connecting to Ethereum RPC at ${provider.connection.url}`);
+
+        // wait a bit
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        console.log('Waiting for provider to be ready...');
+
+        // wait for the provider to be ready
+        await provider.ready;
+        
+        const block = await provider.getBlock('latest');
+        return {
+            status: 'success',
+            blockNumber: block.number,
+            blockHash: block.hash,
+            timestamp: block.timestamp,
+            gasUsed: block.gasUsed.toString(),
+            gasLimit: block.gasLimit.toString(),
+            transactionCount: block.transactions.length
+        };
+    }
+    
+    // Async function to get ETH balance for an address
+    static async getBalance(address, rpcUrl) {
+        if (!address) {
+            throw new Error('Missing address for balance query');
+        }
+        
+        const provider = new ethers.JsonRpcProvider(rpcUrl || 'https://eth.llamarpc.com');
+        
+        const balance = await provider.getBalance(address);
+        return {
+            status: 'success',
+            address: address,
+            balanceWei: balance.toString(),
+            balanceEth: ethers.formatEther(balance)
+        };
+    }
 }
 
 module.exports = CryptoHandler;
