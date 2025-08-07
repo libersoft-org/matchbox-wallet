@@ -3,12 +3,15 @@ import QtQuick.Controls 2.15
 
 Rectangle {
 	id: statusBar
+	//color: Qt.darker(colors.primaryBackground)
+	color: "red"
+	height: window.height * 0.075
+	anchors.top: parent.top
+	anchors.left: parent.left
+	anchors.right: parent.right
 
 	// Local alias for easier access to colors
 	property var colors: window.colors
-
-	color: Qt.darker(colors.primaryBackground)
-	height: 32  // Default height, can be overridden by parent
 
 	// Properties for connection states
 	property int wifiStrength: 0    // WiFi signal strength (0-4)
@@ -18,133 +21,125 @@ Rectangle {
 	property bool hasBattery: false  // Whether device has battery
 	property string currentTime: "00:00"
 
+	// Function to update current time
+	function updateCurrentTime() {
+		var now = new Date();
+		statusBar.currentTime = Qt.formatTime(now, "hh:mm");
+	}
+
 	// Update time
 	Timer {
 		interval: 1000
 		running: true
 		repeat: true
-		onTriggered: {
-			var now = new Date();
-			statusBar.currentTime = Qt.formatTime(now, "hh:mm");
-		}
+		onTriggered: updateCurrentTime()
 	}
 
-	Component.onCompleted: {
-		var now = new Date();
-		statusBar.currentTime = Qt.formatTime(now, "hh:mm");
-	}
+	Component.onCompleted: updateCurrentTime()
 
-	Row {
-		anchors.left: parent.left
-		anchors.leftMargin: statusBar.height * 0.3
-		anchors.verticalCenter: parent.verticalCenter
-		spacing: statusBar.height * 0.25
-
-		// WiFi signal
-		Item {
-			width: wifiRow.width
-			height: statusBar.height * 0.8
+	// Signal Rectangle Component
+	Component {
+		id: signalRectComponent
+		Rectangle {
+			property string signalType: "X"
+			property int signalStrength: 0
+			property color backgroundColor: "transparent"
+			property string pageId: "x-settings"
+			property var pageComponent: wifiSettingsPageComponent
+			color: backgroundColor
 
 			MouseArea {
 				anchors.fill: parent
 				onClicked: {
-					// Only navigate to WiFi settings if we're not already there
-					if (window.currentPageId !== "wifi-settings") {
-						window.goPage(wifiSettingsPageComponent, "wifi-settings");
+					if (window.currentPageId !== parent.pageId) {
+						window.goPage(parent.pageComponent, parent.pageId);
 					}
 				}
-				// Visual feedback
-				onPressed: wifiRow.opacity = 0.7
-				onReleased: wifiRow.opacity = 1.0
+				onPressed: parent.opacity = 0.7
+				onReleased: parent.opacity = 1.0
 			}
 
 			Row {
-				id: wifiRow
 				spacing: statusBar.height * 0.1
-				anchors.verticalCenter: parent.verticalCenter
+				anchors.centerIn: parent
 
 				Text {
-					text: "W"
+					text: parent.parent.signalType
 					color: colors.primaryForeground
-					font.pixelSize: statusBar.height * 0.4
+					font.pixelSize: statusBar.height * 0.8
 					font.bold: true
 					anchors.verticalCenter: parent.verticalCenter
 				}
 				Item {
 					width: statusBar.height * 0.65
-					height: statusBar.height * 0.4
+					height: statusBar.height * 0.8
 					anchors.verticalCenter: parent.verticalCenter
 
 					SignalStrength {
 						anchors.fill: parent
-						strength: statusBar.wifiStrength
+						strength: parent.parent.signalStrength
 					}
 
-					// Cross for no WiFi signal
+					// Cross for no signal
 					CrossOut {
 						anchors.fill: parent
-						visible: statusBar.wifiStrength === 0
+						visible: parent.parent.signalStrength === 0
 					}
 				}
 			}
 		}
+	}
 
-		// LoRa signal
-		Row {
-			spacing: statusBar.height * 0.1
-			anchors.verticalCenter: parent.verticalCenter
-			Text {
-				text: "L"
-				color: colors.primaryForeground
-				font.pixelSize: statusBar.height * 0.4
-				font.bold: true
-				anchors.verticalCenter: parent.verticalCenter
-			}
-			Item {
-				width: statusBar.height * 0.65
-				height: statusBar.height * 0.4
-				anchors.verticalCenter: parent.verticalCenter
+	// Helper component for signal loaders with common properties
+	component SignalLoader: Loader {
+		sourceComponent: signalRectComponent
+		width: statusBar.height * 2
+		height: statusBar.height
+		anchors.top: parent.top
+	}
 
-				SignalStrength {
-					anchors.fill: parent
-					strength: statusBar.loraStrength
-				}
-
-				// Cross for no LoRa signal
-				CrossOut {
-					anchors.fill: parent
-					visible: statusBar.loraStrength === 0
-				}
-			}
+	// WiFi Rectangle
+	SignalLoader {
+		id: wifiRect
+		anchors.left: parent.left
+		onLoaded: {
+			item.signalType = "W";
+			item.signalStrength = Qt.binding(function () {
+					return statusBar.wifiStrength;
+				});
+			item.backgroundColor = "blue";
+			item.pageId = "wifi-settings";
+			item.pageComponent = wifiSettingsPageComponent;
 		}
+	}
 
-		// GSM signal
-		Row {
-			spacing: statusBar.height * 0.1
-			anchors.verticalCenter: parent.verticalCenter
-			Text {
-				text: "G"
-				color: colors.primaryForeground
-				font.pixelSize: statusBar.height * 0.4
-				font.bold: true
-				anchors.verticalCenter: parent.verticalCenter
-			}
-			Item {
-				width: statusBar.height * 0.65
-				height: statusBar.height * 0.4
-				anchors.verticalCenter: parent.verticalCenter
+	// LoRa Rectangle
+	SignalLoader {
+		id: loraRect
+		anchors.left: wifiRect.right
+		onLoaded: {
+			item.signalType = "L";
+			item.signalStrength = Qt.binding(function () {
+					return statusBar.loraStrength;
+				});
+			item.backgroundColor = "green";
+			item.pageId = "lora-settings";
+			item.pageComponent = wifiSettingsPageComponent;  // TODO: change to correct component
+		}
+	}
 
-				SignalStrength {
-					anchors.fill: parent
-					strength: statusBar.gsmStrength
-				}
-
-				// Cross for no GSM signal
-				CrossOut {
-					anchors.fill: parent
-					visible: statusBar.gsmStrength === 0
-				}
-			}
+	// GSM Rectangle
+	SignalLoader {
+		id: gsmRect
+		anchors.left: loraRect.right
+		onLoaded: {
+			item.signalType = "G";
+			item.signalStrength = Qt.binding(function () {
+					return statusBar.gsmStrength;
+				});
+			item.backgroundColor = "orange";
+			item.pageId = "gsm-settings";
+			item.pageComponent = wifiSettingsPageComponent;  // TODO: change to correct component
 		}
 	}
 
@@ -201,7 +196,7 @@ Rectangle {
 				text: statusBar.hasBattery ? statusBar.batteryLevel + "%" : "N/A"
 				font.bold: true
 				color: colors.primaryForeground
-				font.pixelSize: statusBar.height * 0.35
+				font.pixelSize: statusBar.height * 0.8
 				anchors.verticalCenter: parent.verticalCenter
 			}
 		}
@@ -209,7 +204,7 @@ Rectangle {
 		// Time
 		Item {
 			width: timeText.width
-			height: statusBar.height * 0.8
+			height: statusBar.height
 
 			MouseArea {
 				anchors.fill: parent
@@ -228,7 +223,7 @@ Rectangle {
 				id: timeText
 				text: statusBar.currentTime
 				color: colors.primaryForeground
-				font.pixelSize: statusBar.height * 0.4
+				font.pixelSize: statusBar.height * 0.8
 				font.bold: true
 				anchors.verticalCenter: parent.verticalCenter
 			}

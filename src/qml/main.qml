@@ -97,10 +97,6 @@ ApplicationWindow {
 	// Status bar at the very top
 	StatusBar {
 		id: statusBar
-		anchors.top: parent.top
-		anchors.left: parent.left
-		anchors.right: parent.right
-		height: window.height * 0.1
 
 		// Real system values
 		wifiStrength: SystemManager.currentWifiStrength
