@@ -8,6 +8,9 @@ BaseMenu {
 	title: tr("menu.settings.system.time.title")
 	signal timeChanged(string newTime)
 
+	// Local alias for easier access to colors
+	property var colors: window.colors
+
 	// Get current time
 	property date currentTime: new Date()
 
@@ -30,9 +33,9 @@ BaseMenu {
 		Rectangle {
 			anchors.fill: parent
 			anchors.margins: root.height * 0.01
-			color: Colors.primaryBackground
+			color: colors.primaryBackground
 			radius: height * 0.2
-			border.color: Colors.primaryForeground
+			border.color: colors.primaryForeground
 			border.width: Math.max(1, root.height * 0.003)
 
 			Column {
@@ -41,7 +44,7 @@ BaseMenu {
 
 				Text {
 					text: Qt.formatTime(root.currentTime, "hh:mm:ss")
-					color: Colors.primaryForeground
+					color: colors.primaryForeground
 					font.pixelSize: parent.parent.height * 0.4
 					font.bold: true
 					font.family: "monospace"
@@ -50,7 +53,7 @@ BaseMenu {
 
 				Text {
 					text: root.currentTime.toLocaleDateString(Qt.locale(), Locale.ShortFormat)
-					color: Colors.primaryForeground
+					color: colors.primaryForeground
 					font.pixelSize: parent.parent.height * 0.2
 					anchors.horizontalCenter: parent.horizontalCenter
 				}
