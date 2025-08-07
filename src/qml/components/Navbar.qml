@@ -31,7 +31,7 @@ Item {
   anchors.verticalCenter: parent.verticalCenter
   width: parent.height
   height: parent.height
-  img: "qrc:/WalletModule/src/img/back.svg"
+  img: Qt.resolvedUrl("../../img/back.svg")
   onClicked: root.backRequested()
  }
 
@@ -52,7 +52,7 @@ Item {
   anchors.verticalCenter: parent.verticalCenter
   width: parent.height
   height: parent.height
-  img: "qrc:/WalletModule/src/img/power.svg"
+  img: Qt.resolvedUrl("../../img/power.svg")
   onClicked: root.powerOffRequested()
  }
 }

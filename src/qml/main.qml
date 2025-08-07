@@ -13,7 +13,7 @@ ApplicationWindow {
  visible: true
  title: tr("menu.title")
  font.family: "Droid Sans"
- property string iconSource: "qrc:/WalletModule/src/img/wallet.svg"
+ property string iconSource: Qt.resolvedUrl("../img/wallet.svg")
  readonly property int animationDuration: 500
  readonly property var animationEasing: Easing.OutCubic
 
