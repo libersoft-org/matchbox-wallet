@@ -17,7 +17,6 @@ NodeJS::NodeJS(QObject *parent)
     , m_isolate(nullptr)
     , m_env(nullptr)
     , m_initialized(false)
-    , m_shouldStopEventLoop(false)
 {
     s_instance = this;
 }
@@ -432,56 +431,16 @@ void NodeJS::msg(const QString &name, const QJsonObject &params) {
 }
 
 void NodeJS::startEventLoop() {
-    m_shouldStopEventLoop = false;
-    m_eventLoopThread = std::make_unique<QThread>();
-    
-    // Move the event loop work to a lambda that runs in the background thread
-    QObject::connect(m_eventLoopThread.get(), &QThread::started, [this]() {
-        if (!m_env) return;
-        
-        qDebug() << "Node.js event loop thread started";
-        
-        // Keep the event loop running until told to stop
-        while (!m_shouldStopEventLoop.load()) {
-            v8::Locker locker(m_isolate);
-            v8::Isolate::Scope isolate_scope(m_isolate);
-            v8::HandleScope handle_scope(m_isolate);
-            
-            // Spin the event loop once
-            auto result = node::SpinEventLoop(m_env);
-            if (result.IsNothing()) {
-                break; // Event loop ended
-            }
-            
-            // Small sleep to prevent busy waiting
-            QThread::msleep(1);
-        }
-        
-        qDebug() << "Node.js event loop thread stopped";
-    });
-    
-    m_eventLoopThread->start();
+    qDebug() << "Node.js embedded - using built-in libuv event loop";
+    // Node.js/libuv handles its own threading internally
+    // No need for separate Qt thread which causes lock contention
 }
 
 void NodeJS::stopEventLoop() {
-    if (m_eventLoopThread && m_eventLoopThread->isRunning()) {
-        m_shouldStopEventLoop = true;
-        
-        // Signal Node.js to stop
-        if (m_env) {
-            node::Stop(m_env);
-        }
-        
-        m_eventLoopThread->quit();
-        m_eventLoopThread->wait(5000); // Wait up to 5 seconds
-        
-        if (m_eventLoopThread->isRunning()) {
-            m_eventLoopThread->terminate();
-            m_eventLoopThread->wait(1000);
-        }
+    // Node.js handles its own event loop cleanup
+    if (m_env) {
+        node::Stop(m_env);
     }
-    
-    m_eventLoopThread.reset();
 }
 
 void NodeJS::shutdown() {

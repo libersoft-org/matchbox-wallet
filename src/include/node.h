@@ -4,10 +4,8 @@
 #include <QObject>
 #include <QJsonObject>
 #include <QJsonDocument>
-#include <QThread>
 #include <functional>
 #include <memory>
-#include <atomic>
 #include <QJSValue>
 #include <node.h>
 #include <uv.h>
@@ -52,8 +50,6 @@ private:
     v8::Global<v8::Function> m_handleMessageFunction;
     bool m_initialized;
     
-    std::unique_ptr<QThread> m_eventLoopThread;
-    std::atomic<bool> m_shouldStopEventLoop;
     
     static NodeJS *s_instance;
     std::function<void(const QJsonObject&)> m_currentCallback;
