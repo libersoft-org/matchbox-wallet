@@ -1,4 +1,5 @@
-const CryptoHandler = require('./crypto');
+// Now we can use regular require with proper file system access
+const CryptoHandler = require('./wallet-crypto');
 const fs = require('fs');
 const path = require('path');
 

@@ -180,9 +180,77 @@ bool NodeJS::loadJSEntryPoint() {
     // Just load the JavaScript code directly - let it handle its own requires
     QString wrappedCode = jsCode;
     
-    // Load the environment with our code
+    // Set up proper working directory for module resolution
+    QString jsDir = QDir(QDir(appDir).absoluteFilePath("../src/js")).absolutePath();
+    qDebug() << "Setting Node.js working directory to:" << jsDir;
+    
+    // Set up the require function that can load files from disk, then execute our code
+    QString setupCode = QString(
+        "process.chdir('%1');\n"
+        "console.log('Node.js working directory set to:', process.cwd());\n"
+        "const publicRequire = require('module').createRequire(process.cwd() + '/');\n"
+        "globalThis.require = publicRequire;\n"
+        "%2"
+    ).arg(jsDir, wrappedCode);
+    
+    // Use the callback approach to set up proper require function
     try {
-        node::LoadEnvironment(m_env, wrappedCode.toStdString().c_str());
+        auto loadenv_ret = node::LoadEnvironment(m_env, [&](const node::StartExecutionCallbackInfo& info) -> v8::MaybeLocal<v8::Value> {
+            v8::Local<v8::Context> context = m_setup->context();
+            v8::Isolate* isolate = context->GetIsolate();
+            
+            // Use the provided require from the callback info
+            v8::Local<v8::Function> require = info.native_require;
+            
+            // Set up the require function that can load files from disk using provided require
+            QString bootstrapCode = QString(
+                "(function(require) {\n"
+                "  const module = require('%1');\n"
+                "  const publicRequire = module.createRequire('%2/');\n"
+                "  globalThis.require = publicRequire;\n"
+                "  console.log('Bootstrap: require function set up');\n"
+                "})"
+            ).arg("module", jsDir);
+            
+            v8::Local<v8::String> bootstrap = v8::String::NewFromUtf8(
+                isolate, bootstrapCode.toStdString().c_str(), v8::NewStringType::kNormal
+            ).ToLocalChecked();
+            
+            v8::Local<v8::Script> bootstrapScript;
+            if (!v8::Script::Compile(context, bootstrap).ToLocal(&bootstrapScript)) {
+                return v8::MaybeLocal<v8::Value>();
+            }
+            
+            v8::Local<v8::Value> bootstrapFunctionResult;
+            if (!bootstrapScript->Run(context).ToLocal(&bootstrapFunctionResult)) {
+                return v8::MaybeLocal<v8::Value>();
+            }
+            
+            // Call the bootstrap function with require as argument
+            v8::Local<v8::Function> bootstrapFunction = bootstrapFunctionResult.As<v8::Function>();
+            v8::Local<v8::Value> args[] = { require };
+            v8::Local<v8::Value> result;
+            if (!bootstrapFunction->Call(context, context->Global(), 1, args).ToLocal(&result)) {
+                return v8::MaybeLocal<v8::Value>();
+            }
+            
+            // Now run our actual code
+            v8::Local<v8::String> source = v8::String::NewFromUtf8(
+                isolate, wrappedCode.toStdString().c_str(), v8::NewStringType::kNormal
+            ).ToLocalChecked();
+            
+            v8::Local<v8::Script> script;
+            if (!v8::Script::Compile(context, source).ToLocal(&script)) {
+                return v8::MaybeLocal<v8::Value>();
+            }
+            
+            return script->Run(context);
+        });
+        
+        if (loadenv_ret.IsEmpty()) {
+            qWarning() << "LoadEnvironment callback failed";
+            return false;
+        }
         
         // Get reference to handleMessage function
         v8::Local<v8::Context> context = m_setup->context();
