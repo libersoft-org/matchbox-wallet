@@ -124,27 +124,47 @@ class CryptoHandler {
     
     // Async function to get latest block from Ethereum mainnet
     static async getLatestBlock(rpcUrl) {
-        console.log('new ethers.JsonRpcProvider...');
-        const provider = new ethers.JsonRpcProvider('https://eth.llamarpc.com');
-        console.log(`Connecting to Ethereum RPC at ${provider.connection.url}`);
-
-        // wait a bit
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        console.log('Waiting for provider to be ready...');
-
-        // wait for the provider to be ready
-        await provider.ready;
+        console.log('Checking network capabilities...');
         
-        const block = await provider.getBlock('latest');
-        return {
-            status: 'success',
-            blockNumber: block.number,
-            blockHash: block.hash,
-            timestamp: block.timestamp,
-            gasUsed: block.gasUsed.toString(),
-            gasLimit: block.gasLimit.toString(),
-            transactionCount: block.transactions.length
-        };
+        // Check what networking globals are available
+        console.log('typeof fetch:', typeof fetch);
+        console.log('typeof XMLHttpRequest:', typeof XMLHttpRequest);
+        console.log('process.versions.node:', process.versions.node);
+        
+        try {
+            console.log('Testing fetch functionality...');
+            const testResponse = await fetch('https://httpbin.org/json');
+            const testData = await testResponse.json();
+            console.log('Fetch test successful, received data keys:', Object.keys(testData));
+            
+            console.log('Creating ethers.JsonRpcProvider...');
+            const provider = new ethers.JsonRpcProvider('https://eth.llamarpc.com');
+            console.log('Provider created successfully');
+
+            console.log('Attempting to fetch latest block...');
+            const block = await provider.getBlock('latest');
+            
+            return {
+                status: 'success',
+                blockNumber: block.number,
+                blockHash: block.hash,
+                timestamp: block.timestamp,
+                gasUsed: block.gasUsed.toString(),
+                gasLimit: block.gasLimit.toString(),
+                transactionCount: block.transactions.length
+            };
+        } catch (error) {
+            console.error('Network error:', error.message);
+            return {
+                status: 'error',
+                message: `Network error: ${error.message}`,
+                capabilities: {
+                    fetch: typeof fetch,
+                    XMLHttpRequest: typeof XMLHttpRequest,
+                    nodeVersion: process.versions.node
+                }
+            };
+        }
     }
     
     // Async function to get ETH balance for an address

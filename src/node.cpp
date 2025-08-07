@@ -156,7 +156,7 @@ bool NodeJS::loadJSEntryPoint() {
     
     // Construct path to JS entry point
     QString appDir = QCoreApplication::applicationDirPath();
-    QString jsPath = QDir(appDir).absoluteFilePath("../" + QString(JS_ENTRY_PATH));
+    QString jsPath = QDir(appDir).absoluteFilePath(QString(JS_ENTRY_PATH));
     
     if (!QFile::exists(jsPath)) {
         jsPath = QString(JS_ENTRY_PATH);
