@@ -133,7 +133,7 @@ class CryptoHandler {
         
         try {
             console.log('Testing fetch functionality...');
-            const testResponse = await fetch('https://httpbin.org/json');
+            const testResponse = await fetch('http://127.0.0.1/');
             const testData = await testResponse.json();
             console.log('Fetch test successful, received data keys:', Object.keys(testData));
             

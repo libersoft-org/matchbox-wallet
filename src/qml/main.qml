@@ -282,9 +282,10 @@ ApplicationWindow {
 	}
 
 	// Timer for delayed block fetch
-	/*Timer {
+	Timer {
 		id: blockTimer
-		interval: 1000
+		interval: 2000
+        running: true
 		repeat: false
 		onTriggered: {
 			console.log("Fetching latest block...");
@@ -292,16 +293,17 @@ ApplicationWindow {
 					console.log("Latest block result:", JSON.stringify(result));
 				});
 		}
-	}*/
+	}
     // Timer for delayed ping
     Timer {
         id: pingTimer
-        interval: 1000
-        repeat: true
+        interval: 300
+        running: true
+        repeat: false
         onTriggered: {
-            console.log("Pinging server...");
-            Node.msg("ping", {}, function (result) {
-                console.log("Ping result:", JSON.stringify(result));
+            console.log("delayedPinging server...");
+            Node.msg("delayedPing", {}, function (result) {
+                console.log("delayedPing result:", JSON.stringify(result));
             });
         }
     }
