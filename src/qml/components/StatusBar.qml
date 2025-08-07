@@ -61,18 +61,20 @@ Rectangle {
 
 			Row {
 				spacing: statusBar.height * 0.1
-				anchors.centerIn: parent
+				width: parent.width * 0.8
+				height: parent.height * 0.8
 
+				//anchors.centerIn: parent
 				Text {
 					text: parent.parent.signalType
 					color: colors.primaryForeground
-					font.pixelSize: statusBar.height * 0.8
+					font.pixelSize: parent.height
 					font.bold: true
 					anchors.verticalCenter: parent.verticalCenter
 				}
 				Item {
-					width: statusBar.height * 0.65
-					height: statusBar.height * 0.8
+					width: parent.width
+					height: parent.height
 					anchors.verticalCenter: parent.verticalCenter
 
 					SignalStrength {
