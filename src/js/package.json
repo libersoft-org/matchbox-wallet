@@ -1,0 +1,13 @@
+{
+  "name": "matchbox-wallet-js",
+  "version": "1.0.0",
+  "description": "JavaScript runtime for Matchbox Wallet",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["wallet", "embedded", "node"],
+  "author": "LiberSoft",
+  "license": "ISC",
+  "dependencies": {}
+}
