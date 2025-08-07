@@ -7,7 +7,7 @@ import "../components"
 Rectangle {
  id: root
  property string title: "Camera test"
-
+ /*
  Rectangle {
   width: parent.width
   height: 50
@@ -22,4 +22,5 @@ Rectangle {
    font.bold: true
   }
  }
+	*/
 }

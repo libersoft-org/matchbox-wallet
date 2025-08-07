@@ -4,6 +4,11 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(Qt6 REQUIRED COMPONENTS Core Quick Svg)
 find_package(Qt6 QUIET COMPONENTS Multimedia)
+
+# TODO: Felgo doesnt work on ARM
+#find_package(FelgoHotReload REQUIRED)
+#target_link_libraries(appCppBackendCharts PRIVATE FelgoHotReload)
+
 set(QT_QML_GENERATE_QMLLS_INI ON)
 qt_standard_project_setup()
 qt_add_executable(Wallet

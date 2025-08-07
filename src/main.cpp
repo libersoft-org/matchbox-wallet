@@ -1,3 +1,4 @@
+//#include <FelgoHotReload>
 #include <QGuiApplication>
 #include <QIcon>
 #include <QQmlApplicationEngine>
