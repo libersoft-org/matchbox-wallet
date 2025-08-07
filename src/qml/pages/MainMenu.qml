@@ -40,6 +40,16 @@ BaseMenu {
 	}
 
 	MenuButton {
+		text: "Delayed Ping (2s)"
+		onClicked: {
+			console.log("Starting delayed ping...");
+			Node.msg("delayedPing", { "delay": 2000 }, function (result) {
+					console.log("Delayed ping result:", JSON.stringify(result));
+				});
+		}
+	}
+
+	MenuButton {
 		text: "Test Hash"
 		onClicked: {
 			Node.msg("hash", {

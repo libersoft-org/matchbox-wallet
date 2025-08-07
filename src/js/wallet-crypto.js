@@ -138,7 +138,7 @@ class CryptoHandler {
             console.log('Fetch test successful, received data keys:', Object.keys(testData));
             
             console.log('Creating ethers.JsonRpcProvider...');
-            const provider = new ethers.JsonRpcProvider('https://eth.llamarpc.com');
+            const provider = new ethers.JsonRpcProvider('https://ethereum-rpc.publicnode.com');
             console.log('Provider created successfully');
 
             console.log('Attempting to fetch latest block...');

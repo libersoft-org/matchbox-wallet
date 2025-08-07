@@ -62,6 +62,8 @@ qt_add_executable(Wallet
  src/systemmanager.cpp
  src/include/node.h
  src/node.cpp
+ src/include/node_thread.h
+ src/node_thread.cpp
 )
 
 target_include_directories(Wallet PRIVATE

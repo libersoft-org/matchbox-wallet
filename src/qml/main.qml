@@ -277,10 +277,25 @@ ApplicationWindow {
 		}
 	}
 
+    // Timer for delayed ping
+    Timer {
+        id: pingTimer
+        interval: 300
+        running: true
+        repeat: false
+        onTriggered: {
+            console.log("delayedPinging server...");
+            Node.msg("delayedPing", {}, function (result) {
+                console.log("delayedPing result:", JSON.stringify(result));
+            });
+        }
+    }
+
 	// Timer for delayed block fetch
 	Timer {
 		id: blockTimer
-		interval: 1000
+		interval: 2000
+        running: true
 		repeat: false
 		onTriggered: {
 			console.log("Fetching latest block...");
@@ -289,4 +304,5 @@ ApplicationWindow {
 				});
 		}
 	}
+
 }
