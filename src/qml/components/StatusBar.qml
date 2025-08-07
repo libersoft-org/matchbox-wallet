@@ -199,6 +199,7 @@ Rectangle {
 			// Battery percentage
 			Text {
 				text: statusBar.hasBattery ? statusBar.batteryLevel + "%" : "N/A"
+				font.bold: true
 				color: colors.primaryForeground
 				font.pixelSize: statusBar.height * 0.35
 				anchors.verticalCenter: parent.verticalCenter
@@ -206,12 +207,31 @@ Rectangle {
 		}
 
 		// Time
-		Text {
-			text: statusBar.currentTime
-			color: colors.primaryForeground
-			font.pixelSize: statusBar.height * 0.4
-			font.bold: true
-			anchors.verticalCenter: parent.verticalCenter
+		Item {
+			width: timeText.width
+			height: statusBar.height * 0.8
+
+			MouseArea {
+				anchors.fill: parent
+				onClicked: {
+					// Only navigate to time settings if we're not already there
+					if (window.currentPageId !== "time-settings") {
+						window.goPage(settingsSystemTimePageComponent, "time-settings");
+					}
+				}
+				// Visual feedback
+				onPressed: timeText.opacity = 0.7
+				onReleased: timeText.opacity = 1.0
+			}
+
+			Text {
+				id: timeText
+				text: statusBar.currentTime
+				color: colors.primaryForeground
+				font.pixelSize: statusBar.height * 0.4
+				font.bold: true
+				anchors.verticalCenter: parent.verticalCenter
+			}
 		}
 	}
 }
