@@ -5,11 +5,14 @@ import "../../components"
 
 Rectangle {
 	id: root
-	color: Colors.primaryBackground
+	color: colors.primaryBackground
 	property string title: tr("menu.settings.system.wifi.title")
 	signal backRequested
 	signal powerOffRequested
 	signal wifiListRequested
+
+	// Local alias for easier access to colors
+	property var colors: window.colors
 
 	// WiFi Manager is available as global context property
 	// Connect to its signals
@@ -68,10 +71,10 @@ Rectangle {
 				color: {
 					for (let i = 0; i < WiFiManager.networks.length; i++) {
 						if (WiFiManager.networks[i].connected) {
-							return Colors.success;
+							return colors.success;
 						}
 					}
-					return Colors.disabledForeground;
+					return colors.disabledForeground;
 				}
 				Layout.alignment: Qt.AlignHCenter
 				horizontalAlignment: Text.AlignHCenter
@@ -94,7 +97,7 @@ Rectangle {
 				horizontalAlignment: Text.AlignHCenter
 				wrapMode: Text.WordWrap
 				Layout.fillWidth: true
-				color: Colors.primaryText
+				color: colors.primaryForeground
 			}
 
 			// Signal strength for connected network
@@ -109,8 +112,8 @@ Rectangle {
 					}
 					return 0;
 				}
-				activeColor: Colors.success
-				inactiveColor: Colors.disabledForeground
+				activeColor: colors.success
+				inactiveColor: colors.disabledForeground
 				visible: {
 					for (let i = 0; i < WiFiManager.networks.length; i++) {
 						if (WiFiManager.networks[i].connected) {
