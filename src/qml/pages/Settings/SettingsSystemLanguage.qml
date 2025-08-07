@@ -4,24 +4,24 @@ import QtQuick.Layouts 1.15
 import "../../components"
 
 BaseMenu {
- id: root
- title: tr("menu.settings.system.language.title")
+	id: root
+	title: tr("menu.settings.system.language.title")
 
- signal languageSelected(string languageCode)
+	signal languageSelected(string languageCode)
 
- MenuButton {
-  id: englishButton
-  text: tr("common.languages.english")
-  onClicked: {
-   root.languageSelected("en");
-  }
- }
+	MenuButton {
+		id: englishButton
+		text: tr("common.languages.english")
+		onClicked: {
+			root.languageSelected("en");
+		}
+	}
 
- MenuButton {
-  id: czechButton
-  text: tr("common.languages.czech")
-  onClicked: {
-   root.languageSelected("cz");
-  }
- }
+	MenuButton {
+		id: czechButton
+		text: tr("common.languages.czech")
+		onClicked: {
+			root.languageSelected("cz");
+		}
+	}
 }

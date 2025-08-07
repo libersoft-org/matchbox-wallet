@@ -6,26 +6,26 @@ import "../../components"
 BaseMenu {
 	id: root
 	title: tr("menu.wallet.send.title")
-	
+
 	ScrollableContainer {
 		anchors.fill: parent
-		
+
 		ColumnLayout {
 			width: parent.width
 			spacing: 20
-			
+
 			// Recipient address
 			ColumnLayout {
 				Layout.fillWidth: true
 				spacing: 10
-				
+
 				Text {
 					text: tr("Recipient Address")
 					color: Colors.primaryForeground
 					font.pixelSize: 16
 					font.bold: true
 				}
-				
+
 				Rectangle {
 					Layout.fillWidth: true
 					Layout.preferredHeight: 50
@@ -33,7 +33,7 @@ BaseMenu {
 					border.color: Colors.disabledBackground
 					border.width: 1
 					radius: 5
-					
+
 					TextInput {
 						id: addressInput
 						anchors.fill: parent
@@ -42,7 +42,7 @@ BaseMenu {
 						font.pixelSize: 14
 						clip: true
 						selectByMouse: true
-						
+
 						Text {
 							visible: parent.text === ""
 							text: "Enter Bitcoin address..."
@@ -53,29 +53,29 @@ BaseMenu {
 						}
 					}
 				}
-				
+
 				MenuButton {
 					text: tr("Scan QR Code")
 					Layout.fillWidth: true
 					onClicked: {
 						// TODO: Implement QR code scanning
-						console.log("Scan QR code clicked")
+						console.log("Scan QR code clicked");
 					}
 				}
 			}
-			
+
 			// Amount
 			ColumnLayout {
 				Layout.fillWidth: true
 				spacing: 10
-				
+
 				Text {
 					text: tr("Amount")
 					color: Colors.primaryForeground
 					font.pixelSize: 16
 					font.bold: true
 				}
-				
+
 				Rectangle {
 					Layout.fillWidth: true
 					Layout.preferredHeight: 50
@@ -83,7 +83,7 @@ BaseMenu {
 					border.color: Colors.disabledBackground
 					border.width: 1
 					radius: 5
-					
+
 					TextInput {
 						id: amountInput
 						anchors.fill: parent
@@ -96,7 +96,7 @@ BaseMenu {
 							bottom: 0
 							decimals: 8
 						}
-						
+
 						Text {
 							visible: parent.text === ""
 							text: "0.00000000"
@@ -108,19 +108,19 @@ BaseMenu {
 					}
 				}
 			}
-			
+
 			// Fee
 			ColumnLayout {
 				Layout.fillWidth: true
 				spacing: 10
-				
+
 				Text {
 					text: tr("Transaction Fee")
 					color: Colors.primaryForeground
 					font.pixelSize: 16
 					font.bold: true
 				}
-				
+
 				Rectangle {
 					Layout.fillWidth: true
 					Layout.preferredHeight: 50
@@ -128,7 +128,7 @@ BaseMenu {
 					border.color: Colors.disabledBackground
 					border.width: 1
 					radius: 5
-					
+
 					Text {
 						anchors.centerIn: parent
 						text: "0.00001000 BTC (Standard)"
@@ -137,7 +137,7 @@ BaseMenu {
 					}
 				}
 			}
-			
+
 			// Send button
 			MenuButton {
 				text: tr("Send Payment")
@@ -145,10 +145,10 @@ BaseMenu {
 				enabled: addressInput.text.length > 0 && amountInput.text.length > 0
 				onClicked: {
 					// TODO: Implement send payment
-					console.log("Send payment:", addressInput.text, amountInput.text)
+					console.log("Send payment:", addressInput.text, amountInput.text);
 				}
 			}
-			
+
 			Item {
 				Layout.preferredHeight: 20
 			}

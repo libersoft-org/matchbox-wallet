@@ -6,17 +6,17 @@ import "../../components"
 ScrollableContainer {
 	id: root
 	property string title: tr("menu.wallet.balance.title")
-	
+
 	Column {
 		width: parent.width
 		spacing: 20
-		
+
 		// Container for balance rectangle and refresh icon
 		Row {
 			width: parent.width
 			height: root.height * 0.1
 			spacing: 15
-			
+
 			// Balance display rectangle
 			Rectangle {
 				width: parent.width - refreshIcon.width - parent.spacing
@@ -25,7 +25,7 @@ ScrollableContainer {
 				radius: height * 0.2
 				border.color: Colors.primaryForeground
 				border.width: 2
-				
+
 				// Balance text
 				Text {
 					anchors.centerIn: parent
@@ -35,7 +35,7 @@ ScrollableContainer {
 					font.bold: true
 				}
 			}
-			
+
 			// Refresh icon
 			Icon {
 				id: refreshIcon
@@ -46,7 +46,7 @@ ScrollableContainer {
 				iconMargins: 0.1
 				onClicked: {
 					// TODO: Implement balance refresh
-					console.log("Refresh balance clicked")
+					console.log("Refresh balance clicked");
 				}
 			}
 		}

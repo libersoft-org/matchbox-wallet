@@ -4,17 +4,17 @@ import QtQuick.Layouts 1.15
 import "../../components"
 
 BaseMenu {
- id: root
- title: tr("menu.settings.general.fiat.title")
- signal currencySelected(string currency)
- property var currencies: ["USD", "EUR", "GBP", "CHF", "CZK", "PLN", "HUF"]
+	id: root
+	title: tr("menu.settings.general.fiat.title")
+	signal currencySelected(string currency)
+	property var currencies: ["USD", "EUR", "GBP", "CHF", "CZK", "PLN", "HUF"]
 
- Repeater {
-  model: root.currencies
+	Repeater {
+		model: root.currencies
 
-  MenuButton {
-   text: modelData
-   onClicked: root.currencySelected(modelData)
-  }
- }
+		MenuButton {
+			text: modelData
+			onClicked: root.currencySelected(modelData)
+		}
+	}
 }

@@ -4,22 +4,22 @@ import QtQuick.Layouts 1.15
 import "../components"
 
 BaseMenu {
- id: root
- title: tr("menu.power.title")
- property bool showPowerButton: false
+	id: root
+	title: tr("menu.power.title")
+	property bool showPowerButton: false
 
- MenuButton {
-  text: tr("menu.power.quit")
-  onClicked: Qt.quit()
- }
+	MenuButton {
+		text: tr("menu.power.quit")
+		onClicked: Qt.quit()
+	}
 
- MenuButton {
-  text: tr("menu.power.reboot")
-  onClicked: SystemManager.rebootSystem()
- }
+	MenuButton {
+		text: tr("menu.power.reboot")
+		onClicked: SystemManager.rebootSystem()
+	}
 
- MenuButton {
-  text: tr("menu.power.shutdown")
-  onClicked: SystemManager.shutdownSystem()
- }
+	MenuButton {
+		text: tr("menu.power.shutdown")
+		onClicked: SystemManager.shutdownSystem()
+	}
 }

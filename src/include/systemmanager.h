@@ -18,13 +18,13 @@ public:
  explicit SystemManager(QObject *parent = nullptr);
 
  int batteryLevel() const {
-  return m_batteryLevel;
+		return m_batteryLevel;
  }
  bool hasBattery() const {
-  return m_hasBattery;
+		return m_hasBattery;
  }
  int currentWifiStrength() const {
-  return m_currentWifiStrength;
+		return m_currentWifiStrength;
  }
 
 public slots:
@@ -48,4 +48,4 @@ private:
  QTimer *m_statusTimer;
 };
 
-#endif  // SYSTEMMANAGER_H
+#endif		// SYSTEMMANAGER_H

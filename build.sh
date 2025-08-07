@@ -4,7 +4,7 @@ echo "Checking dependencies..."
 is_installed() {
  dpkg -l "$1" 2>/dev/null | grep -q "^ii"
 }
-PACKAGES=("cmake" "qt6-base-dev" "qt6-declarative-dev" "qt6-multimedia-dev" "qt6-svg-dev" "qml6-module-qtquick" "qml6-module-qtmultimedia")
+PACKAGES=("cmake" "qt6-base-dev" "qt6-declarative-dev" "qt6-multimedia-dev" "qt6-svg-dev" "qml6-module-qtquick" "qml6-module-qtmultimedia" "libnode-dev")
 MISSING_PACKAGES=()
 for package in "${PACKAGES[@]}"; do
  if ! is_installed "$package"; then

@@ -16,10 +16,10 @@ public:
  explicit WiFiManager(QObject* parent = nullptr);
 
  QVariantList networks() const {
-  return m_networks;
+		return m_networks;
  }
  bool isScanning() const {
-  return m_isScanning;
+		return m_isScanning;
  }
 
 public slots:
@@ -46,4 +46,4 @@ private:
  QString m_connectingSsid;
 };
 
-#endif  // WIFIMANAGER_H
+#endif		// WIFIMANAGER_H

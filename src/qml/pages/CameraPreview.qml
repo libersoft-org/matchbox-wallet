@@ -5,9 +5,9 @@ import QtQuick 2.15
 import "../components"
 
 Rectangle {
- id: root
- property string title: "Camera test"
- /*
+	id: root
+	property string title: "Camera test"
+	/*
  Rectangle {
   width: parent.width
   height: 50

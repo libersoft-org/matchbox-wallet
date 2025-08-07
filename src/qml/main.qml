@@ -8,280 +8,289 @@ import "pages/Settings"
 import "utils/NodeUtils.js" as Node
 
 ApplicationWindow {
- id: window
- width: 480
- height: 640
- visible: true
- title: tr("menu.title")
- font.family: "Droid Sans"
- property string iconSource: Qt.resolvedUrl("../img/wallet.svg")
- readonly property int animationDuration: 500
- readonly property var animationEasing: Easing.OutCubic
+	id: window
+	width: 480
+	height: 640
+	visible: true
+	title: tr("menu.title")
+	font.family: "Droid Sans"
+	property string iconSource: Qt.resolvedUrl("../img/wallet.svg")
+	readonly property int animationDuration: 500
+	readonly property var animationEasing: Easing.OutCubic
 
- // Create instances of our "singleton" objects
- property var colors: colorsObj
- property var settingsManager: settingsManagerObj
- property var translationManager: translationManagerObj
+	// Create instances of our "singleton" objects
+	property var colors: colorsObj
+	property var settingsManager: settingsManagerObj
+	property var translationManager: translationManagerObj
 
- Colors {
-  id: colorsObj
- }
+	Colors {
+		id: colorsObj
+	}
 
- SettingsManager {
-  id: settingsManagerObj
-  onSettingsLoaded: {
-   console.log("Settings loaded, setting language to:", selectedLanguage);
-   translationManager.setLanguage(selectedLanguage);
+	SettingsManager {
+		id: settingsManagerObj
+		onSettingsLoaded: {
+			console.log("Settings loaded, setting language to:", selectedLanguage);
+			translationManager.setLanguage(selectedLanguage);
 
+			// Use QML Timer instead of setTimeout
+			blockTimer.start();
+		}
+	}
 
-   // Use QML Timer instead of setTimeout
-   blockTimer.start()
+	TranslationManager {
+		id: translationManagerObj
+	}
 
+	// Global settings - use SettingsManager instance
+	property string selectedCurrency: settingsManager.selectedCurrency
+	property string selectedLanguage: settingsManager.selectedLanguage
 
+	// Track current page/section
+	property string currentPageId: "home"
 
-  }
- }
+	// SystemManager is now available as global context property
+	// No need to create instance - it's injected from C++
 
- TranslationManager {
-  id: translationManagerObj
- }
+	// Global translation function - available to all child components
+	function tr(key) {
+		try {
+			if (translationManager && translationManager.tr)
+				return translationManager.tr(key);
+		} catch (e) {
+			console.log("Translation error:", e);
+		}
+		// Fallback - return key
+		return key;
+	}
 
- // Global settings - use SettingsManager instance
- property string selectedCurrency: settingsManager.selectedCurrency
- property string selectedLanguage: settingsManager.selectedLanguage
+	background: Rectangle {
+		color: colors.primaryBackground
+	}
 
- // SystemManager is now available as global context property
- // No need to create instance - it's injected from C++
+	Component.onCompleted: {
+		x = (Screen.width - width) / 2;
+		y = (Screen.height - height) / 2;
+		console.log("ApplicationWindow completed");
+		// Language initialization is now handled by settingsManager.onSettingsLoaded
+	}
 
- // Global translation function - available to all child components
- function tr(key) {
-  try {
-   if (translationManager && translationManager.tr)
-	return translationManager.tr(key);
-  } catch (e) {
-   console.log("Translation error:", e);
-  }
-  // Fallback - return key
-  return key;
- }
+	function goPage(component, pageId) {
+		if (stackView && component) {
+			stackView.push(component);
+			if (pageId) {
+				window.currentPageId = pageId;
+			}
+		}
+	}
 
- background: Rectangle {
-  color: colors.primaryBackground
- }
+	function goBack() {
+		stackView.pop();
+		// Update currentPageId based on what's now on top
+		if (stackView.currentItem && stackView.currentItem.pageId) {
+			window.currentPageId = stackView.currentItem.pageId;
+		} else {
+			window.currentPageId = "home";
+		}
+	}
 
- Component.onCompleted: {
-  x = (Screen.width - width) / 2;
-  y = (Screen.height - height) / 2;
-  console.log("ApplicationWindow completed");
-  // Language initialization is now handled by settingsManager.onSettingsLoaded
- }
+	// Status bar at the very top
+	StatusBar {
+		id: statusBar
+		anchors.top: parent.top
+		anchors.left: parent.left
+		anchors.right: parent.right
+		height: window.height * 0.1
 
- function goPage(component) {
-  if (stackView && component)
-   stackView.push(component);
- }
+		// Real system values
+		wifiStrength: SystemManager.currentWifiStrength
+		batteryLevel: SystemManager.batteryLevel
+		hasBattery: SystemManager.hasBattery
 
- function goBack() {
-  stackView.pop();
- }
+		// Mock values for LoRa and GSM (not implemented yet)
+		loraStrength: 0
+		gsmStrength: 0  // 0 means no signal/not available
+	}
 
- // Status bar at the very top
- StatusBar {
-  id: statusBar
-  anchors.top: parent.top
-  anchors.left: parent.left
-  anchors.right: parent.right
-  height: window.height * 0.1
+	// Fixed navigation bar below status bar
+	Navbar {
+		id: fixedNavbar
+		anchors.top: statusBar.bottom
+		anchors.left: parent.left
+		anchors.right: parent.right
+		height: window.height * 0.1
+		title: stackView.currentItem ? stackView.currentItem.title || "" : ""
+		showBackButton: stackView.currentItem && stackView.currentItem.hasOwnProperty("showBackButton") ? stackView.currentItem.showBackButton : true
+		showPowerButton: stackView.currentItem && stackView.currentItem.hasOwnProperty("showPowerButton") ? stackView.currentItem.showPowerButton : true
+		onBackRequested: window.goBack()
+		onPowerOffRequested: window.goPage(powerOffPageComponent)
+	}
 
-  // Real system values
-  wifiStrength: SystemManager.currentWifiStrength
-  batteryLevel: SystemManager.batteryLevel
-  hasBattery: SystemManager.hasBattery
+	// Content area with animations - this part animates
+	StackView {
+		id: stackView
+		anchors.top: fixedNavbar.bottom
+		anchors.left: parent.left
+		anchors.right: parent.right
+		anchors.bottom: parent.bottom
+		initialItem: mainMenuComponent
+		pushEnter: Transition {
+			PropertyAnimation {
+				property: "x"
+				from: stackView.width
+				to: 0
+				duration: window.animationDuration
+				easing.type: window.animationEasing
+			}
+		}
+		pushExit: Transition {
+			PropertyAnimation {
+				property: "x"
+				from: 0
+				to: -stackView.width
+				duration: window.animationDuration
+				easing.type: window.animationEasing
+			}
+		}
+		popEnter: Transition {
+			PropertyAnimation {
+				property: "x"
+				from: -stackView.width
+				to: 0
+				duration: window.animationDuration
+				easing.type: window.animationEasing
+			}
+		}
+		popExit: Transition {
+			PropertyAnimation {
+				property: "x"
+				from: 0
+				to: stackView.width
+				duration: window.animationDuration
+				easing.type: window.animationEasing
+			}
+		}
+	}
 
-  // Mock values for LoRa and GSM (not implemented yet)
-  loraStrength: 0
-  gsmStrength: 0  // 0 means no signal/not available
- }
+	Component {
+		id: mainMenuComponent
+		MainMenu {
+			walletComponent: walletPageComponent
+			settingsComponent: settingsPageComponent
+			cameraPreviewComponent: cameraPreviewPageComponent
+			goPageFunction: window.goPage
+		}
+	}
 
- // Fixed navigation bar below status bar
- Navbar {
-  id: fixedNavbar
-  anchors.top: statusBar.bottom
-  anchors.left: parent.left
-  anchors.right: parent.right
-  height: window.height * 0.1
-  title: stackView.currentItem ? stackView.currentItem.title || "" : ""
-  showBackButton: stackView.currentItem && stackView.currentItem.hasOwnProperty("showBackButton") ? stackView.currentItem.showBackButton : true
-  showPowerButton: stackView.currentItem && stackView.currentItem.hasOwnProperty("showPowerButton") ? stackView.currentItem.showPowerButton : true
-  onBackRequested: window.goBack()
-  onPowerOffRequested: window.goPage(powerOffPageComponent)
- }
+	Component {
+		id: walletPageComponent
+		Wallet {
+			goPageFunction: window.goPage
+		}
+	}
 
- // Content area with animations - this part animates
- StackView {
-  id: stackView
-  anchors.top: fixedNavbar.bottom
-  anchors.left: parent.left
-  anchors.right: parent.right
-  anchors.bottom: parent.bottom
-  initialItem: mainMenuComponent
-  pushEnter: Transition {
-   PropertyAnimation {
-	property: "x"
-	from: stackView.width
-	to: 0
-	duration: window.animationDuration
-	easing.type: window.animationEasing
-   }
-  }
-  pushExit: Transition {
-   PropertyAnimation {
-	property: "x"
-	from: 0
-	to: -stackView.width
-	duration: window.animationDuration
-	easing.type: window.animationEasing
-   }
-  }
-  popEnter: Transition {
-   PropertyAnimation {
-	property: "x"
-	from: -stackView.width
-	to: 0
-	duration: window.animationDuration
-	easing.type: window.animationEasing
-   }
-  }
-  popExit: Transition {
-   PropertyAnimation {
-	property: "x"
-	from: 0
-	to: stackView.width
-	duration: window.animationDuration
-	easing.type: window.animationEasing
-   }
-  }
- }
+	Component {
+		id: settingsPageComponent
+		Settings {
+			onGeneralSettingsRequested: window.goPage(generalSettingsPageComponent)
+			onSystemSettingsRequested: window.goPage(systemSettingsPageComponent)
+		}
+	}
 
- Component {
-  id: mainMenuComponent
-  MainMenu {
-   walletComponent: walletPageComponent
-   settingsComponent: settingsPageComponent
-   cameraPreviewComponent: cameraPreviewPageComponent
-   goPageFunction: window.goPage
-  }
- }
+	// General settings page
+	Component {
+		id: generalSettingsPageComponent
+		SettingsGeneral {
+			selectedCurrency: window.selectedCurrency
+			onCurrencySelectionRequested: window.goPage(settingsGeneralFiatPageComponent)
+		}
+	}
 
- Component {
-  id: walletPageComponent
-  Wallet {
-   goPageFunction: window.goPage
-  }
- }
+	// Currency selection page
+	Component {
+		id: settingsGeneralFiatPageComponent
+		SettingsGeneralFiat {
+			onCurrencySelected: function (currency) {
+				window.settingsManager.saveCurrency(currency);
+				window.goBack();
+			}
+		}
+	}
 
- Component {
-  id: settingsPageComponent
-  Settings {
-   onGeneralSettingsRequested: window.goPage(generalSettingsPageComponent)
-   onSystemSettingsRequested: window.goPage(systemSettingsPageComponent)
-  }
- }
+	// System settings page
+	Component {
+		id: systemSettingsPageComponent
+		SettingsSystem {
+			selectedLanguage: window.selectedLanguage
+			onWifiSettingsRequested: window.goPage(wifiSettingsPageComponent, "wifi-settings")
+			onLanguageSelectionRequested: window.goPage(settingsSystemLanguagePageComponent)
+			onTimeSettingsRequested: window.goPage(settingsSystemTimePageComponent)
+		}
+	}
 
- // General settings page
- Component {
-  id: generalSettingsPageComponent
-  SettingsGeneral {
-   selectedCurrency: window.selectedCurrency
-   onCurrencySelectionRequested: window.goPage(settingsGeneralFiatPageComponent)
-  }
- }
+	// WiFi settings page
+	Component {
+		id: wifiSettingsPageComponent
+		SettingsSystemWiFi {
+			onWifiListRequested: window.goPage(wifiListPageComponent)
+		}
+	}
 
- // Currency selection page
- Component {
-  id: settingsGeneralFiatPageComponent
-  SettingsGeneralFiat {
-   onCurrencySelected: function (currency) {
-	window.settingsManager.saveCurrency(currency);
-	window.goBack();
-   }
-  }
- }
+	// WiFi list page
+	Component {
+		id: wifiListPageComponent
+		SettingsSystemWiFiList {
+		}
+	}
 
- // System settings page
- Component {
-  id: systemSettingsPageComponent
-  SettingsSystem {
-   selectedLanguage: window.selectedLanguage
-   onWifiSettingsRequested: window.goPage(wifiSettingsPageComponent)
-   onLanguageSelectionRequested: window.goPage(settingsSystemLanguagePageComponent)
-   onTimeSettingsRequested: window.goPage(settingsSystemTimePageComponent)
-  }
- }
+	// System language selection page
+	Component {
+		id: settingsSystemLanguagePageComponent
+		SettingsSystemLanguage {
+			onLanguageSelected: function (languageCode) {
+				window.settingsManager.saveLanguage(languageCode);
+				window.translationManager.setLanguage(languageCode);
+				window.goBack();
+			}
+		}
+	}
 
- // WiFi settings page
- Component {
-  id: wifiSettingsPageComponent
-  SettingsSystemWiFi {
-   onWifiListRequested: window.goPage(wifiListPageComponent)
-  }
- }
+	// System time settings page
+	Component {
+		id: settingsSystemTimePageComponent
+		SettingsSystemTime {
+			onTimeChanged: function (timeString) {
+				console.log("Time changed to:", timeString);
+				// TODO: Implement actual system time setting
+				window.goBack();
+			}
+		}
+	}
 
- // WiFi list page
- Component {
-  id: wifiListPageComponent
-  SettingsSystemWiFiList {
-  }
- }
+	// Power off page
+	Component {
+		id: powerOffPageComponent
+		PowerOff {
+		}
+	}
 
- // System language selection page
- Component {
-  id: settingsSystemLanguagePageComponent
-  SettingsSystemLanguage {
-   onLanguageSelected: function (languageCode) {
-	window.settingsManager.saveLanguage(languageCode);
-	window.translationManager.setLanguage(languageCode);
-	window.goBack();
-   }
-  }
- }
+	// Camera preview page
+	Component {
+		id: cameraPreviewPageComponent
+		CameraPreview {
+		}
+	}
 
- // System time settings page
- Component {
-  id: settingsSystemTimePageComponent
-  SettingsSystemTime {
-   onTimeChanged: function (timeString) {
-	console.log("Time changed to:", timeString);
-	// TODO: Implement actual system time setting
-	window.goBack();
-   }
-  }
- }
-
- // Power off page
- Component {
-  id: powerOffPageComponent
-  PowerOff {
-  }
- }
-
- // Camera preview page
- Component {
-  id: cameraPreviewPageComponent
-  CameraPreview {
-  }
- }
-
- // Timer for delayed block fetch
- Timer {
-  id: blockTimer
-  interval: 1000
-  repeat: false
-  onTriggered: {
-   console.log("Fetching latest block...")
-   Node.msg("getLatestBlock", {}, function(result) {
-    console.log("Latest block result:", JSON.stringify(result))
-   })
-  }
- }
+	// Timer for delayed block fetch
+	Timer {
+		id: blockTimer
+		interval: 1000
+		repeat: false
+		onTriggered: {
+			console.log("Fetching latest block...");
+			Node.msg("getLatestBlock", {}, function (result) {
+					console.log("Latest block result:", JSON.stringify(result));
+				});
+		}
+	}
 }
