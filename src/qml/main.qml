@@ -103,6 +103,11 @@ ApplicationWindow {
 		batteryLevel: SystemManager.batteryLevel
 		hasBattery: SystemManager.hasBattery
 
+		// Dev mocking: if no battery is detected, show mocked battery + charging
+		mockBattery: !SystemManager.hasBattery
+		mockBatteryLevel: 62
+		mockCharging: !SystemManager.hasBattery
+
 		// Mock values for LoRa and GSM (not implemented yet)
 		loraStrength: 0
 		gsmStrength: 0  // 0 means no signal/not available
