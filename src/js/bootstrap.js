@@ -5,8 +5,10 @@
     const path = require('path');
     
     // Set up standard Node.js require for src/js directory
-    // Create require context pointing to the actual src/js directory  
-    const srcJsPath = '/home/koom/repos/libersoft-org/matchbox-wallet/0/matchbox-wallet/src/js/index.js';
+    // Create require context pointing to the actual source directory
+    // Go up from build directory to find src/js
+    const buildDir = process.cwd();
+    const srcJsPath = path.resolve(buildDir, '..', '..', 'src', 'js', 'index.js');
     const publicRequire = module.createRequire(srcJsPath);
     globalThis.require = publicRequire;
     
