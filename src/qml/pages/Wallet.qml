@@ -35,11 +35,6 @@ BaseMenu {
 		}
 	}
 
-	property Component addressComponent: Component {
-		Address {
-		}
-	}
-
 	MenuButton {
 		text: tr("menu.wallet.balance.button")
 		onClicked: goPageFunction(root.balanceComponent)
