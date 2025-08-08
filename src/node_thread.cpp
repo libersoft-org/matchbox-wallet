@@ -5,6 +5,8 @@
 #include <QJsonDocument>
 #include <QFile>
 #include <QTextStream>
+#include <QFileInfo>
+#include <QTime>
 
 NodeThread* NodeThread::s_instance = nullptr;
 
@@ -175,21 +177,37 @@ bool NodeThread::loadJSEntryPoint() {
     
     // Load main JavaScript file from filesystem
     QString jsPath = "../../src/js/index.js";  // Relative to build directory
+    qDebug() << "NodeThread: Attempting to load main JS file from:" << jsPath;
+    
     QFile jsFile(jsPath);
+    QFileInfo jsFileInfo(jsPath);
+    
+    qDebug() << "NodeThread: File exists check:" << jsFile.exists();
+    qDebug() << "NodeThread: Absolute path:" << jsFileInfo.absoluteFilePath();
+    qDebug() << "NodeThread: File size:" << jsFileInfo.size() << "bytes";
+    qDebug() << "NodeThread: File readable:" << jsFileInfo.isReadable();
+    qDebug() << "NodeThread: Last modified:" << jsFileInfo.lastModified().toString();
     
     if (!jsFile.exists()) {
         qCritical() << "NodeThread: JavaScript file not found:" << jsPath;
+        qCritical() << "NodeThread: Working directory:" << QDir::currentPath();
         return false;
     }
     
     if (!jsFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
         qCritical() << "NodeThread: Failed to open JavaScript file:" << jsPath;
+        qCritical() << "NodeThread: Error:" << jsFile.errorString();
         return false;
     }
     
+    qDebug() << "NodeThread: Reading JavaScript file content...";
     QTextStream in(&jsFile);
     QString jsCode = in.readAll();
     jsFile.close();
+    
+    qDebug() << "NodeThread: File read completed";
+    qDebug() << "NodeThread: Content length:" << jsCode.length() << "characters";
+    qDebug() << "NodeThread: Content preview (first 100 chars):" << jsCode.left(100);
     
     if (jsCode.isEmpty()) {
         qCritical() << "NodeThread: JavaScript file is empty:" << jsPath;
@@ -197,6 +215,7 @@ bool NodeThread::loadJSEntryPoint() {
     }
     
     qDebug() << "NodeThread: Successfully loaded" << jsCode.length() << "characters from" << jsPath;
+    qDebug() << "NodeThread: Content hash:" << QString::number(qHash(jsCode), 16);
 
     // Validate JavaScript content before proceeding
     if (jsCode.trimmed().isEmpty()) {
@@ -228,21 +247,35 @@ bool NodeThread::loadJSEntryPoint() {
 
         // Load bootstrap code from filesystem  
         QString bootstrapPath = "../../src/js/bootstrap.js";  // Relative to build directory
+        qDebug() << "NodeThread: Loading bootstrap file from:" << bootstrapPath;
+        
         QFile bootstrapFile(bootstrapPath);
+        QFileInfo bootstrapFileInfo(bootstrapPath);
+        
+        qDebug() << "NodeThread: Bootstrap file exists:" << bootstrapFile.exists();
+        qDebug() << "NodeThread: Bootstrap absolute path:" << bootstrapFileInfo.absoluteFilePath();
+        qDebug() << "NodeThread: Bootstrap file size:" << bootstrapFileInfo.size() << "bytes";
         
         if (!bootstrapFile.exists()) {
             qCritical() << "NodeThread: Bootstrap file not found:" << bootstrapPath;
+            qCritical() << "NodeThread: Current working directory:" << QDir::currentPath();
             return v8::MaybeLocal<v8::Value>();
         }
         
         if (!bootstrapFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
             qCritical() << "NodeThread: Failed to open bootstrap file:" << bootstrapPath;
+            qCritical() << "NodeThread: Bootstrap error:" << bootstrapFile.errorString();
             return v8::MaybeLocal<v8::Value>();
         }
         
+        qDebug() << "NodeThread: Reading bootstrap file content...";
         QTextStream bootstrapStream(&bootstrapFile);
         QString bootstrapCode = bootstrapStream.readAll();
         bootstrapFile.close();
+        
+        qDebug() << "NodeThread: Bootstrap read completed";
+        qDebug() << "NodeThread: Bootstrap content length:" << bootstrapCode.length() << "characters";
+        qDebug() << "NodeThread: Bootstrap preview (first 50 chars):" << bootstrapCode.left(50);
         
         if (bootstrapCode.isEmpty()) {
             qCritical() << "NodeThread: Bootstrap file is empty:" << bootstrapPath;
@@ -250,6 +283,7 @@ bool NodeThread::loadJSEntryPoint() {
         }
         
         qDebug() << "NodeThread: Loaded bootstrap from filesystem:" << bootstrapPath;
+        qDebug() << "NodeThread: Bootstrap content hash:" << QString::number(qHash(bootstrapCode), 16);
 
         v8::Local<v8::String> bootstrap = v8::String::NewFromUtf8(
             isolate, bootstrapCode.toStdString().c_str(), v8::NewStringType::kNormal
@@ -294,11 +328,16 @@ bool NodeThread::loadJSEntryPoint() {
         }
         
         qDebug() << "NodeThread: Bootstrap completed successfully";
+        qDebug() << "NodeThread: Now compiling main JavaScript code...";
+        qDebug() << "NodeThread: Converting" << jsCode.length() << "characters to V8 string";
 
         v8::Local<v8::String> source = v8::String::NewFromUtf8(
             isolate, jsCode.toStdString().c_str(), v8::NewStringType::kNormal
         ).ToLocalChecked();
         
+        qDebug() << "NodeThread: V8 string conversion completed";
+        
+        qDebug() << "NodeThread: Starting V8 script compilation...";
         v8::Local<v8::Script> script;
         if (!v8::Script::Compile(context, source).ToLocal(&script)) {
             qCritical() << "NodeThread: Failed to compile main JavaScript code";
@@ -307,23 +346,39 @@ bool NodeThread::loadJSEntryPoint() {
             if (try_catch.HasCaught()) {
                 v8::String::Utf8Value exception(isolate, try_catch.Exception());
                 qCritical() << "NodeThread: Main script compilation exception:" << *exception;
+                v8::Local<v8::Message> message = try_catch.Message();
+                if (!message.IsEmpty()) {
+                    qCritical() << "NodeThread: Error line number:" << message->GetLineNumber(context).FromMaybe(-1);
+                    qCritical() << "NodeThread: Error start column:" << message->GetStartColumn(context).FromMaybe(-1);
+                }
             }
             return v8::MaybeLocal<v8::Value>();
         }
         
         qDebug() << "NodeThread: Main JavaScript code compiled successfully";
+        qDebug() << "NodeThread: Script compilation took" << QTime::currentTime().toString();
 
+        qDebug() << "NodeThread: Starting main JavaScript execution...";
         v8::Local<v8::Value> scriptResult;
         if (!script->Run(context).ToLocal(&scriptResult)) {
             qCritical() << "NodeThread: Failed to execute main JavaScript code";
             if (try_catch.HasCaught()) {
                 v8::String::Utf8Value exception(isolate, try_catch.Exception());
                 qCritical() << "NodeThread: Main script execution exception:" << *exception;
+                v8::Local<v8::Message> message = try_catch.Message();
+                if (!message.IsEmpty()) {
+                    qCritical() << "NodeThread: Runtime error line:" << message->GetLineNumber(context).FromMaybe(-1);
+                    qCritical() << "NodeThread: Runtime error column:" << message->GetStartColumn(context).FromMaybe(-1);
+                }
             }
             return v8::MaybeLocal<v8::Value>();
         }
 
         qDebug() << "NodeThread: Main JavaScript code executed successfully";
+        qDebug() << "NodeThread: Script result type:" << (scriptResult->IsUndefined() ? "undefined" :
+                                                          scriptResult->IsFunction() ? "function" :
+                                                          scriptResult->IsObject() ? "object" :
+                                                          scriptResult->IsString() ? "string" : "other");
         return scriptResult;
     });
     
