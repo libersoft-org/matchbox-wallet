@@ -15,6 +15,7 @@ Item {
 		color: colors.error
 		rotation: 45
 		opacity: 0.9
+		radius: height / 2
 	}
 	Rectangle {
 		anchors.centerIn: parent
@@ -23,5 +24,6 @@ Item {
 		color: colors.error
 		rotation: -45
 		opacity: 0.9
+		radius: height / 2
 	}
 }

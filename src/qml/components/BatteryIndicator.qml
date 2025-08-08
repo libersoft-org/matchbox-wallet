@@ -8,47 +8,59 @@ Item {
 	property bool hasBattery: false
 	property var colors: undefined   // expect palette with success/error
 
-	// Sizing is controlled by parent
+	// Internal metrics
+	property real indicatorWidth: width * 0.45
+	property real tipHeight: height * 0.12
+	property real bodyHeight: height - tipHeight
+	property real bodyBorderWidth: Math.max(2, height * 0.08)
+	property real margin: Math.max(2, Math.max(height * 0.06, bodyBorderWidth))
 
-	// Tip on top, body below, both fully inside the bounds of this item
-	Rectangle {
-		id: tip
-		width: body.width * 0.6
-		height: root.height * 0.12
-		color: "white"
-		radius: Math.max(1, root.height * 0.03)
-		anchors.top: parent.top
-		anchors.horizontalCenter: parent.horizontalCenter
-	}
+	// Visuals centered inside root to avoid overflow
+	Column {
+		id: pack
+		anchors.centerIn: parent
+		spacing: 0
+		width: root.indicatorWidth
+		height: root.height
 
-	Rectangle {
-		id: body
-		property real m: Math.max(1, root.height * 0.06)
-		width: root.width * 0.45
-		anchors.top: tip.bottom
-		anchors.bottom: parent.bottom
-		anchors.horizontalCenter: parent.horizontalCenter
-		color: "transparent"
-		border.color: "white"
-		border.width: Math.max(1, root.height * 0.03)
-		radius: Math.max(1, root.height * 0.06)
-
-		// Fill (grows from bottom up)
+		// Tip on top (centered over body)
 		Rectangle {
-			id: fill
-			x: body.m
-			width: body.width - 2 * body.m
-			height: (body.height - 2 * body.m) * (Math.max(0, Math.min(100, root.level)) / 100.0)
-			y: body.height - body.m - height
-			color: (root.colors ? (root.level > 20 ? root.colors.success : root.colors.error) : (root.level > 20 ? "#00C853" : "#D50000"))
+			id: tip
+			width: root.indicatorWidth * 0.6
+			height: root.tipHeight
+			color: colors.primaryForeground
 			radius: Math.max(1, root.height * 0.03)
-			visible: root.hasBattery
+			anchors.horizontalCenter: parent.horizontalCenter
 		}
 
-		// Cross for no battery
-		CrossOut {
-			anchors.fill: parent
-			visible: !root.hasBattery
+		// Body below tip
+		Rectangle {
+			id: body
+			width: root.indicatorWidth
+			height: root.bodyHeight
+			color: "transparent"
+			border.color: colors.primaryForeground
+			border.width: root.bodyBorderWidth
+			radius: Math.max(1, root.height * 0.06)
+			anchors.horizontalCenter: parent.horizontalCenter
+
+			// Fill (grows from bottom up)
+			Rectangle {
+				id: fill
+				x: root.margin
+				width: body.width - 2 * root.margin
+				height: (body.height - 2 * root.margin) * (Math.max(0, Math.min(100, root.level)) / 100.0)
+				y: body.height - root.margin - height
+				color: (root.colors ? (root.level > 20 ? root.colors.success : root.colors.error) : (root.level > 20 ? "#00C853" : "#D50000"))
+				radius: Math.max(1, root.height * 0.03)
+				visible: root.hasBattery
+			}
+
+			// Cross for no battery
+			CrossOut {
+				anchors.fill: parent
+				visible: !root.hasBattery
+			}
 		}
 	}
 }

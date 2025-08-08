@@ -24,7 +24,7 @@ Rectangle {
 
 	function navigateTo(component, pageId) {
 		if (component && window.currentPageId !== pageId) {
-			window.goPage(component, pageId)
+			window.goPage(component, pageId);
 		}
 	}
 
@@ -103,7 +103,7 @@ Rectangle {
 			id: battery
 			Layout.alignment: Qt.AlignVCenter
 			Layout.preferredWidth: statusBar.height * 0.7
-			Layout.preferredHeight: statusBar.height * 0.9
+			Layout.preferredHeight: statusBar.height * 0.8
 			level: statusBar.batteryLevel
 			hasBattery: statusBar.hasBattery
 			colors: statusBar.colors
