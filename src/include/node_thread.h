@@ -54,6 +54,9 @@ private:
     void handleNodeMessage(const NodeMessage &message);
     static void nativeCallback(const v8::FunctionCallbackInfo<v8::Value> &args);
     static void loadFromQrc(const v8::FunctionCallbackInfo<v8::Value> &args);
+    
+    // Helper function for loading files with filesystem-first, QRC-fallback pattern
+    QString loadFileWithFallback(const QString& filename, const QString& baseDir, bool* loadedFromQrc = nullptr);
 
     // Node.js environment
     std::unique_ptr<node::CommonEnvironmentSetup> m_setup;

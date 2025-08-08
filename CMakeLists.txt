@@ -100,6 +100,7 @@ file(GLOB_RECURSE NODE_MODULES_FILES_LIST RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
 set(NODE_JS_FILES_LIST
     "src/js/index.js"
     "src/js/wallet-crypto.js"
+    "src/js/bootstrap.js"
     "src/js/package.json"
     "src/js/package-lock.json"
 #    ${NODE_MODULES_FILES_LIST}
