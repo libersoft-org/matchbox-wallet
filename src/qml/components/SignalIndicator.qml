@@ -3,6 +3,7 @@ import QtQuick.Controls 2.15
 
 Rectangle {
 	id: root
+	clip: true
 
 	// Public API
 	property string signalType: "X"
@@ -26,27 +27,38 @@ Rectangle {
 		onReleased: root.opacity = 1.0
 	}
 
-	Row {
-		spacing: root.height * 0.1
-		width: parent.width * 0.8
-		height: parent.height * 0.8
+	// Content with 10% padding based on parent's (StatusBar) height
+	Item {
+		id: content
+		anchors.fill: parent
+		anchors.margins: parent.height * 0.1
 
+		// Type label on the left
 		Text {
+			id: typeText
 			text: root.signalType
 			color: root.colors ? root.colors.primaryForeground : "white"
 			font.pixelSize: parent.height
 			font.bold: true
+			anchors.left: parent.left
 			anchors.verticalCenter: parent.verticalCenter
 		}
 
+		// Signal strength bars fill remaining space to the right
 		Item {
-			width: parent.width
-			height: parent.height
+			id: strengthBox
+			anchors.left: typeText.right
+			anchors.leftMargin: parent.height * 0.1
+			anchors.right: parent.right
+			anchors.top: parent.top
+			anchors.bottom: parent.bottom
 			anchors.verticalCenter: parent.verticalCenter
 
 			SignalStrength {
 				anchors.fill: parent
 				strength: root.signalStrength
+				activeColor: root.colors ? root.colors.success : "#44d17a"
+				inactiveColor: root.colors ? root.colors.disabledForeground : "#808080"
 			}
 
 			CrossOut {
