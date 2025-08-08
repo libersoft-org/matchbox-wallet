@@ -6,7 +6,7 @@ Rectangle {
 	id: statusBar
 	//color: Qt.darker(colors.primaryBackground)
 	color: "red"
-	height: window.height * 0.075
+	height: window.height * 0.05
 	anchors.top: parent.top
 	anchors.left: parent.left
 	anchors.right: parent.right
