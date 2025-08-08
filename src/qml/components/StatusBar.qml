@@ -1,5 +1,6 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
+import QtQuick.Layouts 1.15
 
 Rectangle {
 	id: statusBar
@@ -91,39 +92,35 @@ Rectangle {
 		onNavigate: statusBar.navigateTo
 	}
 
-	Row {
+	RowLayout {
 		anchors.right: parent.right
 		anchors.rightMargin: statusBar.height * 0.3
 		anchors.verticalCenter: parent.verticalCenter
 		spacing: statusBar.height * 0.25
 
-		// Battery on the right, vertically centered, using component
-		Row {
-			spacing: statusBar.height * 0.15
-			anchors.verticalCenter: parent.verticalCenter
+		// Battery (standing) with percentage on the right side, centered including tip
+		BatteryIndicator {
+			id: battery
+			Layout.alignment: Qt.AlignVCenter
+			Layout.preferredWidth: statusBar.height * 0.7
+			Layout.preferredHeight: statusBar.height * 0.9
+			level: statusBar.batteryLevel
+			hasBattery: statusBar.hasBattery
+			colors: statusBar.colors
+		}
 
-			BatteryIndicator {
-				id: battery
-				width: statusBar.height * 0.7
-				height: statusBar.height * 0.9
-				level: statusBar.batteryLevel
-				hasBattery: statusBar.hasBattery
-				colors: statusBar.colors
-			}
-
-			Text {
-				text: statusBar.hasBattery ? statusBar.batteryLevel + "%" : "N/A"
-				font.bold: true
-				color: colors.primaryForeground
-				font.pixelSize: statusBar.height * 0.8
-				anchors.verticalCenter: parent.verticalCenter
-			}
+		Text {
+			text: statusBar.hasBattery ? statusBar.batteryLevel + "%" : "N/A"
+			font.bold: true
+			color: colors.primaryForeground
+			font.pixelSize: statusBar.height * 0.8
+			Layout.alignment: Qt.AlignVCenter
 		}
 
 		// Time
 		Item {
-			width: timeText.width
-			height: statusBar.height
+			Layout.preferredWidth: timeText.width
+			Layout.preferredHeight: statusBar.height
 
 			MouseArea {
 				anchors.fill: parent
