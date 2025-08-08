@@ -32,7 +32,6 @@ public:
     explicit NodeThread(QObject *parent = nullptr);
     ~NodeThread();
     
-    void setApplicationDirPath(const QString &appDirPath);
     
     bool initialize();
     void shutdown();
@@ -53,10 +52,6 @@ private:
     void processMessages();
     void handleNodeMessage(const NodeMessage &message);
     static void nativeCallback(const v8::FunctionCallbackInfo<v8::Value> &args);
-    static void loadFromQrc(const v8::FunctionCallbackInfo<v8::Value> &args);
-    
-    // Helper function for loading files with filesystem-first, QRC-fallback pattern
-    QString loadFileWithFallback(const QString& filename, const QString& baseDir, bool* loadedFromQrc = nullptr);
 
     // Node.js environment
     std::unique_ptr<node::CommonEnvironmentSetup> m_setup;
@@ -76,11 +71,6 @@ private:
     QMap<QString, std::function<void(const QJsonObject&)>> m_callbacks;
     QMutex m_callbackMutex;
     
-    // Application directory path (set from main thread)
-    QString m_applicationDirPath;
-    
-    static const char* JS_ENTRY_PATH;
-    static const char* JS_ENTRY_QRC_PATH;
     static NodeThread* s_instance;
 };
 

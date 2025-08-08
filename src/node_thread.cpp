@@ -6,8 +6,6 @@
 #include <QFile>
 #include <QTextStream>
 
-const char* NodeThread::JS_ENTRY_PATH = "src/js/index.js";
-const char* NodeThread::JS_ENTRY_QRC_PATH = ":/js/index.js";
 NodeThread* NodeThread::s_instance = nullptr;
 
 NodeThread::NodeThread(QObject *parent)
@@ -19,9 +17,6 @@ NodeThread::NodeThread(QObject *parent)
     s_instance = this;
 }
 
-void NodeThread::setApplicationDirPath(const QString &appDirPath) {
-    m_applicationDirPath = appDirPath;
-}
 
 NodeThread::~NodeThread() {
     shutdown();
@@ -169,40 +164,6 @@ bool NodeThread::initializeNodeEnvironment() {
     }
 }
 
-QString NodeThread::loadFileWithFallback(const QString& filename, const QString& baseDir, bool* loadedFromQrc) {
-    QString fileContent;
-    bool fromQrc = false;
-    
-    // Try filesystem first
-    QString filesystemPath = QDir(baseDir).absoluteFilePath(filename);
-    QFile filesystemFile(filesystemPath);
-    if (filesystemFile.exists() && filesystemFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        QTextStream stream(&filesystemFile);
-        fileContent = stream.readAll();
-        filesystemFile.close();
-        qDebug() << "NodeThread: Loaded" << filename << "from filesystem:" << filesystemPath;
-    } else {
-        // Fallback to QRC
-        QString qrcPath = QString(":/js/%1").arg(filename);
-        QFile qrcFile(qrcPath);
-        if (qrcFile.exists() && qrcFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-            QTextStream stream(&qrcFile);
-            fileContent = stream.readAll();
-            qrcFile.close();
-            fromQrc = true;
-            qDebug() << "NodeThread: Loaded" << filename << "from QRC:" << qrcPath;
-        } else {
-            qCritical() << "NodeThread: File not found in filesystem or QRC:" << filename;
-            return QString();
-        }
-    }
-    
-    if (loadedFromQrc) {
-        *loadedFromQrc = fromQrc;
-    }
-    
-    return fileContent;
-}
 
 bool NodeThread::loadJSEntryPoint() {
     v8::Locker locker(m_isolate);
@@ -210,50 +171,32 @@ bool NodeThread::loadJSEntryPoint() {
     v8::HandleScope handle_scope(m_isolate);
     v8::Context::Scope context_scope(m_setup->context());
     
-    // Set up QRC loader function BEFORE any JavaScript code runs
-    v8::Local<v8::String> qrcLoaderName = v8::String::NewFromUtf8(
-        m_isolate, "__loadFromQrc", v8::NewStringType::kNormal
-    ).ToLocalChecked();
-
-    v8::Local<v8::Function> qrcLoaderFunc = v8::Function::New(
-        m_setup->context(), loadFromQrc
-    ).ToLocalChecked();
-
-    if (!m_setup->context()->Global()->Set(m_setup->context(), qrcLoaderName, qrcLoaderFunc).FromMaybe(false)) {
-        qCritical() << "NodeThread: Failed to set QRC loader function";
+    qDebug() << "NodeThread: Using filesystem-only loading";
+    
+    // Load main JavaScript file from filesystem
+    QString jsPath = "../../src/js/index.js";  // Relative to build directory
+    QFile jsFile(jsPath);
+    
+    if (!jsFile.exists()) {
+        qCritical() << "NodeThread: JavaScript file not found:" << jsPath;
         return false;
     }
-    qDebug() << "NodeThread: QRC loader function registered successfully";
     
-    // Load main JavaScript file using helper function with fallback locations
-    QString jsCode;
-    bool loadedFromQrc = false;
-    
-    // Try multiple locations for filesystem loading
-    QStringList searchDirs;
-    searchDirs << QDir::currentPath();  // Current directory
-    if (!m_applicationDirPath.isEmpty()) {
-        QString appDir = m_applicationDirPath;
-        searchDirs << QDir(appDir).absoluteFilePath("../../src/js");  // Relative to app dir
+    if (!jsFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qCritical() << "NodeThread: Failed to open JavaScript file:" << jsPath;
+        return false;
     }
     
-    // Try each search directory
-    for (const QString& searchDir : searchDirs) {
-        jsCode = loadFileWithFallback("index.js", searchDir, &loadedFromQrc);
-        if (!jsCode.isEmpty()) {
-            qDebug() << "NodeThread: Successfully loaded index.js from search directory:" << searchDir;
-            break;
-        }
-    }
+    QTextStream in(&jsFile);
+    QString jsCode = in.readAll();
+    jsFile.close();
     
     if (jsCode.isEmpty()) {
-        qCritical() << "NodeThread: Failed to load index.js from any location";
-        qCritical() << "NodeThread: Searched directories:";
-        for (const QString& dir : searchDirs) {
-            qCritical() << "  - " << dir;
-        }
+        qCritical() << "NodeThread: JavaScript file is empty:" << jsPath;
         return false;
     }
+    
+    qDebug() << "NodeThread: Successfully loaded" << jsCode.length() << "characters from" << jsPath;
 
     // Validate JavaScript content before proceeding
     if (jsCode.trimmed().isEmpty()) {
@@ -267,21 +210,9 @@ bool NodeThread::loadJSEntryPoint() {
         qWarning() << "NodeThread: First 200 characters of loaded code:" << jsCode.left(200);
     }
 
-    // Set up working directory for require function
-    QString jsDir;
-    if (loadedFromQrc) {
-        // For QRC files, use a virtual directory path
-        jsDir = ":/js";
-        qDebug() << "NodeThread: Using Qt resources directory:" << jsDir;
-    } else {
-        // For filesystem files, use the src/js directory
-        QString appDir = m_applicationDirPath.isEmpty() ? QDir::currentPath() : m_applicationDirPath;
-        jsDir = QDir(appDir).absoluteFilePath("../../src/js");
-        if (!QDir(jsDir).exists()) {
-            jsDir = QDir::currentPath();  // Fallback to current directory
-        }
-        qDebug() << "NodeThread: Setting working directory to:" << jsDir;
-    }
+    // Use src/js as working directory for Node.js modules
+    QString workingDir = "src/js";
+    qDebug() << "NodeThread: Using working directory:" << workingDir;
 
     auto loadenv_ret = node::LoadEnvironment(m_env, [&](const node::StartExecutionCallbackInfo& info) -> v8::MaybeLocal<v8::Value> {
         v8::Local<v8::Context> context = m_setup->context();
@@ -295,16 +226,30 @@ bool NodeThread::loadJSEntryPoint() {
             return v8::MaybeLocal<v8::Value>();
         }
 
-        // Load bootstrap code using the helper function - same bootstrap for both cases
-        QString bootstrapCode = loadFileWithFallback("bootstrap.js", jsDir);
+        // Load bootstrap code from filesystem  
+        QString bootstrapPath = "../../src/js/bootstrap.js";  // Relative to build directory
+        QFile bootstrapFile(bootstrapPath);
         
-        if (bootstrapCode.isEmpty()) {
-            qCritical() << "NodeThread: Failed to load bootstrap file: bootstrap.js";
+        if (!bootstrapFile.exists()) {
+            qCritical() << "NodeThread: Bootstrap file not found:" << bootstrapPath;
             return v8::MaybeLocal<v8::Value>();
         }
         
-        // Replace placeholder with the actual working directory
-        bootstrapCode = bootstrapCode.arg(jsDir);
+        if (!bootstrapFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            qCritical() << "NodeThread: Failed to open bootstrap file:" << bootstrapPath;
+            return v8::MaybeLocal<v8::Value>();
+        }
+        
+        QTextStream bootstrapStream(&bootstrapFile);
+        QString bootstrapCode = bootstrapStream.readAll();
+        bootstrapFile.close();
+        
+        if (bootstrapCode.isEmpty()) {
+            qCritical() << "NodeThread: Bootstrap file is empty:" << bootstrapPath;
+            return v8::MaybeLocal<v8::Value>();
+        }
+        
+        qDebug() << "NodeThread: Loaded bootstrap from filesystem:" << bootstrapPath;
 
         v8::Local<v8::String> bootstrap = v8::String::NewFromUtf8(
             isolate, bootstrapCode.toStdString().c_str(), v8::NewStringType::kNormal
@@ -389,7 +334,7 @@ bool NodeThread::loadJSEntryPoint() {
     }
     
     qDebug() << "NodeThread: LoadEnvironment completed successfully";
-    qDebug() << "NodeThread: JavaScript loaded from:" << (loadedFromQrc ? "Qt resources" : "filesystem");
+    qDebug() << "NodeThread: JavaScript loaded from filesystem";
 
     // Get handleMessage function
     v8::Local<v8::Context> context = m_setup->context();
@@ -624,185 +569,3 @@ void NodeThread::nativeCallback(const v8::FunctionCallbackInfo<v8::Value> &args)
     }
 }
 
-void NodeThread::loadFromQrc(const v8::FunctionCallbackInfo<v8::Value> &args) {
-    v8::Isolate* isolate = args.GetIsolate();
-    v8::HandleScope handle_scope(isolate);
-    v8::Local<v8::Context> context = isolate->GetCurrentContext();
-
-    if (args.Length() != 1 || !args[0]->IsString()) {
-        isolate->ThrowException(v8::Exception::TypeError(
-            v8::String::NewFromUtf8(isolate, "loadFromQrc expects a string argument").ToLocalChecked()));
-        return;
-    }
-
-    v8::String::Utf8Value qrcPath(isolate, args[0]);
-    QString resourcePath = QString(*qrcPath);
-
-    qDebug() << "NodeThread: Loading from QRC:" << resourcePath;
-
-    // Load the file from Qt resources
-    QFile qrcFile(resourcePath);
-    if (!qrcFile.exists()) {
-        QString errorMsg = QString("QRC resource not found: %1").arg(resourcePath);
-        qCritical() << "NodeThread:" << errorMsg;
-        isolate->ThrowException(v8::Exception::Error(
-            v8::String::NewFromUtf8(isolate, errorMsg.toStdString().c_str()).ToLocalChecked()));
-        return;
-    }
-
-    if (!qrcFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        QString errorMsg = QString("Failed to open QRC resource: %1 - %2").arg(resourcePath, qrcFile.errorString());
-        qCritical() << "NodeThread:" << errorMsg;
-        isolate->ThrowException(v8::Exception::Error(
-            v8::String::NewFromUtf8(isolate, errorMsg.toStdString().c_str()).ToLocalChecked()));
-        return;
-    }
-
-    QTextStream stream(&qrcFile);
-    QString fileContent = stream.readAll();
-    qrcFile.close();
-
-    if (fileContent.isEmpty()) {
-        qWarning() << "NodeThread: QRC resource is empty:" << resourcePath;
-    }
-
-    qDebug() << "NodeThread: Successfully loaded" << fileContent.length() << "characters from QRC:" << resourcePath;
-
-    // Determine if this is a JSON file or JavaScript module
-    QString fileName = resourcePath.split('/').last();
-
-    if (fileName.endsWith(".json")) {
-        // Parse as JSON and return the parsed object
-        QJsonParseError parseError;
-        QJsonDocument jsonDoc = QJsonDocument::fromJson(fileContent.toUtf8(), &parseError);
-
-        if (parseError.error != QJsonParseError::NoError) {
-            QString errorMsg = QString("JSON parse error in %1: %2").arg(resourcePath, parseError.errorString());
-            qCritical() << "NodeThread:" << errorMsg;
-            isolate->ThrowException(v8::Exception::SyntaxError(
-                v8::String::NewFromUtf8(isolate, errorMsg.toStdString().c_str()).ToLocalChecked()));
-            return;
-        }
-
-        // Convert QJsonDocument to V8 value
-        QByteArray jsonData = jsonDoc.toJson(QJsonDocument::Compact);
-        v8::Local<v8::String> jsonStr = v8::String::NewFromUtf8(
-            isolate, jsonData.constData(), v8::NewStringType::kNormal
-        ).ToLocalChecked();
-
-        // Use JSON.parse to convert to JavaScript object
-        v8::Local<v8::Value> jsonObj;
-        if (!context->Global()->Get(context,
-            v8::String::NewFromUtf8(isolate, "JSON").ToLocalChecked()).ToLocal(&jsonObj)) {
-            isolate->ThrowException(v8::Exception::Error(
-                v8::String::NewFromUtf8(isolate, "Failed to get JSON object").ToLocalChecked()));
-            return;
-        }
-
-        v8::Local<v8::Object> json = jsonObj->ToObject(context).ToLocalChecked();
-        v8::Local<v8::Value> parseFunc;
-        if (!json->Get(context,
-            v8::String::NewFromUtf8(isolate, "parse").ToLocalChecked()).ToLocal(&parseFunc)) {
-            isolate->ThrowException(v8::Exception::Error(
-                v8::String::NewFromUtf8(isolate, "Failed to get JSON.parse").ToLocalChecked()));
-            return;
-        }
-
-        v8::Local<v8::Function> parse = parseFunc.As<v8::Function>();
-        v8::Local<v8::Value> parseArgs[] = { jsonStr };
-        v8::Local<v8::Value> result;
-        if (!parse->Call(context, json, 1, parseArgs).ToLocal(&result)) {
-            isolate->ThrowException(v8::Exception::Error(
-                v8::String::NewFromUtf8(isolate, "Failed to parse JSON").ToLocalChecked()));
-            return;
-        }
-
-        args.GetReturnValue().Set(result);
-    } else {
-        // Treat as JavaScript module - compile and execute it
-        v8::Local<v8::String> source = v8::String::NewFromUtf8(
-            isolate, fileContent.toStdString().c_str(), v8::NewStringType::kNormal
-        ).ToLocalChecked();
-
-        // Create a module-like environment with exports object
-        QString moduleWrapper = QString(
-            "(function(exports, module, require, __filename, __dirname, console) {\n"
-            "%1\n"
-            "return module.exports;\n"
-            "})"
-        ).arg(fileContent);
-
-        v8::Local<v8::String> wrappedSource = v8::String::NewFromUtf8(
-            isolate, moduleWrapper.toStdString().c_str(), v8::NewStringType::kNormal
-        ).ToLocalChecked();
-
-        v8::Local<v8::Script> script;
-        if (!v8::Script::Compile(context, wrappedSource).ToLocal(&script)) {
-            QString errorMsg = QString("Failed to compile JavaScript module: %1").arg(resourcePath);
-            qCritical() << "NodeThread:" << errorMsg;
-            isolate->ThrowException(v8::Exception::SyntaxError(
-                v8::String::NewFromUtf8(isolate, errorMsg.toStdString().c_str()).ToLocalChecked()));
-            return;
-        }
-
-        v8::Local<v8::Value> moduleFunction;
-        if (!script->Run(context).ToLocal(&moduleFunction)) {
-            QString errorMsg = QString("Failed to execute JavaScript module: %1").arg(resourcePath);
-            qCritical() << "NodeThread:" << errorMsg;
-            isolate->ThrowException(v8::Exception::Error(
-                v8::String::NewFromUtf8(isolate, errorMsg.toStdString().c_str()).ToLocalChecked()));
-            return;
-        }
-
-        // Create module context
-        v8::Local<v8::Object> exports = v8::Object::New(isolate);
-        v8::Local<v8::Object> module = v8::Object::New(isolate);
-        module->Set(context, v8::String::NewFromUtf8(isolate, "exports").ToLocalChecked(), exports).ToChecked();
-
-        // Get the global require function
-        v8::Local<v8::Value> requireFunc;
-        if (!context->Global()->Get(context,
-            v8::String::NewFromUtf8(isolate, "require").ToLocalChecked()).ToLocal(&requireFunc)) {
-            requireFunc = v8::Undefined(isolate);
-        }
-
-        QString filename = resourcePath;
-        QString dirname = resourcePath.section('/', 0, -2); // Remove filename, keep directory
-
-        // Get the global console function
-        v8::Local<v8::Value> consoleFunc;
-        if (!context->Global()->Get(context,
-            v8::String::NewFromUtf8(isolate, "console").ToLocalChecked()).ToLocal(&consoleFunc)) {
-            consoleFunc = v8::Undefined(isolate);
-        }
-
-        // Call the wrapped module function
-        v8::Local<v8::Function> moduleFunc = moduleFunction.As<v8::Function>();
-        v8::Local<v8::Value> moduleArgs[] = {
-            exports,
-            module,
-            requireFunc,
-            v8::String::NewFromUtf8(isolate, filename.toStdString().c_str()).ToLocalChecked(),
-            v8::String::NewFromUtf8(isolate, dirname.toStdString().c_str()).ToLocalChecked(),
-            consoleFunc
-        };
-
-        v8::Local<v8::Value> result;
-        v8::TryCatch try_catch(isolate);
-        if (!moduleFunc->Call(context, context->Global(), 6, moduleArgs).ToLocal(&result)) {
-            QString errorMsg = QString("Failed to execute module function: %1").arg(resourcePath);
-            if (try_catch.HasCaught()) {
-                v8::String::Utf8Value exception(isolate, try_catch.Exception());
-                v8::String::Utf8Value stack_trace(isolate, try_catch.StackTrace(context).ToLocalChecked());
-                qCritical() << "NodeThread: Module execution exception:" << *exception;
-                qCritical() << "NodeThread: Stack trace:" << *stack_trace;
-            }
-            qCritical() << "NodeThread:" << errorMsg;
-            isolate->ThrowException(v8::Exception::Error(
-                v8::String::NewFromUtf8(isolate, errorMsg.toStdString().c_str()).ToLocalChecked()));
-            return;
-        }
-
-        args.GetReturnValue().Set(result);
-    }
-}

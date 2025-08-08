@@ -97,21 +97,8 @@ qt_add_qml_module(Wallet
 # Find Node.js entry files and include all node_modules
 file(GLOB_RECURSE NODE_MODULES_FILES_LIST RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "src/js/node_modules/**/*.js")
 
-set(NODE_JS_FILES_LIST
-    "src/js/index.js"
-    "src/js/wallet-crypto.js"
-    "src/js/bootstrap.js"
-    "src/js/package.json"
-    "src/js/package-lock.json"
-#    ${NODE_MODULES_FILES_LIST}
-)
-
-# Add Node.js files as separate resources with proper prefix
-qt_add_resources(Wallet "nodejs"
- PREFIX "/"
- BASE "src"
- FILES ${NODE_JS_FILES_LIST}
-)
+# Node.js files are now loaded directly from filesystem
+# No QRC resources needed
 target_link_libraries(Wallet PRIVATE
  Qt6::Core
  Qt6::Quick
