@@ -1,9 +1,6 @@
 build/
 .secret_git
+.secret_deploy
 **/*-formatting-tmp.qml~
 *.log
-build-and-start.ps1
-build-and-start.sh
-build-and-deploy.ps1
-build-and-deploy.sh
 .dev_intention
