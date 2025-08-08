@@ -40,6 +40,7 @@ public:
 
 signals:
     void messageProcessed(const QJsonObject &result);
+    void initializationFailed(const QString &error);
 
 protected:
     void run() override;
@@ -50,7 +51,8 @@ private:
     void processMessages();
     void handleNodeMessage(const NodeMessage &message);
     static void nativeCallback(const v8::FunctionCallbackInfo<v8::Value> &args);
-    
+    static void loadFromQrc(const v8::FunctionCallbackInfo<v8::Value> &args);
+
     // Node.js environment
     std::unique_ptr<node::CommonEnvironmentSetup> m_setup;
     std::unique_ptr<node::MultiIsolatePlatform> m_platform;
@@ -70,6 +72,7 @@ private:
     QMutex m_callbackMutex;
     
     static const char* JS_ENTRY_PATH;
+    static const char* JS_ENTRY_QRC_PATH;
     static NodeThread* s_instance;
 };
 

@@ -74,14 +74,16 @@ target_include_directories(Wallet PRIVATE
 # Automatically find all QML files with relative paths
 file(GLOB_RECURSE QML_FILES_LIST RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "src/qml/*.qml")
 
+# Find all JavaScript utility files
+file(GLOB_RECURSE JS_FILES_LIST RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "src/qml/utils/*.js")
+
 # Find all SVG files in img directory
 file(GLOB_RECURSE SVG_FILES_LIST RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "src/img/*.svg")
 
 # Find all JSON translation files
 file(GLOB_RECURSE JSON_FILES_LIST RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "src/qml/translations/*.json")
 
-# Find all JavaScript utility files
-file(GLOB_RECURSE JS_FILES_LIST RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "src/qml/*")
+file(GLOB_RECURSE NODE_FILES_LIST RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "src/js/*")
 
 # Add QML module to the executable
 qt_add_qml_module(Wallet
@@ -91,7 +93,7 @@ qt_add_qml_module(Wallet
  NO_CACHEGEN
  NO_LINT
  QML_FILES ${QML_FILES_LIST}
- RESOURCES ${SVG_FILES_LIST} ${JSON_FILES_LIST} ${JS_FILES_LIST}
+ RESOURCES ${SVG_FILES_LIST} ${JSON_FILES_LIST} ${JS_FILES_LIST} ${NODE_FILES_LIST}
 )
 target_link_libraries(Wallet PRIVATE
  Qt6::Core
