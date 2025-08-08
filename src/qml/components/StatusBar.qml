@@ -4,8 +4,7 @@ import QtQuick.Layouts 1.15
 
 Rectangle {
 	id: statusBar
-	//color: Qt.darker(colors.primaryBackground)
-	color: "red"
+	color: Qt.darker(colors.primaryBackground)
 	height: window.height * 0.05
 	anchors.top: parent.top
 	anchors.left: parent.left
@@ -53,7 +52,7 @@ Rectangle {
 		height: statusBar.height
 		signalType: "W"
 		signalStrength: statusBar.wifiStrength
-		backgroundColor: "blue"
+		//backgroundColor: "blue"
 		pageId: "wifi-settings"
 		pageComponent: wifiSettingsPageComponent
 		colors: statusBar.colors
@@ -69,7 +68,7 @@ Rectangle {
 		height: statusBar.height
 		signalType: "L"
 		signalStrength: statusBar.loraStrength
-		backgroundColor: "green"
+		//backgroundColor: "green"
 		pageId: "lora-settings"
 		pageComponent: wifiSettingsPageComponent  // TODO: change to correct component
 		colors: statusBar.colors
@@ -85,7 +84,7 @@ Rectangle {
 		height: statusBar.height
 		signalType: "G"
 		signalStrength: statusBar.gsmStrength
-		backgroundColor: "orange"
+		//backgroundColor: "orange"
 		pageId: "gsm-settings"
 		pageComponent: wifiSettingsPageComponent  // TODO: change to correct component
 		colors: statusBar.colors

@@ -9,7 +9,7 @@ Item {
 	property var colors: undefined   // expect palette with success/error
 
 	// Internal metrics
-	property real indicatorWidth: width * 0.45
+	property real indicatorWidth: width * 0.9
 	property real tipHeight: height * 0.12
 	property real bodyHeight: height - tipHeight
 	property real bodyBorderWidth: Math.max(2, height * 0.08)
