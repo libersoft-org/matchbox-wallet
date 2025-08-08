@@ -30,6 +30,7 @@ bool NodeJS::initialize() {
     qDebug() << "NodeJS: Initializing with NodeThread";
     
     m_nodeThread = std::make_unique<NodeThread>(this);
+    m_nodeThread->setApplicationDirPath(QCoreApplication::applicationDirPath());
 
     connect(m_nodeThread.get(), &NodeThread::initializationFailed,
         this, [this](const QString &error) {

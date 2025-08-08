@@ -1,5 +1,16 @@
 const crypto = require('crypto');
-const ethers = require('ethers');
+
+// Lazy-load ethers to avoid module loading issues in embedded environment
+let ethers = null;
+function getEthers() {
+    if (!ethers) {
+        console.log('Lazy-loading ethers library...');
+        ethers = require('ethers');
+        console.log('ETHERS:', ethers);
+        console.log('ETHERS.VERSION:', ethers.version);
+    }
+    return ethers;
+}
 
 class CryptoHandler {
     static hash(input) {
@@ -58,6 +69,7 @@ class CryptoHandler {
     
     // Ethereum wallet functions using ethers.js
     static createWallet() {
+        const ethers = getEthers();
         const wallet = ethers.Wallet.createRandom();
         return {
             status: 'success',
@@ -72,6 +84,7 @@ class CryptoHandler {
             throw new Error('Missing mnemonic phrase');
         }
         
+        const ethers = getEthers();
         const wallet = ethers.Wallet.fromPhrase(mnemonic);
         return {
             status: 'success',
@@ -85,6 +98,7 @@ class CryptoHandler {
             throw new Error('Missing private key');
         }
         
+        const ethers = getEthers();
         const wallet = new ethers.Wallet(privateKey);
         return {
             status: 'success',
@@ -95,6 +109,7 @@ class CryptoHandler {
     
     static validateAddress(address) {
         try {
+            const ethers = getEthers();
             const isValid = ethers.isAddress(address);
             return {
                 status: 'success',
@@ -115,6 +130,7 @@ class CryptoHandler {
             throw new Error('Missing data for keccak256 hash');
         }
         
+        const ethers = getEthers();
         const hash = ethers.keccak256(ethers.toUtf8Bytes(data));
         return {
             status: 'success',
@@ -138,6 +154,7 @@ class CryptoHandler {
             console.log('Fetch test successful, received data keys:', Object.keys(testData));
             
             console.log('Creating ethers.JsonRpcProvider...');
+            const ethers = getEthers();
             const provider = new ethers.JsonRpcProvider('https://ethereum-rpc.publicnode.com');
             console.log('Provider created successfully');
 
@@ -172,8 +189,12 @@ class CryptoHandler {
         if (!address) {
             throw new Error('Missing address for balance query');
         }
-        
+
+        const ethers = getEthers();
+        console.log('ETHERS:', ethers);
+        console.log('ETHERS.VERSION:', ethers.version);
         const provider = new ethers.JsonRpcProvider(rpcUrl || 'https://eth.llamarpc.com');
+        console.log('PROVIDER:', provider);
         
         const balance = await provider.getBalance(address);
         return {

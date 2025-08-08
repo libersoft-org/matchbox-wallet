@@ -19,6 +19,10 @@ NodeThread::NodeThread(QObject *parent)
     s_instance = this;
 }
 
+void NodeThread::setApplicationDirPath(const QString &appDirPath) {
+    m_applicationDirPath = appDirPath;
+}
+
 NodeThread::~NodeThread() {
     shutdown();
     s_instance = nullptr;
@@ -171,6 +175,21 @@ bool NodeThread::loadJSEntryPoint() {
     v8::HandleScope handle_scope(m_isolate);
     v8::Context::Scope context_scope(m_setup->context());
     
+    // Set up QRC loader function BEFORE any JavaScript code runs
+    v8::Local<v8::String> qrcLoaderName = v8::String::NewFromUtf8(
+        m_isolate, "__loadFromQrc", v8::NewStringType::kNormal
+    ).ToLocalChecked();
+
+    v8::Local<v8::Function> qrcLoaderFunc = v8::Function::New(
+        m_setup->context(), loadFromQrc
+    ).ToLocalChecked();
+
+    if (!m_setup->context()->Global()->Set(m_setup->context(), qrcLoaderName, qrcLoaderFunc).FromMaybe(false)) {
+        qCritical() << "NodeThread: Failed to set QRC loader function";
+        return false;
+    }
+    qDebug() << "NodeThread: QRC loader function registered successfully";
+    
     // Try to load JavaScript file from Qt resources first, then fall back to filesystem
     QString jsPath;
     QString jsCode;
@@ -213,7 +232,7 @@ bool NodeThread::loadJSEntryPoint() {
             qWarning() << "NodeThread: JavaScript file not found at constant path:" << jsPath;
 
             // Try relative to application directory
-            QString appDir = QCoreApplication::applicationDirPath();
+            QString appDir = m_applicationDirPath.isEmpty() ? QDir::currentPath() : m_applicationDirPath;
             QString relativePath = QDir(appDir).absoluteFilePath("../../src/js/index.js");
             qDebug() << "NodeThread: Trying relative path:" << relativePath;
 
@@ -330,39 +349,136 @@ bool NodeThread::loadJSEntryPoint() {
                 "  try {\n"
                 "    const module = require('%1');\n"
                 "    \n"
+                "    // Change working directory to src/js so Node.js can find node_modules\n"
+                "    try {\n"
+                "      const path = require('path');\n"
+                "      const fs = require('fs');\n"
+                "      const srcJsDir = path.resolve(process.cwd(), '../../src/js');\n"
+                "      if (fs.existsSync(srcJsDir)) {\n"
+                "        process.chdir(srcJsDir);\n"
+                "        console.log('Changed working directory to:', process.cwd());\n"
+                "      } else {\n"
+                "        console.log('src/js directory not found at:', srcJsDir);\n"
+                "      }\n"
+                "    } catch (e) {\n"
+                "      console.log('Failed to change directory:', e.message);\n"
+                "    }\n"
+                "    \n"
+                "    // Create custom console object that works in embedded environment\n"
+                "    const originalConsole = global.console;\n"
+                "    global.console = {\n"
+                "      log: (...args) => originalConsole.log(...args),\n"
+                "      error: (...args) => originalConsole.error(...args),\n"
+                "      warn: (...args) => originalConsole.warn(...args),\n"
+                "      info: (...args) => originalConsole.info(...args),\n"
+                "      debug: (...args) => originalConsole.debug(...args)\n"
+                "    };\n"
+                "    \n"
                 "    // Create our custom require function that supports Qt resources\n"
-                "    function customRequire(id) {\n"
-                "      // For relative paths starting with ./ or ../, try to load from QRC\n"
+                "    // Track current module context for relative requires\n"
+                "    const moduleStack = [];\n"
+                "    const moduleCache = {};\n"
+                "    function customRequire(id, currentModulePath) {\n"
+                "      console.log('customRequire called with id:', id);\n"
+                "      \n"
+                "      // Use global module path if currentModulePath is not provided\n"
+                "      if (!currentModulePath && global.__currentModulePath) {\n"
+                "        currentModulePath = global.__currentModulePath;\n"
+                "        console.log('Using global currentModulePath:', currentModulePath);\n"
+                "      }\n"
+                "      \n"
+                "      // Check cache first\n"
+                "      const cacheKey = currentModulePath ? currentModulePath + '::' + id : id;\n"
+                "      if (moduleCache[cacheKey]) {\n"
+                "        console.log('Found cached module:', id);\n"
+                "        return moduleCache[cacheKey];\n"
+                "      }\n"
+                "      \n"
+                "      // For relative paths starting with ./ or ../, try to resolve relative to current module\n"
                 "      if (id.startsWith('./') || id.startsWith('../')) {\n"
+                "        console.log('Processing relative require - id:', id, 'currentModulePath:', currentModulePath);\n"
+                "        // Check if we have a current module path (for filesystem modules)\n"
+                "        if (currentModulePath && !currentModulePath.startsWith(':/')) {\n"
+                "          // Filesystem module requiring relative path\n"
+                "          try {\n"
+                "            const path = require('path');\n"
+                "            const fs = require('fs');\n"
+                "            const resolvedPath = path.resolve(path.dirname(currentModulePath), id);\n"
+                "            console.log('Resolving relative path from', currentModulePath, 'to', resolvedPath);\n"
+                "            \n"
+                "            if (fs.existsSync(resolvedPath)) {\n"
+                "              console.log('Found relative module at:', resolvedPath);\n"
+                "              const moduleCode = fs.readFileSync(resolvedPath, 'utf8');\n"
+                "              const module = { exports: {} };\n"
+                "              const moduleFunc = new Function('module', 'exports', 'require', '__filename', '__dirname', 'console', moduleCode);\n"
+                "              // Create a bound version of customRequire with the current module path\n"
+                "              const boundRequire = (reqId) => customRequire(reqId, resolvedPath);\n"
+                "              Object.setPrototypeOf(boundRequire, require);\n"
+                "              Object.assign(boundRequire, require);\n"
+                "              moduleFunc(module, module.exports, boundRequire, resolvedPath, path.dirname(resolvedPath), global.console);\n"
+                "              console.log('Successfully loaded relative module:', id);\n"
+                "              return module.exports;\n"
+                "            }\n"
+                "          } catch (e) {\n"
+                "            console.log('Failed to load relative filesystem module:', id, 'Error:', e.message);\n"
+                "          }\n"
+                "        }\n"
+                "        \n"
                 "        try {\n"
-                "          // Convert relative path to QRC path\n"
-                "          let resourcePath = id.replace(/^\\.\\//, '');\n"
+                "          // Convert relative path to QRC path (fallback for QRC resources)\n"
+                "          let resourcePath;\n"
+                "          if (currentModulePath && currentModulePath.includes('node_modules')) {\n"
+                "            // If we have a filesystem path, convert it to equivalent QRC path\n"
+                "            const path = require('path');\n"
+                "            const resolvedPath = path.resolve(path.dirname(currentModulePath), id);\n"
+                "            // Convert filesystem absolute path to QRC relative path\n"
+                "            const jsBasePath = process.cwd();\n"
+                "            if (resolvedPath.startsWith(jsBasePath)) {\n"
+                "              resourcePath = path.relative(jsBasePath, resolvedPath);\n"
+                "            } else {\n"
+                "              resourcePath = id.replace(/^\\.\\//, '');\n"
+                "            }\n"
+                "          } else {\n"
+                "            // Fallback to simple conversion\n"
+                "            resourcePath = id.replace(/^\\.\\//, '');\n"
+                "          }\n"
+                "          console.log('converted resourcePath:', resourcePath, 'from currentModulePath:', currentModulePath);\n"
                 "          \n"
                 "          // Try multiple file extensions following Node.js resolution order\n"
                 "          const extensions = ['', '.js', '.json', '.node', '.mjs', '.cjs'];\n"
                 "          \n"
                 "          for (const ext of extensions) {\n"
-                "            let tryPath;\n"
+                "            let pathWithExt;\n"
                 "            if (resourcePath.includes('.') && ext === '') {\n"
                 "              // If the path already has an extension, try it as-is first\n"
-                "              tryPath = ':/js/' + resourcePath;\n"
+                "              pathWithExt = resourcePath;\n"
                 "            } else if (ext === '') {\n"
                 "              // Try without extension (could be a directory with index.js)\n"
-                "              tryPath = ':/js/' + resourcePath + '/index.js';\n"
+                "              pathWithExt = resourcePath + '/index.js';\n"
                 "            } else {\n"
                 "              // Try with extension\n"
-                "              tryPath = ':/js/' + resourcePath + ext;\n"
+                "              pathWithExt = resourcePath + ext;\n"
                 "            }\n"
                 "            \n"
+                "            // Normalize the relative path first, then construct QRC path\n"
+                "            const path = require('path');\n"
+                "            const normalizedPath = path.posix.normalize('js/' + pathWithExt);\n"
+                "            const tryPath = ':/' + normalizedPath;\n"
+                "            \n"
+                "            console.log('Trying to load from QRC path:', tryPath);\n"
                 "            try {\n"
-                "              return __loadFromQrc(tryPath);\n"
+                "              const result = __loadFromQrc(tryPath);\n"
+                "              console.log('Successfully loaded from QRC:', tryPath);\n"
+                "              return result;\n"
                 "            } catch (e) {\n"
+                "              console.log('Failed to load from QRC:', tryPath, 'Error:', e.message);\n"
                 "              // Continue to next extension\n"
                 "              continue;\n"
                 "            }\n"
                 "          }\n"
                 "          \n"
                 "          // If we get here, none of the extensions worked\n"
+                "          console.log('All QRC extensions failed for id:', id, 'resourcePath:', resourcePath);\n"
                 "          throw new Error('Module not found in QRC resources: ' + id);\n"
                 "        } catch (e) {\n"
                 "          console.error('Failed to load from QRC:', id, e.message);\n"
@@ -372,9 +488,81 @@ bool NodeThread::loadJSEntryPoint() {
                 "      \n"
                 "      // For absolute module names, use normal Node.js require\n"
                 "      // This won't work perfectly without a filesystem, but at least it won't crash\n"
+                "      console.log('Trying to require absolute module:', id);\n"
+                "      console.log('Current working directory:', process.cwd());\n"
+                "      if (require.resolve && require.resolve.paths) {\n"
+                "        console.log('Module paths:', require.resolve.paths(id));\n"
+                "      } else {\n"
+                "        console.log('require.resolve.paths not available');\n"
+                "      }\n"
+                "      // Generic handling for npm modules from filesystem\n"
+                "      if (id && !id.startsWith('./') && !id.startsWith('../') && !id.startsWith('/')) {\n"
+                "        try {\n"
+                "          console.log('Attempting to load npm module from filesystem:', id);\n"
+                "          const fs = require('fs');\n"
+                "          const path = require('path');\n"
+                "          \n"
+                "          // Try different common entry points for npm modules\n"
+                "          let tryPaths = [\n"
+                "            path.join(process.cwd(), 'node_modules', id, 'lib.commonjs', 'index.js'),\n"
+                "            path.join(process.cwd(), 'node_modules', id, 'index.js'),\n"
+                "            path.join(process.cwd(), 'node_modules', id + '.js'),\n"
+                "            path.join(process.cwd(), 'node_modules', id, id + '.js'),\n"
+                "            path.join(process.cwd(), 'node_modules', id, 'dist', 'index.js')\n"
+                "          ];\n"
+                "          \n"
+                "          // Handle scoped packages (e.g., @noble/hashes/sha3)\n"
+                "          if (id.includes('/') && !id.startsWith('./') && !id.startsWith('../')) {\n"
+                "            const parts = id.split('/');\n"
+                "            if (parts[0].startsWith('@')) {\n"
+                "              // Scoped package with subpath\n"
+                "              const scopedPaths = [\n"
+                "                path.join(process.cwd(), 'node_modules', parts[0], parts[1], parts.slice(2).join('/') + '.js'),\n"
+                "                path.join(process.cwd(), 'node_modules', parts[0], parts[1], parts.slice(2).join('/'), 'index.js'),\n"
+                "                path.join(process.cwd(), 'node_modules', id + '.js'),\n"
+                "                path.join(process.cwd(), 'node_modules', id, 'index.js')\n"
+                "              ];\n"
+                "              tryPaths = scopedPaths.concat(tryPaths);\n"
+                "            } else {\n"
+                "              // Regular package with subpath\n"
+                "              const subpathPaths = [\n"
+                "                path.join(process.cwd(), 'node_modules', parts[0], parts.slice(1).join('/') + '.js'),\n"
+                "                path.join(process.cwd(), 'node_modules', parts[0], parts.slice(1).join('/'), 'index.js'),\n"
+                "                path.join(process.cwd(), 'node_modules', id + '.js'),\n"
+                "                path.join(process.cwd(), 'node_modules', id, 'index.js')\n"
+                "              ];\n"
+                "              tryPaths = subpathPaths.concat(tryPaths);\n"
+                "            }\n"
+                "          }\n"
+                "          \n"
+                "          for (const tryPath of tryPaths) {\n"
+                "            console.log('Trying path:', tryPath);\n"
+                "            if (fs.existsSync(tryPath)) {\n"
+                "              console.log('Found module file, attempting to load:', tryPath);\n"
+                "              const moduleCode = fs.readFileSync(tryPath, 'utf8');\n"
+                "              const module = { exports: {} };\n"
+                "              const moduleFunc = new Function('module', 'exports', 'require', '__filename', '__dirname', 'console', moduleCode);\n"
+                "              // Create a bound version of customRequire with the current module path\n"
+                "              const boundRequire = (reqId) => customRequire(reqId, tryPath);\n"
+                "              Object.setPrototypeOf(boundRequire, require);\n"
+                "              Object.assign(boundRequire, require);\n"
+                "              moduleFunc(module, module.exports, boundRequire, tryPath, path.dirname(tryPath), global.console);\n"
+                "              console.log('Successfully loaded npm module from filesystem:', id);\n"
+                "              return module.exports;\n"
+                "            }\n"
+                "          }\n"
+                "          console.log('No suitable entry point found for module:', id);\n"
+                "        } catch (e) {\n"
+                "          console.log('Failed to load npm module from filesystem:', id, 'Error:', e.message);\n"
+                "        }\n"
+                "      }\n"
+                "      \n"
                 "      try {\n"
-                "        return require(id);\n"
+                "        const result = require(id);\n"
+                "        console.log('Successfully loaded absolute module:', id);\n"
+                "        return result;\n"
                 "      } catch (e) {\n"
+                "        console.log('Failed to load absolute module:', id, 'Error:', e.message);\n"
                 "        throw new Error('Module not found: ' + id + ' (embedded mode has limited require support). Error: ' + e.message);\n"
                 "      }\n"
                 "    }\n"
@@ -451,6 +639,32 @@ bool NodeThread::loadJSEntryPoint() {
         }
         
         qDebug() << "NodeThread: Bootstrap completed successfully";
+
+        // Set the current module path for the require function to use
+        QString modulePath;
+        if (loadedFromQrc) {
+            modulePath = ":/js/index.js";
+        } else {
+            modulePath = QFileInfo(jsPath).absoluteFilePath();
+        }
+        
+        v8::Local<v8::String> setModulePathCode = v8::String::NewFromUtf8(
+            isolate, 
+            ("global.__currentModulePath = '" + modulePath.toStdString() + "';").c_str(),
+            v8::NewStringType::kNormal
+        ).ToLocalChecked();
+        
+        v8::Local<v8::Script> setModulePathScript;
+        if (!v8::Script::Compile(context, setModulePathCode).ToLocal(&setModulePathScript)) {
+            qCritical() << "NodeThread: Failed to compile module path setter";
+            return v8::MaybeLocal<v8::Value>();
+        }
+        
+        v8::Local<v8::Value> setResult;
+        if (!setModulePathScript->Run(context).ToLocal(&setResult)) {
+            qCritical() << "NodeThread: Failed to set module path";
+            return v8::MaybeLocal<v8::Value>();
+        }
 
         v8::Local<v8::String> source = v8::String::NewFromUtf8(
             isolate, jsCode.toStdString().c_str(), v8::NewStringType::kNormal
@@ -552,22 +766,8 @@ bool NodeThread::loadJSEntryPoint() {
         return false;
     }
 
-    // Set up QRC loader function
-    v8::Local<v8::String> qrcLoaderName = v8::String::NewFromUtf8(
-        m_isolate, "__loadFromQrc", v8::NewStringType::kNormal
-    ).ToLocalChecked();
-
-    v8::Local<v8::Function> qrcLoaderFunc = v8::Function::New(
-        context, loadFromQrc
-    ).ToLocalChecked();
-
-    if (!context->Global()->Set(context, qrcLoaderName, qrcLoaderFunc).FromMaybe(false)) {
-        qCritical() << "NodeThread: Failed to set QRC loader function";
-        return false;
-    }
 
     qDebug() << "NodeThread: Native callback function set successfully";
-    qDebug() << "NodeThread: QRC loader function set successfully";
     qDebug() << "NodeThread: JavaScript environment loaded successfully";
     return true;
 }
@@ -842,7 +1042,7 @@ void NodeThread::loadFromQrc(const v8::FunctionCallbackInfo<v8::Value> &args) {
 
         // Create a module-like environment with exports object
         QString moduleWrapper = QString(
-            "(function(exports, module, require, __filename, __dirname) {\n"
+            "(function(exports, module, require, __filename, __dirname, console) {\n"
             "%1\n"
             "return module.exports;\n"
             "})"
@@ -885,6 +1085,13 @@ void NodeThread::loadFromQrc(const v8::FunctionCallbackInfo<v8::Value> &args) {
         QString filename = resourcePath;
         QString dirname = resourcePath.section('/', 0, -2); // Remove filename, keep directory
 
+        // Get the global console function
+        v8::Local<v8::Value> consoleFunc;
+        if (!context->Global()->Get(context,
+            v8::String::NewFromUtf8(isolate, "console").ToLocalChecked()).ToLocal(&consoleFunc)) {
+            consoleFunc = v8::Undefined(isolate);
+        }
+
         // Call the wrapped module function
         v8::Local<v8::Function> moduleFunc = moduleFunction.As<v8::Function>();
         v8::Local<v8::Value> moduleArgs[] = {
@@ -892,12 +1099,20 @@ void NodeThread::loadFromQrc(const v8::FunctionCallbackInfo<v8::Value> &args) {
             module,
             requireFunc,
             v8::String::NewFromUtf8(isolate, filename.toStdString().c_str()).ToLocalChecked(),
-            v8::String::NewFromUtf8(isolate, dirname.toStdString().c_str()).ToLocalChecked()
+            v8::String::NewFromUtf8(isolate, dirname.toStdString().c_str()).ToLocalChecked(),
+            consoleFunc
         };
 
         v8::Local<v8::Value> result;
-        if (!moduleFunc->Call(context, context->Global(), 5, moduleArgs).ToLocal(&result)) {
+        v8::TryCatch try_catch(isolate);
+        if (!moduleFunc->Call(context, context->Global(), 6, moduleArgs).ToLocal(&result)) {
             QString errorMsg = QString("Failed to execute module function: %1").arg(resourcePath);
+            if (try_catch.HasCaught()) {
+                v8::String::Utf8Value exception(isolate, try_catch.Exception());
+                v8::String::Utf8Value stack_trace(isolate, try_catch.StackTrace(context).ToLocalChecked());
+                qCritical() << "NodeThread: Module execution exception:" << *exception;
+                qCritical() << "NodeThread: Stack trace:" << *stack_trace;
+            }
             qCritical() << "NodeThread:" << errorMsg;
             isolate->ThrowException(v8::Exception::Error(
                 v8::String::NewFromUtf8(isolate, errorMsg.toStdString().c_str()).ToLocalChecked()));

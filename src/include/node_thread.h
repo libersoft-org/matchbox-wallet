@@ -32,6 +32,8 @@ public:
     explicit NodeThread(QObject *parent = nullptr);
     ~NodeThread();
     
+    void setApplicationDirPath(const QString &appDirPath);
+    
     bool initialize();
     void shutdown();
     
@@ -70,6 +72,9 @@ private:
     // Callback storage for concurrent messages
     QMap<QString, std::function<void(const QJsonObject&)>> m_callbacks;
     QMutex m_callbackMutex;
+    
+    // Application directory path (set from main thread)
+    QString m_applicationDirPath;
     
     static const char* JS_ENTRY_PATH;
     static const char* JS_ENTRY_QRC_PATH;

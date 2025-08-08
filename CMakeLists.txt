@@ -83,8 +83,6 @@ file(GLOB_RECURSE SVG_FILES_LIST RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "src/img
 # Find all JSON translation files
 file(GLOB_RECURSE JSON_FILES_LIST RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "src/qml/translations/*.json")
 
-file(GLOB_RECURSE NODE_FILES_LIST RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "src/js/*")
-
 # Add QML module to the executable
 qt_add_qml_module(Wallet
  URI WalletModule
@@ -93,7 +91,25 @@ qt_add_qml_module(Wallet
  NO_CACHEGEN
  NO_LINT
  QML_FILES ${QML_FILES_LIST}
- RESOURCES ${SVG_FILES_LIST} ${JSON_FILES_LIST} ${JS_FILES_LIST} ${NODE_FILES_LIST}
+ RESOURCES ${SVG_FILES_LIST} ${JSON_FILES_LIST} ${JS_FILES_LIST}
+)
+
+# Find Node.js entry files and include all node_modules
+file(GLOB_RECURSE NODE_MODULES_FILES_LIST RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "src/js/node_modules/**/*.js")
+
+set(NODE_JS_FILES_LIST
+    "src/js/index.js"
+    "src/js/wallet-crypto.js"
+    "src/js/package.json"
+    "src/js/package-lock.json"
+#    ${NODE_MODULES_FILES_LIST}
+)
+
+# Add Node.js files as separate resources with proper prefix
+qt_add_resources(Wallet "nodejs"
+ PREFIX "/"
+ BASE "src"
+ FILES ${NODE_JS_FILES_LIST}
 )
 target_link_libraries(Wallet PRIVATE
  Qt6::Core

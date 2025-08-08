@@ -5,9 +5,9 @@ const path = require('path');
 
 global.handleMessage = async function(message, callback) {
     console.log('node.js handleMessage ', JSON.stringify(message, null, 2));
-    
+    const { messageId, action, data } = message;
+
     try {
-        const { messageId, action, data } = message;
         let result = {};
         
         switch (action) {
