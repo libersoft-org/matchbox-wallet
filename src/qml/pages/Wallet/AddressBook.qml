@@ -53,8 +53,8 @@ BaseMenu {
 					delegate: Rectangle {
 						Layout.fillWidth: true
 						Layout.preferredHeight: 80
-						color: Colors.backgroundSecondary
-						border.color: Colors.border
+						color: colors.backgroundSecondary
+						border.color: colors.border
 						border.width: 1
 						radius: 8
 
@@ -69,14 +69,14 @@ BaseMenu {
 
 								Text {
 									text: model.name
-									color: Colors.textPrimary
+									color: colors.textPrimary
 									font.pixelSize: 16
 									font.bold: true
 								}
 
 								Text {
 									text: model.address
-									color: Colors.textSecondary
+									color: colors.textSecondary
 									font.pixelSize: 12
 									font.family: "monospace"
 									Layout.fillWidth: true
@@ -85,7 +85,7 @@ BaseMenu {
 
 								Text {
 									text: model.note
-									color: Colors.textSecondary
+									color: colors.textSecondary
 									font.pixelSize: 11
 									Layout.fillWidth: true
 									visible: text.length > 0
@@ -128,7 +128,7 @@ BaseMenu {
 					Text {
 						anchors.centerIn: parent
 						text: tr("No addresses in your address book")
-						color: Colors.textSecondary
+						color: colors.textSecondary
 						font.pixelSize: 14
 					}
 				}

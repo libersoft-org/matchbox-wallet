@@ -21,7 +21,7 @@ BaseMenu {
 
 				Text {
 					text: tr("Recipient Address")
-					color: Colors.primaryForeground
+					color: colors.primaryForeground
 					font.pixelSize: 16
 					font.bold: true
 				}
@@ -29,8 +29,8 @@ BaseMenu {
 				Rectangle {
 					Layout.fillWidth: true
 					Layout.preferredHeight: 50
-					color: Colors.primaryBackground
-					border.color: Colors.disabledBackground
+					color: colors.primaryBackground
+					border.color: colors.disabledBackground
 					border.width: 1
 					radius: 5
 
@@ -38,7 +38,7 @@ BaseMenu {
 						id: addressInput
 						anchors.fill: parent
 						anchors.margins: 10
-						color: Colors.primaryForeground
+						color: colors.primaryForeground
 						font.pixelSize: 14
 						clip: true
 						selectByMouse: true
@@ -46,7 +46,7 @@ BaseMenu {
 						Text {
 							visible: parent.text === ""
 							text: "Enter Bitcoin address..."
-							color: Colors.disabledForeground
+							color: colors.disabledForeground
 							font: parent.font
 							anchors.verticalCenter: parent.verticalCenter
 							anchors.left: parent.left
@@ -71,7 +71,7 @@ BaseMenu {
 
 				Text {
 					text: tr("Amount")
-					color: Colors.primaryForeground
+					color: colors.primaryForeground
 					font.pixelSize: 16
 					font.bold: true
 				}
@@ -79,8 +79,8 @@ BaseMenu {
 				Rectangle {
 					Layout.fillWidth: true
 					Layout.preferredHeight: 50
-					color: Colors.primaryBackground
-					border.color: Colors.disabledBackground
+					color: colors.primaryBackground
+					border.color: colors.disabledBackground
 					border.width: 1
 					radius: 5
 
@@ -88,7 +88,7 @@ BaseMenu {
 						id: amountInput
 						anchors.fill: parent
 						anchors.margins: 10
-						color: Colors.primaryForeground
+						color: colors.primaryForeground
 						font.pixelSize: 14
 						clip: true
 						selectByMouse: true
@@ -100,7 +100,7 @@ BaseMenu {
 						Text {
 							visible: parent.text === ""
 							text: "0.00000000"
-							color: Colors.disabledForeground
+							color: colors.disabledForeground
 							font: parent.font
 							anchors.verticalCenter: parent.verticalCenter
 							anchors.left: parent.left
@@ -116,7 +116,7 @@ BaseMenu {
 
 				Text {
 					text: tr("Transaction Fee")
-					color: Colors.primaryForeground
+					color: colors.primaryForeground
 					font.pixelSize: 16
 					font.bold: true
 				}
@@ -124,15 +124,15 @@ BaseMenu {
 				Rectangle {
 					Layout.fillWidth: true
 					Layout.preferredHeight: 50
-					color: Colors.primaryBackground
-					border.color: Colors.disabledBackground
+					color: colors.primaryBackground
+					border.color: colors.disabledBackground
 					border.width: 1
 					radius: 5
 
 					Text {
 						anchors.centerIn: parent
 						text: "0.00001000 BTC (Standard)"
-						color: Colors.primaryForeground
+						color: colors.primaryForeground
 						font.pixelSize: 14
 					}
 				}

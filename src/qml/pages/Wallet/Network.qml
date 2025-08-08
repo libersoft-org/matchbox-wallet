@@ -21,7 +21,7 @@ BaseMenu {
 
 				Text {
 					text: tr("Bitcoin Network")
-					color: Colors.textPrimary
+					color: colors.textPrimary
 					font.pixelSize: 16
 					font.bold: true
 				}
@@ -29,8 +29,8 @@ BaseMenu {
 				Rectangle {
 					Layout.fillWidth: true
 					Layout.preferredHeight: 50
-					color: Colors.backgroundSecondary
-					border.color: Colors.border
+					color: colors.backgroundSecondary
+					border.color: colors.border
 					border.width: 1
 					radius: 5
 
@@ -40,7 +40,7 @@ BaseMenu {
 
 						Text {
 							text: "Mainnet"
-							color: Colors.textPrimary
+							color: colors.textPrimary
 							font.pixelSize: 14
 							Layout.fillWidth: true
 						}
@@ -62,7 +62,7 @@ BaseMenu {
 
 				Text {
 					text: tr("Connection Status")
-					color: Colors.textPrimary
+					color: colors.textPrimary
 					font.pixelSize: 16
 					font.bold: true
 				}
@@ -70,8 +70,8 @@ BaseMenu {
 				Rectangle {
 					Layout.fillWidth: true
 					Layout.preferredHeight: 80
-					color: Colors.backgroundSecondary
-					border.color: Colors.border
+					color: colors.backgroundSecondary
+					border.color: colors.border
 					border.width: 1
 					radius: 8
 
@@ -85,7 +85,7 @@ BaseMenu {
 
 							Text {
 								text: "Status:"
-								color: Colors.textSecondary
+								color: colors.textSecondary
 								font.pixelSize: 14
 							}
 
@@ -106,13 +106,13 @@ BaseMenu {
 
 							Text {
 								text: "Block Height:"
-								color: Colors.textSecondary
+								color: colors.textSecondary
 								font.pixelSize: 14
 							}
 
 							Text {
 								text: "820,543"
-								color: Colors.textPrimary
+								color: colors.textPrimary
 								font.pixelSize: 14
 							}
 
@@ -131,7 +131,7 @@ BaseMenu {
 
 				Text {
 					text: tr("Node Configuration")
-					color: Colors.textPrimary
+					color: colors.textPrimary
 					font.pixelSize: 16
 					font.bold: true
 				}
@@ -139,8 +139,8 @@ BaseMenu {
 				Rectangle {
 					Layout.fillWidth: true
 					Layout.preferredHeight: 50
-					color: Colors.backgroundSecondary
-					border.color: Colors.border
+					color: colors.backgroundSecondary
+					border.color: colors.border
 					border.width: 1
 					radius: 5
 
@@ -148,7 +148,7 @@ BaseMenu {
 						id: nodeInput
 						anchors.fill: parent
 						anchors.margins: 10
-						color: Colors.textPrimary
+						color: colors.textPrimary
 						font.pixelSize: 14
 						clip: true
 						selectByMouse: true
@@ -157,7 +157,7 @@ BaseMenu {
 						Text {
 							visible: parent.text === ""
 							text: "Node address:port"
-							color: Colors.textSecondary
+							color: colors.textSecondary
 							font: parent.font
 							anchors.verticalCenter: parent.verticalCenter
 							anchors.left: parent.left

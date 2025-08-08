@@ -32,7 +32,7 @@ BaseMenu {
 
 				Text {
 					text: tr("Your Addresses")
-					color: Colors.textPrimary
+					color: colors.textPrimary
 					font.pixelSize: 16
 					font.bold: true
 				}
@@ -63,8 +63,8 @@ BaseMenu {
 					delegate: Rectangle {
 						Layout.fillWidth: true
 						Layout.preferredHeight: 90
-						color: Colors.backgroundSecondary
-						border.color: model.used ? Colors.border : "#4CAF50"
+						color: colors.backgroundSecondary
+						border.color: model.used ? colors.border : "#4CAF50"
 						border.width: 1
 						radius: 8
 
@@ -78,7 +78,7 @@ BaseMenu {
 
 								Text {
 									text: "Address #" + (model.index + 1)
-									color: Colors.textPrimary
+									color: colors.textPrimary
 									font.pixelSize: 14
 									font.bold: true
 								}
@@ -96,14 +96,14 @@ BaseMenu {
 
 								Text {
 									text: model.used ? "Used" : "Fresh"
-									color: Colors.textSecondary
+									color: colors.textSecondary
 									font.pixelSize: 12
 								}
 							}
 
 							Text {
 								text: model.address
-								color: Colors.textSecondary
+								color: colors.textSecondary
 								font.pixelSize: 11
 								font.family: "monospace"
 								Layout.fillWidth: true
@@ -115,7 +115,7 @@ BaseMenu {
 
 								Text {
 									text: "Balance: " + model.balance + " BTC"
-									color: Colors.textPrimary
+									color: colors.textPrimary
 									font.pixelSize: 12
 								}
 
@@ -149,7 +149,7 @@ BaseMenu {
 
 				Text {
 					text: tr("Fresh addresses haven't been used for receiving payments yet")
-					color: Colors.textSecondary
+					color: colors.textSecondary
 					font.pixelSize: 11
 					Layout.fillWidth: true
 					wrapMode: Text.WordWrap

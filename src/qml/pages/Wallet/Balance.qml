@@ -21,16 +21,16 @@ ScrollableContainer {
 			Rectangle {
 				width: parent.width - refreshIcon.width - parent.spacing
 				height: parent.height
-				color: Colors.primaryBackground
+				color: colors.primaryBackground
 				radius: height * 0.2
-				border.color: Colors.primaryForeground
+				border.color: colors.primaryForeground
 				border.width: 2
 
 				// Balance text
 				Text {
 					anchors.centerIn: parent
 					text: "0.00 ETH"
-					color: Colors.primaryForeground
+					color: colors.primaryForeground
 					font.pixelSize: parent.height * 0.4
 					font.bold: true
 				}

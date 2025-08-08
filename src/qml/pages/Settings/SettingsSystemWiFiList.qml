@@ -5,7 +5,7 @@ import "../../components"
 
 Rectangle {
 	id: root
-	color: Colors.primaryBackground
+	color: colors.primaryBackground
 	property string title: tr("settings.system.wifi.list.title")
 	signal backRequested
 	signal powerOffRequested
@@ -48,7 +48,7 @@ Rectangle {
 			model: WiFiManager.networks
 			MenuButton {
 				text: modelData.name + (modelData.connected ? " ✓" : "") + (modelData.secured ? " 🔒" : " 🔓")
-				backgroundColor: modelData.connected ? Colors.success : Colors.primaryBackground
+				backgroundColor: modelData.connected ? colors.success : colors.primaryBackground
 				onClicked: {
 					if (!modelData.connected) {
 						connectDialog.networkName = modelData.name;
@@ -110,7 +110,7 @@ Rectangle {
 					text: connectDialog.isSecured ? "" : tr("settings.system.wifi.connect.open")
 					visible: !connectDialog.isSecured
 					font.pointSize: 10
-					color: Colors.disabledForeground
+					color: colors.disabledForeground
 				}
 
 				RowLayout {

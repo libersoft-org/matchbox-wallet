@@ -21,7 +21,7 @@ BaseMenu {
 
 				Text {
 					text: tr("Your Bitcoin Address")
-					color: Colors.textPrimary
+					color: colors.textPrimary
 					font.pixelSize: 16
 					font.bold: true
 				}
@@ -29,8 +29,8 @@ BaseMenu {
 				Rectangle {
 					Layout.fillWidth: true
 					Layout.preferredHeight: 120
-					color: Colors.backgroundSecondary
-					border.color: Colors.border
+					color: colors.backgroundSecondary
+					border.color: colors.border
 					border.width: 1
 					radius: 10
 
@@ -44,15 +44,15 @@ BaseMenu {
 							Layout.preferredWidth: 80
 							Layout.preferredHeight: 80
 							Layout.alignment: Qt.AlignHCenter
-							color: Colors.background
-							border.color: Colors.border
+							color: colors.background
+							border.color: colors.border
 							border.width: 1
 							radius: 5
 
 							Text {
 								anchors.centerIn: parent
 								text: "QR"
-								color: Colors.textSecondary
+								color: colors.textSecondary
 								font.pixelSize: 12
 							}
 						}
@@ -60,7 +60,7 @@ BaseMenu {
 						Text {
 							id: addressText
 							text: "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh"
-							color: Colors.textPrimary
+							color: colors.textPrimary
 							font.pixelSize: 12
 							font.family: "monospace"
 							Layout.alignment: Qt.AlignHCenter
@@ -102,7 +102,7 @@ BaseMenu {
 
 				Text {
 					text: tr("Request Amount (Optional)")
-					color: Colors.textPrimary
+					color: colors.textPrimary
 					font.pixelSize: 16
 					font.bold: true
 				}
@@ -110,8 +110,8 @@ BaseMenu {
 				Rectangle {
 					Layout.fillWidth: true
 					Layout.preferredHeight: 50
-					color: Colors.backgroundSecondary
-					border.color: Colors.border
+					color: colors.backgroundSecondary
+					border.color: colors.border
 					border.width: 1
 					radius: 5
 
@@ -119,7 +119,7 @@ BaseMenu {
 						id: requestAmountInput
 						anchors.fill: parent
 						anchors.margins: 10
-						color: Colors.textPrimary
+						color: colors.textPrimary
 						font.pixelSize: 14
 						clip: true
 						selectByMouse: true
@@ -131,7 +131,7 @@ BaseMenu {
 						Text {
 							visible: parent.text === ""
 							text: "0.00000000"
-							color: Colors.textSecondary
+							color: colors.textSecondary
 							font: parent.font
 							anchors.verticalCenter: parent.verticalCenter
 							anchors.left: parent.left
