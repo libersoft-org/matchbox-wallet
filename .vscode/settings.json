@@ -1,7 +1,9 @@
 {
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
 	"editor.tabSize": 1,
 	"editor.insertSpaces": false,
 	"editor.formatOnSave": true,
+	"files.insertFinalNewline": true,
 	"editor.detectIndentation": false,
 	"[cpp]": {
 		"editor.defaultFormatter": "xaver.clang-format",
@@ -26,7 +28,12 @@
 	"clang-format.executable": "clang-format",
 	"clang-format.style": "file",
 	"[javascript]": {
-		"editor.defaultFormatter": "esbenp.prettier-vscode"
+		"editor.defaultFormatter": "esbenp.prettier-vscode",
+		"editor.formatOnSave": true
+	},
+	"[javascriptreact]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode",
+		"editor.formatOnSave": true
 	},
 	"[json]": {
 		"editor.defaultFormatter": "vscode.json-language-features"
@@ -62,5 +69,8 @@
 	"qml.formatter.path": "qmlformat",
 	"qml.server.enabled": true,
 	"qmlFormat.keepBackups": false,
-	"qmlFormat.createBackups": false
+	"qmlFormat.createBackups": false,
+	"prettier.requireConfig": true,
+	"prettier.prettierPath": "src/js/node_modules/prettier",
+	"prettier.logLevel": "debug"
 }
