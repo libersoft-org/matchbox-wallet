@@ -8,11 +8,6 @@ Components.BaseMenu {
 	title: tr("menu.settings.system.time.title")
 	signal timeChanged(string newTime)
 	signal timezoneSettingsRequested()
-
-	// Local alias for easier access to colors
-	//property var colors: window.colors
-
-	// Get current time
 	property date currentTime: new Date()
 
 	// Current time display as Item
