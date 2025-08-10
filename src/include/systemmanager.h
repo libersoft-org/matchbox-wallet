@@ -5,6 +5,7 @@
 
 #include <QObject>
 #include <QTimer>
+#include <QStringList>
 
 class SystemManager : public QObject {
  Q_OBJECT
@@ -35,6 +36,13 @@ public slots:
  void rebootSystem();
  void shutdownSystem();
  void updateSystemStatus();
+ void syncSystemTime();
+ void setAutoTimeSync(bool enabled);
+ void setTimeZone(const QString &tz);
+ void setNtpServer(const QString &server);
+
+ // QML-callable helpers
+ Q_INVOKABLE QStringList listTimeZones() const;
 
 signals:
  void batteryLevelChanged();

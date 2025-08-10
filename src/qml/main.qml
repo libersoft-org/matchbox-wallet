@@ -35,6 +35,16 @@ ApplicationWindow {
 
 			// Use QML Timer instead of setTimeout
 			blockTimer.start();
+
+			// Auto-sync time on startup if enabled
+			if (SystemManager) {
+				if (SystemManager.setNtpServer && settingsManagerObj.ntpServer)
+					SystemManager.setNtpServer(settingsManagerObj.ntpServer);
+				if (SystemManager.setTimeZone && settingsManagerObj.timeZone)
+					SystemManager.setTimeZone(settingsManagerObj.timeZone);
+				if (settingsManagerObj.autoTimeSync && SystemManager.syncSystemTime)
+					SystemManager.syncSystemTime();
+			}
 		}
 	}
 
@@ -258,6 +268,19 @@ ApplicationWindow {
 			onTimeChanged: function (timeString) {
 				console.log("Time changed to:", timeString);
 				// TODO: Implement actual system time setting
+				window.goBack();
+			}
+			onTimezoneSettingsRequested: window.goPage(settingsSystemTimezonePageComponent)
+		}
+	}
+
+	// System timezone selection page
+	Component {
+		id: settingsSystemTimezonePageComponent
+		SettingsSystemTimezone {
+			onTimezoneSelected: function(tz) {
+				if (window.settingsManager) window.settingsManager.saveTimeZone(tz);
+				if (SystemManager && SystemManager.setTimeZone) SystemManager.setTimeZone(tz);
 				window.goBack();
 			}
 		}

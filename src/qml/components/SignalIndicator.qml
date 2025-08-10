@@ -52,7 +52,7 @@ Rectangle {
 			anchors.right: parent.right
 			anchors.top: parent.top
 			anchors.bottom: parent.bottom
-			anchors.verticalCenter: parent.verticalCenter
+			// anchors.verticalCenter conflicts with specifying both top and bottom
 
 			SignalStrength {
 				anchors.fill: parent

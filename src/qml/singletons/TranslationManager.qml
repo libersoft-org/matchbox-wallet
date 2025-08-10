@@ -96,10 +96,6 @@ QtObject {
 	function setLanguage(language) {
 		console.log("Setting language to:", language);
 		currentLanguage = language;
-		loadTranslations(language, function (data) {
-				console.log("Translations loaded successfully for language:", language);
-			}, function (error) {
-				console.log("Failed to load translations for language:", language, error);
-			});
+		// Actual loading is triggered by onCurrentLanguageChanged to avoid double-load
 	}
 }

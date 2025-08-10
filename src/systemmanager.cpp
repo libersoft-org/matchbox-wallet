@@ -5,6 +5,12 @@
 #include <QFile>
 #include <QProcess>
 #include <QTextStream>
+#include <QStringList>
+#include <QByteArray>
+#include <QRegularExpression>
+#if QT_CONFIG(timezone)
+#include <QTimeZone>
+#endif
 #ifdef Q_OS_UNIX
 #include <unistd.h>  // for getuid()
 #endif
@@ -208,4 +214,83 @@ void SystemManager::shutdownSystem() {
   QProcess::startDetached("sudo", QStringList() << "shutdown" << "-h" << "now");
  }
 #endif
+}
+
+void SystemManager::syncSystemTime() {
+ qDebug() << "Syncing system time with internet...";
+#ifdef Q_OS_UNIX
+ if (QProcess::execute("which", QStringList() << "timedatectl") == 0) {
+  QProcess::startDetached("sh", {"-lc", "timedatectl set-ntp true"});
+  return;
+ }
+ qWarning() << "timedatectl not found";
+#else
+ qWarning() << "Time sync not implemented for this platform";
+#endif
+}
+
+void SystemManager::setAutoTimeSync(bool enabled) {
+ qDebug() << "Setting auto time sync to" << enabled;
+#ifdef Q_OS_UNIX
+ if (QProcess::execute("which", QStringList() << "timedatectl") == 0) {
+  QString cmd = QString("timedatectl set-ntp %1").arg(enabled ? "true" : "false");
+  QProcess::startDetached("sh", {"-lc", cmd});
+ } else {
+  qWarning() << "timedatectl not found";
+ }
+#endif
+}
+
+void SystemManager::setTimeZone(const QString &tz) {
+ qDebug() << "Setting timezone to" << tz;
+#ifdef Q_OS_UNIX
+ if (QProcess::execute("which", QStringList() << "timedatectl") == 0) {
+  QString cmd = QString("timedatectl set-timezone %1").arg(tz);
+  QProcess::startDetached("sh", {"-lc", cmd});
+ } else {
+  qWarning() << "timedatectl not found";
+ }
+#endif
+}
+
+void SystemManager::setNtpServer(const QString &server) {
+ qDebug() << "Setting NTP server to" << server;
+#ifdef Q_OS_UNIX
+ // For systemd-timesyncd, write /etc/systemd/timesyncd.conf drop-in
+ QString conf = QString("[Time]\nNTP=%1\n").arg(server);
+ // Build a shell script to write the config atomically and restart service
+ QString script = QString("mkdir -p /etc/systemd; printf '%1' > /etc/systemd/timesyncd.conf; systemctl restart systemd-timesyncd || true")
+                     .arg(conf.replace("'", "'\\''"));
+ QProcess::startDetached("sh", {"-lc", script});
+#else
+ qWarning() << "Setting NTP server not implemented for this platform";
+#endif
+}
+
+QStringList SystemManager::listTimeZones() const {
+ QStringList zones;
+#ifdef Q_OS_UNIX
+ if (QProcess::execute("which", QStringList() << "timedatectl") == 0) {
+  QProcess p;
+  p.start("sh", {"-lc", "timedatectl list-timezones"});
+  if (p.waitForFinished(4000) && p.exitStatus() == QProcess::NormalExit && p.exitCode() == 0) {
+   const QString output = QString::fromUtf8(p.readAllStandardOutput());
+   const QStringList lines = output.split('\n', Qt::SkipEmptyParts);
+   for (const QString &line : lines) zones << line.trimmed();
+   zones.removeDuplicates();
+   zones.sort();
+   return zones;
+  }
+ }
+#endif
+#if QT_CONFIG(timezone)
+ const auto ids = QTimeZone::availableTimeZoneIds();
+ for (const QByteArray &id : ids) zones << QString::fromUtf8(id);
+ zones.removeDuplicates();
+ zones.sort();
+#endif
+ if (zones.isEmpty()) {
+  zones << "UTC";
+ }
+ return zones;
 }

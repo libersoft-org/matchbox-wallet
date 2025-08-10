@@ -68,7 +68,10 @@
 					"button": "Datum a čas",
 					"title": "Nastavení data a času",
 					"set": "Nastavit čas",
-					"sync": "Synchr. s internetem"
+					"sync": "Synchr. s internetem",
+					"auto": "Automatická synchr. času",
+					"server": "NTP server",
+					"timezone": "Časové pásmo"
 				},
 				"lora": {
 					"button": "LoRa",

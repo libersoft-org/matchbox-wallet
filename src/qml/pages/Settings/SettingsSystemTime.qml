@@ -1,15 +1,16 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
-import "../../components"
+import "../../components" as Components
 
-BaseMenu {
+Components.BaseMenu {
 	id: root
 	title: tr("menu.settings.system.time.title")
 	signal timeChanged(string newTime)
+	signal timezoneSettingsRequested()
 
 	// Local alias for easier access to colors
-	property var colors: window.colors
+	//property var colors: window.colors
 
 	// Get current time
 	property date currentTime: new Date()
@@ -62,19 +63,67 @@ BaseMenu {
 	}
 
 	// Time setting buttons
-	MenuButton {
-		text: tr("menu.settings.system.time.set")
-		onClicked: {
-			// TODO: Show time setting dialog
-			console.log("Set time clicked");
+
+	// Auto time sync toggle + timezone open button
+	Item {
+		width: parent.width
+		height: root.height * 0.12
+
+		Rectangle {
+			anchors.fill: parent
+			anchors.margins: root.height * 0.01
+			color: colors.primaryBackground
+			radius: height * 0.2
+			border.color: colors.primaryForeground
+			border.width: Math.max(1, root.height * 0.003)
+
+			ColumnLayout {
+				anchors.fill: parent
+				anchors.margins: parent.height * 0.15
+				spacing: parent.height * 0.1
+
+				RowLayout {
+					Layout.fillWidth: true
+					spacing: parent.height * 0.2
+
+					Text {
+						text: tr("menu.settings.system.time.auto")
+						color: root.colors.primaryForeground
+						font.pixelSize: parent.height * 0.35
+						Layout.alignment: Qt.AlignVCenter
+						Layout.fillWidth: true
+					}
+
+					Components.Switch {
+						id: autoSyncSwitch
+						checked: Boolean(window.settingsManager && window.settingsManager.autoTimeSync)
+						onToggled: {
+							if (window.settingsManager)
+								window.settingsManager.saveAutoTimeSync(checked)
+							if (SystemManager && SystemManager.setAutoTimeSync)
+								SystemManager.setAutoTimeSync(checked)
+						}
+					}
+				}
+
+				Button {
+					Layout.fillWidth: true
+					text: tr("menu.settings.system.time.timezone") + ": " + (window.settingsManager ? window.settingsManager.timeZone : "UTC")
+					onClicked: root.timezoneSettingsRequested()
+				}
+			}
 		}
 	}
+    
+	// NTP server field removed from here as requested
 
-	MenuButton {
+	Components.MenuButton {
 		text: tr("menu.settings.system.time.sync")
 		onClicked: {
-			// TODO: Implement NTP sync
 			console.log("Syncing time with internet");
+			if (SystemManager && SystemManager.syncSystemTime) {
+				SystemManager.syncSystemTime();
+			}
 			root.timeChanged(Qt.formatTime(new Date(), "hh:mm:ss"));
 		}
 	}
