@@ -9,7 +9,7 @@
 #include <unistd.h>  // for getuid()
 #endif
 
-SystemManager::SystemManager(QObject *parent) : QObject(parent), m_batteryLevel(100), m_hasBattery(true), m_currentWifiStrength(0) {
+SystemManager::SystemManager(QObject *parent) : QObject(parent), m_batteryLevel(100), m_hasBattery(true), m_isCharging(false), m_currentWifiStrength(0) {
  // Timer for periodic status updates
  m_statusTimer = new QTimer(this);
  connect(m_statusTimer, &QTimer::timeout, this, &SystemManager::updateSystemStatus);
@@ -35,6 +35,10 @@ void SystemManager::checkBatteryStatus() {
    m_hasBattery = false;
    emit hasBatteryChanged();
   }
+  if (m_isCharging) {
+   m_isCharging = false;
+   emit chargingChanged();
+  }
   return;
  }
 
@@ -47,6 +51,7 @@ void SystemManager::checkBatteryStatus() {
  // Read battery level from first available battery
  QString batteryPath = "/sys/class/power_supply/" + batteries.first();
  QFile capacityFile(batteryPath + "/capacity");
+ QFile statusFile(batteryPath + "/status");
 
  if (capacityFile.open(QIODevice::ReadOnly)) {
   QTextStream in(&capacityFile);
@@ -79,8 +84,29 @@ void SystemManager::checkBatteryStatus() {
      }
      break;
     }
+   if (line.contains("state")) {
+    QString stateStr = line.split(':').last().trimmed();
+    bool nowCharging = stateStr.contains("charging", Qt::CaseInsensitive) || stateStr.contains("unknown", Qt::CaseInsensitive);
+    if (nowCharging != m_isCharging) {
+     m_isCharging = nowCharging;
+     emit chargingChanged();
+    }
+   }
    }
   }
+
+ // Prefer sysfs status if available
+ if (statusFile.open(QIODevice::ReadOnly)) {
+  QTextStream in(&statusFile);
+  QString statusStr = in.readLine().trimmed();
+  bool nowCharging = statusStr.compare("Charging", Qt::CaseInsensitive) == 0
+                  || statusStr.compare("Full", Qt::CaseInsensitive) == 0
+                  || statusStr.compare("Unknown", Qt::CaseInsensitive) == 0; // treat unknown as charging for icon
+  if (nowCharging != m_isCharging) {
+   m_isCharging = nowCharging;
+   emit chargingChanged();
+  }
+ }
  }
 }
 

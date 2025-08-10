@@ -19,10 +19,6 @@ Rectangle {
 	property int gsmStrength: 0     // GSM signal strength (0-4)
 	property int batteryLevel: 0  // Battery level (0-100)
 	property bool hasBattery: false  // Whether device has battery
-	// Dev/mock controls (set in main.qml when testing without hardware)
-	property bool mockBattery: false
-	property int mockBatteryLevel: 50
-	property bool mockCharging: false
 	property string currentTime: "00:00"
 
 	function navigateTo(component, pageId) {
@@ -107,14 +103,14 @@ Rectangle {
 			Layout.alignment: Qt.AlignVCenter
 			Layout.preferredWidth: statusBar.height * 0.7
 			Layout.preferredHeight: statusBar.height * 0.8
-			level: statusBar.mockBattery ? statusBar.mockBatteryLevel : statusBar.batteryLevel
-			hasBattery: statusBar.mockBattery ? true : statusBar.hasBattery
-			charging: statusBar.mockBattery ? statusBar.mockCharging : false
+			level: statusBar.batteryLevel
+			hasBattery: statusBar.hasBattery
+			charging: SystemManager.charging
 			colors: statusBar.colors
 		}
 
 		Text {
-			text: (statusBar.mockBattery || statusBar.hasBattery) ? ((statusBar.mockBattery ? statusBar.mockBatteryLevel : statusBar.batteryLevel) + "%") : "N/A"
+			text: statusBar.hasBattery ? (statusBar.batteryLevel + "%") : "N/A"
 			font.bold: true
 			color: colors.primaryForeground
 			font.pixelSize: statusBar.height * 0.8
