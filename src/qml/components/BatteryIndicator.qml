@@ -9,12 +9,38 @@ Item {
 	property bool charging: true     // when true, show charging animation
 	property var colors: undefined   // expect palette with success/error
 
+	// Displayed level (single visual fill); animates from current level to 100% when charging
+	property real displayedLevel: level
+
 	// Internal metrics
 	property real indicatorWidth: width * 0.9
 	property real tipHeight: height * 0.12
 	property real bodyHeight: height - tipHeight
 	property real bodyBorderWidth: Math.max(2, height * 0.08)
 	property real margin: Math.max(2, Math.max(height * 0.06, bodyBorderWidth))
+
+	// Unified color used for the charged part and the top-up animation
+	property color fillColor: root.colors.success
+
+	// Animate displayedLevel upwards to 100% while charging; stops and snaps back to level when not charging
+	NumberAnimation on displayedLevel {
+		from: root.level
+		to: 100
+		duration: 1600
+		loops: Animation.Infinite
+		running: root.hasBattery && root.charging
+		easing.type: Easing.InOutQuad
+	}
+
+	onChargingChanged: {
+		if (!charging)
+			root.displayedLevel = root.level
+	}
+
+	onLevelChanged: {
+		if (!root.charging)
+			root.displayedLevel = root.level
+	}
 
 	// Visuals centered inside root to avoid overflow
 	Column {
@@ -45,25 +71,44 @@ Item {
 			radius: Math.max(1, root.height * 0.06)
 			anchors.horizontalCenter: parent.horizontalCenter
 
+			// Pixel-perfect fill computation inside the body scope
+			property int _marginPx: Math.round(root.margin)
+			property real _fillAvailable: body.height - 2 * _marginPx
+			property real _fillFraction: Math.max(0, Math.min(1, root.displayedLevel / 100.0))
+			property int _fillHeightPx: Math.round(_fillAvailable * _fillFraction)
+
 			// Fill (grows from bottom up)
 			Rectangle {
 				id: fill
-				x: root.margin
-				width: body.width - 2 * root.margin
-				height: (body.height - 2 * root.margin) * (Math.max(0, Math.min(100, root.level)) / 100.0)
-				y: body.height - root.margin - height
-				color: (root.colors ? (root.level > 20 ? root.colors.success : root.colors.error) : (root.level > 20 ? "#00C853" : "#D50000"))
+				x: body._marginPx
+				width: body.width - 2 * body._marginPx
+				height: body._fillHeightPx
+				y: body.height - body._marginPx - body._fillHeightPx
+				color: root.fillColor
 				radius: Math.max(1, root.height * 0.03)
 				visible: root.hasBattery
+			}
+
+			// Charging icon inside the body (centered)
+			Image {
+				id: chargingIcon
+				anchors.centerIn: parent
+				visible: root.hasBattery && root.charging
+				source: Qt.resolvedUrl("../../img/charging.svg")
+				fillMode: Image.PreserveAspectFit
+				opacity: 0.9
+				width: body.width * 0.58
+				height: body.height * 0.58
+				z: 3
 			}
 
 			// Charging animation overlay (clipped to the current fill height)
 			Item {
 				id: chargeOverlay
-				x: root.margin
-				width: body.width - 2 * root.margin
+				x: body._marginPx
+				width: body.width - 2 * body._marginPx
 				anchors.bottom: body.bottom
-				anchors.bottomMargin: root.margin
+				anchors.bottomMargin: body._marginPx
 				height: fill.height
 				clip: true
 				visible: root.hasBattery && root.charging
@@ -135,10 +180,13 @@ Item {
 				}
 			}
 
+			// Removed separate top-up overlay to avoid 1px seam; single fill animates via displayedLevel
+
 			// Cross for no battery
 			CrossOut {
 				anchors.fill: parent
 				visible: !root.hasBattery
+				z: 10
 			}
 		}
 	}
