@@ -61,16 +61,5 @@
 		"**/*.qml~": true,
 		"**/*-formatting-tmp.qml~": true
 	},
-	"qml.formatting.enabled": true,
-	"qml.formatting.indentSize": 1,
-	"qml.formatting.insertSpaces": false,
-	"qml.formatting.maximumBlankLines": 1,
-	"qml.linting.enabled": true,
-	"qml.formatter.path": "qmlformat",
-	"qml.server.enabled": true,
-	"qmlFormat.keepBackups": false,
-	"qmlFormat.createBackups": false,
 	"prettier.requireConfig": true,
-	"prettier.prettierPath": "src/js/node_modules/prettier",
-	"prettier.logLevel": "debug"
 }
