@@ -73,8 +73,7 @@ int main(int argc, char *argv[]) {
  if (!nodeJS->initialize()) {
 		qWarning() << "Failed to initialize Node.js embedding";
  } else {
-		// Test the Node.js integration
-		nodeJS->msg("ping", QJsonObject(), [](const QJsonObject &result) { qDebug() << "Node.js response:" << QJsonDocument(result).toJson(QJsonDocument::Compact); });
+		qDebug() << "Node.js initialization completed successfully";
  }
 
  // Register context properties instead of QML types

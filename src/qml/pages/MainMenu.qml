@@ -31,19 +31,19 @@ BaseMenu {
 	}
 
 	MenuButton {
-		text: "Test Ping"
+		text: "Test ping"
 		onClicked: {
-			Node.msg("ping", {}, function (result) {
+			Node.msg("commonPing", {}, function (result) {
 				console.log("Ping result:", JSON.stringify(result));
 			});
 		}
 	}
 
 	MenuButton {
-		text: "Delayed Ping (2s)"
+		text: "Delayed ping (2s)"
 		onClicked: {
 			console.log("Starting delayed ping...");
-			Node.msg("delayedPing", {
+			Node.msg("commonDelayedPing", {
 				"delay": 2000
 			}, function (result) {
 				console.log("Delayed ping result:", JSON.stringify(result));
@@ -52,10 +52,10 @@ BaseMenu {
 	}
 
 	MenuButton {
-		text: "Test Hash"
+		text: "Test hash"
 		onClicked: {
-			Node.msg("hash", {
-				"input": "Hello World"
+			Node.msg("cryptoHash", {
+				"input": "Hello world"
 			}, function (result) {
 				console.log("Hash result:", JSON.stringify(result));
 			});
@@ -65,7 +65,7 @@ BaseMenu {
 	MenuButton {
 		text: "Generate Key Pair"
 		onClicked: {
-			Node.msg("generateKeyPair", {}, function (result) {
+			Node.msg("cryptoGenerateKeyPair", {}, function (result) {
 				console.log("Key pair result:", JSON.stringify(result));
 			});
 		}
@@ -74,7 +74,7 @@ BaseMenu {
 	MenuButton {
 		text: "Random Bytes"
 		onClicked: {
-			Node.msg("generateRandomBytes", {
+			Node.msg("cryptoGenerateRandomBytes", {
 				"length": 16
 			}, function (result) {
 				console.log("Random bytes result:", JSON.stringify(result));
@@ -85,7 +85,7 @@ BaseMenu {
 	MenuButton {
 		text: "Test HMAC"
 		onClicked: {
-			Node.msg("hmac", {
+			Node.msg("cryptoHmac", {
 				"data": "Hello World",
 				"key": "secret_key",
 				"algorithm": "sha256"
@@ -98,7 +98,7 @@ BaseMenu {
 	MenuButton {
 		text: "Create Wallet"
 		onClicked: {
-			Node.msg("createWallet", {}, function (result) {
+			Node.msg("cryptoCreateWallet", {}, function (result) {
 				console.log("Create wallet result:", JSON.stringify(result));
 			});
 		}
@@ -107,7 +107,7 @@ BaseMenu {
 	MenuButton {
 		text: "Validate bad Address"
 		onClicked: {
-			Node.msg("validateAddress", {
+			Node.msg("cryptoValidateAddress", {
 				"address": "0x742d35cc6b4C16a5b9C9C9b3dB0B6b1b3b0C5a6e"
 			}, function (result) {
 				console.log("Validate address result:", JSON.stringify(result));
@@ -118,7 +118,7 @@ BaseMenu {
 	MenuButton {
 		text: "Validate good Address"
 		onClicked: {
-			Node.msg("validateAddress", {
+			Node.msg("cryptoValidateAddress", {
 				"address": "0x39E54b2Ca6535b51333e1Ea4Ef43B4038d23adB4"
 			}, function (result) {
 				console.log("Validate address result:", JSON.stringify(result));
@@ -130,7 +130,7 @@ BaseMenu {
 		text: "Get Latest Block"
 		onClicked: {
 			console.log("Fetching latest block...");
-			Node.msg("getLatestBlock", {}, function (result) {
+			Node.msg("cryptoGetLatestBlock", {}, function (result) {
 				console.log("Latest block result:", JSON.stringify(result));
 			});
 		}
@@ -140,7 +140,7 @@ BaseMenu {
 		text: "Get ETH Balance"
 		onClicked: {
 			console.log("Fetching ETH balance...");
-			Node.msg("getBalance", {
+			Node.msg("cryptoGetBalance", {
 				"address": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"
 			}, function (result) {
 				console.log("Balance result:", JSON.stringify(result));
