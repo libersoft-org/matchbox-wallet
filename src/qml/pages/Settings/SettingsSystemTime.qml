@@ -7,7 +7,7 @@ Components.BaseMenu {
 	id: root
 	title: tr("menu.settings.system.time.title")
 	signal timeChanged(string newTime)
-	signal timezoneSettingsRequested()
+	signal timezoneSettingsRequested
 	property date currentTime: new Date()
 
 	// Current time display as Item
@@ -94,9 +94,9 @@ Components.BaseMenu {
 						checked: Boolean(window.settingsManager && window.settingsManager.autoTimeSync)
 						onToggled: {
 							if (window.settingsManager)
-								window.settingsManager.saveAutoTimeSync(checked)
+								window.settingsManager.saveAutoTimeSync(checked);
 							if (SystemManager && SystemManager.setAutoTimeSync)
-								SystemManager.setAutoTimeSync(checked)
+								SystemManager.setAutoTimeSync(checked);
 						}
 					}
 				}
@@ -109,7 +109,7 @@ Components.BaseMenu {
 			}
 		}
 	}
-    
+
 	// NTP server field removed from here as requested
 
 	Components.MenuButton {

@@ -12,10 +12,10 @@ QtObject {
 	// Watch for currentLanguage changes
 	onCurrentLanguageChanged: {
 		loadTranslations(currentLanguage, function (data) {
-				console.log("Translations loaded successfully");
-			}, function (error) {
-				console.log("Failed to load translations:", error);
-			});
+			console.log("Translations loaded successfully");
+		}, function (error) {
+			console.log("Failed to load translations:", error);
+		});
 	}
 
 	Component.onCompleted: {
@@ -96,6 +96,6 @@ QtObject {
 	function setLanguage(language) {
 		console.log("Setting language to:", language);
 		currentLanguage = language;
-		// Actual loading is triggered by onCurrentLanguageChanged to avoid double-load
+	// Actual loading is triggered by onCurrentLanguageChanged to avoid double-load
 	}
 }

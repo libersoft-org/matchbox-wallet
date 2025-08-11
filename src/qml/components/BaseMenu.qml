@@ -13,13 +13,13 @@ ScrollableContainer {
 		for (let i = 0; i < buttons.length; i++) {
 			if (buttons[i].hasOwnProperty('windowHeight')) {
 				buttons[i].windowHeight = Qt.binding(function () {
-						return root.height;
-					});
+					return root.height;
+				});
 			}
 			if (buttons[i].hasOwnProperty('flickableHeight')) {
 				buttons[i].flickableHeight = Qt.binding(function () {
-						return root.height;
-					});
+					return root.height;
+				});
 			}
 		}
 	}

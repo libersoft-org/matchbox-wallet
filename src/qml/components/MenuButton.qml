@@ -24,7 +24,7 @@ Button {
 		radius: control.height * 0.2
 		border.color: control.enabled ? control.borderColor : colors.disabledForeground
 		border.width: 1
-		Behavior on color  {
+		Behavior on color {
 			ColorAnimation {
 				duration: 150
 			}
@@ -38,7 +38,7 @@ Button {
 		color: control.enabled ? control.textColor : colors.disabledForeground
 		horizontalAlignment: Text.AlignHCenter
 		verticalAlignment: Text.AlignVCenter
-		Behavior on color  {
+		Behavior on color {
 			ColorAnimation {
 				duration: 150
 			}

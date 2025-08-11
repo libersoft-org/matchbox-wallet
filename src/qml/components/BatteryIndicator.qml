@@ -34,12 +34,12 @@ Item {
 
 	onChargingChanged: {
 		if (!charging)
-			root.displayedLevel = root.level
+			root.displayedLevel = root.level;
 	}
 
 	onLevelChanged: {
 		if (!root.charging)
-			root.displayedLevel = root.level
+			root.displayedLevel = root.level;
 	}
 
 	// Visuals centered inside root to avoid overflow
@@ -139,7 +139,7 @@ Item {
 							color: Qt.rgba(1, 1, 1, 0.0)
 						}
 					}
-					NumberAnimation on y  {
+					NumberAnimation on y {
 						from: chargeOverlay.height
 						to: -pulse1.height
 						duration: chargeOverlay.cycleMs
@@ -170,7 +170,7 @@ Item {
 							color: Qt.rgba(1, 1, 1, 0.0)
 						}
 					}
-					NumberAnimation on y  {
+					NumberAnimation on y {
 						from: chargeOverlay.height * 0.5
 						to: -pulse2.height
 						duration: chargeOverlay.cycleMs

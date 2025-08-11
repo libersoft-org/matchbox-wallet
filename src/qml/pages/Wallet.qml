@@ -11,28 +11,23 @@ BaseMenu {
 
 	// Component definitions
 	property Component balanceComponent: Component {
-		Balance {
-		}
+		Balance {}
 	}
 
 	property Component sendComponent: Component {
-		Send {
-		}
+		Send {}
 	}
 
 	property Component receiveComponent: Component {
-		Receive {
-		}
+		Receive {}
 	}
 
 	property Component addressBookComponent: Component {
-		AddressBook {
-		}
+		AddressBook {}
 	}
 
 	property Component networkComponent: Component {
-		Network {
-		}
+		Network {}
 	}
 
 	MenuButton {
