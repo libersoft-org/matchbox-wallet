@@ -528,7 +528,10 @@ void NodeThread::handleNodeMessage(const NodeMessage& message) {
 }
 
 void NodeThread::nativeCallback(const v8::FunctionCallbackInfo<v8::Value>& args) {
+ qDebug() << "NodeThread::nativeCallback called with" << args.Length() << "arguments";
+ 
  if (!s_instance) {
+		qDebug() << "NodeThread::nativeCallback: No instance available";
 		return;
  }
 
@@ -541,6 +544,7 @@ void NodeThread::nativeCallback(const v8::FunctionCallbackInfo<v8::Value>& args)
 		// Get messageId from first argument
 		v8::String::Utf8Value messageIdStr(isolate, args[0]);
 		QString messageId = QString(*messageIdStr);
+		qDebug() << "NodeThread::nativeCallback: Processing callback for messageId:" << messageId;
 
 		// Find the callback for this message
 		std::function<void(const QJsonObject&)> callback;
@@ -548,6 +552,7 @@ void NodeThread::nativeCallback(const v8::FunctionCallbackInfo<v8::Value>& args)
 			QMutexLocker locker(&s_instance->m_callbackMutex);
 			if (s_instance->m_callbacks.contains(messageId)) {
 				callback = s_instance->m_callbacks.take(messageId);		// Remove after taking
+				qDebug() << "NodeThread::nativeCallback: Found and removed callback for messageId:" << messageId;
 			} else {
 				qWarning() << "NodeThread: No callback found for messageId:" << messageId;
 				return;

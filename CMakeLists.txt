@@ -56,10 +56,6 @@ set(QT_QML_GENERATE_QMLLS_INI ON)
 qt_standard_project_setup()
 qt_add_executable(Wallet
 	src/main.cpp
-	src/include/wifimanager.h
-	src/wifimanager.cpp
-	src/include/systemmanager.h
-	src/systemmanager.cpp
 	src/include/node.h
 	src/node.cpp
 	src/include/node_thread.h

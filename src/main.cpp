@@ -13,8 +13,6 @@
 #include <QProcess>
 
 #include "include/node.h"
-#include "include/systemmanager.h"
-#include "include/wifimanager.h"
 
 int main(int argc, char *argv[]) {
  // Setup arguments for Node.js FIRST - before Qt
@@ -63,8 +61,6 @@ int main(int argc, char *argv[]) {
  app.setWindowIcon(QIcon(":/WalletModule/src/img/wallet.svg"));
 
  // Create global instances for context properties
- SystemManager *systemManager = new SystemManager();
- WiFiManager *wifiManager = new WiFiManager();
  NodeJS *nodeJS = new NodeJS();
 
  QQmlApplicationEngine engine;
@@ -77,8 +73,6 @@ int main(int argc, char *argv[]) {
  }
 
  // Register context properties instead of QML types
- engine.rootContext()->setContextProperty("SystemManager", systemManager);
- engine.rootContext()->setContextProperty("WiFiManager", wifiManager);
  engine.rootContext()->setContextProperty("NodeJS", nodeJS);
  engine.rootContext()->setContextProperty("applicationVersion", app.applicationVersion());
  const QUrl url(QStringLiteral("qrc:/WalletModule/src/qml/main.qml"));

@@ -117,13 +117,18 @@ void NodeJS::msg(const QString &name, const QJsonObject &params, std::function<v
 
 void NodeJS::msg(const QString &name, const QJsonObject &params, const QJSValue &callback) {
  if (callback.isCallable()) {
-		msg(name, params, [callback](const QJsonObject &result) mutable {
+		qDebug() << "NodeJS::msg creating callback wrapper for action:" << name;
+		msg(name, params, [callback, name](const QJsonObject &result) mutable {
+			qDebug() << "NodeJS::msg callback triggered for action:" << name;
 			QJsonDocument doc(result);
 			QString jsonString = doc.toJson(QJsonDocument::Compact);
+			qDebug() << "NodeJS::msg calling JS callback with JSON:" << jsonString;
 
 			QJSValue callResult = callback.call({QJSValue(jsonString)});
 			if (callResult.isError()) {
 				qWarning() << "JavaScript callback error:" << callResult.toString();
+			} else {
+				qDebug() << "NodeJS::msg JS callback executed successfully";
 			}
 		});
  } else {

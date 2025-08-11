@@ -18,6 +18,28 @@ ApplicationWindow {
 	readonly property int animationDuration: 500
 	readonly property var animationEasing: Easing.OutCubic
 
+	// WiFi state for status bar
+	property int currentWifiStrength: 0
+
+	// Function to update WiFi strength
+	function updateWifiStrength() {
+		Node.msg("wifiGetCurrentStrength", {}, function (response) {
+			if (response.status === 'success') {
+				currentWifiStrength = response.data.strength || 0;
+			} else {
+				currentWifiStrength = 0;
+			}
+		});
+	}
+
+	// Timer to periodically update WiFi strength
+	Timer {
+		interval: 5000  // Update every 5 seconds
+		running: true
+		repeat: true
+		onTriggered: updateWifiStrength()
+	}
+
 	// Create instances of our "singleton" objects
 	property var colors: colorsObj
 	property var settingsManager: settingsManagerObj
@@ -87,6 +109,8 @@ ApplicationWindow {
 		x = (Screen.width - width) / 2;
 		y = (Screen.height - height) / 2;
 		console.log("ApplicationWindow completed");
+		// Initialize WiFi strength
+		updateWifiStrength();
 		// Language initialization is now handled by settingsManager.onSettingsLoaded
 	}
 
@@ -114,7 +138,7 @@ ApplicationWindow {
 		id: statusBar
 
 		// Real system values
-		wifiStrength: SystemManager.currentWifiStrength
+		wifiStrength: window.currentWifiStrength
 		batteryLevel: batteryManager.batteryLevel
 		hasBattery: batteryManager.hasBattery
 

@@ -2,6 +2,7 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 import "../../components"
+import "../../utils/NodeUtils.js" as NodeUtils
 
 Rectangle {
 	id: root
@@ -14,21 +15,36 @@ Rectangle {
 	// Local alias for easier access to colors
 	property var colors: window.colors
 
-	// WiFi Manager is available as global context property
-	// Connect to its signals
-	Connections {
-		target: WiFiManager
-		function onConnectionResult(ssid, success, error) {
-			if (success)
-				console.log("Successfully connected to", ssid);
-			else
-				console.log("Failed to connect to", ssid, "Error:", error);
-		}
+	// WiFi state
+	property var networks: []
+	property bool isScanning: false
+	property var currentConnection: null
+
+	// Functions for WiFi management
+	function scanNetworks() {
+		isScanning = true;
+		NodeUtils.msg("wifiScanNetworks", {}, function (response) {
+			isScanning = false;
+			if (response.status === 'success') {
+				networks = response.data.networks || [];
+				updateCurrentConnection();
+			} else {
+				console.log("WiFi scan failed:", response.message);
+			}
+		});
 	}
 
-	// Scan on component load to get current connection status
+	function updateCurrentConnection() {
+		NodeUtils.msg("wifiGetConnectionStatus", {}, function (response) {
+			if (response.status === 'success') {
+				currentConnection = response.data;
+			}
+		});
+	}
+
+	// Scan on component load
 	Component.onCompleted: {
-		WiFiManager.scanNetworks();
+		scanNetworks();
 	}
 
 	ColumnLayout {
@@ -60,21 +76,17 @@ Rectangle {
 			Text {
 				id: statusText
 				text: {
-					for (let i = 0; i < WiFiManager.networks.length; i++) {
-						if (WiFiManager.networks[i].connected) {
-							return tr("settings.system.wifi.connected.to") + ':';
-						}
+					if (currentConnection && currentConnection.connected) {
+						return tr("settings.system.wifi.connected.to") + ':';
 					}
 					return tr("settings.system.wifi.not.connected");
 				}
 				font.pointSize: 12
 				color: {
-					for (let i = 0; i < WiFiManager.networks.length; i++) {
-						if (WiFiManager.networks[i].connected) {
-							return colors.success;
-						}
+					if (currentConnection && currentConnection.connected) {
+						return root.colors.success;
 					}
-					return colors.disabledForeground;
+					return root.colors.disabledForeground;
 				}
 				Layout.alignment: Qt.AlignHCenter
 				horizontalAlignment: Text.AlignHCenter
@@ -85,11 +97,10 @@ Rectangle {
 			Text {
 				id: connectedNetworkText
 				text: {
-					for (let i = 0; i < WiFiManager.networks.length; i++) {
-						if (WiFiManager.networks[i].connected) {
-							return WiFiManager.networks[i].name;
-						}
+					if (currentConnection && currentConnection.connected) {
+						return currentConnection.ssid || "";
 					}
+					return "";
 				}
 				font.pointSize: 20
 				font.bold: true
@@ -106,22 +117,14 @@ Rectangle {
 				Layout.preferredWidth: 50
 				Layout.preferredHeight: 16
 				strength: {
-					for (let i = 0; i < WiFiManager.networks.length; i++) {
-						if (WiFiManager.networks[i].connected)
-							return WiFiManager.networks[i].strength;
+					if (currentConnection && currentConnection.connected) {
+						return currentConnection.strength || 0;
 					}
 					return 0;
 				}
-				activeColor: colors.success
-				inactiveColor: colors.disabledForeground
-				visible: {
-					for (let i = 0; i < WiFiManager.networks.length; i++) {
-						if (WiFiManager.networks[i].connected) {
-							return true;
-						}
-					}
-					return false;
-				}
+				activeColor: root.colors.success
+				inactiveColor: root.colors.disabledForeground
+				visible: currentConnection && currentConnection.connected
 			}
 		}
 
