@@ -15,7 +15,7 @@
 #include <unistd.h>		// for getuid()
 #endif
 
-SystemManager::SystemManager(QObject *parent) : QObject(parent), m_batteryLevel(100), m_hasBattery(true), m_isCharging(false), m_currentWifiStrength(0) {
+SystemManager::SystemManager(QObject *parent) : QObject(parent), m_currentWifiStrength(0) {
  // Timer for periodic status updates
  m_statusTimer = new QTimer(this);
  connect(m_statusTimer, &QTimer::timeout, this, &SystemManager::updateSystemStatus);
@@ -26,92 +26,7 @@ SystemManager::SystemManager(QObject *parent) : QObject(parent), m_batteryLevel(
 }
 
 void SystemManager::updateSystemStatus() {
- checkBatteryStatus();
  checkWifiStatus();
-}
-
-void SystemManager::checkBatteryStatus() {
- // Check if battery exists
- QDir batteryDir("/sys/class/power_supply");
- QStringList batteries = batteryDir.entryList(QStringList() << "BAT*", QDir::Dirs);
-
- if (batteries.isEmpty()) {
-		// No battery found
-		if (m_hasBattery) {
-			m_hasBattery = false;
-			emit hasBatteryChanged();
-		}
-		if (m_isCharging) {
-			m_isCharging = false;
-			emit chargingChanged();
-		}
-		return;
- }
-
- // Battery found
- if (!m_hasBattery) {
-		m_hasBattery = true;
-		emit hasBatteryChanged();
- }
-
- // Read battery level from first available battery
- QString batteryPath = "/sys/class/power_supply/" + batteries.first();
- QFile capacityFile(batteryPath + "/capacity");
- QFile statusFile(batteryPath + "/status");
-
- if (capacityFile.open(QIODevice::ReadOnly)) {
-		QTextStream in(&capacityFile);
-		QString capacityStr = in.readLine().trimmed();
-		bool ok;
-		int newLevel = capacityStr.toInt(&ok);
-		if (ok && newLevel != m_batteryLevel) {
-			m_batteryLevel = qBound(0, newLevel, 100);
-			emit batteryLevelChanged();
-		}
- } else {
-		// Fallback: try to use upower if available
-		QProcess process;
-		process.start("upower", QStringList() << "-i" << "/org/freedesktop/UPower/devices/battery_BAT0");
-		process.waitForFinished(2000);
-
-		if (process.exitCode() == 0) {
-			QString output = process.readAllStandardOutput();
-			QStringList lines = output.split('\n');
-
-			for (const QString &line : lines) {
-				if (line.contains("percentage")) {
-					QString percentStr = line.split(':').last().trimmed();
-					percentStr = percentStr.remove('%');
-					bool ok;
-					int newLevel = percentStr.toInt(&ok);
-					if (ok && newLevel != m_batteryLevel) {
-						m_batteryLevel = qBound(0, newLevel, 100);
-						emit batteryLevelChanged();
-					}
-					break;
-				}
-				if (line.contains("state")) {
-					QString stateStr = line.split(':').last().trimmed();
-					bool nowCharging = stateStr.contains("charging", Qt::CaseInsensitive) || stateStr.contains("unknown", Qt::CaseInsensitive);
-					if (nowCharging != m_isCharging) {
-						m_isCharging = nowCharging;
-						emit chargingChanged();
-					}
-				}
-			}
-		}
-
-		// Prefer sysfs status if available
-		if (statusFile.open(QIODevice::ReadOnly)) {
-			QTextStream in(&statusFile);
-			QString statusStr = in.readLine().trimmed();
-			bool nowCharging = statusStr.compare("Charging", Qt::CaseInsensitive) == 0 || statusStr.compare("Full", Qt::CaseInsensitive) == 0 || statusStr.compare("Unknown", Qt::CaseInsensitive) == 0;		// treat unknown as charging for icon
-			if (nowCharging != m_isCharging) {
-				m_isCharging = nowCharging;
-				emit chargingChanged();
-			}
-		}
- }
 }
 
 void SystemManager::checkWifiStatus() {

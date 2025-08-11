@@ -22,6 +22,7 @@ ApplicationWindow {
 	property var colors: colorsObj
 	property var settingsManager: settingsManagerObj
 	property var translationManager: translationManagerObj
+	property var batteryManager: batteryManagerObj
 
 	Colors {
 		id: colorsObj
@@ -50,6 +51,10 @@ ApplicationWindow {
 
 	TranslationManager {
 		id: translationManagerObj
+	}
+
+	BatteryManager {
+		id: batteryManagerObj
 	}
 
 	// Global settings - use SettingsManager instance
@@ -110,8 +115,8 @@ ApplicationWindow {
 
 		// Real system values
 		wifiStrength: SystemManager.currentWifiStrength
-		batteryLevel: SystemManager.batteryLevel
-		hasBattery: SystemManager.hasBattery
+		batteryLevel: batteryManager.batteryLevel
+		hasBattery: batteryManager.hasBattery
 
 		// Mock values for LoRa and GSM (not implemented yet)
 		loraStrength: 0

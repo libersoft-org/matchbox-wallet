@@ -6,6 +6,7 @@
 	"license": "Unlicense",
 	"main": "index.js",
 	"dependencies": {
-		"ethers": "^6.15.0"
+		"ethers": "^6.15.0",
+		"systeminformation": "^5.27.7"
 	}
 }

@@ -1,5 +1,6 @@
 // Now we can use regular require with proper file system access
 const CryptoHandler = require('./wallet-crypto');
+const si = require('systeminformation');
 
 console.log('Matchbox Wallet JavaScript runtime initialized');
 
@@ -7,6 +8,8 @@ console.log('Matchbox Wallet JavaScript runtime initialized');
 const HANDLERS = {
 	commonPing,
 	commonDelayedPing,
+	systemGetBatteryInfo,
+	systemCheckBatteryStatus,
 	cryptoHash,
 	cryptoGenerateKeyPair,
 	cryptoGenerateRandomBytes,
@@ -121,4 +124,64 @@ async function cryptoGetLatestBlock(params = {}) {
 
 async function cryptoGetBalance(params = {}) {
 	return CryptoHandler.getBalance(params?.address, params?.rpcUrl);
+}
+
+// System functions for battery management
+async function systemGetBatteryInfo() {
+	try {
+		const battery = await si.battery();
+		return {
+			status: 'success',
+			data: {
+				hasBattery: battery.hasBattery,
+				batteryLevel: battery.percent || 0,
+				charging: battery.isCharging,
+				acConnected: battery.acConnected,
+				type: battery.type,
+				model: battery.model,
+				vendor: battery.vendor,
+				maxCapacity: battery.maxCapacity,
+				currentCapacity: battery.currentCapacity,
+				capacityUnit: battery.capacityUnit,
+				voltage: battery.voltage,
+				designedCapacity: battery.designedCapacity,
+				timeRemaining: battery.timeRemaining,
+				additionalBatteries: battery.additionalBatteries || []
+			}
+		};
+	} catch (error) {
+		return {
+			status: 'error',
+			message: error.message,
+			data: {
+				hasBattery: false,
+				batteryLevel: 0,
+				charging: false
+			}
+		};
+	}
+}
+
+async function systemCheckBatteryStatus() {
+	try {
+		const battery = await si.battery();
+		return {
+			status: 'success',
+			data: {
+				batteryLevel: battery.percent || 0,
+				charging: battery.isCharging,
+				hasBattery: battery.hasBattery
+			}
+		};
+	} catch (error) {
+		return {
+			status: 'error',
+			message: error.message,
+			data: {
+				batteryLevel: 0,
+				charging: false,
+				hasBattery: false
+			}
+		};
+	}
 }

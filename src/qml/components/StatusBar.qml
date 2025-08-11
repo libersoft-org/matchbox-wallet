@@ -105,7 +105,7 @@ Rectangle {
 			Layout.preferredHeight: statusBar.height * 0.8
 			level: statusBar.batteryLevel
 			hasBattery: statusBar.hasBattery
-			charging: SystemManager.charging
+			charging: window.batteryManager.charging
 			colors: statusBar.colors
 		}
 
