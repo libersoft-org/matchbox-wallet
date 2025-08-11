@@ -101,8 +101,7 @@ Components.BaseMenu {
 					}
 				}
 
-				Button {
-					Layout.fillWidth: true
+				Components.MenuButton {
 					text: tr("menu.settings.system.time.timezone") + ": " + (window.settingsManager ? window.settingsManager.timeZone : "UTC")
 					onClicked: root.timezoneSettingsRequested()
 				}

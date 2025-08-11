@@ -4,8 +4,8 @@
 #include <qqmlintegration.h>
 
 #include <QObject>
-#include <QTimer>
 #include <QStringList>
+#include <QTimer>
 
 class SystemManager : public QObject {
  Q_OBJECT

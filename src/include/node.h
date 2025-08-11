@@ -4,20 +4,15 @@
 #include <QJSValue>
 #include <QJsonDocument>
 #include <QJsonObject>
-#include <QObject>
 #include <QMutex>
+#include <QObject>
 #include <QWaitCondition>
 #include <functional>
 #include <memory>
 
 #include "node_thread.h"
 
-enum class InitState {
-    NotInitialized,
-    Initializing,
-    Initialized,
-    Failed
-};
+enum class InitState { NotInitialized, Initializing, Initialized, Failed };
 
 class NodeJS : public QObject {
  Q_OBJECT
@@ -48,7 +43,6 @@ private:
  InitState m_initState;
  QMutex m_initMutex;
  QWaitCondition m_initCondition;
-
 };
 
 #endif		// NODE_H
