@@ -50,7 +50,7 @@ async function detectWifiInterface() {
 			const isWifi =
 				iface.iface &&
 				(iface.iface.startsWith('wlan') || // wlan0, wlan1, etc.
-					/^wlp\d+s\d+/.test(iface.iface) || // wlp194s0, wlp1s0, etc.
+					/^wlp\d+s\d+/.test(iface.iface) || // wlp1s0, etc.
 					iface.iface.startsWith('wifi') || // wifi0, wifi1, etc.
 					iface.iface.startsWith('wl') || // wl0, wl1, etc.
 					iface.type === 'wireless' ||
@@ -586,7 +586,7 @@ async function wifiGetInterfaceInfo() {
 			const isWifi =
 				iface.iface &&
 				(iface.iface.startsWith('wlan') || // wlan0, wlan1, etc.
-					/^wlp\d+s\d+/.test(iface.iface) || // wlp194s0, wlp1s0, etc.
+					/^wlp\d+s\d+/.test(iface.iface) || // wlp1s0, etc.
 					iface.iface.startsWith('wifi') || // wifi0, wifi1, etc.
 					iface.iface.startsWith('wl') || // wl0, wl1, etc.
 					iface.type === 'wireless' ||

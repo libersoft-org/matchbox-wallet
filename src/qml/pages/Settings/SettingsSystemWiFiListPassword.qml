@@ -70,7 +70,7 @@ Rectangle {
 			Text {
 				text: root.isSecured ? tr("menu.settings.system.wifi.list.password.secured") : tr("menu.settings.system.wifi.list.password.open")
 				font.pixelSize: window.height * 0.035
-				color: colors.secondaryForeground
+				color: colors.primaryForeground
 				anchors.horizontalCenter: parent.horizontalCenter
 				horizontalAlignment: Text.AlignHCenter
 				wrapMode: Text.WordWrap
