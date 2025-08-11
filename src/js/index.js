@@ -107,9 +107,7 @@ async function initializeWifi() {
 					reject(error);
 				}
 			}),
-			new Promise((_, reject) => 
-				setTimeout(() => reject(new Error('WiFi init timeout')), 5000)
-			)
+			new Promise((_, reject) => setTimeout(() => reject(new Error('WiFi init timeout')), 5000)),
 		]);
 
 		wifiInitialized = true;
@@ -286,7 +284,7 @@ async function cryptoGetBalance(params = {}) {
 // WiFi management functions
 async function wifiScanNetworks(params = {}) {
 	console.log('wifiScanNetworks called with params:', params);
-	
+
 	try {
 		console.log('About to call ensureWifiInit...');
 		await ensureWifiInit();
@@ -355,7 +353,7 @@ async function wifiScanNetworks(params = {}) {
 				isScanning: false,
 			},
 		};
-		
+
 		console.log('wifiScanNetworks returning result:', result);
 		return result;
 	} catch (error) {
@@ -700,17 +698,17 @@ async function systemReboot() {
 		const { exec } = require('child_process');
 		const { promisify } = require('util');
 		const execAsync = promisify(exec);
-		
+
 		// Try multiple reboot methods in order of preference
 		const rebootCommands = [
-			'reboot',           // Direct reboot (works if running as root)
-			'sudo reboot',      // With sudo
+			'reboot', // Direct reboot (works if running as root)
+			'sudo reboot', // With sudo
 			'systemctl reboot', // systemd
 			'sudo systemctl reboot',
-			'/sbin/reboot',     // Direct path
-			'sudo /sbin/reboot'
+			'/sbin/reboot', // Direct path
+			'sudo /sbin/reboot',
 		];
-		
+
 		let lastError = null;
 		for (const cmd of rebootCommands) {
 			try {
@@ -726,9 +724,8 @@ async function systemReboot() {
 				continue;
 			}
 		}
-		
+
 		throw lastError || new Error('All reboot methods failed');
-		
 	} catch (error) {
 		console.error('Reboot failed:', error);
 		return {
@@ -744,21 +741,21 @@ async function systemShutdown() {
 		const { exec } = require('child_process');
 		const { promisify } = require('util');
 		const execAsync = promisify(exec);
-		
+
 		// Try multiple shutdown methods in order of preference
 		const shutdownCommands = [
-			'poweroff',              // Direct poweroff (works if running as root)
-			'shutdown -h now',       // Traditional shutdown
-			'sudo poweroff',         // With sudo
-			'sudo shutdown -h now',  // With sudo
-			'systemctl poweroff',    // systemd
+			'poweroff', // Direct poweroff (works if running as root)
+			'shutdown -h now', // Traditional shutdown
+			'sudo poweroff', // With sudo
+			'sudo shutdown -h now', // With sudo
+			'systemctl poweroff', // systemd
 			'sudo systemctl poweroff',
-			'/sbin/poweroff',        // Direct path
+			'/sbin/poweroff', // Direct path
 			'sudo /sbin/poweroff',
-			'halt',                  // Halt system
-			'sudo halt'
+			'halt', // Halt system
+			'sudo halt',
 		];
-		
+
 		let lastError = null;
 		for (const cmd of shutdownCommands) {
 			try {
@@ -774,9 +771,8 @@ async function systemShutdown() {
 				continue;
 			}
 		}
-		
+
 		throw lastError || new Error('All shutdown methods failed');
-		
 	} catch (error) {
 		console.error('Shutdown failed:', error);
 		return {

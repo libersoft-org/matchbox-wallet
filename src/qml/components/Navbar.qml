@@ -3,10 +3,6 @@ import QtQuick.Controls 2.15
 
 Item {
 	id: root
-
-	// Local alias for easier access to colors
-	property var colors: window.colors
-
 	property string title: ""
 	property bool showBackButton: true
 	property bool showPowerButton: true

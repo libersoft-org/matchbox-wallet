@@ -8,7 +8,6 @@ Rectangle {
 	id: root
 	color: colors.primaryBackground
 	property string title: tr("settings.system.wifi.list.title")
-	property var colors: window.colors
 	signal backRequested
 	signal powerOffRequested
 
@@ -16,7 +15,7 @@ Rectangle {
 	property var networks: []
 	property bool isScanning: false
 
-		// Timer for timeout protection
+	// Timer for timeout protection
 	Timer {
 		id: scanTimeoutTimer
 		interval: 10000
@@ -45,7 +44,7 @@ Rectangle {
 			isScanning = false;
 			if (response.status === 'success') {
 				console.log("QML: Networks data:", JSON.stringify(response.data.networks));
-				
+
 				// Safe assignment with validation
 				var newNetworks = response.data.networks || [];
 				if (Array.isArray(newNetworks) && newNetworks.length > 0) {
@@ -115,40 +114,41 @@ Rectangle {
 				}
 			}
 
-		// Networks container - using Repeater instead of ListView for simplicity
-		Rectangle {
-			width: parent.width
-			height: childrenRect.height
-			color: "transparent"
-			
-			Column {
+			// Networks container - using Repeater instead of ListView for simplicity
+			Rectangle {
 				width: parent.width
-				spacing: 2
-				
-				Repeater {
-					model: root.networks
-					delegate: MenuButton {
-						width: parent.width
-						height: 50
-						text: {
-							if (!modelData) return "Loading..."
-							var name = modelData.name || "Unknown"
-							var secured = modelData.secured ? " 🔒" : " 🔓"
-							return name + secured
-						}
-						
-						onClicked: {
-							if (modelData && modelData.name) {
-								console.log("QML: Clicked network:", modelData.name);
-								connectDialog.networkName = modelData.name;
-								connectDialog.isSecured = modelData.secured || false;
-								connectDialog.open();
+				height: childrenRect.height
+				color: "transparent"
+
+				Column {
+					width: parent.width
+					spacing: 2
+
+					Repeater {
+						model: root.networks
+						delegate: MenuButton {
+							width: parent.width
+							height: 50
+							text: {
+								if (!modelData)
+									return "Loading...";
+								var name = modelData.name || "Unknown";
+								var secured = modelData.secured ? " 🔒" : " 🔓";
+								return name + secured;
+							}
+
+							onClicked: {
+								if (modelData && modelData.name) {
+									console.log("QML: Clicked network:", modelData.name);
+									connectDialog.networkName = modelData.name;
+									connectDialog.isSecured = modelData.secured || false;
+									connectDialog.open();
+								}
 							}
 						}
 					}
 				}
 			}
-		}
 		}
 	}
 

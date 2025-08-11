@@ -4,9 +4,6 @@ import QtQuick.Controls 2.15
 Item {
 	id: root
 
-	// Local alias for easier access to colors
-	property var colors: window.colors
-
 	// Cross lines for indicating disconnected/unavailable state
 	Rectangle {
 		anchors.centerIn: parent

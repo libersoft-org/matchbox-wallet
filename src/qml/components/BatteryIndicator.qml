@@ -7,7 +7,6 @@ Item {
 	property int level: 0            // 0..100
 	property bool hasBattery: false
 	property bool charging: true     // when true, show charging animation
-	property var colors: undefined   // expect palette with success/error
 
 	// Displayed level (single visual fill); animates from current level to 100% when charging
 	property real displayedLevel: level
@@ -20,7 +19,7 @@ Item {
 	property real margin: Math.max(2, Math.max(height * 0.06, bodyBorderWidth))
 
 	// Unified color used for the charged part and the top-up animation
-	property color fillColor: root.colors.success
+	property color fillColor: colors.success
 
 	// Animate displayedLevel upwards to 100% while charging; stops and snaps back to level when not charging
 	NumberAnimation on displayedLevel {

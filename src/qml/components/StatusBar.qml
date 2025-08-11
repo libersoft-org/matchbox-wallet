@@ -10,9 +10,6 @@ Rectangle {
 	anchors.left: parent.left
 	anchors.right: parent.right
 
-	// Local alias for easier access to colors
-	property var colors: window.colors
-
 	// Properties for connection states
 	property int wifiStrength: 0    // WiFi signal strength (0-4)
 	property int loraStrength: 0    // LoRa signal strength (0-4)
@@ -55,7 +52,6 @@ Rectangle {
 		//backgroundColor: "blue"
 		pageId: "wifi-settings"
 		pageComponent: wifiSettingsPageComponent
-		colors: statusBar.colors
 		onNavigate: statusBar.navigateTo
 	}
 
@@ -71,7 +67,6 @@ Rectangle {
 		//backgroundColor: "green"
 		pageId: "lora-settings"
 		pageComponent: wifiSettingsPageComponent  // TODO: change to correct component
-		colors: statusBar.colors
 		onNavigate: statusBar.navigateTo
 	}
 
@@ -87,7 +82,6 @@ Rectangle {
 		//backgroundColor: "orange"
 		pageId: "gsm-settings"
 		pageComponent: wifiSettingsPageComponent  // TODO: change to correct component
-		colors: statusBar.colors
 		onNavigate: statusBar.navigateTo
 	}
 
@@ -106,7 +100,6 @@ Rectangle {
 			level: statusBar.batteryLevel
 			hasBattery: statusBar.hasBattery
 			charging: window.batteryManager.charging
-			colors: statusBar.colors
 		}
 
 		Text {

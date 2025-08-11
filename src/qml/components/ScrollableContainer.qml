@@ -4,10 +4,6 @@ import QtQuick.Layouts 1.15
 
 Item {
 	id: root
-
-	// Local alias for easier access to colors
-	property var colors: window.colors
-
 	default property alias content: contentItem.children
 	property real topMargin: height * 0.05
 	property real bottomMargin: height * 0.05

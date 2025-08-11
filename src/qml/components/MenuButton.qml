@@ -5,10 +5,6 @@ import QtQuick.Layouts 1.15
 
 Button {
 	id: control
-
-	// Local alias for easier access to colors
-	property var colors: window.colors
-
 	property color backgroundColor: colors.primaryForeground
 	property color hoverColor: Qt.darker(backgroundColor, 1.3)
 	property color pressedColor: Qt.darker(backgroundColor, 1.2)

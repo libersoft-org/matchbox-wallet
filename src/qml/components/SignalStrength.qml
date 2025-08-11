@@ -2,13 +2,7 @@ import QtQuick 2.15
 
 Item {
 	id: root
-
-	// Local alias for easier access to colors
-	property var colors: window.colors
-
 	property int strength: 0  // Signal strength (0-4)
-	property color activeColor: colors.success
-	property color inactiveColor: colors.disabledForeground
 
 	Row {
 		anchors.centerIn: parent
@@ -20,7 +14,7 @@ Item {
 				width: (root.width - parent.spacing * 3) / 4
 				height: root.height * (index + 1) / 4
 				anchors.bottom: parent.bottom
-				color: index < root.strength ? root.activeColor : root.inactiveColor
+				color: index < root.strength ? colors.success : colors.disabledForeground
 				radius: width * 0.2
 			}
 		}

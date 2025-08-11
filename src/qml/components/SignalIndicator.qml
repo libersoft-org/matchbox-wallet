@@ -11,7 +11,6 @@ Rectangle {
 	property color backgroundColor: "transparent"
 	property string pageId: ""
 	property var pageComponent: null
-	property var colors: undefined      // expect colors palette to be passed in
 	property var onNavigate: undefined  // function(pageComponent, pageId)
 
 	color: backgroundColor
@@ -37,7 +36,7 @@ Rectangle {
 		Text {
 			id: typeText
 			text: root.signalType
-			color: root.colors ? root.colors.primaryForeground : "white"
+			color: colors.primaryForeground
 			font.pixelSize: parent.height
 			font.bold: true
 			anchors.left: parent.left
@@ -57,8 +56,6 @@ Rectangle {
 			SignalStrength {
 				anchors.fill: parent
 				strength: root.signalStrength
-				activeColor: root.colors ? root.colors.success : "#44d17a"
-				inactiveColor: root.colors ? root.colors.disabledForeground : "#808080"
 			}
 
 			CrossOut {

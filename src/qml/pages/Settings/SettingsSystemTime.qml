@@ -83,7 +83,7 @@ Components.BaseMenu {
 
 					Text {
 						text: tr("menu.settings.system.time.auto")
-						color: root.colors.primaryForeground
+						color: colors.primaryForeground
 						font.pixelSize: parent.height * 0.35
 						Layout.alignment: Qt.AlignVCenter
 						Layout.fillWidth: true
