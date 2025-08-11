@@ -245,8 +245,7 @@ ApplicationWindow {
 	// WiFi list page
 	Component {
 		id: wifiListPageComponent
-		SettingsSystemWiFiList {
-		}
+		SettingsSystemWiFiList {}
 	}
 
 	// System language selection page
@@ -278,9 +277,11 @@ ApplicationWindow {
 	Component {
 		id: settingsSystemTimezonePageComponent
 		SettingsSystemTimezone {
-			onTimezoneSelected: function(tz) {
-				if (window.settingsManager) window.settingsManager.saveTimeZone(tz);
-				if (SystemManager && SystemManager.setTimeZone) SystemManager.setTimeZone(tz);
+			onTimezoneSelected: function (tz) {
+				if (window.settingsManager)
+					window.settingsManager.saveTimeZone(tz);
+				if (SystemManager && SystemManager.setTimeZone)
+					SystemManager.setTimeZone(tz);
 				window.goBack();
 			}
 		}
@@ -289,15 +290,13 @@ ApplicationWindow {
 	// Power off page
 	Component {
 		id: powerOffPageComponent
-		PowerOff {
-		}
+		PowerOff {}
 	}
 
 	// Camera preview page
 	Component {
 		id: cameraPreviewPageComponent
-		CameraPreview {
-		}
+		CameraPreview {}
 	}
 
 	// Timer for delayed ping
@@ -309,8 +308,8 @@ ApplicationWindow {
 		onTriggered: {
 			console.log("delayedPinging server...");
 			Node.msg("delayedPing", {}, function (result) {
-					console.log("delayedPing result:", JSON.stringify(result));
-				});
+				console.log("delayedPing result:", JSON.stringify(result));
+			});
 		}
 	}
 
@@ -323,8 +322,8 @@ ApplicationWindow {
 		onTriggered: {
 			console.log("Fetching latest block...");
 			Node.msg("getLatestBlock", {}, function (result) {
-					console.log("Latest block result:", JSON.stringify(result));
-				});
+				console.log("Latest block result:", JSON.stringify(result));
+			});
 		}
 	}
 }
