@@ -21,6 +21,10 @@ ApplicationWindow {
 	// WiFi state for status bar
 	property int currentWifiStrength: 0
 
+	// Global signals for WiFi state changes
+	signal wifiConnectionChanged
+	signal wifiStatusUpdated
+
 	// Function to update WiFi strength
 	function updateWifiStrength() {
 		Node.msg("wifiGetCurrentStrength", {}, function (response) {
@@ -32,7 +36,7 @@ ApplicationWindow {
 		});
 	}
 
-	// Timer to periodically update WiFi strength
+	// Timer to periodically update WiFi strength (keep for signal strength only)
 	Timer {
 		interval: 5000  // Update every 5 seconds
 		running: true
@@ -268,20 +272,39 @@ ApplicationWindow {
 		id: wifiSettingsPageComponent
 		SettingsSystemWiFi {
 			onWifiListRequested: window.goPage(wifiListPageComponent)
-			onWifiDisconnected: Node.msg("wifiDisconnect", {}, function (response) {
-				if (response.status === 'success') {
-					console.log("WiFi disconnected successfully");
-				} else {
-					console.log("Failed to disconnect WiFi:", response.message);
-				}
-			})
+			onWifiDisconnected: {
+				Node.msg("wifiDisconnect", {}, function (response) {
+					if (response.status === 'success') {
+						console.log("WiFi disconnected successfully");
+						window.wifiConnectionChanged();
+						window.wifiStatusUpdated();
+					} else {
+						console.log("Failed to disconnect WiFi:", response.message);
+					}
+				});
+			}
 		}
 	}
 
 	// WiFi list page
 	Component {
 		id: wifiListPageComponent
-		SettingsSystemWiFiList {}
+		SettingsSystemWiFiList {
+			onPasswordPageRequested: function (networkName, isSecured) {
+				console.log("Password page requested for network:", networkName, "secured:", isSecured);
+				var passwordPage = wifiPasswordPageComponent.createObject(null, {
+					"networkName": networkName,
+					"isSecured": isSecured
+				});
+				stackView.push(passwordPage);
+			}
+		}
+	}
+
+	// WiFi password page
+	Component {
+		id: wifiPasswordPageComponent
+		SettingsSystemWiFiListPassword {}
 	}
 
 	// System language selection page

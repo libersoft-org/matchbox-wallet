@@ -70,7 +70,17 @@
 					"list": {
 						"title": "Available networks",
 						"scanning": "Scanning...",
-						"refresh": "Refresh"
+						"refresh": "Refresh",
+						"password": {
+							"title": "WiFi Password",
+							"network": "Network",
+							"secured": "This network is secured",
+							"open": "This network is open",
+							"enter": "Enter password",
+							"placeholder": "Password",
+							"connect": "Connect",
+							"error": "Connection failed"
+						}
 					}
 				},
 				"time": {

@@ -70,7 +70,17 @@
 					"list": {
 						"title": "Dostupné sítě",
 						"scanning": "Vyhledávám...",
-						"refresh": "Obnovit"
+						"refresh": "Obnovit",
+						"password": {
+							"title": "WiFi heslo",
+							"network": "Síť",
+							"secured": "Tato síť je zabezpečená",
+							"open": "Tato síť je otevřená",
+							"enter": "Zadejte heslo",
+							"placeholder": "Heslo",
+							"connect": "Připojit",
+							"error": "Připojení selhalo"
+						}
 					}
 				},
 				"time": {

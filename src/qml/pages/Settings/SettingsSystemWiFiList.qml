@@ -10,6 +10,7 @@ Rectangle {
 	property string title: tr("menu.settings.system.wifi.list.title")
 	signal backRequested
 	signal powerOffRequested
+	signal passwordPageRequested(string networkName, bool isSecured)
 
 	// WiFi state
 	property var networks: []
@@ -70,6 +71,11 @@ Rectangle {
 		}, function (response) {
 			if (response.status === 'success') {
 				console.log("Successfully connected to", ssid);
+				// Emit global signals for WiFi status update
+				if (typeof window !== 'undefined') {
+					window.wifiConnectionChanged();
+					window.wifiStatusUpdated();
+				}
 				// Go back to main WiFi page after successful connection
 				root.backRequested();
 			} else {
@@ -128,110 +134,16 @@ Rectangle {
 							onClicked: {
 								if (modelData && modelData.name) {
 									console.log("QML: Clicked network:", modelData.name);
-									connectDialog.networkName = modelData.name;
-									connectDialog.isSecured = modelData.secured || false;
-									connectDialog.open();
+									var isSecured = modelData.secured || false;
+									if (isSecured) {
+										// Open password page for secured networks
+										root.passwordPageRequested(modelData.name, isSecured);
+									} else {
+										// Connect directly to open networks
+										connectToNetwork(modelData.name, "");
+									}
 								}
 							}
-						}
-					}
-				}
-			}
-		}
-	}
-
-	// WiFi connection dialog
-	Dialog {
-		id: connectDialog
-		title: tr("settings.system.wifi.connect.title")
-		modal: true
-		anchors.centerIn: parent
-		width: 350
-		height: isSecured ? 200 : 150
-
-		property string networkName: ""
-		property bool isSecured: false
-
-		contentItem: Rectangle {
-			color: "white"
-
-			ColumnLayout {
-				anchors.fill: parent
-				anchors.margins: 20
-				spacing: 15
-
-				Text {
-					text: tr("settings.system.wifi.connect.network").arg(connectDialog.networkName)
-					wrapMode: Text.WordWrap
-					Layout.fillWidth: true
-					font.bold: true
-				}
-
-				// Password field (only for secured networks)
-				ColumnLayout {
-					Layout.fillWidth: true
-					visible: connectDialog.isSecured
-					spacing: 5
-
-					Text {
-						text: tr("settings.system.wifi.connect.password")
-						font.pointSize: 10
-					}
-
-					TextField {
-						id: passwordField
-						Layout.fillWidth: true
-						echoMode: TextInput.Password
-						placeholderText: tr("settings.system.wifi.connect.password.placeholder")
-					}
-				}
-
-				Text {
-					text: connectDialog.isSecured ? "" : tr("settings.system.wifi.connect.open")
-					visible: !connectDialog.isSecured
-					font.pointSize: 10
-					color: colors.disabledForeground
-				}
-
-				RowLayout {
-					Layout.alignment: Qt.AlignHCenter
-					spacing: 10
-
-					Button {
-						text: tr("common.cancel")
-						onClicked: {
-							passwordField.text = "";
-							connectDialog.close();
-						}
-
-						background: Rectangle {
-							color: parent.pressed ? "#e0e0e0" : (parent.hovered ? "#f0f0f0" : "#f8f9fa")
-							radius: 4
-							border.color: "#6c757d"
-							border.width: 1
-						}
-					}
-
-					Button {
-						text: tr("settings.system.wifi.connect.button")
-						onClicked: {
-							root.connectToNetwork(connectDialog.networkName, passwordField.text);
-							passwordField.text = "";
-							connectDialog.close();
-						}
-
-						background: Rectangle {
-							color: parent.pressed ? "#0066cc" : (parent.hovered ? "#3399ff" : "#007bff")
-							radius: 4
-							border.color: "#0056b3"
-							border.width: 1
-						}
-
-						contentItem: Text {
-							text: parent.text
-							color: "white"
-							horizontalAlignment: Text.AlignHCenter
-							verticalAlignment: Text.AlignVCenter
 						}
 					}
 				}
