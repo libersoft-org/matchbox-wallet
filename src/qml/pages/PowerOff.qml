@@ -15,11 +15,35 @@ BaseMenu {
 
 	MenuButton {
 		text: tr("menu.power.reboot")
-		onClicked: SystemManager.rebootSystem()
+		onClicked: {
+			console.log("Reboot requested");
+			if (typeof NodeJS !== 'undefined') {
+				NodeJS.msg("systemReboot", {}, function(result) {
+					console.log("Reboot result:", JSON.stringify(result));
+					if (result.status === 'success') {
+						console.log("System reboot initiated successfully");
+					} else {
+						console.error("Failed to reboot system:", result.message);
+					}
+				});
+			}
+		}
 	}
 
 	MenuButton {
 		text: tr("menu.power.shutdown")
-		onClicked: SystemManager.shutdownSystem()
+		onClicked: {
+			console.log("Shutdown requested");
+			if (typeof NodeJS !== 'undefined') {
+				NodeJS.msg("systemShutdown", {}, function(result) {
+					console.log("Shutdown result:", JSON.stringify(result));
+					if (result.status === 'success') {
+						console.log("System shutdown initiated successfully");
+					} else {
+						console.error("Failed to shutdown system:", result.message);
+					}
+				});
+			}
+		}
 	}
 }
