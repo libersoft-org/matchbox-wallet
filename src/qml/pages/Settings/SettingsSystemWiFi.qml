@@ -8,7 +8,6 @@ Rectangle {
 	id: root
 	color: colors.primaryBackground
 	property string title: tr("menu.settings.system.wifi.title")
-	signal backRequested
 	signal wifiListRequested
 
 	// WiFi state
@@ -43,37 +42,23 @@ Rectangle {
 		scanNetworks();
 	}
 
-	ColumnLayout {
-		Layout.fillWidth: true
-		Layout.fillHeight: true
-		spacing: 15
-
-		Text {
-			text: tr("settings.system.wifi.current.status")
-			font.pixelSize: 16
-			font.bold: true
-			color: colors.primaryForeground
-			Layout.alignment: Qt.AlignHCenter
-		}
+	Column {
+		anchors.fill: parent
+		spacing: window.height * 0.02
 
 		// Connection status text
 		Text {
 			id: statusText
 			text: {
 				if (currentConnection && currentConnection.connected)
-					return tr("settings.system.wifi.connected.to") + ':';
-				return tr("settings.system.wifi.not.connected");
+					return tr("menu.settings.system.wifi.connected") + ':';
+				return tr("menu.settings.system.wifi.disconnected");
 			}
-			font.pointSize: 12
-			color: {
-				if (currentConnection && currentConnection.connected)
-					return colors.success;
-				return colors.error;
-			}
-			Layout.alignment: Qt.AlignHCenter
+			font.pixelSize: window.height * 0.05
+			color: currentConnection && currentConnection.connected ? colors.success : colors.error
+			anchors.horizontalCenter: parent.horizontalCenter
 			horizontalAlignment: Text.AlignHCenter
 			wrapMode: Text.WordWrap
-			Layout.fillWidth: true
 		}
 
 		Text {
@@ -83,32 +68,24 @@ Rectangle {
 					return currentConnection.ssid || "";
 				return "";
 			}
-			font.pointSize: 20
+			font.pixelSize: window.height * 0.05
 			font.bold: true
-			Layout.alignment: Qt.AlignHCenter
+			anchors.horizontalCenter: parent.horizontalCenter
 			horizontalAlignment: Text.AlignHCenter
 			wrapMode: Text.WordWrap
-			Layout.fillWidth: true
 			color: colors.primaryForeground
 		}
 
 		// Signal strength for connected network
 		SignalStrength {
-			Layout.alignment: Qt.AlignHCenter
-			Layout.preferredWidth: 50
-			Layout.preferredHeight: 16
-			strength: {
-				if (currentConnection && currentConnection.connected)
-					return currentConnection.strength || 0;
-				return 0;
-			}
+			anchors.horizontalCenter: parent.horizontalCenter
+			strength: currentConnection && currentConnection.connected ? currentConnection.strength || 0 : 0
 			visible: currentConnection && currentConnection.connected
 		}
 
 		// Search button
 		MenuButton {
 			id: searchMenuButton
-			Layout.fillWidth: true
 			text: tr("settings.system.wifi.search")
 			onClicked: root.wifiListRequested()
 		}

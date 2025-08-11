@@ -62,7 +62,14 @@
 				},
 				"wifi": {
 					"button": "WiFi",
-					"title": "Nastavení WiFi"
+					"title": "Nastavení WiFi",
+					"connected": "Připojeno k síti",
+					"disconnected": "Odpojeno",
+					"list": {
+						"title": "Dostupné sítě",
+						"scanning": "Vyhledávám...",
+						"refresh": "Obnovit"
+					}
 				},
 				"time": {
 					"button": "Datum a čas",

@@ -62,7 +62,14 @@
 				},
 				"wifi": {
 					"button": "WiFi",
-					"title": "WiFi settings"
+					"title": "WiFi settings",
+					"connected": "Connected to network",
+					"disconnected": "Disconnected",
+					"list": {
+						"title": "Available networks",
+						"scanning": "Scanning...",
+						"refresh": "Refresh"
+					}
 				},
 				"time": {
 					"button": "Date & time",

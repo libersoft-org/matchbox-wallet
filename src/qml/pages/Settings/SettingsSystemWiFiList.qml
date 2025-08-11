@@ -7,7 +7,7 @@ import "../../utils/NodeUtils.js" as NodeUtils
 Rectangle {
 	id: root
 	color: colors.primaryBackground
-	property string title: tr("settings.system.wifi.list.title")
+	property string title: tr("menu.settings.system.wifi.list.title")
 	signal backRequested
 	signal powerOffRequested
 
@@ -92,22 +92,10 @@ Rectangle {
 			width: parent.width
 			spacing: root.height * 0.03
 
-			// Title
-			Text {
-				text: root.title
-				font.pixelSize: root.height * 0.06
-				font.bold: true
-				color: colors.primaryForeground
-				horizontalAlignment: Text.AlignHCenter
-				width: parent.width
-				topPadding: root.height * 0.05
-				bottomPadding: root.height * 0.03
-			}
-
 			// Refresh button
 			MenuButton {
 				width: parent.width
-				text: root.isScanning ? tr("settings.system.wifi.scanning") : tr("settings.system.wifi.refresh")
+				text: root.isScanning ? tr("menu.settings.system.wifi.list.scanning") : tr("menu.settings.system.wifi.list.refresh")
 				enabled: !root.isScanning
 				onClicked: {
 					root.scanNetworks();
