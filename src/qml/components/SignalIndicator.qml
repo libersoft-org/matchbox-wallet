@@ -18,9 +18,8 @@ Rectangle {
 	MouseArea {
 		anchors.fill: parent
 		onClicked: {
-			if (root.onNavigate) {
+			if (root.onNavigate)
 				root.onNavigate(root.pageComponent, root.pageId);
-			}
 		}
 		onPressed: root.opacity = 0.7
 		onReleased: root.opacity = 1.0
