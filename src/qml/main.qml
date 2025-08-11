@@ -268,6 +268,13 @@ ApplicationWindow {
 		id: wifiSettingsPageComponent
 		SettingsSystemWiFi {
 			onWifiListRequested: window.goPage(wifiListPageComponent)
+			onWifiDisconnected: Node.msg("wifiDisconnect", {}, function (response) {
+				if (response.status === 'success') {
+					console.log("WiFi disconnected successfully");
+				} else {
+					console.log("Failed to disconnect WiFi:", response.message);
+				}
+			})
 		}
 	}
 

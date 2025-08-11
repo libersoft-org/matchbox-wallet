@@ -155,6 +155,7 @@ const HANDLERS = {
 	wifiScanNetworks,
 	wifiGetNetworks,
 	wifiConnectToNetwork,
+	wifiDisconnect,
 	wifiGetConnectionStatus,
 	wifiGetCurrentStrength,
 	wifiGetInterfaceInfo,
@@ -446,6 +447,53 @@ async function wifiConnectToNetwork(params = {}) {
 			data: {
 				ssid: params?.ssid,
 				connected: false,
+			},
+		};
+	}
+}
+
+async function wifiDisconnect() {
+	try {
+		await ensureWifiInit();
+
+		console.log('Attempting to disconnect from WiFi network');
+
+		// Get current connection before disconnecting
+		let currentSSID = null;
+		try {
+			const currentConnections = await wifi.getCurrentConnections();
+			if (currentConnections && currentConnections.length > 0) {
+				currentSSID = currentConnections[0].ssid;
+			}
+		} catch (error) {
+			console.log('Could not get current connection before disconnect:', error.message);
+		}
+
+		// Disconnect from WiFi
+		await wifi.disconnect();
+
+		console.log(`Successfully disconnected from WiFi${currentSSID ? ` (was connected to: ${currentSSID})` : ''}`);
+
+		// Update cached networks to reflect disconnection
+		setTimeout(async () => {
+			await wifiScanNetworks();
+		}, 2000);
+
+		return {
+			status: 'success',
+			message: `Disconnected from WiFi${currentSSID ? ` (${currentSSID})` : ''}`,
+			data: {
+				ssid: currentSSID,
+				connected: false,
+			},
+		};
+	} catch (error) {
+		console.error('WiFi disconnection failed:', error);
+		return {
+			status: 'error',
+			message: error.message,
+			data: {
+				connected: true, // Assume still connected if disconnect failed
 			},
 		};
 	}

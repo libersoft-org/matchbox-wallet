@@ -65,6 +65,8 @@
 					"title": "WiFi settings",
 					"connected": "Connected to network",
 					"disconnected": "Disconnected",
+					"change": "Change network",
+					"disconnect": "Disconnect",
 					"list": {
 						"title": "Available networks",
 						"scanning": "Scanning...",

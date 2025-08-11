@@ -1,9 +1,9 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
-import "../../components" as Components
+import "../../components"
 
-Components.BaseMenu {
+BaseMenu {
 	id: root
 	title: tr("menu.settings.system.time.title")
 	signal timeChanged(string newTime)
@@ -48,9 +48,9 @@ Components.BaseMenu {
 				}
 
 				Text {
-					text: root.currentTime.toLocaleDateString(Qt.locale(), Locale.ShortFormat)
+					text: root.currentTime.toLocaleDateString()
 					color: colors.primaryForeground
-					font.pixelSize: parent.parent.height * 0.2
+					font.pixelSize: parent.parent.height * 0.3
 					anchors.horizontalCenter: parent.horizontalCenter
 				}
 			}
@@ -89,7 +89,7 @@ Components.BaseMenu {
 						Layout.fillWidth: true
 					}
 
-					Components.Switch {
+					Switch {
 						id: autoSyncSwitch
 						checked: Boolean(window.settingsManager && window.settingsManager.autoTimeSync)
 						onToggled: {
@@ -100,18 +100,16 @@ Components.BaseMenu {
 						}
 					}
 				}
-
-				Components.MenuButton {
-					text: tr("menu.settings.system.time.timezone") + ": " + (window.settingsManager ? window.settingsManager.timeZone : "UTC")
-					onClicked: root.timezoneSettingsRequested()
-				}
 			}
 		}
 	}
 
-	// NTP server field removed from here as requested
+	MenuButton {
+		text: tr("menu.settings.system.time.timezone") + ": " + (window.settingsManager ? window.settingsManager.timeZone : "UTC")
+		onClicked: root.timezoneSettingsRequested()
+	}
 
-	Components.MenuButton {
+	MenuButton {
 		text: tr("menu.settings.system.time.sync")
 		onClicked: {
 			console.log("Syncing time with internet");

@@ -9,6 +9,7 @@ Rectangle {
 	color: colors.primaryBackground
 	property string title: tr("menu.settings.system.wifi.title")
 	signal wifiListRequested
+	signal wifiDisconnected
 
 	// WiFi state
 	property var networks: []
@@ -83,11 +84,18 @@ Rectangle {
 			visible: currentConnection && currentConnection.connected
 		}
 
-		// Search button
+		// Change button
 		MenuButton {
-			id: searchMenuButton
-			text: tr("settings.system.wifi.search")
+			id: changeMenuButton
+			text: tr("menu.settings.system.wifi.change")
 			onClicked: root.wifiListRequested()
+		}
+
+		// Disconnect button
+		MenuButton {
+			id: disconnectMenuButton
+			text: tr("menu.settings.system.wifi.disconnect")
+			onClicked: root.wifiDisconnected()
 		}
 	}
 }

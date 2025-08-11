@@ -65,6 +65,8 @@
 					"title": "Nastavení WiFi",
 					"connected": "Připojeno k síti",
 					"disconnected": "Odpojeno",
+					"change": "Změnit síť",
+					"disconnect": "Odpojit",
 					"list": {
 						"title": "Dostupné sítě",
 						"scanning": "Vyhledávám...",
