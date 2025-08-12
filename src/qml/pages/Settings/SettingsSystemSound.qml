@@ -8,7 +8,6 @@ import "../../utils/NodeUtils.js" as Node
 BaseMenu {
 	id: root
 	title: tr("menu.settings.system.sound.title")
-
 	property int soundVolume: 0
 	property bool volumeLoaded: false
 	property bool updatingFromSystem: false  // Guard flag
@@ -16,7 +15,6 @@ BaseMenu {
 	property bool hasError: false
 	property bool isMuted: false
 	property int volumeBeforeMute: 0
-
 	signal volumeChanged(int volume)
 
 	// Load current volume when component is loaded
@@ -32,18 +30,14 @@ BaseMenu {
 				console.log("Setting volume to:", actualVolume);
 				root.updatingFromSystem = true;
 				root.soundVolume = actualVolume;
-				
 				// If volume is 0, consider it as muted (but don't set volumeBeforeMute)
 				if (actualVolume === 0) {
 					root.isMuted = true;
 					// Set a default previous volume if none exists
-					if (root.volumeBeforeMute === 0) {
+					if (root.volumeBeforeMute === 0)
 						root.volumeBeforeMute = 50;
-					}
-				} else {
+				} else
 					root.isMuted = false;
-				}
-				
 				root.volumeLoaded = true;
 				root.updatingFromSystem = false;
 			} else {
@@ -59,7 +53,7 @@ BaseMenu {
 	}
 
 	function saveVolume(volume) {
-		root.hasError = false; // Clear previous error
+		root.hasError = false;
 		Node.msg("systemSetVolume", {
 			volume: volume
 		}, function (response) {
@@ -110,10 +104,7 @@ BaseMenu {
 			text: root.isMuted ? tr("menu.settings.system.sound.unmute") : tr("menu.settings.system.sound.mute")
 			enabled: root.volumeLoaded
 			opacity: root.volumeLoaded ? 1.0 : 0.5
-
-			onClicked: {
-				root.toggleMute();
-			}
+			onClicked: root.toggleMute()
 		}
 
 		Range {
@@ -128,7 +119,6 @@ BaseMenu {
 			suffix: "%"
 			enabled: root.volumeLoaded && !root.isMuted
 			opacity: (root.volumeLoaded && !root.isMuted) ? 1.0 : 0.5
-
 			onRangeValueChanged: function (newValue) {
 				if (root.volumeLoaded && !root.updatingFromSystem && !root.isMuted) {
 					root.soundVolume = newValue;
