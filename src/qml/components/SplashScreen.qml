@@ -85,7 +85,7 @@ Item {
 		// Title text
 		Text {
 			id: titleText
-			text: "Matchbox Wallet"
+			text: applicationName
 			color: colors.primaryForeground
 			font.pixelSize: window.width * 0.05
 			font.weight: Font.Bold

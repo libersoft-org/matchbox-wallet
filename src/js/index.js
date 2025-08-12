@@ -6,6 +6,7 @@ const TimeManager = require('./time.js');
 const AudioManager = require('./audio.js');
 const DisplayManager = require('./display.js');
 const TestManager = require('./test.js');
+const SystemManager = require('./system.js');
 const cryptoManager = new CryptoManager();
 const wifiManager = new WifiManager();
 const batteryManager = new BatteryManager();
@@ -14,6 +15,7 @@ const timeManager = new TimeManager();
 const audioManager = new AudioManager();
 const displayManager = new DisplayManager();
 const testManager = new TestManager();
+const systemManager = new SystemManager();
 
 const HANDLERS = {
 	testPing: () => testManager.ping(),
@@ -38,6 +40,9 @@ const HANDLERS = {
 	wifiGetCurrentStrength: () => wifiManager.getCurrentStrength(),
 	wifiGetInterfaceInfo: () => wifiManager.getInterfaceInfo(),
 	wifiReinitializeInterface: (params) => wifiManager.reinitializeInterface(params),
+	systemGetCurrentVersion: () => systemManager.getCurrentSystemVersion(),
+	systemGetLatestVersion: () => systemManager.getLatestSystemVersion(),
+	systemGetLatestAppVersion: () => systemManager.getLatestApplicationVersion(),
 	cryptoHash: (params) => cryptoManager.hash(params),
 	cryptoGenerateKeyPair: () => cryptoManager.generateKeyPair(),
 	cryptoGenerateRandomBytes: (params) => cryptoManager.generateRandomBytes(params),
@@ -78,4 +83,4 @@ global.handleMessage = async function (message, callback) {
 	}
 };
 
-console.log('Matchbox Wallet JavaScript runtime initialized');
+console.log('JavaScript runtime initialized');

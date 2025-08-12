@@ -38,7 +38,7 @@ if [ -d "src/js" ]; then
  }
 fi
 
-echo "Building Matchbox Wallet..."
+echo "Building the application..."
 if [ -d "build" ]; then
  rm -rf build
 fi

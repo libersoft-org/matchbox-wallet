@@ -1,7 +1,7 @@
 {
 	"name": "matchbox-wallet-js",
 	"version": "1.0.0",
-	"description": "JavaScript runtime for Matchbox Wallet",
+	"description": "JavaScript runtime",
 	"author": "LiberSoft",
 	"license": "Unlicense",
 	"main": "index.js",

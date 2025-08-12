@@ -74,6 +74,7 @@ int main(int argc, char *argv[]) {
 
  // Register context properties instead of QML types
  engine.rootContext()->setContextProperty("NodeJS", nodeJS);
+ engine.rootContext()->setContextProperty("applicationName", app.applicationName());
  engine.rootContext()->setContextProperty("applicationVersion", app.applicationVersion());
  const QUrl url(QStringLiteral("qrc:/WalletModule/src/qml/main.qml"));
  QObject::connect(

@@ -19,7 +19,7 @@ QtObject {
 	}
 
 	function loadSettings() {
-		var db = LocalStorage.openDatabaseSync("MatchboxWallet", "1.0", "Matchbox Wallet Settings", 1000000);
+		var db = LocalStorage.openDatabaseSync(applicationName, applicationVersion, applicationName + " settings", 1000000);
 		db.transaction(function (tx) {
 			// Create settings table if it doesn't exist
 			tx.executeSql('CREATE TABLE IF NOT EXISTS settings(key TEXT PRIMARY KEY, value TEXT)');
@@ -75,7 +75,7 @@ QtObject {
 	}
 
 	function saveLanguage(language) {
-		var db = LocalStorage.openDatabaseSync("MatchboxWallet", "1.0", "Matchbox Wallet Settings", 1000000);
+		var db = LocalStorage.openDatabaseSync(applicationName, applicationVersion, applicationName + " settings", 1000000);
 		db.transaction(function (tx) {
 			tx.executeSql('INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)', ['language', language]);
 			console.log("Language saved to storage:", language);
@@ -85,7 +85,7 @@ QtObject {
 	}
 
 	function saveCurrency(currency) {
-		var db = LocalStorage.openDatabaseSync("MatchboxWallet", "1.0", "Matchbox Wallet Settings", 1000000);
+		var db = LocalStorage.openDatabaseSync(applicationName, applicationVersion, applicationName + " settings", 1000000);
 		db.transaction(function (tx) {
 			tx.executeSql('INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)', ['currency', currency]);
 			console.log("Currency saved to storage:", currency);
@@ -95,7 +95,7 @@ QtObject {
 	}
 
 	function saveAutoTimeSync(enabled) {
-		var db = LocalStorage.openDatabaseSync("MatchboxWallet", "1.0", "Matchbox Wallet Settings", 1000000);
+		var db = LocalStorage.openDatabaseSync(applicationName, applicationVersion, applicationName + " settings", 1000000);
 		db.transaction(function (tx) {
 			tx.executeSql('INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)', ['auto_time_sync', enabled ? '1' : '0']);
 			console.log("autoTimeSync saved to storage:", enabled);
@@ -104,7 +104,7 @@ QtObject {
 	}
 
 	function saveNtpServer(server) {
-		var db = LocalStorage.openDatabaseSync("MatchboxWallet", "1.0", "Matchbox Wallet Settings", 1000000);
+		var db = LocalStorage.openDatabaseSync(applicationName, applicationVersion, applicationName + " settings", 1000000);
 		db.transaction(function (tx) {
 			tx.executeSql('INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)', ['ntp_server', server]);
 			console.log("ntpServer saved to storage:", server);
@@ -113,7 +113,7 @@ QtObject {
 	}
 
 	function saveTimeZone(tz) {
-		var db = LocalStorage.openDatabaseSync("MatchboxWallet", "1.0", "Matchbox Wallet Settings", 1000000);
+		var db = LocalStorage.openDatabaseSync(applicationName, applicationVersion, applicationName + " settings", 1000000);
 		db.transaction(function (tx) {
 			tx.executeSql('INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)', ['time_zone', tz]);
 			console.log("timeZone saved to storage:", tz);
@@ -123,7 +123,7 @@ QtObject {
 
 	function getSetting(key, defaultValue) {
 		var value = defaultValue;
-		var db = LocalStorage.openDatabaseSync("MatchboxWallet", "1.0", "Matchbox Wallet Settings", 1000000);
+		var db = LocalStorage.openDatabaseSync(applicationName, applicationVersion, applicationName + " settings", 1000000);
 		db.transaction(function (tx) {
 			var result = tx.executeSql('SELECT value FROM settings WHERE key = ?', [key]);
 			if (result.rows.length > 0) {
@@ -134,7 +134,7 @@ QtObject {
 	}
 
 	function setSetting(key, value) {
-		var db = LocalStorage.openDatabaseSync("MatchboxWallet", "1.0", "Matchbox Wallet Settings", 1000000);
+		var db = LocalStorage.openDatabaseSync(applicationName, applicationVersion, applicationName + " settings", 1000000);
 		db.transaction(function (tx) {
 			tx.executeSql('INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)', [key, value]);
 		});

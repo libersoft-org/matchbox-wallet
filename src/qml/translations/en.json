@@ -1,6 +1,5 @@
 {
 	"menu": {
-		"title": "Matchbox Wallet",
 		"wallet": {
 			"button": "Wallet",
 			"title": "Wallet",
@@ -107,6 +106,20 @@
 					"auto": "Auto-sync time",
 					"server": "NTP server",
 					"timezone": "Time zone"
+				},
+				"update": {
+					"button": "Update",
+					"title": "System Updates",
+					"app": {
+						"current": "Your app version",
+						"latest": "Latest app version",
+						"button": "Update Application"
+					},
+					"system": {
+						"current": "System version",
+						"latest": "Latest system version",
+						"button": "Update System"
+					}
 				}
 			}
 		},
@@ -124,6 +137,7 @@
 		"yes": "Yes",
 		"no": "No",
 		"loading": "Loading...",
+		"error": "Error",
 		"languages": {
 			"english": "English",
 			"czech": "Czech"

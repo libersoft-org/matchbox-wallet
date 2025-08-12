@@ -1,6 +1,5 @@
 {
 	"menu": {
-		"title": "Matchbox peněženka",
 		"wallet": {
 			"button": "Peněženka",
 			"title": "Peněženka",
@@ -107,6 +106,20 @@
 					"button": "Jazyk: %1",
 					"title": "Výběr jazyka",
 					"selectLanguage": "Vyberte jazyk"
+				},
+				"update": {
+					"button": "Aktualizace",
+					"title": "Aktualizace systému",
+					"app": {
+						"current": "Verze vaší aplikace",
+						"latest": "Nejnovější verze aplikace",
+						"button": "Aktualizovat aplikaci"
+					},
+					"system": {
+						"current": "Verze systému",
+						"latest": "Nejnovější verze systému",
+						"button": "Aktualizovat systém"
+					}
 				}
 			}
 		},
@@ -124,6 +137,7 @@
 		"yes": "Ano",
 		"no": "Ne",
 		"loading": "Načítání...",
+		"error": "Chyba",
 		"languages": {
 			"english": "Angličtina",
 			"czech": "Čeština"

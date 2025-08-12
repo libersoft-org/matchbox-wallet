@@ -3,7 +3,7 @@ import QtQuick 2.15
 QtObject {
 	id: root
 
-	property string currentLanguage: "en"
+	property string currentLanguage: ""
 	property var translations: ({})
 	property int languageVersion: 0  // This will trigger binding updates
 
@@ -11,6 +11,7 @@ QtObject {
 
 	// Watch for currentLanguage changes
 	onCurrentLanguageChanged: {
+		console.log("TranslationManager: currentLanguage changed to:", currentLanguage);
 		loadTranslations(currentLanguage, function (data) {
 			console.log("Translations loaded successfully");
 		}, function (error) {
@@ -94,8 +95,15 @@ QtObject {
 	}
 
 	function setLanguage(language) {
-		console.log("Setting language to:", language);
+		console.log("TranslationManager: setLanguage called with:", language);
+		console.log("TranslationManager: current language before change:", currentLanguage);
 		currentLanguage = language;
-	// Actual loading is triggered by onCurrentLanguageChanged to avoid double-load
+		console.log("TranslationManager: current language after change:", currentLanguage);
+		// Force load translations even if language hasn't changed
+		loadTranslations(language, function (data) {
+			console.log("Translations loaded successfully in setLanguage");
+		}, function (error) {
+			console.log("Failed to load translations in setLanguage:", error);
+		});
 	}
 }

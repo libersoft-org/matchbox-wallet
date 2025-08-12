@@ -7,7 +7,7 @@ import "../utils/NodeUtils.js" as Node
 
 BaseMenu {
 	id: root
-	title: tr("menu.title")
+	title: applicationName
 	property bool showBackButton: false
 	property var walletComponent
 	property var settingsComponent

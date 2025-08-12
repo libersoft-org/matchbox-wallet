@@ -39,7 +39,7 @@ else
  echo "All dependencies are already installed."
 fi
 
-echo "Building Matchbox Wallet for ARM64..."
+echo "Building the application for ARM64..."
 if [ -d "build" ]; then
  rm -rf build
 fi

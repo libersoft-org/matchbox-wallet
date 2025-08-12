@@ -11,6 +11,7 @@ BaseMenu {
 	signal timeSettingsRequested
 	signal soundSettingsRequested
 	signal displaySettingsRequested
+	signal updateSettingsRequested
 
 	property string selectedLanguage: "en"
 
@@ -59,5 +60,10 @@ BaseMenu {
 			return template.replace("%1", displayName);
 		}
 		onClicked: root.languageSelectionRequested()
+	}
+
+	MenuButton {
+		text: tr("menu.settings.system.update.button")
+		onClicked: root.updateSettingsRequested()
 	}
 }

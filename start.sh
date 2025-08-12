@@ -25,7 +25,7 @@ echo "Installing JS dependencies in src/js before start..."
 (cd src/js && npm install) || echo "Warning: npm install failed; runtime may miss modules"
 
 if [ -f "build/linux/wallet" ]; then
-	echo "Starting Matchbox Wallet..."
+	echo "Starting the application..."
 	./build/linux/wallet
 else
 	echo "Error: Application not found. Please build the project first by running:"

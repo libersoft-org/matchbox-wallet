@@ -12,7 +12,7 @@ ApplicationWindow {
 	width: 480
 	height: 640
 	visible: true
-	title: tr("menu.title")
+	title: applicationName
 	font.family: "Droid Sans"
 	property string iconSource: Qt.resolvedUrl("../img/wallet.svg")
 	readonly property int animationDuration: 500
@@ -66,9 +66,6 @@ ApplicationWindow {
 		onSettingsLoaded: {
 			console.log("Settings loaded, setting language to:", selectedLanguage);
 			translationManager.setLanguage(selectedLanguage);
-
-			// Use QML Timer instead of setTimeout
-			blockTimer.start();
 
 			// Auto-sync time on startup if enabled
 			// TODO: Implement time sync via Node.js if needed
@@ -297,6 +294,7 @@ ApplicationWindow {
 			onTimeSettingsRequested: window.goPage(settingsSystemTimePageComponent)
 			onSoundSettingsRequested: window.goPage(settingsSystemSoundPageComponent)
 			onDisplaySettingsRequested: window.goPage(settingsSystemDisplayPageComponent)
+			onUpdateSettingsRequested: window.goPage(settingsSystemUpdatePageComponent)
 		}
 	}
 
@@ -447,6 +445,12 @@ ApplicationWindow {
 				window.goBackMultiple(2);
 			}
 		}
+	}
+
+	// System update page
+	Component {
+		id: settingsSystemUpdatePageComponent
+		SettingsSystemUpdate {}
 	}
 
 	// Power off page
