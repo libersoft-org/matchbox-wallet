@@ -99,7 +99,9 @@
 				"sound": {
 					"button": "Sound",
 					"title": "Sound settings",
-					"volume": "Volume"
+					"volume": "Volume",
+					"mute": "Mute",
+					"unmute": "Unmute"
 				}
 			}
 		},

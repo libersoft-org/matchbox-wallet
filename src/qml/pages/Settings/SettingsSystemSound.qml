@@ -14,6 +14,8 @@ BaseMenu {
 	property bool updatingFromSystem: false  // Guard flag
 	property string errorMessage: ""
 	property bool hasError: false
+	property bool isMuted: false
+	property int volumeBeforeMute: 0
 
 	signal volumeChanged(int volume)
 
@@ -30,12 +32,26 @@ BaseMenu {
 				console.log("Setting volume to:", actualVolume);
 				root.updatingFromSystem = true;
 				root.soundVolume = actualVolume;
+				
+				// If volume is 0, consider it as muted (but don't set volumeBeforeMute)
+				if (actualVolume === 0) {
+					root.isMuted = true;
+					// Set a default previous volume if none exists
+					if (root.volumeBeforeMute === 0) {
+						root.volumeBeforeMute = 50;
+					}
+				} else {
+					root.isMuted = false;
+				}
+				
 				root.volumeLoaded = true;
 				root.updatingFromSystem = false;
 			} else {
 				console.log("Volume load failed, using default 0");
 				root.updatingFromSystem = true;
 				root.soundVolume = 0;
+				root.isMuted = true;
+				root.volumeBeforeMute = 50; // Default volume when unmuting
 				root.volumeLoaded = true;
 				root.updatingFromSystem = false;
 			}
@@ -59,6 +75,21 @@ BaseMenu {
 		});
 	}
 
+	function toggleMute() {
+		if (root.isMuted) {
+			// Unmute - restore previous volume
+			root.isMuted = false;
+			root.soundVolume = root.volumeBeforeMute;
+			root.saveVolume(root.volumeBeforeMute);
+		} else {
+			// Mute - save current volume and set to 0
+			root.volumeBeforeMute = root.soundVolume;
+			root.isMuted = true;
+			root.soundVolume = 0;
+			root.saveVolume(0);
+		}
+	}
+
 	Column {
 		width: parent.width
 		spacing: root.height * 0.05
@@ -71,6 +102,20 @@ BaseMenu {
 			horizontalAlignment: Text.AlignHCenter
 		}
 
+		MenuButton {
+			id: muteButton
+			anchors.horizontalCenter: parent.horizontalCenter
+			width: parent.width * 0.6
+			height: root.height * 0.08
+			text: root.isMuted ? tr("menu.settings.system.sound.unmute") : tr("menu.settings.system.sound.mute")
+			enabled: root.volumeLoaded
+			opacity: root.volumeLoaded ? 1.0 : 0.5
+
+			onClicked: {
+				root.toggleMute();
+			}
+		}
+
 		Range {
 			id: volumeRange
 			anchors.horizontalCenter: parent.horizontalCenter
@@ -81,11 +126,11 @@ BaseMenu {
 			stepSize: 1
 			value: root.soundVolume  // Direct binding to soundVolume
 			suffix: "%"
-			enabled: root.volumeLoaded
-			opacity: root.volumeLoaded ? 1.0 : 0.5
+			enabled: root.volumeLoaded && !root.isMuted
+			opacity: (root.volumeLoaded && !root.isMuted) ? 1.0 : 0.5
 
 			onRangeValueChanged: function (newValue) {
-				if (root.volumeLoaded && !root.updatingFromSystem) {
+				if (root.volumeLoaded && !root.updatingFromSystem && !root.isMuted) {
 					root.soundVolume = newValue;
 					root.volumeChanged(newValue);
 					root.saveVolume(newValue);

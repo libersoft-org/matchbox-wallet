@@ -99,7 +99,9 @@
 				"sound": {
 					"button": "Zvuk",
 					"title": "Nastavení zvuku",
-					"volume": "Hlasitost"
+					"volume": "Hlasitost",
+					"mute": "Ztlumit",
+					"unmute": "Zrušit ztlumení"
 				}
 			}
 		},
