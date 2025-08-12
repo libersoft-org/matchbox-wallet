@@ -7,92 +7,92 @@ import "../../utils/NodeUtils.js" as NodeUtils
 Rectangle {
 	id: root
 	color: colors.primaryBackground
-	property string title: tr("menu.settings.system.wifi.title")
+	property string title: tr('menu.settings.system.wifi.title')
 	signal wifiListRequested
 	signal wifiDisconnected
 	property var networks: []
 	property bool isScanning: false
 	property var currentConnection: null
 	property bool isConnected: currentConnection && currentConnection.connected
-	property string connectedSSID: (currentConnection && currentConnection.connected) ? (currentConnection.ssid || "") : ""
+	property string connectedSSID: (currentConnection && currentConnection.connected) ? (currentConnection.ssid || '') : ''
 	property int connectionStrength: (currentConnection && currentConnection.connected) ? (currentConnection.strength || 0) : 0
 
 	// Debug properties - add watchers
-	onIsConnectedChanged: console.log("DEBUG: isConnected changed to:", isConnected)
-	onConnectedSSIDChanged: console.log("DEBUG: connectedSSID changed to:", connectedSSID)
-	onCurrentConnectionChanged: console.log("DEBUG: currentConnection changed to:", JSON.stringify(currentConnection))
+	onIsConnectedChanged: console.log('DEBUG: isConnected changed to:', isConnected)
+	onConnectedSSIDChanged: console.log('DEBUG: connectedSSID changed to:', connectedSSID)
+	onCurrentConnectionChanged: console.log('DEBUG: currentConnection changed to:', JSON.stringify(currentConnection))
 
 	// Functions for WiFi management
 	function scanNetworks() {
 		isScanning = true;
-		NodeUtils.msg("wifiScanNetworks", {}, function (response) {
+		NodeUtils.msg('wifiScanNetworks', {}, function (response) {
 			isScanning = false;
 			if (response.status === 'success') {
 				networks = response.data.networks || [];
 				updateCurrentConnection();
 			} else
-				console.log("WiFi scan failed:", response.message);
+				console.log('WiFi scan failed:', response.message);
 		});
 	}
 
 	function updateCurrentConnection() {
-		console.log("Updating current connection status...");
-		NodeUtils.msg("wifiGetConnectionStatus", {}, function (response) {
-			console.log("WiFi connection status response:", JSON.stringify(response));
+		console.log('Updating current connection status...');
+		NodeUtils.msg('wifiGetConnectionStatus', {}, function (response) {
+			console.log('WiFi connection status response:', JSON.stringify(response));
 			if (response.status === 'success') {
 				var oldConnection = currentConnection;
 				currentConnection = response.data;
-				console.log("Updated currentConnection:", JSON.stringify(currentConnection));
+				console.log('Updated currentConnection:', JSON.stringify(currentConnection));
 				// Emit property change - force update derived properties
 				if (!oldConnection || oldConnection.connected !== currentConnection.connected || oldConnection.ssid !== currentConnection.ssid || oldConnection.strength !== currentConnection.strength) {
-					console.log("Connection state changed - forcing UI update");
+					console.log('Connection state changed - forcing UI update');
 					// Trigger property change notifications
 					isConnectedChanged();
 					connectedSSIDChanged();
 					connectionStrengthChanged();
 				}
 			} else {
-				console.log("Failed to get connection status:", response.message);
+				console.log('Failed to get connection status:', response.message);
 			}
 		});
 	}
 
 	function connectToNetwork(ssid, password) {
-		console.log("Connecting to network:", ssid);
-		NodeUtils.msg("wifiConnectToNetwork", {
+		console.log('Connecting to network:', ssid);
+		NodeUtils.msg('wifiConnectToNetwork', {
 			ssid: ssid,
 			password: password
 		}, function (response) {
-			console.log("wifiConnectToNetwork response:", JSON.stringify(response));
+			console.log('wifiConnectToNetwork response:', JSON.stringify(response));
 			if (response.status === 'success') {
-				console.log("WiFi connected successfully to", ssid);
+				console.log('WiFi connected successfully to', ssid);
 				// Immediately update connection status
 				updateCurrentConnection();
 			} else {
-				console.log("Failed to connect to WiFi:", response.message);
+				console.log('Failed to connect to WiFi:', response.message);
 			}
 		});
 	}
 
 	function disconnectFromWifi() {
-		console.log("disconnectFromWifi() called");
-		NodeUtils.msg("wifiDisconnect", {}, function (response) {
-			console.log("wifiDisconnect response:", JSON.stringify(response));
+		console.log('disconnectFromWifi() called');
+		NodeUtils.msg('wifiDisconnect', {}, function (response) {
+			console.log('wifiDisconnect response:', JSON.stringify(response));
 			if (response.status === 'success') {
-				console.log("WiFi disconnected successfully");
+				console.log('WiFi disconnected successfully');
 				// Immediately update connection status
 				updateCurrentConnection();
 				// Emit signal for main window
 				root.wifiDisconnected();
 			} else {
-				console.log("Failed to disconnect WiFi:", response.message);
+				console.log('Failed to disconnect WiFi:', response.message);
 			}
 		});
 	}
 
 	// Scan on component load
 	Component.onCompleted: {
-		console.log("SettingsSystemWiFi component loaded");
+		console.log('SettingsSystemWiFi component loaded');
 		updateCurrentConnection(); // Immediate update of connection status
 		scanNetworks();
 	}
@@ -100,7 +100,7 @@ Rectangle {
 	// Update when visibility changes
 	onVisibleChanged: {
 		if (visible) {
-			console.log("WiFi settings page became visible - updating connection status");
+			console.log('WiFi settings page became visible - updating connection status');
 			updateCurrentConnection();
 		}
 	}
@@ -114,8 +114,8 @@ Rectangle {
 			id: statusText
 			text: {
 				if (root.isConnected)
-					return tr("menu.settings.system.wifi.connected") + ':';
-				return tr("menu.settings.system.wifi.disconnected");
+					return tr('menu.settings.system.wifi.connected') + ':';
+				return tr('menu.settings.system.wifi.disconnected');
 			}
 			font.pixelSize: window.height * 0.05
 			color: root.isConnected ? colors.success : colors.error
@@ -133,7 +133,7 @@ Rectangle {
 			horizontalAlignment: Text.AlignHCenter
 			wrapMode: Text.WordWrap
 			color: colors.primaryForeground
-			visible: root.isConnected && root.connectedSSID !== ""
+			visible: root.isConnected && root.connectedSSID !== ''
 		}
 
 		// Signal strength for connected network
@@ -146,17 +146,17 @@ Rectangle {
 		// Change button
 		MenuButton {
 			id: changeMenuButton
-			text: tr("menu.settings.system.wifi.change")
+			text: tr('menu.settings.system.wifi.change')
 			onClicked: root.wifiListRequested()
 		}
 
 		// Disconnect button
 		MenuButton {
 			id: disconnectMenuButton
-			text: tr("menu.settings.system.wifi.disconnect")
+			text: tr('menu.settings.system.wifi.disconnect')
 			visible: root.isConnected
 			onClicked: {
-				console.log("Disconnect button clicked");
+				console.log('Disconnect button clicked');
 				root.disconnectFromWifi();
 			}
 		}
@@ -166,11 +166,11 @@ Rectangle {
 	Connections {
 		target: window
 		function onWifiConnectionChanged() {
-			console.log("WiFi connection changed - updating status");
+			console.log('WiFi connection changed - updating status');
 			updateCurrentConnection();
 		}
 		function onWifiStatusUpdated() {
-			console.log("WiFi status updated - refreshing connection info");
+			console.log('WiFi status updated - refreshing connection info');
 			updateCurrentConnection();
 		}
 	}

@@ -9,6 +9,7 @@ BaseMenu {
 	signal wifiSettingsRequested
 	signal languageSelectionRequested
 	signal timeSettingsRequested
+	signal soundSettingsRequested
 
 	property string selectedLanguage: "en"
 
@@ -36,6 +37,11 @@ BaseMenu {
 	MenuButton {
 		text: tr("menu.settings.system.time.button")
 		onClicked: root.timeSettingsRequested()
+	}
+
+	MenuButton {
+		text: tr("menu.settings.system.sound.button")
+		onClicked: root.soundSettingsRequested()
 	}
 
 	MenuButton {

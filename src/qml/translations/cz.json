@@ -95,6 +95,11 @@
 				"lora": {
 					"button": "LoRa",
 					"title": "LoRa nastavení"
+				},
+				"sound": {
+					"button": "Zvuk",
+					"title": "Nastavení zvuku",
+					"volume": "Hlasitost"
 				}
 			}
 		},

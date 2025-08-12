@@ -282,6 +282,7 @@ ApplicationWindow {
 			onWifiSettingsRequested: window.goPage(wifiSettingsPageComponent, "wifi-settings")
 			onLanguageSelectionRequested: window.goPage(settingsSystemLanguagePageComponent)
 			onTimeSettingsRequested: window.goPage(settingsSystemTimePageComponent)
+			onSoundSettingsRequested: window.goPage(settingsSystemSoundPageComponent)
 		}
 	}
 
@@ -347,6 +348,17 @@ ApplicationWindow {
 				window.goBack();
 			}
 			onTimezoneSettingsRequested: window.goPage(settingsSystemTimeZonesPageComponent)
+		}
+	}
+
+	// System sound settings page
+	Component {
+		id: settingsSystemSoundPageComponent
+		SettingsSystemSound {
+			onVolumeChanged: function (volume) {
+				console.log("Volume changed to:", volume);
+				// TODO: Implement actual system volume setting
+			}
 		}
 	}
 
@@ -423,36 +435,4 @@ ApplicationWindow {
 		id: cameraPreviewPageComponent
 		CameraPreview {}
 	}
-
-	// Timer for delayed ping
-	/*
-	Timer {
-		id: pingTimer
-		interval: 300
-		running: true
-		repeat: false
-		onTriggered: {
-			console.log("delayed pinging server...");
-			Node.msg("testDelayedPing", {}, function (result) {
-				console.log("testDelayedPing result:", JSON.stringify(result));
-			});
-		}
-	}
-	*/
-
-	// Timer for delayed block fetch
-	/*
-	Timer {
-		id: blockTimer
-		interval: 2000
-		running: true
-		repeat: false
-		onTriggered: {
-			console.log("Fetching latest block...");
-			Node.msg("getLatestBlock", {}, function (result) {
-				console.log("Latest block result:", JSON.stringify(result));
-			});
-		}
-	}
-	*/
 }
