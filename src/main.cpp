@@ -49,6 +49,9 @@ int main(int argc, char *argv[]) {
  // Allow QML XMLHttpRequest to read from file:// for translations
  qputenv("QML_XHR_ALLOW_FILE_READ", "1");
 
+ // Enable Qt Virtual Keyboard
+ qputenv("QT_IM_MODULE", "qtvirtualkeyboard");
+
  QGuiApplication app(argc, argv);
  app.setApplicationName("Matchbox Wallet");
  app.setApplicationVersion("0.0.1");

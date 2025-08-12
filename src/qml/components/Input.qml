@@ -22,7 +22,7 @@ Item {
 	property bool inputAutoFocus: false
 
 	// Input method hints for different input types
-	property int inputMethodHints: Qt.ImhNone
+	property int inputMethodHints: Qt.ImhPreferLowercase
 	property string inputType: "text" // "text", "password", "number", "email", "multiline"
 	property bool inputMultiline: false
 
@@ -71,6 +71,7 @@ Item {
 		placeholderText: root.inputPlaceholder
 		color: root.inputTextColor
 		background: Item {} // No background - using parent's
+		activeFocusOnPress: true
 
 		Keys.onReturnPressed: {
 			root.inputReturnPressed();
@@ -92,6 +93,7 @@ Item {
 			color: root.inputTextColor
 			wrapMode: TextArea.Wrap
 			background: Item {} // No background - using parent's
+			activeFocusOnPress: true
 
 			Keys.onReturnPressed: function (event) {
 				if (event.modifiers & Qt.ControlModifier) {
@@ -123,21 +125,27 @@ Item {
 		case "number":
 			if (!inputMultiline) {
 				textField.inputMethodHints = Qt.ImhDigitsOnly;
+			} else {
+				textArea.inputMethodHints = Qt.ImhDigitsOnly;
 			}
 			break;
 		case "email":
 			if (!inputMultiline) {
 				textField.inputMethodHints = Qt.ImhEmailCharactersOnly;
+			} else {
+				textArea.inputMethodHints = Qt.ImhEmailCharactersOnly;
 			}
 			break;
 		case "multiline":
 			inputMultiline = true;
-			textArea.inputMethodHints = Qt.ImhMultiLine;
+			textArea.inputMethodHints = Qt.ImhMultiLine | Qt.ImhPreferLowercase;
 			break;
 		default:
 			if (!inputMultiline) {
 				textField.echoMode = root.inputEchoMode;
-				textField.inputMethodHints = root.inputMethodHints;
+				textField.inputMethodHints = Qt.ImhPreferLowercase;
+			} else {
+				textArea.inputMethodHints = Qt.ImhPreferLowercase;
 			}
 		}
 
