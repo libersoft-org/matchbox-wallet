@@ -14,6 +14,7 @@ const HANDLERS = {
 	systemCheckBatteryStatus: () => systemManager.checkBatteryStatus(),
 	systemReboot: () => systemManager.reboot(),
 	systemShutdown: () => systemManager.shutdown(),
+	systemListTimeZones: () => systemManager.listTimeZones(),
 	wifiScanNetworks: (params) => wifiManager.scanNetworks(params),
 	wifiGetNetworks: () => wifiManager.getNetworks(),
 	wifiConnectToNetwork: (params) => wifiManager.connectToNetwork(params),

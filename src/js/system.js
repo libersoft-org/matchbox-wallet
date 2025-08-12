@@ -149,6 +149,57 @@ class SystemManager {
 			};
 		}
 	}
+
+	async listTimeZones() {
+		try {
+			console.log('Listing available time zones from system');
+			const systemTimezones = await this.loadSystemTimeZones();
+			if (systemTimezones && systemTimezones.length > 0) {
+				console.log(`Loaded ${systemTimezones.length} time zones from system`);
+				return {
+					status: 'success',
+					data: systemTimezones,
+				};
+			}
+			console.log('System timezone loading failed, no timezones available');
+			return {
+				status: 'error',
+				message: 'Unable to load system timezones',
+				data: [],
+			};
+		} catch (error) {
+			console.error('Error listing time zones:', error);
+			return {
+				status: 'error',
+				message: error.message,
+				data: [],
+			};
+		}
+	}
+
+	async loadSystemTimeZones() {
+		try {
+			const { exec } = require('child_process');
+			const { promisify } = require('util');
+			const execAsync = promisify(exec);
+			console.log('Loading timezones using timedatectl only');
+			const { stdout } = await execAsync('timedatectl list-timezones 2>/dev/null');
+			if (stdout && stdout.trim()) {
+				const timezones = stdout
+					.trim()
+					.split('\n')
+					.filter((tz) => tz.trim().length > 0);
+				if (timezones.length > 0) {
+					console.log(`Found ${timezones.length} timezones via timedatectl`);
+					return timezones.sort();
+				}
+			}
+			throw new Error('timedatectl returned no timezones');
+		} catch (error) {
+			console.error('Error loading timezones via timedatectl:', error.message);
+			return null;
+		}
+	}
 }
 
 module.exports = SystemManager;
