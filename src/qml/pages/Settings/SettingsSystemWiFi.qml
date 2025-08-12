@@ -46,8 +46,7 @@ Rectangle {
 				var oldConnection = currentConnection;
 				currentConnection = response.data;
 				console.log("Updated currentConnection:", JSON.stringify(currentConnection));
-
-				// Explicitně emitujeme změnu property - force update derived properties
+				// Emit property change - force update derived properties
 				if (!oldConnection || oldConnection.connected !== currentConnection.connected || oldConnection.ssid !== currentConnection.ssid || oldConnection.strength !== currentConnection.strength) {
 					console.log("Connection state changed - forcing UI update");
 					// Trigger property change notifications
@@ -97,11 +96,11 @@ Rectangle {
 	// Scan on component load
 	Component.onCompleted: {
 		console.log("SettingsSystemWiFi component loaded");
-		updateCurrentConnection(); // Okamžitá aktualizace stavu připojení
+		updateCurrentConnection(); // Immediate update of connection status
 		scanNetworks();
 	}
 
-	// Aktualizace při změně viditelnosti stránky
+	// Update when visibility changes
 	onVisibleChanged: {
 		if (visible) {
 			console.log("WiFi settings page became visible - updating connection status");
