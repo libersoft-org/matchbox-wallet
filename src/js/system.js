@@ -80,14 +80,14 @@ class SystemManager {
 			let lastError = null;
 			for (const cmd of rebootCommands) {
 				try {
-					console.log(`Trying reboot command: ${cmd}`);
+					console.log('Trying reboot command: ' + cmd);
 					await execAsync(cmd);
 					return {
 						status: 'success',
-						message: `System reboot initiated with: ${cmd}`,
+						message: 'System reboot initiated with: ' + cmd,
 					};
 				} catch (error) {
-					console.log(`Reboot command failed: ${cmd} - ${error.message}`);
+					console.log('Reboot command failed: ' + cmd + ' - ' + error.message);
 					lastError = error;
 					continue;
 				}
@@ -98,7 +98,7 @@ class SystemManager {
 			console.error('Reboot failed:', error);
 			return {
 				status: 'error',
-				message: `Failed to reboot system: ${error.message}`,
+				message: 'Failed to reboot system: ' + error.message,
 			};
 		}
 	}
@@ -127,14 +127,14 @@ class SystemManager {
 			let lastError = null;
 			for (const cmd of shutdownCommands) {
 				try {
-					console.log(`Trying shutdown command: ${cmd}`);
+					console.log('Trying shutdown command: ' + cmd);
 					await execAsync(cmd);
 					return {
 						status: 'success',
-						message: `System shutdown initiated with: ${cmd}`,
+						message: 'System shutdown initiated with: ' + cmd,
 					};
 				} catch (error) {
-					console.log(`Shutdown command failed: ${cmd} - ${error.message}`);
+					console.log('Shutdown command failed: ' + cmd + ' - ' + error.message);
 					lastError = error;
 					continue;
 				}
@@ -145,7 +145,7 @@ class SystemManager {
 			console.error('Shutdown failed:', error);
 			return {
 				status: 'error',
-				message: `Failed to shutdown system: ${error.message}`,
+				message: 'Failed to shutdown system: ' + error.message,
 			};
 		}
 	}
@@ -155,7 +155,7 @@ class SystemManager {
 			console.log('Listing available time zones from system');
 			const systemTimezones = await this.loadSystemTimeZones();
 			if (systemTimezones && systemTimezones.length > 0) {
-				console.log(`Loaded ${systemTimezones.length} time zones from system`);
+				console.log('Loaded ' + systemTimezones.length + ' time zones from system');
 				return {
 					status: 'success',
 					data: systemTimezones,
@@ -190,7 +190,7 @@ class SystemManager {
 					.split('\n')
 					.filter((tz) => tz.trim().length > 0);
 				if (timezones.length > 0) {
-					console.log(`Found ${timezones.length} timezones via timedatectl`);
+					console.log('Found ' + timezones.length + ' timezones via timedatectl');
 					return timezones.sort();
 				}
 			}
@@ -214,16 +214,16 @@ class SystemManager {
 
 			// Try multiple timezone change methods in order of preference
 			const timezoneCommands = [
-				`timedatectl set-timezone ${params.timezone}`, // systemd timedatectl (preferred)
-				`sudo timedatectl set-timezone ${params.timezone}`, // with sudo
-				`ln -sf /usr/share/zoneinfo/${params.timezone} /etc/localtime`, // direct symlink
-				`sudo ln -sf /usr/share/zoneinfo/${params.timezone} /etc/localtime`, // with sudo
+				'timedatectl set-timezone ' + params.timezone, // systemd timedatectl (preferred)
+				'sudo timedatectl set-timezone ' + params.timezone, // with sudo
+				'ln -sf /usr/share/zoneinfo/' + params.timezone + ' /etc/localtime', // direct symlink
+				'sudo ln -sf /usr/share/zoneinfo/' + params.timezone + ' /etc/localtime', // with sudo
 			];
 
 			let lastError = null;
 			for (const cmd of timezoneCommands) {
 				try {
-					console.log(`Trying timezone command: ${cmd}`);
+					console.log('Trying timezone command: ' + cmd);
 					await execAsync(cmd);
 
 					// Verify the change worked
@@ -231,19 +231,19 @@ class SystemManager {
 					const currentTimezone = stdout.trim();
 
 					if (currentTimezone === params.timezone) {
-						console.log(`Successfully changed timezone to: ${currentTimezone}`);
+						console.log('Successfully changed timezone to: ' + currentTimezone);
 						return {
 							status: 'success',
-							message: `Timezone changed to ${params.timezone}`,
+							message: 'Timezone changed to ' + params.timezone,
 							data: {
 								timezone: currentTimezone,
 							},
 						};
 					} else {
-						console.log(`Timezone change verification failed. Expected: ${params.timezone}, Got: ${currentTimezone}`);
+						console.log('Timezone change verification failed. Expected: ' + params.timezone + ', Got: ' + currentTimezone);
 					}
 				} catch (error) {
-					console.log(`Timezone command failed: ${cmd} - ${error.message}`);
+					console.log('Timezone command failed: ' + cmd + ' - ' + error.message);
 					lastError = error;
 					continue;
 				}
@@ -254,7 +254,7 @@ class SystemManager {
 			console.error('Timezone change failed:', error);
 			return {
 				status: 'error',
-				message: `Failed to change timezone: ${error.message}`,
+				message: 'Failed to change timezone: ' + error.message,
 			};
 		}
 	}
@@ -277,7 +277,7 @@ class SystemManager {
 
 			for (const cmd of timeSyncCommands) {
 				try {
-					console.log(`Trying time sync command: ${cmd}`);
+					console.log('Trying time sync command: ' + cmd);
 					const result = await execAsync(cmd);
 					// If command succeeded, verify time sync status
 					try {
@@ -285,7 +285,7 @@ class SystemManager {
 						console.log('Time sync status:', stdout);
 						syncResult = {
 							status: 'success',
-							message: `Time synchronization initiated with: ${cmd}`,
+							message: 'Time synchronization initiated with: ' + cmd,
 							data: {
 								command: cmd,
 								output: result.stdout,
@@ -297,7 +297,7 @@ class SystemManager {
 						console.log('Could not verify time status:', statusError.message);
 						syncResult = {
 							status: 'success',
-							message: `Time synchronization initiated with: ${cmd}`,
+							message: 'Time synchronization initiated with: ' + cmd,
 							data: {
 								command: cmd,
 								output: result.stdout,
@@ -306,7 +306,7 @@ class SystemManager {
 						break;
 					}
 				} catch (error) {
-					console.log(`Time sync command failed: ${cmd} - ${error.message}`);
+					console.log('Time sync command failed: ' + cmd + ' - ' + error.message);
 					lastError = error;
 					continue;
 				}
@@ -322,7 +322,7 @@ class SystemManager {
 			console.error('Time sync failed:', error);
 			return {
 				status: 'error',
-				message: `Failed to sync system time: ${error.message}`,
+				message: 'Failed to sync system time: ' + error.message,
 			};
 		}
 	}
@@ -336,10 +336,10 @@ class SystemManager {
 			const ntpCommand = enabled ? 'timedatectl set-ntp true' : 'timedatectl set-ntp false';
 			const sudoNtpCommand = enabled ? 'sudo timedatectl set-ntp true' : 'sudo timedatectl set-ntp false';
 			try {
-				console.log(`Trying command: ${ntpCommand}`);
+				console.log('Trying command: ' + ntpCommand);
 				await execAsync(ntpCommand);
 			} catch (error) {
-				console.log(`Command failed, trying with sudo: ${sudoNtpCommand}`);
+				console.log('Command failed, trying with sudo: ' + sudoNtpCommand);
 				await execAsync(sudoNtpCommand);
 			}
 			// Verify the change
@@ -347,7 +347,7 @@ class SystemManager {
 			const ntpEnabled = stdout.includes('NTP enabled: yes') || stdout.includes('Network time on: yes');
 			return {
 				status: 'success',
-				message: `Auto time sync ${enabled ? 'enabled' : 'disabled'}`,
+				message: 'Auto time sync ' + (enabled ? 'enabled' : 'disabled'),
 				data: {
 					autoSync: ntpEnabled,
 					timeStatus: stdout,
@@ -357,7 +357,7 @@ class SystemManager {
 			console.error('Auto time sync setting failed:', error);
 			return {
 				status: 'error',
-				message: `Failed to set auto time sync: ${error.message}`,
+				message: 'Failed to set auto time sync: ' + error.message,
 			};
 		}
 	}

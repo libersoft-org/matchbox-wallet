@@ -30,9 +30,8 @@ Rectangle {
 			if (response.status === 'success') {
 				networks = response.data.networks || [];
 				updateCurrentConnection();
-			} else {
+			} else
 				console.log("WiFi scan failed:", response.message);
-			}
 		});
 	}
 
