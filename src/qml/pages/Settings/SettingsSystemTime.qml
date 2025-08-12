@@ -2,6 +2,7 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 import "../../components"
+import "../../utils/NodeUtils.js" as NodeUtils
 
 BaseMenu {
 	id: root
@@ -95,8 +96,14 @@ BaseMenu {
 						onToggled: {
 							if (window.settingsManager)
 								window.settingsManager.saveAutoTimeSync(checked);
-							if (SystemManager && SystemManager.setAutoTimeSync)
-								SystemManager.setAutoTimeSync(checked);
+							
+							// Call Node.js backend to set auto time sync
+							NodeUtils.msg("systemSetAutoTimeSync", { enabled: checked }, function(result) {
+								console.log("Auto time sync result:", JSON.stringify(result));
+								if (result.status !== "success") {
+									console.error("Failed to set auto time sync:", result.message);
+								}
+							});
 						}
 					}
 				}
@@ -113,10 +120,17 @@ BaseMenu {
 		text: tr("menu.settings.system.time.sync")
 		onClicked: {
 			console.log("Syncing time with internet");
-			if (SystemManager && SystemManager.syncSystemTime) {
-				SystemManager.syncSystemTime();
-			}
-			root.timeChanged(Qt.formatTime(new Date(), "hh:mm:ss"));
+			NodeUtils.msg("systemSyncTime", {}, function(result) {
+				console.log("Time sync result:", JSON.stringify(result));
+				if (result.status === "success") {
+					console.log("Time synchronization successful");
+					// Update the displayed time
+					root.currentTime = new Date();
+					root.timeChanged(Qt.formatTime(new Date(), "hh:mm:ss"));
+				} else {
+					console.error("Time sync failed:", result.message);
+				}
+			});
 		}
 	}
 }

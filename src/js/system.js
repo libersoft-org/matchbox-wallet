@@ -258,6 +258,121 @@ class SystemManager {
 			};
 		}
 	}
+
+	async syncSystemTime() {
+		try {
+			console.log('Syncing system time with internet');
+			const { exec } = require('child_process');
+			const { promisify } = require('util');
+			const execAsync = promisify(exec);
+
+			// Try multiple time sync methods in order of preference
+			const timeSyncCommands = [
+				'timedatectl set-ntp true', // Enable NTP via systemd
+				'sudo timedatectl set-ntp true', // With sudo
+				'ntpdate -s time.nist.gov', // Manual sync with NIST
+				'sudo ntpdate -s time.nist.gov', // With sudo
+				'chrony sources', // Check chrony status
+				'sudo chrony sources', // With sudo
+				'systemctl restart systemd-timesyncd', // Restart timesyncd
+				'sudo systemctl restart systemd-timesyncd', // With sudo
+			];
+
+			let lastError = null;
+			let syncResult = null;
+
+			for (const cmd of timeSyncCommands) {
+				try {
+					console.log(`Trying time sync command: ${cmd}`);
+					const result = await execAsync(cmd);
+					
+					// If command succeeded, verify time sync status
+					try {
+						const { stdout } = await execAsync('timedatectl status');
+						console.log('Time sync status:', stdout);
+						
+						syncResult = {
+							status: 'success',
+							message: `Time synchronization initiated with: ${cmd}`,
+							data: {
+								command: cmd,
+								output: result.stdout,
+								timeStatus: stdout
+							},
+						};
+						break;
+					} catch (statusError) {
+						console.log('Could not verify time status:', statusError.message);
+						syncResult = {
+							status: 'success',
+							message: `Time synchronization initiated with: ${cmd}`,
+							data: {
+								command: cmd,
+								output: result.stdout
+							},
+						};
+						break;
+					}
+				} catch (error) {
+					console.log(`Time sync command failed: ${cmd} - ${error.message}`);
+					lastError = error;
+					continue;
+				}
+			}
+
+			if (syncResult) {
+				console.log('Time synchronization completed successfully');
+				return syncResult;
+			}
+
+			throw lastError || new Error('All time sync methods failed');
+		} catch (error) {
+			console.error('Time sync failed:', error);
+			return {
+				status: 'error',
+				message: `Failed to sync system time: ${error.message}`,
+			};
+		}
+	}
+
+	async setAutoTimeSync(enabled) {
+		try {
+			console.log('Setting auto time sync to:', enabled);
+			const { exec } = require('child_process');
+			const { promisify } = require('util');
+			const execAsync = promisify(exec);
+
+			const ntpCommand = enabled ? 'timedatectl set-ntp true' : 'timedatectl set-ntp false';
+			const sudoNtpCommand = enabled ? 'sudo timedatectl set-ntp true' : 'sudo timedatectl set-ntp false';
+
+			try {
+				console.log(`Trying command: ${ntpCommand}`);
+				await execAsync(ntpCommand);
+			} catch (error) {
+				console.log(`Command failed, trying with sudo: ${sudoNtpCommand}`);
+				await execAsync(sudoNtpCommand);
+			}
+
+			// Verify the change
+			const { stdout } = await execAsync('timedatectl status');
+			const ntpEnabled = stdout.includes('NTP enabled: yes') || stdout.includes('Network time on: yes');
+			
+			return {
+				status: 'success',
+				message: `Auto time sync ${enabled ? 'enabled' : 'disabled'}`,
+				data: {
+					autoSync: ntpEnabled,
+					timeStatus: stdout
+				},
+			};
+		} catch (error) {
+			console.error('Auto time sync setting failed:', error);
+			return {
+				status: 'error',
+				message: `Failed to set auto time sync: ${error.message}`,
+			};
+		}
+	}
 }
 
 module.exports = SystemManager;
