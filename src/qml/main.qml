@@ -48,6 +48,7 @@ ApplicationWindow {
 	}
 
 	// Create instances of our "singleton" objects
+	property var colors: colors
 	property var settingsManager: settingsManagerObj
 	property var translationManager: translationManagerObj
 	property var batteryManager: batteryManagerObj
@@ -55,6 +56,10 @@ ApplicationWindow {
 	// Global properties for timezone navigation
 	property var globalTimezones: []
 	property string globalSelectedContinent: ""
+
+	Colors {
+		id: colors
+	}
 
 	SettingsManager {
 		id: settingsManagerObj
