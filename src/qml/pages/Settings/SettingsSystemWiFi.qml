@@ -67,7 +67,7 @@ Rectangle {
 			console.log("wifiConnectToNetwork response:", JSON.stringify(response));
 			if (response.status === 'success') {
 				console.log("WiFi connected successfully to", ssid);
-				// Okamžitě aktualizovat stav připojení
+				// Immediately update connection status
 				updateCurrentConnection();
 			} else {
 				console.log("Failed to connect to WiFi:", response.message);
@@ -81,9 +81,9 @@ Rectangle {
 			console.log("wifiDisconnect response:", JSON.stringify(response));
 			if (response.status === 'success') {
 				console.log("WiFi disconnected successfully");
-				// Okamžitě aktualizovat stav připojení
+				// Immediately update connection status
 				updateCurrentConnection();
-				// Emitovat signál pro hlavní okno
+				// Emit signal for main window
 				root.wifiDisconnected();
 			} else {
 				console.log("Failed to disconnect WiFi:", response.message);
