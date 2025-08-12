@@ -11,7 +11,7 @@ Item {
 	// Background
 	Rectangle {
 		anchors.fill: parent
-		color: colorsObj.primaryBackground
+		color: colors.primaryBackground
 	}
 
 	// Center content container
@@ -86,17 +86,12 @@ Item {
 		Text {
 			id: titleText
 			text: "Matchbox Wallet"
-			color: colorsObj.primaryForeground
+			color: colors.primaryForeground
 			font.pixelSize: window.width * 0.05
 			font.weight: Font.Bold
 			anchors.horizontalCenter: parent.horizontalCenter
 			anchors.top: logoContainer.bottom
 			anchors.topMargin: 20
 		}
-	}
-
-	// Colors object reference
-	Colors {
-		id: colorsObj
 	}
 }
