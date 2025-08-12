@@ -10,8 +10,6 @@ Rectangle {
 	property string title: tr("menu.settings.system.wifi.title")
 	signal wifiListRequested
 	signal wifiDisconnected
-
-	// WiFi state
 	property var networks: []
 	property bool isScanning: false
 	property var currentConnection: null
