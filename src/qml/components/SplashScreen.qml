@@ -72,7 +72,7 @@ Item {
 				source: "../../img/logo.svg"
 				width: window.width * 0.5
 				height: window.width * 0.5
-				sourceSize.width: window.width // Very high resolution for scaling
+				sourceSize.width: window.width // Highier resolution for scaling
 				sourceSize.height: window.width
 				fillMode: Image.PreserveAspectFit
 				smooth: true
