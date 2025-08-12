@@ -367,8 +367,8 @@ ApplicationWindow {
 		repeat: false
 		onTriggered: {
 			console.log("delayed pinging server...");
-			Node.msg("commonDelayedPing", {}, function (result) {
-				console.log("commonDelayedPing result:", JSON.stringify(result));
+			Node.msg("testDelayedPing", {}, function (result) {
+				console.log("testDelayedPing result:", JSON.stringify(result));
 			});
 		}
 	}

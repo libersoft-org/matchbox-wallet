@@ -33,7 +33,7 @@ BaseMenu {
 	MenuButton {
 		text: "Test ping"
 		onClicked: {
-			Node.msg("commonPing", {}, function (result) {
+			Node.msg("testPing", {}, function (result) {
 				console.log("Ping result:", JSON.stringify(result));
 			});
 		}
@@ -43,7 +43,7 @@ BaseMenu {
 		text: "Delayed ping (2s)"
 		onClicked: {
 			console.log("Starting delayed ping...");
-			Node.msg("commonDelayedPing", {
+			Node.msg("testDelayedPing", {
 				"delay": 2000
 			}, function (result) {
 				console.log("Delayed ping result:", JSON.stringify(result));

@@ -1,18 +1,20 @@
 const CryptoManager = require('./crypto.js');
 const WifiManager = require('./wifi.js');
 const SystemManager = require('./system.js');
+const TestManager = require('./test.js');
 
 // Initialize managers
 const cryptoManager = new CryptoManager();
 const wifiManager = new WifiManager();
 const systemManager = new SystemManager();
+const testManager = new TestManager();
 
 console.log('Matchbox Wallet JavaScript runtime initialized');
 
 // Action map and message dispatcher placed first for quick overview
 const HANDLERS = {
-	commonPing,
-	commonDelayedPing,
+	testPing,
+	testDelayedPing,
 	systemGetBatteryInfo,
 	systemCheckBatteryStatus,
 	systemReboot,
@@ -77,29 +79,13 @@ global.handleMessage = async function (message, callback) {
 	}
 };
 
-// Standalone action functions
-function commonPing() {
-	return {
-		status: 'success',
-		message: 'pong',
-		timestamp: Date.now(),
-	};
+// Test management functions - wrapper functions calling TestManager
+function testPing() {
+	return testManager.ping();
 }
 
-async function commonDelayedPing(params = {}) {
-	const delay = params?.delay || 2000;
-	console.log(`Starting delayed ping with ${delay}ms delay...`);
-	return new Promise((resolve) => {
-		setTimeout(() => {
-			console.log('Delayed ping completed!');
-			resolve({
-				status: 'success',
-				message: 'delayed pong',
-				timestamp: Date.now(),
-				delay,
-			});
-		}, delay);
-	});
+async function testDelayedPing(params = {}) {
+	return await testManager.delayedPing(params);
 }
 
 // Crypto management functions - wrapper functions calling CryptoManager
