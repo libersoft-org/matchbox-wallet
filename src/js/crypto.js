@@ -12,8 +12,9 @@ function getEthers() {
 	return ethers;
 }
 
-class CryptoHandler {
-	static hash(input) {
+class CryptoManager {
+	hash(params = {}) {
+		const input = params?.input;
 		if (!input) {
 			throw new Error('Missing input for hash operation');
 		}
@@ -26,7 +27,7 @@ class CryptoHandler {
 		};
 	}
 
-	static generateKeyPair() {
+	generateKeyPair() {
 		const { publicKey, privateKey } = crypto.generateKeyPairSync('rsa', {
 			modulusLength: 2048,
 			publicKeyEncoding: { type: 'spki', format: 'pem' },
@@ -40,7 +41,8 @@ class CryptoHandler {
 		};
 	}
 
-	static generateRandomBytes(length = 32) {
+	generateRandomBytes(params = {}) {
+		const length = params?.length || 32;
 		const bytes = crypto.randomBytes(length);
 		return {
 			status: 'success',
@@ -49,7 +51,11 @@ class CryptoHandler {
 		};
 	}
 
-	static hmac(data, key, algorithm = 'sha256') {
+	hmac(params = {}) {
+		const data = params?.data;
+		const key = params?.key;
+		const algorithm = params?.algorithm || 'sha256';
+
 		if (!data || !key) {
 			throw new Error('Missing data or key for HMAC operation');
 		}
@@ -64,7 +70,7 @@ class CryptoHandler {
 	}
 
 	// Ethereum wallet functions using ethers.js
-	static createWallet() {
+	createWallet() {
 		const ethers = getEthers();
 		const wallet = ethers.Wallet.createRandom();
 		return {
@@ -75,7 +81,8 @@ class CryptoHandler {
 		};
 	}
 
-	static walletFromMnemonic(mnemonic) {
+	walletFromMnemonic(params = {}) {
+		const mnemonic = params?.mnemonic;
 		if (!mnemonic) {
 			throw new Error('Missing mnemonic phrase');
 		}
@@ -89,7 +96,8 @@ class CryptoHandler {
 		};
 	}
 
-	static walletFromPrivateKey(privateKey) {
+	walletFromPrivateKey(params = {}) {
+		const privateKey = params?.privateKey;
 		if (!privateKey) {
 			throw new Error('Missing private key');
 		}
@@ -103,7 +111,8 @@ class CryptoHandler {
 		};
 	}
 
-	static validateAddress(address) {
+	validateAddress(params = {}) {
+		const address = params?.address;
 		try {
 			const ethers = getEthers();
 			const isValid = ethers.isAddress(address);
@@ -121,7 +130,8 @@ class CryptoHandler {
 		}
 	}
 
-	static keccak256(data) {
+	keccak256(params = {}) {
+		const data = params?.input;
 		if (!data) {
 			throw new Error('Missing data for keccak256 hash');
 		}
@@ -135,7 +145,9 @@ class CryptoHandler {
 	}
 
 	// Async function to get latest block from Ethereum mainnet
-	static async getLatestBlock(rpcUrl) {
+	async getLatestBlock(params = {}) {
+		const rpcUrl = params?.rpcUrl;
+		console.log('CryptoHandler.getLatestBlock...:', rpcUrl);
 		console.log('Checking network capabilities...');
 
 		// Check what networking globals are available
@@ -181,7 +193,10 @@ class CryptoHandler {
 	}
 
 	// Async function to get ETH balance for an address
-	static async getBalance(address, rpcUrl) {
+	async getBalance(params = {}) {
+		const address = params?.address;
+		const rpcUrl = params?.rpcUrl;
+
 		if (!address) {
 			throw new Error('Missing address for balance query');
 		}
@@ -202,4 +217,4 @@ class CryptoHandler {
 	}
 }
 
-module.exports = CryptoHandler;
+module.exports = CryptoManager;
