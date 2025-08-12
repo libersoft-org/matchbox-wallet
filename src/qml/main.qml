@@ -18,6 +18,9 @@ ApplicationWindow {
 	readonly property int animationDuration: 500
 	readonly property var animationEasing: Easing.OutCubic
 
+	// Splash screen state
+	property bool showSplashScreen: true
+
 	// WiFi state for status bar
 	property int currentWifiStrength: 0
 
@@ -156,6 +159,7 @@ ApplicationWindow {
 	// Status bar at the very top
 	StatusBar {
 		id: statusBar
+		visible: !window.showSplashScreen
 
 		// Real system values
 		wifiStrength: window.currentWifiStrength
@@ -170,6 +174,7 @@ ApplicationWindow {
 	// Fixed navigation bar below status bar
 	Navbar {
 		id: fixedNavbar
+		visible: !window.showSplashScreen
 		anchors.top: statusBar.bottom
 		anchors.left: parent.left
 		anchors.right: parent.right
@@ -184,6 +189,7 @@ ApplicationWindow {
 	// Content area with animations - this part animates
 	StackView {
 		id: stackView
+		visible: !window.showSplashScreen
 		anchors.top: fixedNavbar.bottom
 		anchors.left: parent.left
 		anchors.right: parent.right
@@ -224,6 +230,15 @@ ApplicationWindow {
 				duration: window.animationDuration
 				easing.type: window.animationEasing
 			}
+		}
+	}
+
+	SplashScreen {
+		id: splashScreen
+		anchors.fill: parent
+		visible: window.showSplashScreen
+		onAnimationFinished: {
+			window.showSplashScreen = false;
 		}
 	}
 
