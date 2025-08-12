@@ -200,6 +200,64 @@ class SystemManager {
 			return null;
 		}
 	}
+
+	async changeTimeZone(params) {
+		try {
+			console.log('Changing system timezone to:', params.timezone);
+			const { exec } = require('child_process');
+			const { promisify } = require('util');
+			const execAsync = promisify(exec);
+
+			if (!params.timezone) {
+				throw new Error('Timezone parameter is required');
+			}
+
+			// Try multiple timezone change methods in order of preference
+			const timezoneCommands = [
+				`timedatectl set-timezone ${params.timezone}`, // systemd timedatectl (preferred)
+				`sudo timedatectl set-timezone ${params.timezone}`, // with sudo
+				`ln -sf /usr/share/zoneinfo/${params.timezone} /etc/localtime`, // direct symlink
+				`sudo ln -sf /usr/share/zoneinfo/${params.timezone} /etc/localtime`, // with sudo
+			];
+
+			let lastError = null;
+			for (const cmd of timezoneCommands) {
+				try {
+					console.log(`Trying timezone command: ${cmd}`);
+					await execAsync(cmd);
+
+					// Verify the change worked
+					const { stdout } = await execAsync('timedatectl show --property=Timezone --value');
+					const currentTimezone = stdout.trim();
+
+					if (currentTimezone === params.timezone) {
+						console.log(`Successfully changed timezone to: ${currentTimezone}`);
+						return {
+							status: 'success',
+							message: `Timezone changed to ${params.timezone}`,
+							data: {
+								timezone: currentTimezone,
+							},
+						};
+					} else {
+						console.log(`Timezone change verification failed. Expected: ${params.timezone}, Got: ${currentTimezone}`);
+					}
+				} catch (error) {
+					console.log(`Timezone command failed: ${cmd} - ${error.message}`);
+					lastError = error;
+					continue;
+				}
+			}
+
+			throw lastError || new Error('All timezone change methods failed');
+		} catch (error) {
+			console.error('Timezone change failed:', error);
+			return {
+				status: 'error',
+				message: `Failed to change timezone: ${error.message}`,
+			};
+		}
+	}
 }
 
 module.exports = SystemManager;

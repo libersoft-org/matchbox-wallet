@@ -15,6 +15,7 @@ const HANDLERS = {
 	systemReboot: () => systemManager.reboot(),
 	systemShutdown: () => systemManager.shutdown(),
 	systemListTimeZones: () => systemManager.listTimeZones(),
+	systemChangeTimeZone: (params) => systemManager.changeTimeZone(params),
 	wifiScanNetworks: (params) => wifiManager.scanNetworks(params),
 	wifiGetNetworks: () => wifiManager.getNetworks(),
 	wifiConnectToNetwork: (params) => wifiManager.connectToNetwork(params),

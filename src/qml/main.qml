@@ -357,12 +357,19 @@ ApplicationWindow {
 			onTimezoneSelected: function (tz) {
 				if (window.settingsManager)
 					window.settingsManager.saveTimeZone(tz);
-				try {
-					if (typeof SystemManager !== 'undefined' && SystemManager && SystemManager.setTimeZone)
-						SystemManager.setTimeZone(tz);
-				} catch (e) {
-					console.log("SystemManager not available:", e.message);
-				}
+
+				// Change system timezone using NodeUtils
+				Node.msg("systemChangeTimeZone", {
+					timezone: tz
+				}, function (response) {
+					console.log("Timezone change response:", JSON.stringify(response));
+					if (response.status === 'success') {
+						console.log("Timezone successfully changed to:", tz);
+					} else {
+						console.error("Failed to change timezone:", response.message || "Unknown error");
+					}
+				});
+
 				window.goBack();
 			}
 			onContinentSelected: function (continent) {
@@ -383,12 +390,19 @@ ApplicationWindow {
 			onTimezoneSelected: function (tz) {
 				if (window.settingsManager)
 					window.settingsManager.saveTimeZone(tz);
-				try {
-					if (typeof SystemManager !== 'undefined' && SystemManager && SystemManager.setTimeZone)
-						SystemManager.setTimeZone(tz);
-				} catch (e) {
-					console.log("SystemManager not available:", e.message);
-				}
+
+				// Change system timezone using NodeUtils
+				Node.msg("systemChangeTimeZone", {
+					timezone: tz
+				}, function (response) {
+					console.log("Timezone change response:", JSON.stringify(response));
+					if (response.status === 'success') {
+						console.log("Timezone successfully changed to:", tz);
+					} else {
+						console.error("Failed to change timezone:", response.message || "Unknown error");
+					}
+				});
+
 				// Clear global state
 				window.globalSelectedContinent = "";
 				window.globalTimezones = [];
