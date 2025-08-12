@@ -68,14 +68,15 @@ ApplicationWindow {
 			blockTimer.start();
 
 			// Auto-sync time on startup if enabled
-			if (SystemManager) {
-				if (SystemManager.setNtpServer && settingsManagerObj.ntpServer)
-					SystemManager.setNtpServer(settingsManagerObj.ntpServer);
-				if (SystemManager.setTimeZone && settingsManagerObj.timeZone)
-					SystemManager.setTimeZone(settingsManagerObj.timeZone);
-				if (settingsManagerObj.autoTimeSync && SystemManager.syncSystemTime)
-					SystemManager.syncSystemTime();
-			}
+			// TODO: Implement time sync via Node.js if needed
+			// if (SystemManager) {
+			//	if (SystemManager.setNtpServer && settingsManagerObj.ntpServer)
+			//		SystemManager.setNtpServer(settingsManagerObj.ntpServer);
+			//	if (SystemManager.setTimeZone && settingsManagerObj.timeZone)
+			//		SystemManager.setTimeZone(settingsManagerObj.timeZone);
+			//	if (settingsManagerObj.autoTimeSync && SystemManager.syncSystemTime)
+			//		SystemManager.syncSystemTime();
+			// }
 		}
 	}
 
@@ -93,9 +94,6 @@ ApplicationWindow {
 
 	// Track current page/section
 	property string currentPageId: "home"
-
-	// SystemManager is now available as global context property
-	// No need to create instance - it's injected from C++
 
 	// Global translation function - available to all child components
 	function tr(key) {
@@ -383,7 +381,7 @@ ApplicationWindow {
 					window.settingsManager.saveTimeZone(tz);
 
 				// Change system timezone using NodeUtils
-				Node.msg("systemChangeTimeZone", {
+				Node.msg("timeChangeTimeZone", {
 					timezone: tz
 				}, function (response) {
 					console.log("Timezone change response:", JSON.stringify(response));
@@ -416,7 +414,7 @@ ApplicationWindow {
 					window.settingsManager.saveTimeZone(tz);
 
 				// Change system timezone using NodeUtils
-				Node.msg("systemChangeTimeZone", {
+				Node.msg("timeChangeTimeZone", {
 					timezone: tz
 				}, function (response) {
 					console.log("Timezone change response:", JSON.stringify(response));

@@ -23,7 +23,7 @@ BaseMenu {
 	}
 
 	function loadCurrentBrightness() {
-		Node.msg("systemGetBrightness", {}, function (response) {
+		Node.msg("displayGetBrightness", {}, function (response) {
 			console.log("Brightness get response:", JSON.stringify(response));
 			if (response.status === 'success' && response.data) {
 				var actualBrightness = response.data.brightness || 50;
@@ -44,7 +44,7 @@ BaseMenu {
 
 	function saveBrightness(brightness) {
 		root.hasError = false; // Clear previous error
-		Node.msg("systemSetBrightness", {
+		Node.msg("displaySetBrightness", {
 			brightness: brightness
 		}, function (response) {
 			console.log("Brightness set response:", JSON.stringify(response));

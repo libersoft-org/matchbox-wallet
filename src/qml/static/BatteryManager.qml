@@ -19,7 +19,7 @@ Item {
 	// Functions
 	function updateBatteryStatus() {
 		if (typeof NodeJS !== 'undefined') {
-			NodeJS.msg("systemCheckBatteryStatus", {}, function (result) {
+			NodeJS.msg("batteryCheckStatus", {}, function (result) {
 				if (result && result.status === "success" && result.data) {
 					var data = result.data;
 					if (data.batteryLevel !== undefined) {
@@ -38,7 +38,7 @@ Item {
 
 	function getBatteryInfo() {
 		if (typeof NodeJS !== 'undefined') {
-			NodeJS.msg("systemGetBatteryInfo", {}, function (result) {
+			NodeJS.msg("batteryGetInfo", {}, function (result) {
 				console.log("Battery info:", JSON.stringify(result));
 				if (result && result.status === "success" && result.data) {
 					var data = result.data;

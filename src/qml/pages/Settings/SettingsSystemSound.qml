@@ -23,7 +23,7 @@ BaseMenu {
 	}
 
 	function loadCurrentVolume() {
-		Node.msg("systemGetVolume", {}, function (response) {
+		Node.msg("audioGetVolume", {}, function (response) {
 			console.log("Volume get response:", JSON.stringify(response));
 			if (response.status === 'success' && response.data) {
 				var actualVolume = response.data.volume || 0;
@@ -54,7 +54,7 @@ BaseMenu {
 
 	function saveVolume(volume) {
 		root.hasError = false;
-		Node.msg("systemSetVolume", {
+		Node.msg("audioSetVolume", {
 			volume: volume
 		}, function (response) {
 			console.log("Volume set response:", JSON.stringify(response));

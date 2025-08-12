@@ -18,7 +18,7 @@ BaseMenu {
 		onClicked: {
 			console.log("Reboot requested");
 			if (typeof NodeJS !== 'undefined') {
-				NodeJS.msg("systemReboot", {}, function(result) {
+				NodeJS.msg("powerReboot", {}, function(result) {
 					console.log("Reboot result:", JSON.stringify(result));
 					if (result.status === 'success') {
 						console.log("System reboot initiated successfully");
@@ -35,7 +35,7 @@ BaseMenu {
 		onClicked: {
 			console.log("Shutdown requested");
 			if (typeof NodeJS !== 'undefined') {
-				NodeJS.msg("systemShutdown", {}, function(result) {
+				NodeJS.msg("powerShutdown", {}, function(result) {
 					console.log("Shutdown result:", JSON.stringify(result));
 					if (result.status === 'success') {
 						console.log("System shutdown initiated successfully");

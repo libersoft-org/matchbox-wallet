@@ -98,7 +98,7 @@ BaseMenu {
 								window.settingsManager.saveAutoTimeSync(checked);
 
 							// Call Node.js backend to set auto time sync
-							NodeUtils.msg("systemSetAutoTimeSync", {
+							NodeUtils.msg("timeSetAutoTimeSync", {
 								enabled: checked
 							}, function (result) {
 								console.log("Auto time sync result:", JSON.stringify(result));
@@ -122,7 +122,7 @@ BaseMenu {
 		text: tr("menu.settings.system.time.sync")
 		onClicked: {
 			console.log("Syncing time with internet");
-			NodeUtils.msg("systemSyncTime", {}, function (result) {
+			NodeUtils.msg("timeSyncTime", {}, function (result) {
 				console.log("Time sync result:", JSON.stringify(result));
 				if (result.status === "success") {
 					console.log("Time synchronization successful");

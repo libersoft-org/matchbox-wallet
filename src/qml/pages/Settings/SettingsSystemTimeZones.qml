@@ -26,7 +26,7 @@ BaseMenu {
 
 	function loadTimeZones() {
 		console.log("Loading time zones...");
-		NodeUtils.msg("systemListTimeZones", {}, function (response) {
+		NodeUtils.msg("timeListTimeZones", {}, function (response) {
 			console.log("Time zones response:", JSON.stringify(response));
 			if (response.status === 'success' && response.data) {
 				timezones = response.data;
