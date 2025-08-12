@@ -4,14 +4,25 @@ import QtQuick.Layouts 1.15
 import "../../components"
 import "../../utils/NodeUtils.js" as NodeUtils
 
+pragma ComponentBehavior: Bound
+
 BaseMenu {
 	id: root
-	title: tr("menu.settings.system.time.timezone")
+	title: selectedContinent ? (tr("menu.settings.system.time.timezone") + " - " + selectedContinent) : tr("menu.settings.system.time.timezone")
 	signal timezoneSelected(string tz)
+	signal continentSelected(string continent)
 	property var timezones: []
+	property string selectedContinent: ""  // If set, show cities for this continent
+	property var displayItems: []
 
 	Component.onCompleted: {
-		loadTimeZones()
+		if (selectedContinent) {
+			// We're showing cities for a continent
+			extractCitiesForContinent();
+		} else {
+			// We're showing continents
+			loadTimeZones();
+		}
 	}
 
 	function loadTimeZones() {
@@ -21,18 +32,99 @@ BaseMenu {
 			if (response.status === 'success' && response.data) {
 				timezones = response.data;
 				console.log("Loaded", timezones.length, "time zones");
+				extractContinents();
 			} else {
 				console.error("Failed to load time zones:", response.message || "Unknown error");
 				timezones = ["UTC"];
+				displayItems = [{
+					text: "UTC",
+					isTimezone: true,
+					timezone: "UTC"
+				}];
 			}
 		});
 	}
 
+	function extractContinents() {
+		var continentsSet = new Set();
+		
+		// Add special cases first
+		continentsSet.add("UTC");
+		
+		for (var i = 0; i < timezones.length; i++) {
+			var timezone = timezones[i];
+			if (timezone.includes("/")) {
+				var parts = timezone.split("/");
+				continentsSet.add(parts[0]);
+			}
+		}
+		
+		// Convert Set to Array, sort and create display items
+		var continentsArray = Array.from(continentsSet).sort();
+		var items = [];
+		
+		for (var j = 0; j < continentsArray.length; j++) {
+			var continent = continentsArray[j];
+			if (continent === "UTC") {
+				items.push({
+					text: "UTC",
+					isTimezone: true,
+					timezone: "UTC"
+				});
+			} else {
+				items.push({
+					text: continent,
+					isTimezone: false,
+					continent: continent
+				});
+			}
+		}
+		
+		displayItems = items;
+		console.log("Extracted continents:", JSON.stringify(continentsArray));
+	}
+
+	function extractCitiesForContinent() {
+		var citiesArray = [];
+		
+		for (var i = 0; i < timezones.length; i++) {
+			var timezone = timezones[i];
+			if (timezone.startsWith(selectedContinent + "/")) {
+				var parts = timezone.split("/");
+				if (parts.length >= 2) {
+					// Take everything after the continent as the city name
+					var city = parts.slice(1).join("/");
+					citiesArray.push({
+						text: city.replace(/_/g, " "),
+						isTimezone: true,
+						timezone: timezone
+					});
+				}
+			}
+		}
+		
+		// Sort cities by display name
+		citiesArray.sort(function(a, b) {
+			return a.text.localeCompare(b.text);
+		});
+		
+		displayItems = citiesArray;
+		console.log("Extracted", citiesArray.length, "cities for continent:", selectedContinent);
+	}
+
 	Repeater {
-		model: root.timezones
+		model: root.displayItems
 		delegate: MenuButton {
-			text: modelData
-			onClicked: root.timezoneSelected(modelData)
+			required property var modelData
+			text: modelData.text
+			onClicked: {
+				if (modelData.isTimezone) {
+					root.timezoneSelected(modelData.timezone);
+				} else {
+					// Emit signal to navigate to cities for this continent
+					root.continentSelected(modelData.continent);
+				}
+			}
 		}
 	}
 }

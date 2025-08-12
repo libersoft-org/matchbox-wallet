@@ -50,6 +50,10 @@ ApplicationWindow {
 	property var translationManager: translationManagerObj
 	property var batteryManager: batteryManagerObj
 
+	// Global properties for timezone navigation
+	property var globalTimezones: []
+	property string globalSelectedContinent: ""
+
 	Colors {
 		id: colorsObj
 	}
@@ -332,7 +336,7 @@ ApplicationWindow {
 		}
 	}
 
-	// System timezone selection page
+	// System timezone selection page (continents)
 	Component {
 		id: settingsSystemTimeZonesPageComponent
 		SettingsSystemTimeZones {
@@ -341,6 +345,30 @@ ApplicationWindow {
 					window.settingsManager.saveTimeZone(tz);
 				if (SystemManager && SystemManager.setTimeZone)
 					SystemManager.setTimeZone(tz);
+				window.goBack();
+			}
+			onContinentSelected: function (continent) {
+				// Store timezones globally and navigate to cities
+				window.globalTimezones = timezones;
+				window.globalSelectedContinent = continent;
+				window.goPage(settingsSystemTimeZonesCitiesPageComponent);
+			}
+		}
+	}
+
+	// System timezone cities selection page
+	Component {
+		id: settingsSystemTimeZonesCitiesPageComponent
+		SettingsSystemTimeZones {
+			selectedContinent: window.globalSelectedContinent
+			timezones: window.globalTimezones || []
+			onTimezoneSelected: function (tz) {
+				if (window.settingsManager)
+					window.settingsManager.saveTimeZone(tz);
+				if (SystemManager && SystemManager.setTimeZone)
+					SystemManager.setTimeZone(tz);
+				// Go back twice to return to SettingsSystemTime
+				window.goBack();
 				window.goBack();
 			}
 		}
