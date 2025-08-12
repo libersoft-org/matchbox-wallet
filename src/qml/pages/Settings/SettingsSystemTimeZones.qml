@@ -1,10 +1,9 @@
+pragma ComponentBehavior: Bound
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 import "../../components"
 import "../../utils/NodeUtils.js" as NodeUtils
-
-pragma ComponentBehavior: Bound
 
 BaseMenu {
 	id: root
@@ -36,21 +35,23 @@ BaseMenu {
 			} else {
 				console.error("Failed to load time zones:", response.message || "Unknown error");
 				timezones = ["UTC"];
-				displayItems = [{
-					text: "UTC",
-					isTimezone: true,
-					timezone: "UTC"
-				}];
+				displayItems = [
+					{
+						text: "UTC",
+						isTimezone: true,
+						timezone: "UTC"
+					}
+				];
 			}
 		});
 	}
 
 	function extractContinents() {
 		var continentsSet = new Set();
-		
+
 		// Add special cases first
 		continentsSet.add("UTC");
-		
+
 		for (var i = 0; i < timezones.length; i++) {
 			var timezone = timezones[i];
 			if (timezone.includes("/")) {
@@ -58,11 +59,11 @@ BaseMenu {
 				continentsSet.add(parts[0]);
 			}
 		}
-		
+
 		// Convert Set to Array, sort and create display items
 		var continentsArray = Array.from(continentsSet).sort();
 		var items = [];
-		
+
 		for (var j = 0; j < continentsArray.length; j++) {
 			var continent = continentsArray[j];
 			if (continent === "UTC") {
@@ -79,14 +80,14 @@ BaseMenu {
 				});
 			}
 		}
-		
+
 		displayItems = items;
 		console.log("Extracted continents:", JSON.stringify(continentsArray));
 	}
 
 	function extractCitiesForContinent() {
 		var citiesArray = [];
-		
+
 		for (var i = 0; i < timezones.length; i++) {
 			var timezone = timezones[i];
 			if (timezone.startsWith(selectedContinent + "/")) {
@@ -102,12 +103,12 @@ BaseMenu {
 				}
 			}
 		}
-		
+
 		// Sort cities by display name
-		citiesArray.sort(function(a, b) {
+		citiesArray.sort(function (a, b) {
 			return a.text.localeCompare(b.text);
 		});
-		
+
 		displayItems = citiesArray;
 		console.log("Extracted", citiesArray.length, "cities for continent:", selectedContinent);
 	}

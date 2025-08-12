@@ -141,6 +141,20 @@ ApplicationWindow {
 		}
 	}
 
+	function goBackMultiple(count) {
+		for (var i = 0; i < count; i++) {
+			if (stackView.depth > 1) {
+				stackView.pop();
+			}
+		}
+		// Update currentPageId based on what's now on top
+		if (stackView.currentItem && stackView.currentItem.pageId) {
+			window.currentPageId = stackView.currentItem.pageId;
+		} else {
+			window.currentPageId = "home";
+		}
+	}
+
 	// Status bar at the very top
 	StatusBar {
 		id: statusBar
@@ -343,8 +357,12 @@ ApplicationWindow {
 			onTimezoneSelected: function (tz) {
 				if (window.settingsManager)
 					window.settingsManager.saveTimeZone(tz);
-				if (SystemManager && SystemManager.setTimeZone)
-					SystemManager.setTimeZone(tz);
+				try {
+					if (typeof SystemManager !== 'undefined' && SystemManager && SystemManager.setTimeZone)
+						SystemManager.setTimeZone(tz);
+				} catch (e) {
+					console.log("SystemManager not available:", e.message);
+				}
 				window.goBack();
 			}
 			onContinentSelected: function (continent) {
@@ -365,11 +383,17 @@ ApplicationWindow {
 			onTimezoneSelected: function (tz) {
 				if (window.settingsManager)
 					window.settingsManager.saveTimeZone(tz);
-				if (SystemManager && SystemManager.setTimeZone)
-					SystemManager.setTimeZone(tz);
-				// Go back twice to return to SettingsSystemTime
-				window.goBack();
-				window.goBack();
+				try {
+					if (typeof SystemManager !== 'undefined' && SystemManager && SystemManager.setTimeZone)
+						SystemManager.setTimeZone(tz);
+				} catch (e) {
+					console.log("SystemManager not available:", e.message);
+				}
+				// Clear global state
+				window.globalSelectedContinent = "";
+				window.globalTimezones = [];
+				// Go back 2 levels to return to SettingsSystemTime
+				window.goBackMultiple(2);
 			}
 		}
 	}
