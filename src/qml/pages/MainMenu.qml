@@ -13,6 +13,7 @@ BaseMenu {
 	property var settingsComponent
 	property var powerOffComponent
 	property var cameraPreviewComponent
+	property var keyboardTestComponent
 	property var goPageFunction
 
 	MenuButton {
@@ -28,6 +29,11 @@ BaseMenu {
 	MenuButton {
 		text: "Camera test"
 		onClicked: goPageFunction(cameraPreviewComponent)
+	}
+
+	MenuButton {
+		text: "Test keyboard"
+		onClicked: goPageFunction(keyboardTestComponent)
 	}
 
 	MenuButton {

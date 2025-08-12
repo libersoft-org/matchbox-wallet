@@ -245,6 +245,7 @@ ApplicationWindow {
 			walletComponent: walletPageComponent
 			settingsComponent: settingsPageComponent
 			cameraPreviewComponent: cameraPreviewPageComponent
+			keyboardTestComponent: keyboardTestPageComponent
 			goPageFunction: window.goPage
 		}
 	}
@@ -463,5 +464,11 @@ ApplicationWindow {
 	Component {
 		id: cameraPreviewPageComponent
 		CameraPreview {}
+	}
+
+	// Keyboard test page
+	Component {
+		id: keyboardTestPageComponent
+		KeyboardTest {}
 	}
 }
