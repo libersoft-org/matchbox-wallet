@@ -50,9 +50,7 @@ global.handleMessage = async function (message, callback) {
 			result = { status: 'error', message: `Unknown action: ${action}` };
 		}
 		console.log('Handler result for', action, ':', result);
-		if (typeof __nativeCallback === 'function') {
-			__nativeCallback(messageId, result);
-		}
+		if (typeof __nativeCallback === 'function') __nativeCallback(messageId, result);
 	} catch (error) {
 		console.error('Error in handleMessage for action', action, ':', error);
 		const errorResult = {
@@ -60,9 +58,7 @@ global.handleMessage = async function (message, callback) {
 			message: error.message,
 			stack: error.stack,
 		};
-		if (typeof __nativeCallback === 'function') {
-			__nativeCallback(messageId, errorResult);
-		}
+		if (typeof __nativeCallback === 'function') __nativeCallback(messageId, errorResult);
 	}
 };
 

@@ -6,10 +6,7 @@ import "../../components"
 BaseMenu {
 	id: root
 	title: tr("menu.settings.system.time.timezone")
-
 	signal timezoneSelected(string tz)
-
-	// Load time zones from system
 	property var timezones: []
 
 	Component.onCompleted: {
@@ -19,9 +16,8 @@ BaseMenu {
 		} catch (e) {
 			console.log("Failed to load time zones:", e);
 		}
-		if (!timezones || timezones.length === 0) {
+		if (!timezones || timezones.length === 0)
 			timezones = ["UTC"];
-		}
 	}
 
 	Repeater {

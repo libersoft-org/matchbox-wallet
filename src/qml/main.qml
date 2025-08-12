@@ -328,14 +328,14 @@ ApplicationWindow {
 				// TODO: Implement actual system time setting
 				window.goBack();
 			}
-			onTimezoneSettingsRequested: window.goPage(settingsSystemTimezonePageComponent)
+			onTimezoneSettingsRequested: window.goPage(settingsSystemTimeZonesPageComponent)
 		}
 	}
 
 	// System timezone selection page
 	Component {
-		id: settingsSystemTimezonePageComponent
-		SettingsSystemTimezone {
+		id: settingsSystemTimeZonesPageComponent
+		SettingsSystemTimeZones {
 			onTimezoneSelected: function (tz) {
 				if (window.settingsManager)
 					window.settingsManager.saveTimeZone(tz);
