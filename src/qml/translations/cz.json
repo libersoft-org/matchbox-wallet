@@ -55,11 +55,6 @@
 			"system": {
 				"button": "Systém",
 				"title": "Systémová nastavení",
-				"language": {
-					"button": "Jazyk: %1",
-					"title": "Výběr jazyka",
-					"selectLanguage": "Vyberte jazyk"
-				},
 				"wifi": {
 					"button": "WiFi",
 					"title": "Nastavení WiFi",
@@ -83,6 +78,22 @@
 						}
 					}
 				},
+				"lora": {
+					"button": "LoRa",
+					"title": "LoRa nastavení"
+				},
+				"display": {
+					"button": "Displej",
+					"title": "Nastavení displeje",
+					"brightness": "Jas obrazovky"
+				},
+				"sound": {
+					"button": "Zvuk",
+					"title": "Nastavení zvuku",
+					"volume": "Hlasitost",
+					"mute": "Ztlumit",
+					"unmute": "Zrušit ztlumení"
+				},
 				"time": {
 					"button": "Datum a čas",
 					"title": "Nastavení data a času",
@@ -92,16 +103,10 @@
 					"server": "NTP server",
 					"timezone": "Časové pásmo"
 				},
-				"lora": {
-					"button": "LoRa",
-					"title": "LoRa nastavení"
-				},
-				"sound": {
-					"button": "Zvuk",
-					"title": "Nastavení zvuku",
-					"volume": "Hlasitost",
-					"mute": "Ztlumit",
-					"unmute": "Zrušit ztlumení"
+				"language": {
+					"button": "Jazyk: %1",
+					"title": "Výběr jazyka",
+					"selectLanguage": "Vyberte jazyk"
 				}
 			}
 		},

@@ -83,18 +83,14 @@
 						}
 					}
 				},
-				"time": {
-					"button": "Date & time",
-					"title": "Date & time settings",
-					"set": "Nastavit čas",
-					"sync": "Synchr. s internetem",
-					"auto": "Auto-sync time",
-					"server": "NTP server",
-					"timezone": "Time zone"
-				},
 				"lora": {
 					"button": "LoRa",
 					"title": "LoRa settings"
+				},
+				"display": {
+					"button": "Display",
+					"title": "Display settings",
+					"brightness": "Screen brightness"
 				},
 				"sound": {
 					"button": "Sound",
@@ -102,6 +98,15 @@
 					"volume": "Volume",
 					"mute": "Mute",
 					"unmute": "Unmute"
+				},
+				"time": {
+					"button": "Date & time",
+					"title": "Date & time settings",
+					"set": "Set time",
+					"sync": "Sync with internet",
+					"auto": "Auto-sync time",
+					"server": "NTP server",
+					"timezone": "Time zone"
 				}
 			}
 		},

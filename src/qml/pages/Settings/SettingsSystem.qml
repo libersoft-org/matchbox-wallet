@@ -10,6 +10,7 @@ BaseMenu {
 	signal languageSelectionRequested
 	signal timeSettingsRequested
 	signal soundSettingsRequested
+	signal displaySettingsRequested
 
 	property string selectedLanguage: "en"
 
@@ -25,26 +26,6 @@ BaseMenu {
 	}
 
 	MenuButton {
-		id: languageButton
-		text: {
-			var displayName = getLanguageDisplayName(root.selectedLanguage);
-			var template = tr("menu.settings.system.language.button");
-			return template.replace("%1", displayName);
-		}
-		onClicked: root.languageSelectionRequested()
-	}
-
-	MenuButton {
-		text: tr("menu.settings.system.time.button")
-		onClicked: root.timeSettingsRequested()
-	}
-
-	MenuButton {
-		text: tr("menu.settings.system.sound.button")
-		onClicked: root.soundSettingsRequested()
-	}
-
-	MenuButton {
 		text: tr("menu.settings.system.wifi.button")
 		onClicked: root.wifiSettingsRequested()
 	}
@@ -53,5 +34,30 @@ BaseMenu {
 		text: tr("menu.settings.system.lora.button")
 		enabled: false
 		onClicked: console.log("LoRa settings clicked - not implemented yet")
+	}
+
+	MenuButton {
+		text: tr("menu.settings.system.display.button")
+		onClicked: root.displaySettingsRequested()
+	}
+
+	MenuButton {
+		text: tr("menu.settings.system.sound.button")
+		onClicked: root.soundSettingsRequested()
+	}
+
+	MenuButton {
+		text: tr("menu.settings.system.time.button")
+		onClicked: root.timeSettingsRequested()
+	}
+
+	MenuButton {
+		id: languageButton
+		text: {
+			var displayName = getLanguageDisplayName(root.selectedLanguage);
+			var template = tr("menu.settings.system.language.button");
+			return template.replace("%1", displayName);
+		}
+		onClicked: root.languageSelectionRequested()
 	}
 }

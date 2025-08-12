@@ -283,6 +283,7 @@ ApplicationWindow {
 			onLanguageSelectionRequested: window.goPage(settingsSystemLanguagePageComponent)
 			onTimeSettingsRequested: window.goPage(settingsSystemTimePageComponent)
 			onSoundSettingsRequested: window.goPage(settingsSystemSoundPageComponent)
+			onDisplaySettingsRequested: window.goPage(settingsSystemDisplayPageComponent)
 		}
 	}
 
@@ -358,6 +359,17 @@ ApplicationWindow {
 			onVolumeChanged: function (volume) {
 				console.log("Volume changed to:", volume);
 				// TODO: Implement actual system volume setting
+			}
+		}
+	}
+
+	// System display settings page
+	Component {
+		id: settingsSystemDisplayPageComponent
+		SettingsSystemDisplay {
+			onBrightnessChanged: function (brightness) {
+				console.log("Brightness changed to:", brightness);
+				// TODO: Implement actual system brightness setting
 			}
 		}
 	}
