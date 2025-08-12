@@ -89,29 +89,20 @@ Rectangle {
 					anchors.horizontalCenter: parent.horizontalCenter
 				}
 
-				TextField {
+				Input {
 					id: passwordInput
-					width: window.width * 0.8
-					height: window.height * 0.06
-					font.pixelSize: window.height * 0.035
-					placeholderText: tr("menu.settings.system.wifi.list.password.placeholder")
-					echoMode: TextInput.Password
-					color: colors.primaryForeground
-					background: Rectangle {
-						color: colors.primaryBackground
-						border.color: colors.primaryForeground
-						border.width: 2
-						radius: 10
-					}
+					inputWidth: window.width * 0.8
+					inputHeight: window.height * 0.06
+					inputFontSize: window.height * 0.035
+					inputPlaceholder: tr("menu.settings.system.wifi.list.password.placeholder")
+					inputEchoMode: TextInput.Password
+					inputTextColor: colors.primaryForeground
+					inputBackgroundColor: colors.primaryBackground
+					inputBorderColor: colors.primaryForeground
+					inputAutoFocus: root.isSecured
 
-					Keys.onReturnPressed: {
+					onInputReturnPressed: {
 						root.connectToNetwork();
-					}
-
-					Component.onCompleted: {
-						if (root.isSecured) {
-							passwordInput.forceActiveFocus();
-						}
 					}
 				}
 			}
