@@ -158,6 +158,19 @@ Page {
 		y: root.height
 		state: "hidden"
 
+		// Handle hide button on keyboard
+		onActiveChanged: {
+			if (!active) {
+				// User pressed hide button, clear focus from all inputs
+				textField1.clearFocus();
+				textField2.clearFocus();
+				passwordField.clearFocus();
+				numberField.clearFocus();
+				textArea.clearFocus();
+				root.forceActiveFocus();
+			}
+		}
+
 		// Show keyboard only when any input has focus
 		states: [
 			State {
