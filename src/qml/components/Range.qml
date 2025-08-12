@@ -5,7 +5,7 @@ import "../static"
 Item {
 	id: root
 
-	property real value: 50
+	property real value: 0
 	property real from: 0
 	property real to: 100
 	property real stepSize: 1
@@ -70,18 +70,33 @@ Item {
 					anchors.margins: -10
 					enabled: root.enabled
 					property bool dragging: false
-					onPressed: dragging = true
-					onReleased: dragging = false
+					property real pendingValue: root.value
+
+					onPressed: {
+						dragging = true;
+						pendingValue = root.value;
+					}
+
+					onReleased: {
+						dragging = false;
+						// Only emit the signal when mouse is released
+						if (pendingValue !== root.value) {
+							root.rangeValueChanged(root.value);
+						}
+					}
+
 					onPositionChanged: {
 						if (dragging) {
 							var newX = Math.max(0, Math.min(sliderTrack.width, mouseX + sliderHandle.x));
 							var newValue = root.from + (newX / sliderTrack.width) * (root.to - root.from);
+
 							// Snap to step size
 							newValue = Math.round(newValue / root.stepSize) * root.stepSize;
 							newValue = Math.max(root.from, Math.min(root.to, newValue));
+
+							// Update visual value but don't emit signal yet
 							if (newValue !== root.value) {
 								root.value = newValue;
-								root.rangeValueChanged(newValue);
 							}
 						}
 					}

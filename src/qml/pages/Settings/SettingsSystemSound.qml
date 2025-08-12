@@ -3,14 +3,55 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 import "../../components"
 import "../../static"
+import "../../utils/NodeUtils.js" as Node
 
 BaseMenu {
 	id: root
 	title: tr("menu.settings.system.sound.title")
 
-	property int soundVolume: 50
+	property int soundVolume: 0
+	property bool volumeLoaded: false
+	property bool updatingFromSystem: false  // Guard flag
 
 	signal volumeChanged(int volume)
+
+	// Load current volume when component is loaded
+	Component.onCompleted: {
+		loadCurrentVolume();
+	}
+
+	function loadCurrentVolume() {
+		Node.msg("systemGetVolume", {}, function (response) {
+			console.log("Volume get response:", JSON.stringify(response));
+			if (response.status === 'success' && response.data) {
+				var actualVolume = response.data.volume || 0;
+				console.log("Setting volume to:", actualVolume);
+				root.updatingFromSystem = true;
+				root.soundVolume = actualVolume;
+				root.volumeLoaded = true;
+				root.updatingFromSystem = false;
+			} else {
+				console.log("Volume load failed, using default 0");
+				root.updatingFromSystem = true;
+				root.soundVolume = 0;
+				root.volumeLoaded = true;
+				root.updatingFromSystem = false;
+			}
+		});
+	}
+
+	function saveVolume(volume) {
+		Node.msg("systemSetVolume", {
+			volume: volume
+		}, function (response) {
+			console.log("Volume set response:", JSON.stringify(response));
+			if (response.status === 'success') {
+				console.log("Volume successfully changed to:", volume);
+			} else {
+				console.error("Failed to change volume:", response.message || "Unknown error");
+			}
+		});
+	}
 
 	Column {
 		width: parent.width
@@ -32,12 +73,26 @@ BaseMenu {
 			from: 0
 			to: 100
 			stepSize: 1
-			value: root.soundVolume
+			value: root.soundVolume  // Direct binding to soundVolume
 			suffix: "%"
+			enabled: root.volumeLoaded
+			opacity: root.volumeLoaded ? 1.0 : 0.5
+
 			onRangeValueChanged: function (newValue) {
-				root.soundVolume = newValue;
-				root.volumeChanged(newValue);
+				if (root.volumeLoaded && !root.updatingFromSystem) {
+					root.soundVolume = newValue;
+					root.volumeChanged(newValue);
+					root.saveVolume(newValue);
+				}
 			}
+		}
+
+		Text {
+			anchors.horizontalCenter: parent.horizontalCenter
+			text: root.volumeLoaded ? "" : tr("common.loading")
+			font.pixelSize: root.height * 0.025
+			color: "#aaa"
+			visible: !root.volumeLoaded
 		}
 	}
 }
