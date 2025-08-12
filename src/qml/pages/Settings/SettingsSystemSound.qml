@@ -12,6 +12,8 @@ BaseMenu {
 	property int soundVolume: 0
 	property bool volumeLoaded: false
 	property bool updatingFromSystem: false  // Guard flag
+	property string errorMessage: ""
+	property bool hasError: false
 
 	signal volumeChanged(int volume)
 
@@ -41,14 +43,18 @@ BaseMenu {
 	}
 
 	function saveVolume(volume) {
+		root.hasError = false; // Clear previous error
 		Node.msg("systemSetVolume", {
 			volume: volume
 		}, function (response) {
 			console.log("Volume set response:", JSON.stringify(response));
 			if (response.status === 'success') {
 				console.log("Volume successfully changed to:", volume);
+				root.hasError = false;
 			} else {
 				console.error("Failed to change volume:", response.message || "Unknown error");
+				root.errorMessage = response.message || "Failed to set volume";
+				root.hasError = true;
 			}
 		});
 	}
@@ -87,11 +93,20 @@ BaseMenu {
 			}
 		}
 
+		Alert {
+			id: volumeErrorAlert
+			anchors.horizontalCenter: parent.horizontalCenter
+			width: parent.width * 0.9
+			type: "error"
+			message: root.errorMessage
+			visible: root.hasError
+		}
+
 		Text {
 			anchors.horizontalCenter: parent.horizontalCenter
 			text: root.volumeLoaded ? "" : tr("common.loading")
 			font.pixelSize: root.height * 0.025
-			color: "#aaa"
+			color: colors.disabledForeground
 			visible: !root.volumeLoaded
 		}
 	}
