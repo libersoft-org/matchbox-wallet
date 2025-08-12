@@ -113,12 +113,12 @@
 					"app": {
 						"current": "Your app version",
 						"latest": "Latest app version",
-						"button": "Update Application"
+						"button": "Update application"
 					},
 					"system": {
-						"current": "System version",
+						"current": "Your system version",
 						"latest": "Latest system version",
-						"button": "Update System"
+						"button": "Update system"
 					}
 				}
 			}

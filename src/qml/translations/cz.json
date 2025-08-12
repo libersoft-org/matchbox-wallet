@@ -116,7 +116,7 @@
 						"button": "Aktualizovat aplikaci"
 					},
 					"system": {
-						"current": "Verze systému",
+						"current": "Verze vašeho systému",
 						"latest": "Nejnovější verze systému",
 						"button": "Aktualizovat systém"
 					}

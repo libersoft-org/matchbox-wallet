@@ -67,6 +67,7 @@ ScrollableContainer {
 			Text {
 				text: root.appVersion
 				font.pixelSize: window.height * 0.05
+				font.bold: true
 				color: root.appVersion === root.latestAppVersion ? colors.success : colors.error
 				anchors.horizontalCenter: parent.horizontalCenter
 			}
@@ -81,6 +82,7 @@ ScrollableContainer {
 			Text {
 				text: root.latestAppVersion
 				font.pixelSize: window.height * 0.05
+				font.bold: true
 				color: colors.success
 				anchors.horizontalCenter: parent.horizontalCenter
 			}
@@ -101,6 +103,7 @@ ScrollableContainer {
 			Text {
 				text: root.systemVersion
 				font.pixelSize: window.height * 0.05
+				font.bold: true
 				color: root.systemVersion === root.latestSystemVersion ? colors.success : colors.error
 				anchors.horizontalCenter: parent.horizontalCenter
 			}
@@ -115,6 +118,7 @@ ScrollableContainer {
 			Text {
 				text: root.latestSystemVersion
 				font.pixelSize: window.height * 0.05
+				font.bold: true
 				color: colors.success
 				anchors.horizontalCenter: parent.horizontalCenter
 			}
