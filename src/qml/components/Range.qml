@@ -20,7 +20,6 @@ Item {
 		border.color: colors.disabledForeground
 		border.width: 2
 		radius: 8
-		opacity: root.enabled ? 1.0 : 0.5
 	}
 
 	Column {
@@ -34,7 +33,7 @@ Item {
 			text: Math.round(root.value) + root.suffix
 			font.pixelSize: 24
 			font.bold: true
-			color: colors.primaryForeground
+			color: root.enabled ? colors.primaryForeground : colors.disabledForeground
 		}
 
 		Rectangle {
@@ -48,7 +47,7 @@ Item {
 				id: sliderFill
 				width: (root.value - root.from) / (root.to - root.from) * parent.width
 				height: parent.height
-				color: colors.primaryForeground
+				color: root.enabled ? colors.primaryForeground : colors.disabledForeground
 				radius: 3
 			}
 
@@ -57,7 +56,7 @@ Item {
 				width: 24
 				height: 24
 				radius: 12
-				color: colors.primaryForeground
+				color: root.enabled ? colors.primaryForeground : colors.disabledForeground
 				border.color: colors.disabledForeground
 				border.width: 2
 				x: Math.max(0, Math.min(parent.width - width, (root.value - root.from) / (root.to - root.from) * parent.width - width / 2))

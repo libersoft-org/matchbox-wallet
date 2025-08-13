@@ -8,13 +8,12 @@ import "../../utils/NodeUtils.js" as Node
 BaseMenu {
 	id: root
 	title: tr("menu.settings.system.display.title")
-
 	property int displayBrightness: 50
 	property bool brightnessLoaded: false
 	property bool updatingFromSystem: false  // Guard flag
 	property string errorMessage: ""
 	property bool hasError: false
-
+	property bool loadError: false  // New property for load errors
 	signal brightnessChanged(int brightness)
 
 	// Load current brightness when component is loaded
@@ -23,6 +22,7 @@ BaseMenu {
 	}
 
 	function loadCurrentBrightness() {
+		console.log("Starting loadCurrentBrightness");
 		Node.msg("displayGetBrightness", {}, function (response) {
 			console.log("Brightness get response:", JSON.stringify(response));
 			if (response.status === 'success' && response.data) {
@@ -31,12 +31,17 @@ BaseMenu {
 				root.updatingFromSystem = true;
 				root.displayBrightness = actualBrightness;
 				root.brightnessLoaded = true;
+				root.loadError = false;
+				console.log("Success - loadError set to false");
 				root.updatingFromSystem = false;
 			} else {
-				console.log("Brightness load failed, using default 50");
+				console.log("Brightness load failed:", response.message || "Unknown error");
 				root.updatingFromSystem = true;
-				root.displayBrightness = 50;
+				root.displayBrightness = 100; // Set to maximum on error
 				root.brightnessLoaded = true;
+				root.loadError = true;
+				root.errorMessage = response.message || "Failed to load current brightness";
+				console.log("Error - loadError set to true, errorMessage:", root.errorMessage);
 				root.updatingFromSystem = false;
 			}
 		});
@@ -79,13 +84,17 @@ BaseMenu {
 			from: 0
 			to: 100
 			stepSize: 1
-			value: root.displayBrightness  // Direct binding to displayBrightness
+			value: root.displayBrightness
 			suffix: "%"
-			enabled: root.brightnessLoaded
-			opacity: root.brightnessLoaded ? 1.0 : 0.5
+			enabled: {
+				console.log("Range enabled check - brightnessLoaded:", root.brightnessLoaded, "loadError:", root.loadError);
+				return root.brightnessLoaded && !root.loadError;
+			}
+			opacity: enabled ? 1.0 : 0.5
 
 			onRangeValueChanged: function (newValue) {
-				if (root.brightnessLoaded && !root.updatingFromSystem) {
+				console.log("Range value changed:", newValue, "enabled:", enabled, "loadError:", root.loadError);
+				if (root.brightnessLoaded && !root.updatingFromSystem && !root.loadError) {
 					root.displayBrightness = newValue;
 					root.brightnessChanged(newValue);
 					root.saveBrightness(newValue);
@@ -99,7 +108,10 @@ BaseMenu {
 			width: parent.width * 0.9
 			type: "error"
 			message: root.errorMessage
-			visible: root.hasError
+			visible: {
+				console.log("Alert visibility check - hasError:", root.hasError, "loadError:", root.loadError, "message:", root.errorMessage);
+				return root.hasError || root.loadError;
+			}
 		}
 
 		Text {
@@ -107,7 +119,7 @@ BaseMenu {
 			text: root.brightnessLoaded ? "" : tr("common.loading")
 			font.pixelSize: root.height * 0.025
 			color: colors.disabledForeground
-			visible: !root.brightnessLoaded
+			visible: !root.brightnessLoaded && !root.loadError
 		}
 	}
 }
