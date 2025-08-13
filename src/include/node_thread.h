@@ -1,6 +1,8 @@
 #ifndef NODE_THREAD_H
 #define NODE_THREAD_H
 
+#ifdef ENABLE_NODEJS
+
 #include <libplatform/libplatform.h>
 #include <node.h>
 #include <uv.h>
@@ -72,5 +74,7 @@ private:
 
  static NodeThread *s_instance;
 };
+
+#endif // ENABLE_NODEJS
 
 #endif		// NODE_THREAD_H

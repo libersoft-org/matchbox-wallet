@@ -4,7 +4,10 @@ echo "Checking dependencies..."
 is_installed() {
  dpkg -l "$1" 2>/dev/null | grep -q "^ii"
 }
-PACKAGES=("cmake" "qt6-base-dev" "qt6-declarative-dev" "qt6-declarative-dev-tools" "qt6-multimedia-dev" "qt6-svg-dev" "qml6-module-qtquick" "qml6-module-qtmultimedia" "libnode-dev" "npm" "clang-format")
+
+PACKAGES=("cmake" "qt6-base-dev" "qt6-declarative-dev" "qt6-declarative-dev-tools" "qt6-multimedia-dev" "qt6-svg-dev" "qml6-module-qtquick" "qml6-module-qtmultimedia" "libnode-dev" "npm")
+# "clang-format")
+
 MISSING_PACKAGES=()
 for package in "${PACKAGES[@]}"; do
  if ! is_installed "$package"; then
@@ -14,7 +17,7 @@ for package in "${PACKAGES[@]}"; do
 done
 if [ ${#MISSING_PACKAGES[@]} -gt 0 ]; then
  echo "Installing missing packages: ${MISSING_PACKAGES[*]}"
- apt update && apt install -y "${MISSING_PACKAGES[@]}"
+ sudo apt update && sudo apt install -y "${MISSING_PACKAGES[@]}"
 else
  echo "All dependencies are already installed."
 fi
@@ -23,7 +26,7 @@ fi
 echo "Ensuring JavaScript dependencies..."
 if ! command -v npm >/dev/null 2>&1; then
  echo "npm not found, attempting to install..."
- apt update && apt install -y npm || {
+ sudo apt update && sudo apt install -y npm || {
   echo "Failed to install npm."
   exit 1
  }
@@ -44,7 +47,7 @@ if [ -d "build" ]; then
 fi
 mkdir -p build/linux
 cd build/linux
-cmake ../.. -DCMAKE_BUILD_TYPE=Release
+cmake ../.. -DCMAKE_BUILD_TYPE=Release -DENABLE_NODEJS=ON
 if [ $? -ne 0 ]; then
  echo "CMAKE configuration failed!"
  exit 1

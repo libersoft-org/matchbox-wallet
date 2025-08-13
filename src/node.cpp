@@ -1,5 +1,7 @@
 #include "include/node.h"
 
+#ifdef ENABLE_NODEJS
+
 #include <QCoreApplication>
 #include <QDebug>
 #include <QMutexLocker>
@@ -118,18 +120,44 @@ void NodeJS::msg(const QString &name, const QJsonObject &params, std::function<v
 void NodeJS::msg(const QString &name, const QJsonObject &params, const QJSValue &callback) {
  if (callback.isCallable()) {
 		qDebug() << "NodeJS::msg creating callback wrapper for action:" << name;
-		msg(name, params, [callback, name](const QJsonObject &result) mutable {
+
+        msg(name, params, [callback, name](const QJsonObject &result) mutable {
+//		msg(name, params, [this, callback, name](const QJsonObject &result) mutable {
+
+
 			qDebug() << "NodeJS::msg callback triggered for action:" << name;
 			QJsonDocument doc(result);
 			QString jsonString = doc.toJson(QJsonDocument::Compact);
-			qDebug() << "NodeJS::msg calling JS callback with JSON:" << jsonString;
 
-			QJSValue callResult = callback.call({QJSValue(jsonString)});
-			if (callResult.isError()) {
-				qWarning() << "JavaScript callback error:" << callResult.toString();
-			} else {
-				qDebug() << "NodeJS::msg JS callback executed successfully";
-			}
+
+
+
+ qDebug() << "NodeJS::msg calling JS callback with JSON:" << jsonString;
+
+ QJSValue callResult = callback.call({QJSValue(jsonString)});
+ if (callResult.isError()) {
+         qWarning() << "JavaScript callback error:" << callResult.toString();
+ } else {
+         qDebug() << "NodeJS::msg JS callback executed successfully";
+ }
+
+
+
+/*
+			qDebug() << "NodeJS::msg marshalling JS callback to main thread with JSON:" << jsonString;
+
+			// Marshal the callback execution to the main thread
+			QMetaObject::invokeMethod(this, [callback, jsonString, name]() mutable {
+				qDebug() << "NodeJS::msg executing JS callback on main thread for action:" << name;
+				QJSValue callResult = callback.call({QJSValue(jsonString)});
+				if (callResult.isError()) {
+					qWarning() << "JavaScript callback error:" << callResult.toString();
+				} else {
+					qDebug() << "NodeJS::msg JS callback executed successfully";
+				}
+			}, Qt::QueuedConnection);
+*/
+
 		});
  } else {
 		msg(name, params);
@@ -139,3 +167,5 @@ void NodeJS::msg(const QString &name, const QJsonObject &params, const QJSValue 
 void NodeJS::msg(const QString &name, const QJsonObject &params) {
  msg(name, params, [this](const QJsonObject &result) { emit messageResponse(result); });
 }
+
+#endif // ENABLE_NODEJS

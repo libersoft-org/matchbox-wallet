@@ -1,0 +1,67 @@
+# Valgrind suppression file for Qt6 applications
+# These suppressions filter out known false positives in Qt6 libraries
+
+{
+   Qt6Core-waitid-unaddressable
+   Memcheck:Param
+   waitid(infop)
+   fun:syscall
+   obj:*/libQt6Core.so*
+}
+
+{
+   Qt6Core-waitid-syscall
+   Memcheck:Param
+   syscall(number)
+   fun:syscall
+   obj:*/libQt6Core.so*
+}
+
+{
+   xcb-writev-uninitialised
+   Memcheck:Param
+   writev(vector[0])
+   fun:__writev
+   fun:writev
+   obj:*/libxcb.so*
+}
+
+{
+   xcb-write-uninitialised
+   Memcheck:Param
+   write(buf)
+   fun:__write_nocancel
+   obj:*/libxcb.so*
+}
+
+{
+   xcb-connect-uninitialized
+   Memcheck:Cond
+   obj:*/libxcb.so*
+   obj:*/libxcb.so*
+}
+
+{
+   Qt6XcbQpa-connection-issues
+   Memcheck:Param
+   writev(vector[0])
+   fun:__writev
+   fun:writev
+   obj:*/libxcb.so*
+   obj:*/libQt6XcbQpa.so*
+}
+
+{
+   X11-display-open-uninitialized
+   Memcheck:Cond
+   obj:*/libX11.so*
+   fun:XOpenDisplay
+}
+
+{
+   Qt6Gui-platform-integration
+   Memcheck:Leak
+   fun:*alloc
+   obj:*/libQt6Gui.so*
+   fun:*createPlatformIntegration*
+}

@@ -15,8 +15,10 @@
 #include "include/node.h"
 
 int main(int argc, char *argv[]) {
+#ifdef ENABLE_NODEJS
  // Setup arguments for Node.js FIRST - before Qt
  argv = uv_setup_args(argc, argv);
+#endif
 
  // Platform and environment setup (moved from start.sh)
  auto exists = [](const char *p) { return QFile::exists(QString::fromUtf8(p)); };
@@ -68,12 +70,16 @@ int main(int argc, char *argv[]) {
 
  QQmlApplicationEngine engine;
 
+#ifdef ENABLE_NODEJS
  // Initialize Node.js
  if (!nodeJS->initialize()) {
 		qWarning() << "Failed to initialize Node.js embedding";
  } else {
 		qDebug() << "Node.js initialization completed successfully";
  }
+#else
+ qDebug() << "Node.js integration disabled at compile time";
+#endif
 
  // Register context properties instead of QML types
  engine.rootContext()->setContextProperty("NodeJS", nodeJS);

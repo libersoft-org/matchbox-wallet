@@ -1,5 +1,7 @@
 #include "include/node_thread.h"
 
+#ifdef ENABLE_NODEJS
+
 #include <QCoreApplication>
 #include <QDebug>
 #include <QDir>
@@ -588,3 +590,5 @@ void NodeThread::nativeCallback(const v8::FunctionCallbackInfo<v8::Value>& args)
 		}
  }
 }
+
+#endif // ENABLE_NODEJS
