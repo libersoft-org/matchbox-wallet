@@ -28,6 +28,7 @@ const HANDLERS = {
 	timeChangeTimeZone: (params) => timeManager.changeTimeZone(params),
 	timeSyncTime: () => timeManager.syncTime(),
 	timeSetAutoTimeSync: (params) => timeManager.setAutoTimeSync(params),
+	timeGetAutoTimeSyncStatus: () => timeManager.getAutoTimeSyncStatus(),
 	timeSetSystemDateTime: (params) => timeManager.setSystemDateTime(params),
 	audioGetVolume: () => audioManager.getVolume(),
 	audioSetVolume: (params) => audioManager.setVolume(params),

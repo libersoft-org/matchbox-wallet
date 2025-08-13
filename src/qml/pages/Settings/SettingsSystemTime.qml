@@ -13,6 +13,21 @@ BaseMenu {
 	property date displayTime: new Date()  // Time shown in the top display
 	property bool userIsEditing: false
 
+	// Component initialization
+	Component.onCompleted: {
+		// Load actual auto time sync status from system
+		NodeUtils.msg("timeGetAutoTimeSyncStatus", {}, function (result) {
+			console.log("Auto time sync status:", JSON.stringify(result));
+			if (result.status === "success" && result.data) {
+				autoSyncSwitch.checked = result.data.autoSync;
+				// Also update settings manager if different
+				if (window.settingsManager && window.settingsManager.autoTimeSync !== result.data.autoSync) {
+					window.settingsManager.saveAutoTimeSync(result.data.autoSync);
+				}
+			}
+		});
+	}
+
 	// Function to mark user as editing and restart reset timer
 	function markUserEditing() {
 		root.userIsEditing = true;

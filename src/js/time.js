@@ -211,6 +211,36 @@ class TimeManager {
 		}
 	}
 
+	async getAutoTimeSyncStatus() {
+		try {
+			console.log('Getting current auto time sync status');
+			const { exec } = require('child_process');
+			const { promisify } = require('util');
+			const execAsync = promisify(exec);
+
+			// Get current time sync status
+			const { stdout } = await execAsync('timedatectl status');
+			const ntpEnabled = stdout.includes('NTP enabled: yes') || stdout.includes('Network time on: yes') || stdout.includes('NTP service: active');
+
+			return {
+				status: 'success',
+				data: {
+					autoSync: ntpEnabled,
+					timeStatus: stdout,
+				},
+			};
+		} catch (error) {
+			console.error('Failed to get auto time sync status:', error);
+			return {
+				status: 'error',
+				message: 'Failed to get auto time sync status: ' + error.message,
+				data: {
+					autoSync: false,
+				},
+			};
+		}
+	}
+
 	async setSystemDateTime(params) {
 		try {
 			console.log('Setting system date and time to:', params);
