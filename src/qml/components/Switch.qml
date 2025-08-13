@@ -13,12 +13,12 @@ Switch {
 		radius: width / 2
 		color: colors.disabledForeground
 		border.width: control.height * 0.05
-		border.color: colors.primaryForeground
+		border.color: control.checked ? colors.primaryForeground : colors.disabledBackground
 
 		Rectangle {
-			x: control.checked ? (parent.width - width) - 2 : 2
-			width: parent.height * 0.85
-			height: parent.height * 0.85
+			x: control.checked ? (parent.width - width) - parent.height * 0.1 : parent.height * 0.1
+			width: parent.height * 0.82
+			height: parent.height * 0.82
 			radius: height / 2
 			color: control.checked ? colors.primaryForeground : colors.disabledBackground
 			anchors.verticalCenter: parent.verticalCenter
