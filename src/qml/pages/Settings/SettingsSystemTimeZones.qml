@@ -7,19 +7,19 @@ import "../../utils/NodeUtils.js" as NodeUtils
 
 BaseMenu {
 	id: root
-	title: selectedContinent ? (tr("menu.settings.system.time.timezone") + " - " + selectedContinent) : tr("menu.settings.system.time.timezone")
+	title: currentPath ? (tr("menu.settings.system.time.timezone") + " - " + currentPath.replace(/\//g, " / ")) : tr("menu.settings.system.time.timezone")
 	signal timezoneSelected(string tz)
-	signal continentSelected(string continent)
+	signal pathSelected(string path)
 	property var timezones: []
-	property string selectedContinent: ""  // If set, show cities for this continent
+	property string currentPath: ""  // Current path (e.g., "" -> "America" -> "America/Argentina")
 	property var displayItems: []
 
 	Component.onCompleted: {
-		if (selectedContinent) {
-			// We're showing cities for a continent
-			extractCitiesForContinent();
+		if (currentPath) {
+			// We're showing items for a specific path
+			extractItemsForPath();
 		} else {
-			// We're showing continents
+			// We're showing top-level continents
 			loadTimeZones();
 		}
 	}
@@ -31,7 +31,7 @@ BaseMenu {
 			if (response.status === 'success' && response.data) {
 				timezones = response.data;
 				console.log("Loaded", timezones.length, "time zones");
-				extractContinents();
+				extractItemsForPath();
 			} else {
 				console.error("Failed to load time zones:", response.message || "Unknown error");
 				timezones = ["UTC"];
@@ -46,71 +46,67 @@ BaseMenu {
 		});
 	}
 
-	function extractContinents() {
-		var continentsSet = new Set();
+	function extractItemsForPath() {
+		var itemsSet = new Set();
+		var pathDepth = currentPath ? currentPath.split("/").length : 0;
 
-		// Add special cases first
-		continentsSet.add("UTC");
+		// Add UTC at top level
+		if (!currentPath) {
+			itemsSet.add("UTC");
+		}
 
 		for (var i = 0; i < timezones.length; i++) {
 			var timezone = timezones[i];
-			if (timezone.includes("/")) {
-				var parts = timezone.split("/");
-				continentsSet.add(parts[0]);
-			}
-		}
 
-		// Convert Set to Array, sort and create display items
-		var continentsArray = Array.from(continentsSet).sort();
-		var items = [];
+			// Skip UTC if we're not at root level
+			if (timezone === "UTC" && currentPath)
+				continue;
 
-		for (var j = 0; j < continentsArray.length; j++) {
-			var continent = continentsArray[j];
-			if (continent === "UTC") {
-				items.push({
-					text: "UTC",
-					isTimezone: true,
-					timezone: "UTC"
-				});
+			if (currentPath) {
+				// We're in a subdirectory - check if timezone starts with our path
+				if (timezone.startsWith(currentPath + "/")) {
+					var remainingPath = timezone.substring(currentPath.length + 1);
+					var nextPart = remainingPath.split("/")[0];
+					if (nextPart) {
+						itemsSet.add(nextPart);
+					}
+				}
 			} else {
-				items.push({
-					text: continent,
-					isTimezone: false,
-					continent: continent
-				});
-			}
-		}
-
-		displayItems = items;
-		console.log("Extracted continents:", JSON.stringify(continentsArray));
-	}
-
-	function extractCitiesForContinent() {
-		var citiesArray = [];
-
-		for (var i = 0; i < timezones.length; i++) {
-			var timezone = timezones[i];
-			if (timezone.startsWith(selectedContinent + "/")) {
-				var parts = timezone.split("/");
-				if (parts.length >= 2) {
-					// Take everything after the continent as the city name
-					var city = parts.slice(1).join("/");
-					citiesArray.push({
-						text: city.replace(/_/g, " "),
-						isTimezone: true,
-						timezone: timezone
-					});
+				// We're at root level - extract top-level continents
+				if (timezone.includes("/")) {
+					var parts = timezone.split("/");
+					itemsSet.add(parts[0]);
 				}
 			}
 		}
 
-		// Sort cities by display name
-		citiesArray.sort(function (a, b) {
-			return a.text.localeCompare(b.text);
-		});
+		// Convert Set to Array and sort
+		var itemsArray = Array.from(itemsSet).sort();
+		var items = [];
 
-		displayItems = citiesArray;
-		console.log("Extracted", citiesArray.length, "cities for continent:", selectedContinent);
+		for (var j = 0; j < itemsArray.length; j++) {
+			var item = itemsArray[j];
+			var fullPath = currentPath ? (currentPath + "/" + item) : item;
+
+			// Check if this is a complete timezone (leaf node)
+			var isCompleteTimezone = false;
+			for (var k = 0; k < timezones.length; k++) {
+				if (timezones[k] === fullPath) {
+					isCompleteTimezone = true;
+					break;
+				}
+			}
+
+			items.push({
+				text: item.replace(/_/g, " "),
+				isTimezone: isCompleteTimezone,
+				timezone: isCompleteTimezone ? fullPath : null,
+				path: isCompleteTimezone ? null : fullPath
+			});
+		}
+
+		displayItems = items;
+		console.log("Extracted", items.length, "items for path:", currentPath || "root");
 	}
 
 	Repeater {
@@ -122,8 +118,8 @@ BaseMenu {
 				if (modelData.isTimezone) {
 					root.timezoneSelected(modelData.timezone);
 				} else {
-					// Emit signal to navigate to cities for this continent
-					root.continentSelected(modelData.continent);
+					// Emit signal to navigate deeper into this path
+					root.pathSelected(modelData.path);
 				}
 			}
 		}
