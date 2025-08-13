@@ -96,7 +96,7 @@
 				"time": {
 					"button": "Datum a čas",
 					"title": "Nastavení data a času",
-					"set": "Nastavit datum a čas",
+					"set": "Nastavit manuálně",
 					"auto": "Automatická synchr. času",
 					"server": "NTP server",
 					"timezone": "Časové pásmo"
