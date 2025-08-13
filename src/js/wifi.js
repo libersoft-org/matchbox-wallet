@@ -172,33 +172,6 @@ class WifiManager {
 			console.log('About to call ensureWifiInit...');
 			await this.ensureWifiInit();
 			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
-			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
-			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
-			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
-			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
-			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
-			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
-			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
-			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
-			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
-			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
-			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
-			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
-			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
-			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
-			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
-			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
-			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
-			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
-			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
-			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
-			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
-			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
-			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
-			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
-			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
-			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
-			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
 
 			if (this.isCurrentlyScanning) {
 				console.log('Scan already in progress, returning error');
@@ -211,17 +184,10 @@ class WifiManager {
 			this.isCurrentlyScanning = true;
 			console.log('Starting WiFi scan...');
 
-
-
-
-			await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate delay before scan
-
-
-
 			// Add timeout to prevent hanging scans
 			const scanPromise = wifi.scan();
 			const timeoutPromise = new Promise((_, reject) => {
-				setTimeout(() => reject(new Error('WiFi scan timeout after 8 seconds')), 18000);
+				setTimeout(() => reject(new Error('WiFi scan timeout after 8 seconds')), 8000);
 			});
 
 			// Use node-wifi with timeout protection

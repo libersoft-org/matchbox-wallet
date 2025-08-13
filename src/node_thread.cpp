@@ -471,7 +471,7 @@ void NodeThread::processMessages() {
 		}
 
 		// Sleep briefly to prevent busy waiting
-		QThread::msleep(1);
+		QThread::msleep(10);
  }
 }
 

@@ -41,10 +41,10 @@ ApplicationWindow {
 
 	// Timer to periodically update WiFi strength (keep for signal strength only)
 	Timer {
-		interval: 15000  // Update every 5 seconds
+		interval: 5000  // Update every 5 seconds
 		running: true
 		repeat: true
-		//onTriggered: updateWifiStrength()
+		onTriggered: updateWifiStrength()
 	}
 
 	// Create instances of our "singleton" objects
@@ -116,7 +116,7 @@ ApplicationWindow {
 		y = (Screen.height - height) / 2;
 		console.log("ApplicationWindow completed");
 		// Initialize WiFi strength
-		//updateWifiStrength();
+		updateWifiStrength();
 		// Language initialization is now handled by settingsManager.onSettingsLoaded
 	}
 
