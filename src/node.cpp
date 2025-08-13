@@ -121,29 +121,13 @@ void NodeJS::msg(const QString &name, const QJsonObject &params, const QJSValue 
  if (callback.isCallable()) {
 		qDebug() << "NodeJS::msg creating callback wrapper for action:" << name;
 
-        msg(name, params, [callback, name](const QJsonObject &result) mutable {
-//		msg(name, params, [this, callback, name](const QJsonObject &result) mutable {
-
+		msg(name, params, [this, callback, name](const QJsonObject &result) mutable {
 
 			qDebug() << "NodeJS::msg callback triggered for action:" << name;
 			QJsonDocument doc(result);
 			QString jsonString = doc.toJson(QJsonDocument::Compact);
 
 
-
-
- qDebug() << "NodeJS::msg calling JS callback with JSON:" << jsonString;
-
- QJSValue callResult = callback.call({QJSValue(jsonString)});
- if (callResult.isError()) {
-         qWarning() << "JavaScript callback error:" << callResult.toString();
- } else {
-         qDebug() << "NodeJS::msg JS callback executed successfully";
- }
-
-
-
-/*
 			qDebug() << "NodeJS::msg marshalling JS callback to main thread with JSON:" << jsonString;
 
 			// Marshal the callback execution to the main thread
@@ -156,7 +140,6 @@ void NodeJS::msg(const QString &name, const QJsonObject &params, const QJSValue 
 					qDebug() << "NodeJS::msg JS callback executed successfully";
 				}
 			}, Qt::QueuedConnection);
-*/
 
 		});
  } else {
