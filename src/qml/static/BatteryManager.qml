@@ -13,7 +13,7 @@ Item {
 		interval: 10000 // 10 seconds
 		running: true
 		repeat: true
-		onTriggered: batteryManager.updateBatteryStatus()
+		//onTriggered: batteryManager.updateBatteryStatus()
 	}
 
 	// Functions
@@ -58,6 +58,6 @@ Item {
 
 	// Initialize battery info when component is created
 	Component.onCompleted: {
-		getBatteryInfo();
+		//getBatteryInfo();
 	}
 }

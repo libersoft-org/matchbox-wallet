@@ -132,14 +132,28 @@ class WifiManager {
 
 	// Ensure WiFi is initialized before any operation
 	async ensureWifiInit() {
+		console.log('ensureWifiInit called at', new Date().toISOString());
+		console.log('Current state - wifiInitialized:', this.wifiInitialized, 'wifiInitializing:', this.wifiInitializing);
+
 		if (!this.wifiInitialized && !this.wifiInitializing) {
+			console.log('WiFi not initialized, starting initialization...');
 			await this.initializeWifi();
 		}
 
 		// Wait for initialization to complete
+		let waitCount = 0;
 		while (this.wifiInitializing) {
+			waitCount++;
+			console.log(`Waiting for WiFi initialization to complete... (attempt ${waitCount})`);
 			await new Promise((resolve) => setTimeout(resolve, 100));
+			if (waitCount > 50) { // Safety check - max 5 seconds wait
+				console.error('WiFi initialization timeout - breaking out of wait loop');
+				this.wifiInitializing = false;
+				break;
+			}
 		}
+
+		console.log('WiFi initialization check complete, final state - wifiInitialized:', this.wifiInitialized, 'wifiInitializing:', this.wifiInitializing);
 	}
 
 	// Helper function to convert signal quality to bars (1-4)
@@ -158,6 +172,33 @@ class WifiManager {
 			console.log('About to call ensureWifiInit...');
 			await this.ensureWifiInit();
 			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
+			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
+			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
+			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
+			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
+			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
+			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
+			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
+			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
+			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
+			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
+			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
+			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
+			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
+			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
+			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
+			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
+			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
+			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
+			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
+			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
+			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
+			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
+			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
+			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
+			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
+			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
+			console.log('ensureWifiInit completed, wifiInterface:', this.wifiInterface);
 
 			if (this.isCurrentlyScanning) {
 				console.log('Scan already in progress, returning error');
@@ -170,10 +211,17 @@ class WifiManager {
 			this.isCurrentlyScanning = true;
 			console.log('Starting WiFi scan...');
 
+
+
+
+			await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate delay before scan
+
+
+
 			// Add timeout to prevent hanging scans
 			const scanPromise = wifi.scan();
 			const timeoutPromise = new Promise((_, reject) => {
-				setTimeout(() => reject(new Error('WiFi scan timeout after 8 seconds')), 8000);
+				setTimeout(() => reject(new Error('WiFi scan timeout after 8 seconds')), 18000);
 			});
 
 			// Use node-wifi with timeout protection
@@ -368,10 +416,15 @@ class WifiManager {
 	}
 
 	async getConnectionStatus() {
+		console.log('getConnectionStatus called at', new Date().toISOString());
 		try {
+			console.log('About to call ensureWifiInit from getConnectionStatus...');
 			await this.ensureWifiInit();
+			console.log('ensureWifiInit completed in getConnectionStatus');
 
+			console.log('About to call wifi.getCurrentConnections...');
 			const currentConnections = await wifi.getCurrentConnections();
+			console.log('wifi.getCurrentConnections returned:', currentConnections);
 
 			if (currentConnections && currentConnections.length > 0) {
 				const connection = currentConnections[0];
@@ -414,27 +467,36 @@ class WifiManager {
 	}
 
 	async getCurrentStrength() {
+		console.log('getCurrentStrength called at', new Date().toISOString());
+		console.log('wifiInitialized:', this.wifiInitialized, 'wifiInitializing:', this.wifiInitializing);
 		try {
+			console.log('About to call getConnectionStatus...')
 			const status = await this.getConnectionStatus();
+			console.log('getConnectionStatus returned:', JSON.stringify(status));
 			if (status.status === 'success' && status.data.connected) {
-				return {
+				const result = {
 					status: 'success',
 					data: {
 						strength: status.data.strength,
 						quality: status.data.quality,
 					},
 				};
+				console.log('getCurrentStrength returning connected result:', result);
+				return result;
 			} else {
-				return {
+				const result = {
 					status: 'success',
 					data: {
 						strength: 0,
 						quality: 0,
 					},
 				};
+				console.log('getCurrentStrength returning disconnected result:', result);
+				return result;
 			}
 		} catch (error) {
-			return {
+			console.error('getCurrentStrength caught error:', error);
+			const result = {
 				status: 'error',
 				message: error.message,
 				data: {
@@ -442,6 +504,8 @@ class WifiManager {
 					quality: 0,
 				},
 			};
+			console.log('getCurrentStrength returning error result:', result);
+			return result;
 		}
 	}
 

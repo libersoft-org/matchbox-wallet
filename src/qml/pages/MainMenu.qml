@@ -176,4 +176,20 @@ BaseMenu {
 
 		}
 	}
+
+	MenuButton {
+		text: "wifi"
+		onClicked: {
+			console.log("Fetching WiFi strength...");
+			Node.msg("wifiGetCurrentStrength", {}, function (response) {
+				console.log("WiFi strength response:", JSON.stringify(response));
+				if (response.status === 'success') {
+					console.log("WiFi strength:", response.data.strength);
+				} else {
+					console.error("Failed to get WiFi strength:", response.message);
+				}
+			});
+
+		}
+	}
 }

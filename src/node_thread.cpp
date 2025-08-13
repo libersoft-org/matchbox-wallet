@@ -432,7 +432,7 @@ void NodeThread::processMessages() {
  qDebug() << "NodeThread: Starting infinite loop for message processing and event loop";
 
  while (m_running) {
-		// qDebug() << "NodeThread: loop";
+		//qDebug() << "NodeThread: loop";
 
 		{
 			QMutexLocker locker(&m_messageMutex);
@@ -454,17 +454,24 @@ void NodeThread::processMessages() {
 			// Add the missing Context::Scope to make GetCurrentEventLoop work
 			v8::Context::Scope context_scope(m_setup->context());
 
+			// Process any pending microtasks (promise continuations)
+			m_isolate->PerformMicrotaskCheckpoint();
+
 			// Now GetCurrentEventLoop should work because we have all required scopes
 			uv_loop_t* loop = node::GetCurrentEventLoop(m_isolate);
 			if (loop) {
 				uv_run(loop, UV_RUN_NOWAIT);
+				
+				// Process microtasks again after running the event loop
+				// This ensures promise chains continue to execute
+				m_isolate->PerformMicrotaskCheckpoint();
 			} else {
 				qDebug() << "NodeThread: GetCurrentEventLoop still returns null";
 			}
 		}
 
 		// Sleep briefly to prevent busy waiting
-		QThread::msleep(100);
+		QThread::msleep(1);
  }
 }
 
@@ -525,6 +532,10 @@ void NodeThread::handleNodeMessage(const NodeMessage& message) {
 		message.callback(QJsonObject{{"status", "error"}, {"message", "Failed to call handleMessage"}});
 		return;
  }
+
+ // Since handleMessage is async and returns a Promise, we need to ensure
+ // the microtask queue is processed to allow the promise chain to continue
+ m_isolate->PerformMicrotaskCheckpoint();
 
  qDebug() << "handleNodeMessage returning.";
 }
