@@ -55,7 +55,8 @@ ApplicationWindow {
 
 	// Global properties for timezone navigation
 	property var globalTimezones: []
-	property string globalSelectedContinent: ""
+	property string globalSelectedPath: ""
+	property int timezoneNavigationDepth: 0
 
 	Colors {
 		id: colors
@@ -390,10 +391,11 @@ ApplicationWindow {
 	Component {
 		id: settingsSystemTimeZonesPageComponent
 		SettingsSystemTimeZones {
+			Component.onCompleted: {
+				// Reset navigation depth when entering timezone selection
+				window.timezoneNavigationDepth = 1;
+			}
 			onTimezoneSelected: function (tz) {
-				if (window.settingsManager)
-					window.settingsManager.saveTimeZone(tz);
-
 				// Change system timezone using NodeUtils
 				Node.msg("timeChangeTimeZone", {
 					timezone: tz
@@ -408,25 +410,32 @@ ApplicationWindow {
 
 				window.goBack();
 			}
-			onContinentSelected: function (continent) {
-				// Store timezones globally and navigate to cities
+			onPathSelected: function (path) {
+				// Store timezones globally and navigate deeper
 				window.globalTimezones = timezones;
-				window.globalSelectedContinent = continent;
-				window.goPage(settingsSystemTimeZonesCitiesPageComponent);
+				window.globalSelectedPath = path;
+				window.timezoneNavigationDepth++;
+				window.goPage(settingsSystemTimeZonesSubPageComponent);
 			}
 		}
 	}
 
-	// System timezone cities selection page
+	// System timezone sub-level selection page (can handle any depth)
 	Component {
-		id: settingsSystemTimeZonesCitiesPageComponent
+		id: settingsSystemTimeZonesSubPageComponent
 		SettingsSystemTimeZones {
-			selectedContinent: window.globalSelectedContinent
+			currentPath: window.globalSelectedPath
 			timezones: window.globalTimezones || []
-			onTimezoneSelected: function (tz) {
-				if (window.settingsManager)
-					window.settingsManager.saveTimeZone(tz);
 
+			Component.onDestruction: {
+				// When going back (not selecting timezone), decrement depth
+				if (window.timezoneNavigationDepth > 0) {
+					window.timezoneNavigationDepth--;
+					console.log("Back navigation, depth now:", window.timezoneNavigationDepth);
+				}
+			}
+
+			onTimezoneSelected: function (tz) {
 				// Change system timezone using NodeUtils
 				Node.msg("timeChangeTimeZone", {
 					timezone: tz
@@ -439,11 +448,18 @@ ApplicationWindow {
 					}
 				});
 
-				// Clear global state
-				window.globalSelectedContinent = "";
+				// Clear global state and go back the exact number of steps
+				var stepsBack = window.timezoneNavigationDepth;
+				window.globalSelectedPath = "";
 				window.globalTimezones = [];
-				// Go back 2 levels to return to SettingsSystemTime
-				window.goBackMultiple(2);
+				window.timezoneNavigationDepth = 0;
+				window.goBackMultiple(stepsBack);
+			}
+			onPathSelected: function (path) {
+				// Navigate deeper - create new instance with deeper path
+				window.globalSelectedPath = path;
+				window.timezoneNavigationDepth++;
+				window.goPage(settingsSystemTimeZonesSubPageComponent);
 			}
 		}
 	}

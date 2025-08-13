@@ -108,74 +108,6 @@ class TimeManager {
 		}
 	}
 
-	async syncTime() {
-		try {
-			console.log('Syncing system time with internet');
-			const { exec } = require('child_process');
-			const { promisify } = require('util');
-			const execAsync = promisify(exec);
-
-			// Try multiple time sync methods in order of preference
-			const timeSyncCommands = [
-				'timedatectl set-ntp true', // Enable NTP via systemd
-				'sudo timedatectl set-ntp true', // With sudo
-			];
-
-			let lastError = null;
-			let syncResult = null;
-
-			for (const cmd of timeSyncCommands) {
-				try {
-					console.log('Trying time sync command: ' + cmd);
-					const result = await execAsync(cmd);
-					// If command succeeded, verify time sync status
-					try {
-						const { stdout } = await execAsync('timedatectl status');
-						console.log('Time sync status:', stdout);
-						syncResult = {
-							status: 'success',
-							message: 'Time synchronization initiated with: ' + cmd,
-							data: {
-								command: cmd,
-								output: result.stdout,
-								timeStatus: stdout,
-							},
-						};
-						break;
-					} catch (statusError) {
-						console.log('Could not verify time status:', statusError.message);
-						syncResult = {
-							status: 'success',
-							message: 'Time synchronization initiated with: ' + cmd,
-							data: {
-								command: cmd,
-								output: result.stdout,
-							},
-						};
-						break;
-					}
-				} catch (error) {
-					console.log('Time sync command failed: ' + cmd + ' - ' + error.message);
-					lastError = error;
-					continue;
-				}
-			}
-
-			if (syncResult) {
-				console.log('Time synchronization completed successfully');
-				return syncResult;
-			}
-
-			throw lastError || new Error('All time sync methods failed');
-		} catch (error) {
-			console.error('Time sync failed:', error);
-			return {
-				status: 'error',
-				message: 'Failed to sync system time: ' + error.message,
-			};
-		}
-	}
-
 	async setAutoTimeSync(params) {
 		try {
 			console.log('Setting auto time sync to:', params.enabled);
@@ -207,6 +139,140 @@ class TimeManager {
 			return {
 				status: 'error',
 				message: 'Failed to set auto time sync: ' + error.message,
+			};
+		}
+	}
+
+	async getCurrentTimezone() {
+		try {
+			console.log('Getting current system timezone');
+			const { exec } = require('child_process');
+			const { promisify } = require('util');
+			const execAsync = promisify(exec);
+
+			// Get current timezone from system
+			const { stdout } = await execAsync('timedatectl show --property=Timezone --value');
+			const currentTimezone = stdout.trim();
+
+			if (currentTimezone) {
+				console.log('Current system timezone:', currentTimezone);
+				return {
+					status: 'success',
+					data: {
+						timezone: currentTimezone,
+					},
+				};
+			} else {
+				throw new Error('Unable to get timezone from timedatectl');
+			}
+		} catch (error) {
+			console.error('Failed to get current timezone:', error);
+			return {
+				status: 'error',
+				message: 'Failed to get current timezone: ' + error.message,
+				data: {
+					timezone: 'UTC',
+				},
+			};
+		}
+	}
+
+	async getAutoTimeSyncStatus() {
+		try {
+			console.log('Getting current auto time sync status');
+			const { exec } = require('child_process');
+			const { promisify } = require('util');
+			const execAsync = promisify(exec);
+
+			// Get current time sync status
+			const { stdout } = await execAsync('timedatectl status');
+			const ntpEnabled = stdout.includes('NTP enabled: yes') || stdout.includes('Network time on: yes') || stdout.includes('NTP service: active');
+
+			return {
+				status: 'success',
+				data: {
+					autoSync: ntpEnabled,
+					timeStatus: stdout,
+				},
+			};
+		} catch (error) {
+			console.error('Failed to get auto time sync status:', error);
+			return {
+				status: 'error',
+				message: 'Failed to get auto time sync status: ' + error.message,
+				data: {
+					autoSync: false,
+				},
+			};
+		}
+	}
+
+	async setSystemDateTime(params) {
+		try {
+			console.log('Setting system date and time to:', params);
+			const { exec } = require('child_process');
+			const { promisify } = require('util');
+			const execAsync = promisify(exec);
+
+			if (!params.hours || !params.minutes || !params.seconds || !params.day || !params.month || !params.year) {
+				throw new Error('All date and time parameters are required (hours, minutes, seconds, day, month, year)');
+			}
+
+			// Validate parameters
+			const hours = parseInt(params.hours);
+			const minutes = parseInt(params.minutes);
+			const seconds = parseInt(params.seconds);
+			const day = parseInt(params.day);
+			const month = parseInt(params.month);
+			const year = parseInt(params.year);
+
+			if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59 || seconds < 0 || seconds > 59) {
+				throw new Error('Invalid time values');
+			}
+			if (day < 1 || day > 31 || month < 1 || month > 12 || year < 1970 || year > 2100) {
+				throw new Error('Invalid date values');
+			}
+
+			// Format date and time string for timedatectl
+			const formattedDate = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+			const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+			const dateTimeString = `${formattedDate} ${formattedTime}`;
+
+			// Try multiple methods to set the date/time
+			const setTimeCommands = [`timedatectl set-time "${dateTimeString}"`, `sudo timedatectl set-time "${dateTimeString}"`, `date -s "${dateTimeString}"`, `sudo date -s "${dateTimeString}"`];
+
+			let lastError = null;
+			for (const cmd of setTimeCommands) {
+				try {
+					console.log('Trying set time command:', cmd);
+					await execAsync(cmd);
+
+					// Verify the change worked by checking current time
+					const { stdout } = await execAsync('date "+%Y-%m-%d %H:%M:%S"');
+					const currentDateTime = stdout.trim();
+
+					console.log('Successfully set system date/time to:', currentDateTime);
+					return {
+						status: 'success',
+						message: 'System date and time updated successfully',
+						data: {
+							dateTime: currentDateTime,
+							requested: dateTimeString,
+						},
+					};
+				} catch (error) {
+					console.log('Set time command failed:', cmd, '-', error.message);
+					lastError = error;
+					continue;
+				}
+			}
+
+			throw lastError || new Error('All date/time setting methods failed');
+		} catch (error) {
+			console.error('Set system date/time failed:', error);
+			return {
+				status: 'error',
+				message: 'Failed to set system date/time: ' + error.message,
 			};
 		}
 	}

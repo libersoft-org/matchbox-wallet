@@ -6,21 +6,21 @@ Switch {
 	property color backgroundColor: colors.primaryBackground
 
 	indicator: Rectangle {
-		implicitHeight: 32
-		implicitWidth: 56
+		implicitHeight: window.width * 0.07
+		implicitWidth: window.width * 0.12
 		x: control.leftPadding
 		y: parent.height / 2 - height / 2
 		radius: width / 2
-		color: control.checked ? colors.success : colors.warning
-		border.width: control.checked ? 2 : 1
-		border.color: control.checked ? colors.warning : colors.success
+		color: colors.disabledForeground
+		border.width: control.height * 0.05
+		border.color: control.checked ? colors.primaryForeground : colors.disabledBackground
 
 		Rectangle {
-			x: control.checked ? (parent.width - width) - 2 : 2
-			width: 28
-			height: 28
+			x: control.checked ? (parent.width - width) - parent.height * 0.1 : parent.height * 0.1
+			width: parent.height * 0.82
+			height: parent.height * 0.82
 			radius: height / 2
-			color: control.checked ? colors.primaryForeground : colors.disabledForeground
+			color: control.checked ? colors.primaryForeground : colors.disabledBackground
 			anchors.verticalCenter: parent.verticalCenter
 		}
 	}

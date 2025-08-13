@@ -101,8 +101,7 @@
 				"time": {
 					"button": "Date & time",
 					"title": "Date & time settings",
-					"set": "Set time",
-					"sync": "Sync with internet",
+					"set": "Set manually",
 					"auto": "Auto-sync time",
 					"server": "NTP server",
 					"timezone": "Time zone"

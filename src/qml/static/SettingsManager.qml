@@ -8,7 +8,6 @@ QtObject {
 	property string selectedCurrency: "USD"
 	property bool autoTimeSync: true
 	property string ntpServer: "pool.ntp.org"
-	property string timeZone: "UTC"
 
 	signal languageChanged
 	signal currencyChanged
@@ -58,14 +57,8 @@ QtObject {
 				console.log("No ntpServer setting found, using default:", ntpServer);
 			}
 
-			// Load Time Zone
-			result = tx.executeSql('SELECT value FROM settings WHERE key = ?', ['time_zone']);
-			if (result.rows.length > 0) {
-				timeZone = result.rows.item(0).value;
-				console.log("Loaded timeZone from storage:", timeZone);
-			} else {
-				console.log("No timeZone setting found, using default:", timeZone);
-			}
+			// Load auto time sync setting (default true)
+			result = tx.executeSql('SELECT value FROM settings WHERE key = ?', ['auto_time_sync']);
 			if (result.rows.length > 0) {
 				var raw = result.rows.item(0).value;
 				autoTimeSync = (raw === '1' || raw === 'true' || raw === 1 || raw === true);
@@ -114,15 +107,6 @@ QtObject {
 			console.log("ntpServer saved to storage:", server);
 		});
 		ntpServer = server;
-	}
-
-	function saveTimeZone(tz) {
-		var db = getDatabase();
-		db.transaction(function (tx) {
-			tx.executeSql('INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)', ['time_zone', tz]);
-			console.log("timeZone saved to storage:", tz);
-		});
-		timeZone = tz;
 	}
 
 	function getSetting(key, defaultValue) {
