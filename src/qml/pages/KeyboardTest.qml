@@ -57,7 +57,7 @@ Page {
 			spacing: 20
 
 			Text {
-				text: "Test Qt Virtual Keyboard s našimi Input komponenty:"
+				text: "Test Qt Virtual Keyboard:"
 				font.pixelSize: 18
 				color: colors.primaryForeground
 				wrapMode: Text.WordWrap
