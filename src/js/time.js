@@ -34,13 +34,27 @@ class TimeManager {
 			console.log('Loading timezones using timedatectl only');
 			const { stdout } = await execAsync('timedatectl list-timezones 2>/dev/null');
 			if (stdout && stdout.trim()) {
-				const timezones = stdout
+				const allTimezones = stdout
 					.trim()
 					.split('\n')
 					.filter((tz) => tz.trim().length > 0);
-				if (timezones.length > 0) {
-					console.log('Found ' + timezones.length + ' timezones via timedatectl');
-					return timezones.sort();
+				if (allTimezones.length > 0) {
+					console.log('Found ' + allTimezones.length + ' timezones via timedatectl');
+					
+					// Use more efficient filtering - get list of actual timezone files first
+					try {
+						const { stdout: filesOutput } = await execAsync('find /usr/share/zoneinfo -type f | grep -v "/right/" | grep -v "/posix/" | sed "s|/usr/share/zoneinfo/||" | sort');
+						const existingFiles = new Set(filesOutput.trim().split('\n').filter(f => f.length > 0));
+						
+						// Filter timezones to only include those with actual files
+						const validTimezones = allTimezones.filter(tz => existingFiles.has(tz));
+						
+						console.log('Filtered to ' + validTimezones.length + ' valid timezones with files');
+						return validTimezones.sort();
+					} catch (e) {
+						console.log('File-based filtering failed, using all timezones:', e.message);
+						return allTimezones.sort();
+					}
 				}
 			}
 			throw new Error('timedatectl returned no timezones');
