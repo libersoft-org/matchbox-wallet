@@ -31,10 +31,9 @@ BaseMenu {
 		});
 	}
 
-	// Function to mark user as editing and restart reset timer
+	// Function to mark user as editing
 	function markUserEditing() {
 		root.userIsEditing = true;
-		editResetTimer.restart();
 		// Update currentTime based on user input when editing
 		updateCurrentTimeFromSpinBoxes();
 	}
@@ -53,19 +52,6 @@ BaseMenu {
 	Item {
 		width: parent.width
 		height: root.height * 0.15
-
-		// Timer to reset editing state after period of inactivity
-		// TODO: Maybe not used anymore!
-		Timer {
-			id: editResetTimer
-			interval: 5000 // 5 seconds
-			running: false
-			repeat: false
-			onTriggered: {
-				root.userIsEditing = false;
-				// Don't change displayTime - it always shows system time
-			}
-		}
 
 		// Timer to update current time every second
 		Timer {
@@ -404,7 +390,6 @@ BaseMenu {
 					root.timeChanged(Qt.formatTime(new Date(), "hh:mm:ss"));
 					// Reset editing state after successful save
 					root.userIsEditing = false;
-					editResetTimer.stop();
 				} else {
 					console.error("Failed to set date/time:", result.message);
 				}
