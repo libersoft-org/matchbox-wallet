@@ -11,7 +11,6 @@ BaseMenu {
 	signal timezoneSettingsRequested
 	property date currentTime: new Date()
 	property date displayTime: new Date()  // Time shown in the top display
-	property bool userIsEditing: false
 	property bool loadingSystemState: true  // Track if we're still loading system state
 
 	// Component initialization
@@ -31,21 +30,12 @@ BaseMenu {
 		});
 	}
 
-	// Function to mark user as editing
-	function markUserEditing() {
-		root.userIsEditing = true;
-		// Update currentTime based on user input when editing
-		updateCurrentTimeFromSpinBoxes();
-	}
-
 	// Function to update currentTime based on SpinBox values
 	function updateCurrentTimeFromSpinBoxes() {
-		if (root.userIsEditing) {
-			var newDate = new Date(yearSpinBox.currentValue, monthSpinBox.currentValue - 1 // Month is 0-indexed
-			, daySpinBox.currentValue, hoursSpinBox.currentValue, minutesSpinBox.currentValue, secondsSpinBox.currentValue);
-			root.currentTime = newDate;
-			// Don't update displayTime - it should show actual system time always
-		}
+		var newDate = new Date(yearSpinBox.currentValue, monthSpinBox.currentValue - 1 // Month is 0-indexed
+		, daySpinBox.currentValue, hoursSpinBox.currentValue, minutesSpinBox.currentValue, secondsSpinBox.currentValue);
+		root.currentTime = newDate;
+	// Don't update displayTime - it should show actual system time always
 	}
 
 	// Current time display as Item
@@ -62,35 +52,6 @@ BaseMenu {
 			onTriggered: {
 				// Always update displayTime with actual system time
 				root.displayTime = new Date();
-
-				if (!root.userIsEditing) {
-					// Update with system time when not editing
-					root.currentTime = new Date();
-					hoursSpinBox.currentValue = root.currentTime.getHours();
-					minutesSpinBox.currentValue = root.currentTime.getMinutes();
-					secondsSpinBox.currentValue = root.currentTime.getSeconds();
-					daySpinBox.currentValue = root.currentTime.getDate();
-					monthSpinBox.currentValue = root.currentTime.getMonth() + 1;
-					yearSpinBox.currentValue = root.currentTime.getFullYear();
-				} else {
-					// When editing, increment time based on current SpinBox values
-					var newTime = new Date(root.currentTime.getTime() + 1000); // Add 1 second
-					root.currentTime = newTime;
-					// Only update seconds automatically during editing, keep other values as user set them
-					secondsSpinBox.currentValue = newTime.getSeconds();
-					// If seconds overflow, handle minute/hour overflow
-					if (newTime.getSeconds() === 0) {
-						minutesSpinBox.currentValue = newTime.getMinutes();
-						if (newTime.getMinutes() === 0) {
-							hoursSpinBox.currentValue = newTime.getHours();
-							if (newTime.getHours() === 0) {
-								daySpinBox.currentValue = newTime.getDate();
-								monthSpinBox.currentValue = newTime.getMonth() + 1;
-								yearSpinBox.currentValue = newTime.getFullYear();
-							}
-						}
-					}
-				}
 			}
 		}
 
@@ -203,14 +164,8 @@ BaseMenu {
 					width: parent.parent.width * 0.25
 					height: parent.parent.height * 0.6
 
-					onUserInteraction: {
-						root.markUserEditing();
-					}
-
 					onCurrentValueChanged: {
-						if (root.userIsEditing) {
-							root.updateCurrentTimeFromSpinBoxes();
-						}
+						root.updateCurrentTimeFromSpinBoxes();
 					}
 				}
 
@@ -231,14 +186,8 @@ BaseMenu {
 					width: parent.parent.width * 0.25
 					height: parent.parent.height * 0.6
 
-					onUserInteraction: {
-						root.markUserEditing();
-					}
-
 					onCurrentValueChanged: {
-						if (root.userIsEditing) {
-							root.updateCurrentTimeFromSpinBoxes();
-						}
+						root.updateCurrentTimeFromSpinBoxes();
 					}
 				}
 
@@ -259,14 +208,8 @@ BaseMenu {
 					width: parent.parent.width * 0.25
 					height: parent.parent.height * 0.6
 
-					onUserInteraction: {
-						root.markUserEditing();
-					}
-
 					onCurrentValueChanged: {
-						if (root.userIsEditing) {
-							root.updateCurrentTimeFromSpinBoxes();
-						}
+						root.updateCurrentTimeFromSpinBoxes();
 					}
 				}
 			}
@@ -298,14 +241,8 @@ BaseMenu {
 					width: parent.parent.width * 0.25
 					height: parent.parent.height * 0.6
 
-					onUserInteraction: {
-						root.markUserEditing();
-					}
-
 					onCurrentValueChanged: {
-						if (root.userIsEditing) {
-							root.updateCurrentTimeFromSpinBoxes();
-						}
+						root.updateCurrentTimeFromSpinBoxes();
 					}
 				}
 
@@ -326,14 +263,8 @@ BaseMenu {
 					width: parent.parent.width * 0.25
 					height: parent.parent.height * 0.6
 
-					onUserInteraction: {
-						root.markUserEditing();
-					}
-
 					onCurrentValueChanged: {
-						if (root.userIsEditing) {
-							root.updateCurrentTimeFromSpinBoxes();
-						}
+						root.updateCurrentTimeFromSpinBoxes();
 					}
 				}
 
@@ -354,14 +285,8 @@ BaseMenu {
 					width: parent.parent.width * 0.25
 					height: parent.parent.height * 0.6
 
-					onUserInteraction: {
-						root.markUserEditing();
-					}
-
 					onCurrentValueChanged: {
-						if (root.userIsEditing) {
-							root.updateCurrentTimeFromSpinBoxes();
-						}
+						root.updateCurrentTimeFromSpinBoxes();
 					}
 				}
 			}
@@ -388,8 +313,6 @@ BaseMenu {
 					// Update the displayed time
 					root.currentTime = new Date();
 					root.timeChanged(Qt.formatTime(new Date(), "hh:mm:ss"));
-					// Reset editing state after successful save
-					root.userIsEditing = false;
 				} else {
 					console.error("Failed to set date/time:", result.message);
 				}
