@@ -12,6 +12,7 @@ BaseMenu {
 	property date currentTime: new Date()
 	property date displayTime: new Date()  // Time shown in the top display
 	property bool userIsEditing: false
+	property bool loadingSystemState: true  // Track if we're still loading system state
 
 	// Component initialization
 	Component.onCompleted: {
@@ -25,6 +26,8 @@ BaseMenu {
 					window.settingsManager.saveAutoTimeSync(result.data.autoSync);
 				}
 			}
+			// Mark loading as complete
+			loadingSystemState = false;
 		});
 	}
 
@@ -192,7 +195,7 @@ BaseMenu {
 	Item {
 		width: parent.width
 		height: root.height * 0.15
-		visible: !autoSyncSwitch.checked  // Hide when auto sync is enabled
+		visible: !loadingSystemState && !autoSyncSwitch.checked  // Hide when loading or auto sync is enabled
 
 		Column {
 			anchors.fill: parent
@@ -287,7 +290,7 @@ BaseMenu {
 	Item {
 		width: parent.width
 		height: root.height * 0.15
-		visible: !autoSyncSwitch.checked  // Hide when auto sync is enabled
+		visible: !loadingSystemState && !autoSyncSwitch.checked  // Hide when loading or auto sync is enabled
 
 		Column {
 			anchors.fill: parent
@@ -381,7 +384,7 @@ BaseMenu {
 	// Save button
 	MenuButton {
 		text: tr("menu.settings.system.time.set")
-		visible: !autoSyncSwitch.checked  // Hide when auto sync is enabled
+		visible: !loadingSystemState && !autoSyncSwitch.checked  // Hide when loading or auto sync is enabled
 		onClicked: {
 			console.log("Saving date and time...");
 			NodeUtils.msg("timeSetSystemDateTime", {
