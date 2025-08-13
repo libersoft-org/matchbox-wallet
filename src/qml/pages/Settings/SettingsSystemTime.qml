@@ -182,11 +182,7 @@ BaseMenu {
 					minimumDigits: 2
 					width: parent.parent.width * 0.25
 					height: parent.parent.height * 0.6
-
-					onCurrentValueChanged: {
-						// Only update spinBoxTime when user changes the value (not timer)
-						updateSpinBoxTimeFromUser();
-					}
+					onCurrentValueChanged: updateSpinBoxTimeFromUser()
 				}
 
 				Text {
@@ -204,11 +200,7 @@ BaseMenu {
 					minimumDigits: 2
 					width: parent.parent.width * 0.25
 					height: parent.parent.height * 0.6
-
-					onCurrentValueChanged: {
-						// Only update spinBoxTime when user changes the value (not timer)
-						updateSpinBoxTimeFromUser();
-					}
+					onCurrentValueChanged: updateSpinBoxTimeFromUser()
 				}
 
 				Text {
@@ -226,11 +218,7 @@ BaseMenu {
 					minimumDigits: 2
 					width: parent.parent.width * 0.25
 					height: parent.parent.height * 0.6
-
-					onCurrentValueChanged: {
-						// Only update spinBoxTime when user changes the value (not timer)
-						updateSpinBoxTimeFromUser();
-					}
+					onCurrentValueChanged: updateSpinBoxTimeFromUser()
 				}
 			}
 		}
@@ -259,11 +247,7 @@ BaseMenu {
 					minimumDigits: 2
 					width: parent.parent.width * 0.25
 					height: parent.parent.height * 0.6
-
-					onCurrentValueChanged: {
-						// Only update spinBoxTime when user changes the value (not timer)
-						updateSpinBoxTimeFromUser();
-					}
+					onCurrentValueChanged: updateSpinBoxTimeFromUser()
 				}
 
 				Text {
@@ -281,11 +265,7 @@ BaseMenu {
 					minimumDigits: 2
 					width: parent.parent.width * 0.25
 					height: parent.parent.height * 0.6
-
-					onCurrentValueChanged: {
-						// Only update spinBoxTime when user changes the value (not timer)
-						updateSpinBoxTimeFromUser();
-					}
+					onCurrentValueChanged: updateSpinBoxTimeFromUser()
 				}
 
 				Text {
@@ -303,11 +283,7 @@ BaseMenu {
 					minimumDigits: 4
 					width: parent.parent.width * 0.25
 					height: parent.parent.height * 0.6
-
-					onCurrentValueChanged: {
-						// Only update spinBoxTime when user changes the value (not timer)
-						updateSpinBoxTimeFromUser();
-					}
+					onCurrentValueChanged: updateSpinBoxTimeFromUser()
 				}
 			}
 		}
