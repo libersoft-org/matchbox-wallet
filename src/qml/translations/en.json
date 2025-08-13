@@ -102,7 +102,6 @@
 					"button": "Date & time",
 					"title": "Date & time settings",
 					"set": "Set date and time",
-					"sync": "Sync with internet",
 					"auto": "Auto-sync time",
 					"server": "NTP server",
 					"timezone": "Time zone"

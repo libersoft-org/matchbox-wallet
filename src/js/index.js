@@ -26,7 +26,6 @@ const HANDLERS = {
 	powerShutdown: () => powerManager.shutdown(),
 	timeListTimeZones: () => timeManager.listTimeZones(),
 	timeChangeTimeZone: (params) => timeManager.changeTimeZone(params),
-	timeSyncTime: () => timeManager.syncTime(),
 	timeSetAutoTimeSync: (params) => timeManager.setAutoTimeSync(params),
 	timeGetAutoTimeSyncStatus: () => timeManager.getAutoTimeSyncStatus(),
 	timeSetSystemDateTime: (params) => timeManager.setSystemDateTime(params),

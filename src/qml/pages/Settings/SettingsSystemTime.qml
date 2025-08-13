@@ -415,22 +415,4 @@ BaseMenu {
 		text: tr("menu.settings.system.time.timezone") + ": " + (window.settingsManager ? window.settingsManager.timeZone : "UTC")
 		onClicked: root.timezoneSettingsRequested()
 	}
-
-	MenuButton {
-		text: tr("menu.settings.system.time.sync")
-		onClicked: {
-			console.log("Syncing time with internet");
-			NodeUtils.msg("timeSyncTime", {}, function (result) {
-				console.log("Time sync result:", JSON.stringify(result));
-				if (result.status === "success") {
-					console.log("Time synchronization successful");
-					// Update the displayed time
-					root.currentTime = new Date();
-					root.timeChanged(Qt.formatTime(new Date(), "hh:mm:ss"));
-				} else {
-					console.error("Time sync failed:", result.message);
-				}
-			});
-		}
-	}
 }
