@@ -391,9 +391,6 @@ ApplicationWindow {
 		id: settingsSystemTimeZonesPageComponent
 		SettingsSystemTimeZones {
 			onTimezoneSelected: function (tz) {
-				if (window.settingsManager)
-					window.settingsManager.saveTimeZone(tz);
-
 				// Change system timezone using NodeUtils
 				Node.msg("timeChangeTimeZone", {
 					timezone: tz
@@ -424,9 +421,6 @@ ApplicationWindow {
 			selectedContinent: window.globalSelectedContinent
 			timezones: window.globalTimezones || []
 			onTimezoneSelected: function (tz) {
-				if (window.settingsManager)
-					window.settingsManager.saveTimeZone(tz);
-
 				// Change system timezone using NodeUtils
 				Node.msg("timeChangeTimeZone", {
 					timezone: tz

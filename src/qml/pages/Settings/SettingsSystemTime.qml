@@ -9,10 +9,20 @@ BaseMenu {
 	title: tr("menu.settings.system.time.title")
 	signal timeChanged(string newTime)
 	signal timezoneSettingsRequested
+	signal timezoneChanged
 	property date displayTime: new Date()  // Time shown in the top display
 	property date spinBoxTime: new Date()  // Independent time for spinboxes
 	property bool updatingFromTimer: false  // Flag to prevent onCurrentValueChanged during timer updates
 	property bool loadingSystemState: true  // Track if we're still loading system state
+	property string currentTimezone: "UTC"  // Current system timezone
+
+	// Refresh timezone when page becomes visible (when returning from timezone settings)
+	onVisibleChanged: {
+		if (visible) {
+			console.log("SettingsSystemTime became visible, refreshing timezone");
+			refreshTimezone();
+		}
+	}
 
 	function updateSpinBoxes() {
 		root.updatingFromTimer = true;
@@ -30,6 +40,17 @@ BaseMenu {
 			root.spinBoxTime = new Date(yearSpinBox.currentValue, monthSpinBox.currentValue - 1, daySpinBox.currentValue, hoursSpinBox.currentValue, minutesSpinBox.currentValue, secondsSpinBox.currentValue);
 	}
 
+	function refreshTimezone() {
+		// Reload timezone from system
+		NodeUtils.msg("timeGetCurrentTimezone", {}, function (result) {
+			console.log("Refreshed timezone result:", JSON.stringify(result));
+			if (result.status === "success" && result.data && result.data.timezone) {
+				root.currentTimezone = result.data.timezone;
+				console.log("Refreshed timezone from system:", root.currentTimezone);
+			}
+		});
+	}
+
 	// Component initialization
 	Component.onCompleted: {
 		// Initialize with current system time
@@ -37,6 +58,19 @@ BaseMenu {
 		root.displayTime = now;
 		root.spinBoxTime = now;
 		updateSpinBoxes();
+
+		// Load current timezone from system
+		NodeUtils.msg("timeGetCurrentTimezone", {}, function (result) {
+			console.log("Current timezone result:", JSON.stringify(result));
+			if (result.status === "success" && result.data && result.data.timezone) {
+				root.currentTimezone = result.data.timezone;
+				console.log("Loaded current timezone from system:", root.currentTimezone);
+			} else {
+				console.log("Failed to get timezone, using UTC");
+				root.currentTimezone = "UTC";
+			}
+		});
+
 		// Load actual auto time sync status from system
 		NodeUtils.msg("timeGetAutoTimeSyncStatus", {}, function (result) {
 			console.log("Auto time sync status:", JSON.stringify(result));
@@ -317,7 +351,7 @@ BaseMenu {
 	}
 
 	MenuButton {
-		text: tr("menu.settings.system.time.timezone") + ": " + (window.settingsManager ? window.settingsManager.timeZone : "UTC")
+		text: tr("menu.settings.system.time.timezone") + ": " + root.currentTimezone
 		onClicked: root.timezoneSettingsRequested()
 	}
 }

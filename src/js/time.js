@@ -143,6 +143,40 @@ class TimeManager {
 		}
 	}
 
+	async getCurrentTimezone() {
+		try {
+			console.log('Getting current system timezone');
+			const { exec } = require('child_process');
+			const { promisify } = require('util');
+			const execAsync = promisify(exec);
+
+			// Get current timezone from system
+			const { stdout } = await execAsync('timedatectl show --property=Timezone --value');
+			const currentTimezone = stdout.trim();
+
+			if (currentTimezone) {
+				console.log('Current system timezone:', currentTimezone);
+				return {
+					status: 'success',
+					data: {
+						timezone: currentTimezone,
+					},
+				};
+			} else {
+				throw new Error('Unable to get timezone from timedatectl');
+			}
+		} catch (error) {
+			console.error('Failed to get current timezone:', error);
+			return {
+				status: 'error',
+				message: 'Failed to get current timezone: ' + error.message,
+				data: {
+					timezone: 'UTC',
+				},
+			};
+		}
+	}
+
 	async getAutoTimeSyncStatus() {
 		try {
 			console.log('Getting current auto time sync status');
