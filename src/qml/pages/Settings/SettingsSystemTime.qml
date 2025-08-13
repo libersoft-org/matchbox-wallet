@@ -161,7 +161,7 @@ BaseMenu {
 					spacing: parent.height * 0.2
 
 					Text {
-						text: tr("menu.settings.system.time.auto")
+						text: tr("menu.settings.system.time.auto") + ':'
 						color: colors.primaryForeground
 						font.pixelSize: parent.height * 0.35
 						Layout.alignment: Qt.AlignVCenter
