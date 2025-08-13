@@ -11,8 +11,24 @@ BaseMenu {
 	signal timezoneSettingsRequested
 	property date displayTime: new Date()  // Time shown in the top display
 	property date spinBoxTime: new Date()  // Independent time for spinboxes
-	property bool updatingFromTimer: false  // Flag to prevent onCurrentValueChanged during timer updates  // Time shown in SpinBoxes (ticking independently)
+	property bool updatingFromTimer: false  // Flag to prevent onCurrentValueChanged during timer updates
 	property bool loadingSystemState: true  // Track if we're still loading system state
+
+	function updateSpinBoxes() {
+		root.updatingFromTimer = true;
+		hoursSpinBox.currentValue = root.spinBoxTime.getHours();
+		minutesSpinBox.currentValue = root.spinBoxTime.getMinutes();
+		secondsSpinBox.currentValue = root.spinBoxTime.getSeconds();
+		daySpinBox.currentValue = root.spinBoxTime.getDate();
+		monthSpinBox.currentValue = root.spinBoxTime.getMonth() + 1;
+		yearSpinBox.currentValue = root.spinBoxTime.getFullYear();
+		root.updatingFromTimer = false;
+	}
+
+	function updateSpinBoxTimeFromUser() {
+		if (!root.updatingFromTimer)
+			root.spinBoxTime = new Date(yearSpinBox.currentValue, monthSpinBox.currentValue - 1, daySpinBox.currentValue, hoursSpinBox.currentValue, minutesSpinBox.currentValue, secondsSpinBox.currentValue);
+	}
 
 	// Component initialization
 	Component.onCompleted: {
@@ -20,15 +36,7 @@ BaseMenu {
 		var now = new Date();
 		root.displayTime = now;
 		root.spinBoxTime = now;
-
-		// Initialize SpinBox values with current system time
-		hoursSpinBox.currentValue = now.getHours();
-		minutesSpinBox.currentValue = now.getMinutes();
-		secondsSpinBox.currentValue = now.getSeconds();
-		daySpinBox.currentValue = now.getDate();
-		monthSpinBox.currentValue = now.getMonth() + 1;
-		yearSpinBox.currentValue = now.getFullYear();
-
+		updateSpinBoxes();
 		// Load actual auto time sync status from system
 		NodeUtils.msg("timeGetAutoTimeSyncStatus", {}, function (result) {
 			console.log("Auto time sync status:", JSON.stringify(result));
@@ -62,19 +70,8 @@ BaseMenu {
 				// Always increment spinBoxTime by 1 second
 				root.spinBoxTime = new Date(root.spinBoxTime.getTime() + 1000);
 
-				// Set flag to prevent onCurrentValueChanged during updates
-				root.updatingFromTimer = true;
-
-				// Update SpinBox values from spinBoxTime
-				hoursSpinBox.currentValue = root.spinBoxTime.getHours();
-				minutesSpinBox.currentValue = root.spinBoxTime.getMinutes();
-				secondsSpinBox.currentValue = root.spinBoxTime.getSeconds();
-				daySpinBox.currentValue = root.spinBoxTime.getDate();
-				monthSpinBox.currentValue = root.spinBoxTime.getMonth() + 1;
-				yearSpinBox.currentValue = root.spinBoxTime.getFullYear();
-
-				// Clear flag after updates
-				root.updatingFromTimer = false;
+				// Update SpinBox values from spinBoxTime (with flag handling)
+				updateSpinBoxes();
 			}
 		}
 
@@ -181,7 +178,6 @@ BaseMenu {
 					id: hoursSpinBox
 					minValue: 0
 					maxValue: 23
-					currentValue: 0  // Will be set in Component.onCompleted
 					leadingZeros: true
 					minimumDigits: 2
 					width: parent.parent.width * 0.25
@@ -189,9 +185,7 @@ BaseMenu {
 
 					onCurrentValueChanged: {
 						// Only update spinBoxTime when user changes the value (not timer)
-						if (!root.updatingFromTimer) {
-							root.spinBoxTime = new Date(yearSpinBox.currentValue, monthSpinBox.currentValue - 1, daySpinBox.currentValue, hoursSpinBox.currentValue, minutesSpinBox.currentValue, secondsSpinBox.currentValue);
-						}
+						updateSpinBoxTimeFromUser();
 					}
 				}
 
@@ -206,7 +200,6 @@ BaseMenu {
 					id: minutesSpinBox
 					minValue: 0
 					maxValue: 59
-					currentValue: 0  // Will be set in Component.onCompleted
 					leadingZeros: true
 					minimumDigits: 2
 					width: parent.parent.width * 0.25
@@ -214,9 +207,7 @@ BaseMenu {
 
 					onCurrentValueChanged: {
 						// Only update spinBoxTime when user changes the value (not timer)
-						if (!root.updatingFromTimer) {
-							root.spinBoxTime = new Date(yearSpinBox.currentValue, monthSpinBox.currentValue - 1, daySpinBox.currentValue, hoursSpinBox.currentValue, minutesSpinBox.currentValue, secondsSpinBox.currentValue);
-						}
+						updateSpinBoxTimeFromUser();
 					}
 				}
 
@@ -231,7 +222,6 @@ BaseMenu {
 					id: secondsSpinBox
 					minValue: 0
 					maxValue: 59
-					currentValue: 0  // Will be set in Component.onCompleted
 					leadingZeros: true
 					minimumDigits: 2
 					width: parent.parent.width * 0.25
@@ -239,9 +229,7 @@ BaseMenu {
 
 					onCurrentValueChanged: {
 						// Only update spinBoxTime when user changes the value (not timer)
-						if (!root.updatingFromTimer) {
-							root.spinBoxTime = new Date(yearSpinBox.currentValue, monthSpinBox.currentValue - 1, daySpinBox.currentValue, hoursSpinBox.currentValue, minutesSpinBox.currentValue, secondsSpinBox.currentValue);
-						}
+						updateSpinBoxTimeFromUser();
 					}
 				}
 			}
@@ -267,7 +255,6 @@ BaseMenu {
 					id: daySpinBox
 					minValue: 1
 					maxValue: 31
-					currentValue: 1  // Will be set in Component.onCompleted
 					leadingZeros: true
 					minimumDigits: 2
 					width: parent.parent.width * 0.25
@@ -275,9 +262,7 @@ BaseMenu {
 
 					onCurrentValueChanged: {
 						// Only update spinBoxTime when user changes the value (not timer)
-						if (!root.updatingFromTimer) {
-							root.spinBoxTime = new Date(yearSpinBox.currentValue, monthSpinBox.currentValue - 1, daySpinBox.currentValue, hoursSpinBox.currentValue, minutesSpinBox.currentValue, secondsSpinBox.currentValue);
-						}
+						updateSpinBoxTimeFromUser();
 					}
 				}
 
@@ -292,7 +277,6 @@ BaseMenu {
 					id: monthSpinBox
 					minValue: 1
 					maxValue: 12
-					currentValue: 1  // Will be set in Component.onCompleted
 					leadingZeros: true
 					minimumDigits: 2
 					width: parent.parent.width * 0.25
@@ -300,9 +284,7 @@ BaseMenu {
 
 					onCurrentValueChanged: {
 						// Only update spinBoxTime when user changes the value (not timer)
-						if (!root.updatingFromTimer) {
-							root.spinBoxTime = new Date(yearSpinBox.currentValue, monthSpinBox.currentValue - 1, daySpinBox.currentValue, hoursSpinBox.currentValue, minutesSpinBox.currentValue, secondsSpinBox.currentValue);
-						}
+						updateSpinBoxTimeFromUser();
 					}
 				}
 
@@ -316,8 +298,7 @@ BaseMenu {
 				Stepper {
 					id: yearSpinBox
 					minValue: 1970
-					maxValue: 2100
-					currentValue: 2025  // Will be set in Component.onCompleted
+					maxValue: 2999
 					leadingZeros: false
 					minimumDigits: 4
 					width: parent.parent.width * 0.25
@@ -325,9 +306,7 @@ BaseMenu {
 
 					onCurrentValueChanged: {
 						// Only update spinBoxTime when user changes the value (not timer)
-						if (!root.updatingFromTimer) {
-							root.spinBoxTime = new Date(yearSpinBox.currentValue, monthSpinBox.currentValue - 1, daySpinBox.currentValue, hoursSpinBox.currentValue, minutesSpinBox.currentValue, secondsSpinBox.currentValue);
-						}
+						updateSpinBoxTimeFromUser();
 					}
 				}
 			}
