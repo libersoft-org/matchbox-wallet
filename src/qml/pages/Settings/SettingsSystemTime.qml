@@ -55,6 +55,7 @@ BaseMenu {
 		height: root.height * 0.15
 
 		// Timer to reset editing state after period of inactivity
+		// TODO: Maybe not used anymore!
 		Timer {
 			id: editResetTimer
 			interval: 5000 // 5 seconds
@@ -109,11 +110,11 @@ BaseMenu {
 
 		Rectangle {
 			anchors.fill: parent
-			anchors.margins: root.height * 0.01
+			anchors.margins: window.height * 0.01
 			color: colors.primaryBackground
-			radius: height * 0.2
+			radius: window.width * 0.04
 			border.color: colors.primaryForeground
-			border.width: Math.max(1, root.height * 0.003)
+			border.width: window.width * 0.004
 
 			Column {
 				anchors.centerIn: parent
@@ -141,15 +142,15 @@ BaseMenu {
 	// Auto time sync toggle
 	Item {
 		width: parent.width
-		height: root.height * 0.12
+		height: window.width * 0.16
 
 		Rectangle {
 			anchors.fill: parent
-			anchors.margins: root.height * 0.01
+			anchors.margins: window.height * 0.01
 			color: colors.primaryBackground
-			radius: height * 0.2
+			radius: window.width * 0.04
 			border.color: colors.primaryForeground
-			border.width: Math.max(1, root.height * 0.003)
+			border.width: window.width * 0.004
 
 			ColumnLayout {
 				anchors.fill: parent
