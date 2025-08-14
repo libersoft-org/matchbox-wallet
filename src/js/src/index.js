@@ -1,4 +1,6 @@
-const wallet = require('./wallet.js');
+const crypto = require('libersoft-crypto');
+
+const CryptoManager = require('./crypto0.js');
 const WifiManager = require('./wifi.js');
 const BatteryManager = require('./battery.js');
 const PowerManager = require('./power.js');

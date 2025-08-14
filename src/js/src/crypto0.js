@@ -1,4 +1,4 @@
-const crypto = require('crypto');
+const crypto0 = require('crypto');
 
 // Lazy-load ethers to avoid module loading issues in embedded environment
 let ethers = null;
@@ -19,7 +19,7 @@ class CryptoManager {
 			throw new Error('Missing input for hash operation');
 		}
 
-		const hash = crypto.createHash('sha256').update(input).digest('hex');
+		const hash = crypto0.createHash('sha256').update(input).digest('hex');
 
 		return {
 			status: 'success',
@@ -28,7 +28,7 @@ class CryptoManager {
 	}
 
 	generateKeyPair() {
-		const { publicKey, privateKey } = crypto.generateKeyPairSync('rsa', {
+		const { publicKey, privateKey } = crypto0.generateKeyPairSync('rsa', {
 			modulusLength: 2048,
 			publicKeyEncoding: { type: 'spki', format: 'pem' },
 			privateKeyEncoding: { type: 'pkcs8', format: 'pem' },
@@ -43,7 +43,7 @@ class CryptoManager {
 
 	generateRandomBytes(params = {}) {
 		const length = params?.length || 32;
-		const bytes = crypto.randomBytes(length);
+		const bytes = crypto0.randomBytes(length);
 		return {
 			status: 'success',
 			bytes: bytes.toString('hex'),
@@ -60,7 +60,7 @@ class CryptoManager {
 			throw new Error('Missing data or key for HMAC operation');
 		}
 
-		const hmac = crypto.createHmac(algorithm, key).update(data).digest('hex');
+		const hmac = crypto0.createHmac(algorithm, key).update(data).digest('hex');
 
 		return {
 			status: 'success',
