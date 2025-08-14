@@ -27,6 +27,13 @@ Rectangle {
 		loadFirewallStatus();
 	}
 
+	// Reload data when page becomes visible
+	onVisibleChanged: {
+		if (visible) {
+			loadFirewallStatus();
+		}
+	}
+
 	function loadFirewallStatus() {
 		root.isLoading = true;
 		NodeUtils.msg('firewallGetStatus', {}, function (response) {
@@ -227,7 +234,7 @@ Rectangle {
 
 						MenuButton {
 							text: tr("menu.settings.system.firewall.ports.remove")
-							enabled: !root.isLoading && parent.modelData.action === "allow"
+							enabled: !root.isLoading
 							width: 80
 							backgroundColor: colors.error
 							onClicked: root.removeException(parent.modelData.port, parent.modelData.protocol)
