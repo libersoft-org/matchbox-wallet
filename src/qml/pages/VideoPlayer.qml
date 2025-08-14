@@ -1,5 +1,4 @@
 import QtQuick 2.15
-import QtQuick.Controls 2.15
 import QtQuick.Window 2.15
 import QtMultimedia 6.0
 import "../components"
@@ -72,21 +71,38 @@ Item {
 
 				// Seek bar
 				Rectangle {
+					id: seekBarContainer
 					width: parent.width
 					height: parent.height * 0.5
-					color: Qt.lighter(colors.primaryBackground)
 					radius: height * 0.5
-					clip: true
 
-					Rectangle {
-						width: (mediaPlayer.duration > 0) ? (parent.width * mediaPlayer.position / mediaPlayer.duration) : 0
-						height: parent.height
-						color: colors.primaryForeground
+					gradient: Gradient {
+						orientation: Gradient.Horizontal
+
+						GradientStop {
+							position: 0.0
+							color: colors.primaryForeground
+						}
+
+						GradientStop {
+							position: (mediaPlayer.duration > 0) ? (mediaPlayer.position / mediaPlayer.duration) : 0.0
+							color: colors.primaryForeground
+						}
+
+						GradientStop {
+							position: (mediaPlayer.duration > 0) ? ((mediaPlayer.position / mediaPlayer.duration) + 0.001) : 0.001
+							color: Qt.lighter(colors.primaryBackground)
+						}
+
+						GradientStop {
+							position: 1.0
+							color: Qt.lighter(colors.primaryBackground)
+						}
 					}
 
 					MouseArea {
 						anchors.fill: parent
-						onClicked: {
+						onClicked: function (mouse) {
 							if (mediaPlayer.duration > 0) {
 								var newPosition = (mouse.x / width) * mediaPlayer.duration;
 								mediaPlayer.setPosition(newPosition);
@@ -96,6 +112,7 @@ Item {
 						}
 					}
 
+					// Left time text - base text
 					Text {
 						anchors.left: parent.left
 						anchors.leftMargin: parent.width * 0.02
@@ -106,6 +123,20 @@ Item {
 						font.pixelSize: parent.height * 0.8
 					}
 
+					// Left time text - overlaid inverted text (clipped by progress)
+					Text {
+						anchors.left: parent.left
+						anchors.leftMargin: parent.width * 0.02
+						anchors.verticalCenter: parent.verticalCenter
+						text: formatTime(mediaPlayer.position)
+						font.bold: true
+						color: colors.primaryBackground
+						font.pixelSize: parent.height * 0.8
+						width: Math.max(0, (parent.width * (mediaPlayer.duration > 0 ? mediaPlayer.position / mediaPlayer.duration : 0)) - anchors.leftMargin)
+						clip: true
+					}
+
+					// Right time text - base text
 					Text {
 						anchors.right: parent.right
 						anchors.rightMargin: parent.width * 0.02
@@ -114,6 +145,20 @@ Item {
 						font.bold: true
 						color: colors.primaryForeground
 						font.pixelSize: parent.height * 0.8
+					}
+
+					// Right time text - overlaid inverted text (clipped by progress)
+					Text {
+						anchors.verticalCenter: parent.verticalCenter
+						text: formatTime(mediaPlayer.duration)
+						font.bold: true
+						color: colors.primaryBackground
+						font.pixelSize: parent.height * 0.8
+
+						// Stejná pozice jako základní text, ale clippovaný
+						x: parent.width - (parent.width * 0.02) - implicitWidth
+						width: Math.max(0, (parent.width * (mediaPlayer.duration > 0 ? mediaPlayer.position / mediaPlayer.duration : 0)) - x)
+						clip: true
 					}
 				}
 
