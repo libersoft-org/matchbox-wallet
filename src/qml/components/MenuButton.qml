@@ -11,9 +11,8 @@ Button {
 	property color borderColor: Qt.darker(backgroundColor, 1.1)
 	property color textColor: colors.primaryBackground
 	property int windowHeight: 640 // default fallback
-	property real flickableHeight: 480 // default fallback
 	width: parent.width
-	height: flickableHeight * 0.2
+	height: window.width * 0.25
 	enabled: true
 	background: Rectangle {
 		color: control.enabled ? (control.pressed ? control.pressedColor : (control.hovered ? control.hoverColor : control.backgroundColor)) : colors.disabledBackground

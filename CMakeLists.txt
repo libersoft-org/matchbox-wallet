@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 option(ENABLE_NODEJS "Enable Node.js integration" ON)
 
 find_package(Qt6 REQUIRED COMPONENTS Core Quick Svg)
-find_package(Qt6 QUIET COMPONENTS Multimedia)
+find_package(Qt6 QUIET COMPONENTS Multimedia VirtualKeyboard)
 
 # Node.js integration (conditional)
 if(ENABLE_NODEJS)
@@ -140,6 +140,15 @@ if(TARGET Qt6::Multimedia)
 	message(STATUS "Qt6Multimedia found - camera support enabled")
 else()
 	message(WARNING "Qt6Multimedia not found - camera support disabled")
+endif()
+
+# Link Qt6::VirtualKeyboard if available
+if(TARGET Qt6::VirtualKeyboard)
+	target_link_libraries(Wallet PRIVATE Qt6::VirtualKeyboard)
+	target_compile_definitions(Wallet PRIVATE HAVE_QT_VIRTUALKEYBOARD)
+	message(STATUS "Qt6VirtualKeyboard found - virtual keyboard support enabled")
+else()
+	message(WARNING "Qt6VirtualKeyboard not found - virtual keyboard support disabled")
 endif()
 # Platform specific settings
 if(WIN32)

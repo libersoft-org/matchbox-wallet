@@ -1,6 +1,8 @@
 import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
+import QtQuick.VirtualKeyboard 2.15
+import QtMultimedia 6.0
 import "static"
 import "components"
 import "pages"
@@ -95,6 +97,7 @@ ApplicationWindow {
 
 	// Track current page/section
 	property string currentPageId: "home"
+	property bool isFullscreen: false
 
 	// Global translation function - available to all child components
 	function tr(key) {
@@ -124,46 +127,39 @@ ApplicationWindow {
 	function goPage(component, pageId) {
 		if (stackView && component) {
 			stackView.push(component);
-			if (pageId) {
+			if (pageId)
 				window.currentPageId = pageId;
-			}
 		}
 	}
 
 	function goBack() {
 		stackView.pop();
 		// Update currentPageId based on what's now on top
-		if (stackView.currentItem && stackView.currentItem.pageId) {
+		if (stackView.currentItem && stackView.currentItem.pageId)
 			window.currentPageId = stackView.currentItem.pageId;
-		} else {
+		else
 			window.currentPageId = "home";
-		}
 	}
 
 	function goBackMultiple(count) {
 		for (var i = 0; i < count; i++) {
-			if (stackView.depth > 1) {
+			if (stackView.depth > 1)
 				stackView.pop();
-			}
 		}
 		// Update currentPageId based on what's now on top
-		if (stackView.currentItem && stackView.currentItem.pageId) {
+		if (stackView.currentItem && stackView.currentItem.pageId)
 			window.currentPageId = stackView.currentItem.pageId;
-		} else {
+		else
 			window.currentPageId = "home";
-		}
 	}
 
 	// Status bar at the very top
 	StatusBar {
 		id: statusBar
-		visible: !window.showSplashScreen
-
-		// Real system values
+		visible: !window.showSplashScreen && !window.isFullscreen
 		wifiStrength: window.currentWifiStrength
 		batteryLevel: batteryManager.batteryLevel
 		hasBattery: batteryManager.hasBattery
-
 		// Mock values for LoRa and GSM (not implemented yet)
 		loraStrength: 0
 		gsmStrength: 0  // 0 means no signal/not available
@@ -172,11 +168,10 @@ ApplicationWindow {
 	// Fixed navigation bar below status bar
 	Navbar {
 		id: fixedNavbar
-		visible: !window.showSplashScreen
+		visible: !window.showSplashScreen && !window.isFullscreen
 		anchors.top: statusBar.bottom
 		anchors.left: parent.left
 		anchors.right: parent.right
-		height: window.height * 0.1
 		title: stackView.currentItem ? stackView.currentItem.title || "" : ""
 		showBackButton: stackView.currentItem && stackView.currentItem.hasOwnProperty("showBackButton") ? stackView.currentItem.showBackButton : true
 		showPowerButton: stackView.currentItem && stackView.currentItem.hasOwnProperty("showPowerButton") ? stackView.currentItem.showPowerButton : true
@@ -188,7 +183,7 @@ ApplicationWindow {
 	StackView {
 		id: stackView
 		visible: !window.showSplashScreen
-		anchors.top: fixedNavbar.bottom
+		anchors.top: window.isFullscreen ? parent.top : fixedNavbar.bottom
 		anchors.left: parent.left
 		anchors.right: parent.right
 		anchors.bottom: parent.bottom
@@ -247,6 +242,7 @@ ApplicationWindow {
 			settingsComponent: settingsPageComponent
 			cameraPreviewComponent: cameraPreviewPageComponent
 			keyboardTestComponent: keyboardTestPageComponent
+			mediaPlayerComponent: mediaPlayerPageComponent
 			goPageFunction: window.goPage
 		}
 	}
@@ -297,6 +293,7 @@ ApplicationWindow {
 			onSoundSettingsRequested: window.goPage(settingsSystemSoundPageComponent)
 			onDisplaySettingsRequested: window.goPage(settingsSystemDisplayPageComponent)
 			onUpdateSettingsRequested: window.goPage(settingsSystemUpdatePageComponent)
+			onFirewallSettingsRequested: window.goPage(firewallSettingsPageComponent, "firewall-settings")
 		}
 	}
 
@@ -373,6 +370,25 @@ ApplicationWindow {
 				console.log("Volume changed to:", volume);
 				// TODO: Implement actual system volume setting
 			}
+		}
+	}
+
+	// System firewall settings page
+	Component {
+		id: firewallSettingsPageComponent
+		SettingsSystemFirewall {
+			property var parentWindow: window
+			onAddExceptionRequested: parentWindow.goPage(firewallExceptionsPageComponent, "firewall-add-port")
+		}
+	}
+
+	// Firewall add port page
+	Component {
+		id: firewallExceptionsPageComponent
+		SettingsSystemFirewallExceptions {
+			property var parentWindow: window
+			onPortAdded: parentWindow.goBack()
+			onAddCancelled: parentWindow.goBack()
 		}
 	}
 
@@ -486,5 +502,44 @@ ApplicationWindow {
 	Component {
 		id: keyboardTestPageComponent
 		KeyboardTest {}
+	}
+
+	// Media Player page
+	Component {
+		id: mediaPlayerPageComponent
+		VideoPlayer {
+			onFullscreenRequested: function(fullscreen) {
+				window.isFullscreen = fullscreen;
+			}
+		}
+	}
+
+	// Virtual Keyboard
+	InputPanel {
+		id: inputPanel
+		z: 99
+		x: 0
+		y: window.height
+		width: window.width
+
+		states: State {
+			name: "visible"
+			when: inputPanel.active
+			PropertyChanges {
+				inputPanel.y: window.height - inputPanel.height
+			}
+		}
+		transitions: Transition {
+			from: ""
+			to: "visible"
+			reversible: true
+			ParallelAnimation {
+				NumberAnimation {
+					properties: "y"
+					duration: 250
+					easing.type: Easing.InOutQuad
+				}
+			}
+		}
 	}
 }

@@ -85,7 +85,7 @@ int main(int argc, char *argv[]) {
  engine.rootContext()->setContextProperty("NodeJS", nodeJS);
  engine.rootContext()->setContextProperty("applicationName", app.applicationName());
  engine.rootContext()->setContextProperty("applicationVersion", app.applicationVersion());
- const QUrl url(QStringLiteral("qrc:/WalletModule/src/qml/main.qml"));
+ const QUrl url(QStringLiteral("qrc:/WalletModule/src/qml/Main.qml"));
  QObject::connect(
 					&engine, &QQmlApplicationEngine::objectCreated, &app,
 					[url](QObject *obj, const QUrl &objUrl) {
