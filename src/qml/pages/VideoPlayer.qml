@@ -33,13 +33,12 @@ Item {
 			anchors.right: parent.right
 			anchors.bottom: parent.bottom
 			height: window.width * 0.3
-			color: "red"
-			opacity: 0.8
+			color: "#AA000000"
 
 			Column {
 				anchors.fill: parent
 				anchors.margins: 10
-				spacing: 10
+				spacing: parent.height * 0.1
 
 				// Seek bar
 				Rectangle {
@@ -89,8 +88,7 @@ Item {
 				// Control buttons
 				Row {
 					anchors.left: parent.left
-					anchors.leftMargin: 10
-					spacing: 15
+					spacing: parent.width * 0.05
 
 					// Play/Pause button
 					Icon {
