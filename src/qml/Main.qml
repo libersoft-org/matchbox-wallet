@@ -125,46 +125,39 @@ ApplicationWindow {
 	function goPage(component, pageId) {
 		if (stackView && component) {
 			stackView.push(component);
-			if (pageId) {
+			if (pageId)
 				window.currentPageId = pageId;
-			}
 		}
 	}
 
 	function goBack() {
 		stackView.pop();
 		// Update currentPageId based on what's now on top
-		if (stackView.currentItem && stackView.currentItem.pageId) {
+		if (stackView.currentItem && stackView.currentItem.pageId)
 			window.currentPageId = stackView.currentItem.pageId;
-		} else {
+		else
 			window.currentPageId = "home";
-		}
 	}
 
 	function goBackMultiple(count) {
 		for (var i = 0; i < count; i++) {
-			if (stackView.depth > 1) {
+			if (stackView.depth > 1)
 				stackView.pop();
-			}
 		}
 		// Update currentPageId based on what's now on top
-		if (stackView.currentItem && stackView.currentItem.pageId) {
+		if (stackView.currentItem && stackView.currentItem.pageId)
 			window.currentPageId = stackView.currentItem.pageId;
-		} else {
+		else
 			window.currentPageId = "home";
-		}
 	}
 
 	// Status bar at the very top
 	StatusBar {
 		id: statusBar
 		visible: !window.showSplashScreen
-
-		// Real system values
 		wifiStrength: window.currentWifiStrength
 		batteryLevel: batteryManager.batteryLevel
 		hasBattery: batteryManager.hasBattery
-
 		// Mock values for LoRa and GSM (not implemented yet)
 		loraStrength: 0
 		gsmStrength: 0  // 0 means no signal/not available
@@ -177,7 +170,6 @@ ApplicationWindow {
 		anchors.top: statusBar.bottom
 		anchors.left: parent.left
 		anchors.right: parent.right
-		height: window.height * 0.1
 		title: stackView.currentItem ? stackView.currentItem.title || "" : ""
 		showBackButton: stackView.currentItem && stackView.currentItem.hasOwnProperty("showBackButton") ? stackView.currentItem.showBackButton : true
 		showPowerButton: stackView.currentItem && stackView.currentItem.hasOwnProperty("showPowerButton") ? stackView.currentItem.showPowerButton : true

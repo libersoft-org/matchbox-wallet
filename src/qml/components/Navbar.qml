@@ -8,16 +8,15 @@ Item {
 	property bool showPowerButton: true
 	signal backRequested
 	signal powerOffRequested
-	height: parent.height * 0.1
+	height: window.width * 0.1
 
 	// Debug background
-	/*
+
 	Rectangle {
 		anchors.fill: parent
 		color: "red"
 		opacity: 0.3
 	}
-	*/
 
 	// Back button (left)
 	Icon {
@@ -35,7 +34,7 @@ Item {
 	Text {
 		anchors.centerIn: parent
 		text: root.title
-		font.pixelSize: parent.height * 0.4
+		font.pixelSize: window.width * 0.05
 		font.bold: true
 		color: colors.primaryForeground
 	}

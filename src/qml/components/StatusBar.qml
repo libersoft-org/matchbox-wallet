@@ -5,7 +5,7 @@ import QtQuick.Layouts 1.15
 Rectangle {
 	id: statusBar
 	color: Qt.darker(colors.primaryBackground)
-	height: window.height * 0.05
+	height: window.width * 0.06
 	anchors.top: parent.top
 	anchors.left: parent.left
 	anchors.right: parent.right

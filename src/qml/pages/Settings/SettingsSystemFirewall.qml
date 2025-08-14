@@ -111,7 +111,7 @@ Rectangle {
 
 				Text {
 					text: root.firewallEnabled ? tr("menu.settings.system.firewall.enabled") : tr("menu.settings.system.firewall.disabled")
-					font.pixelSize: 16
+					font.pixelSize: window.width * 0.04
 					color: root.firewallEnabled ? colors.success : colors.error
 				}
 			}
@@ -123,7 +123,7 @@ Rectangle {
 
 				Text {
 					text: tr("menu.settings.system.firewall.enable")
-					font.pixelSize: 18
+					font.pixelSize: window.width * 0.04
 					color: colors.primaryForeground
 					anchors.verticalCenter: parent.verticalCenter
 				}
@@ -154,7 +154,7 @@ Rectangle {
 
 				Text {
 					text: tr("menu.settings.system.firewall.ports.title")
-					font.pixelSize: 20
+					font.pixelSize: window.width * 0.06
 					font.bold: true
 					color: colors.primaryForeground
 				}
@@ -166,7 +166,7 @@ Rectangle {
 
 					Text {
 						text: tr("menu.settings.system.firewall.ports.port")
-						font.pixelSize: 14
+						font.pixelSize: window.width * 0.04
 						font.bold: true
 						color: colors.primaryForeground
 						width: 80
@@ -174,7 +174,7 @@ Rectangle {
 
 					Text {
 						text: tr("menu.settings.system.firewall.ports.description")
-						font.pixelSize: 14
+						font.pixelSize: window.width * 0.04
 						font.bold: true
 						color: colors.primaryForeground
 						width: 200
@@ -182,7 +182,7 @@ Rectangle {
 
 					Text {
 						text: tr("menu.settings.system.firewall.ports.enabled")
-						font.pixelSize: 14
+						font.pixelSize: window.width * 0.04
 						font.bold: true
 						color: colors.primaryForeground
 						width: 80
@@ -206,7 +206,7 @@ Rectangle {
 
 						Text {
 							text: parent.modelData.port + "/" + parent.modelData.protocol
-							font.pixelSize: 14
+							font.pixelSize: window.width * 0.04
 							color: colors.primaryForeground
 							width: 80
 							anchors.verticalCenter: parent.verticalCenter
@@ -214,7 +214,7 @@ Rectangle {
 
 						Text {
 							text: parent.modelData.description || ("Port " + parent.modelData.port)
-							font.pixelSize: 14
+							font.pixelSize: window.width * 0.04
 							color: colors.primaryForeground
 							width: 200
 							anchors.verticalCenter: parent.verticalCenter
@@ -244,7 +244,7 @@ Rectangle {
 				// No ports message
 				Text {
 					text: tr("menu.settings.system.firewall.ports.noPortsMessage")
-					font.pixelSize: 16
+					font.pixelSize: window.width * 0.04
 					color: colors.primaryForeground
 					visible: root.allowedExceptions.length === 0 && !root.isLoading
 					anchors.horizontalCenter: parent.horizontalCenter
