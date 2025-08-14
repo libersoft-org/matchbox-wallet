@@ -224,7 +224,7 @@ Rectangle {
 						Switch {
 							checked: parent.modelData.action === "allow"
 							enabled: !root.isLoading
-							width: 80
+							anchors.verticalCenter: parent.verticalCenter
 							onCheckedChanged: {
 								if (checked !== (parent.modelData.action === "allow")) {
 									root.setExceptionEnabled(parent.modelData.port, parent.modelData.protocol, checked, parent.modelData.description);
