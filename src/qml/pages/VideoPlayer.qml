@@ -1,5 +1,6 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
+import QtQuick.Window 2.15
 import QtMultimedia 6.0
 import "../components"
 
@@ -8,84 +9,94 @@ Item {
 	property string title: tr("menu.mediaPlayer.title")
 	property bool showBackButton: true
 	property bool showPowerButton: false
+	property bool isVideoFullscreen: false
+	signal fullscreenRequested(bool fullscreen)
 
 	Rectangle {
 		anchors.fill: parent
 		color: "#000"
+	}
 
-		MediaPlayer {
-			id: mediaPlayer
-			audioOutput: AudioOutput {}
+	MediaPlayer {
+		id: mediaPlayer
+		audioOutput: AudioOutput {}
+	}
+
+	VideoOutput {
+		id: videoOutput
+		anchors.fill: root.isVideoFullscreen ? root : parent
+		z: root.isVideoFullscreen ? 999 : 0
+
+		Component.onCompleted: {
+			mediaPlayer.videoOutput = videoOutput;
 		}
+	}
 
-		VideoOutput {
-			id: videoOutput
+	// Control panel at the bottom
+	Rectangle {
+		anchors.left: parent.left
+		anchors.right: parent.right
+		anchors.bottom: parent.bottom
+		height: window.width * 0.3
+		color: "#AA000000"
+		z: root.isVideoFullscreen ? 1000 : 1
+
+		Column {
 			anchors.fill: parent
+			anchors.margins: 10
+			spacing: parent.height * 0.1
 
-			Component.onCompleted: {
-				mediaPlayer.videoOutput = videoOutput;
-			}
-		}
+			// Seek bar
+			Rectangle {
+				width: parent.width
+				height: parent.height * 0.5
+				color: Qt.lighter(colors.primaryBackground)
+				radius: height * 0.5
+				clip: true
 
-		// Control panel at the bottom
-		Rectangle {
-			anchors.left: parent.left
-			anchors.right: parent.right
-			anchors.bottom: parent.bottom
-			height: window.width * 0.3
-			color: "#AA000000"
-
-			Column {
-				anchors.fill: parent
-				anchors.margins: 10
-				spacing: parent.height * 0.1
-
-				// Seek bar
 				Rectangle {
-					width: parent.width
-					height: parent.height * 0.5
-					color: Qt.lighter(colors.primaryBackground)
-					radius: height * 0.5
-					clip: true
+					width: (mediaPlayer.duration > 0) ? (parent.width * mediaPlayer.position / mediaPlayer.duration) : 0
+					height: parent.height
+					color: colors.primaryForeground
+				}
 
-					Rectangle {
-						width: (mediaPlayer.duration > 0) ? (parent.width * mediaPlayer.position / mediaPlayer.duration) : 0
-						height: parent.height
-						color: colors.primaryForeground
-					}
-
-					MouseArea {
-						anchors.fill: parent
-						onClicked: {
-							if (mediaPlayer.duration > 0) {
-								var newPosition = (mouse.x / width) * mediaPlayer.duration;
-								mediaPlayer.setPosition(newPosition);
-							}
+				MouseArea {
+					anchors.fill: parent
+					onClicked: {
+						if (mediaPlayer.duration > 0) {
+							var newPosition = (mouse.x / width) * mediaPlayer.duration;
+							mediaPlayer.setPosition(newPosition);
 						}
-					}
-
-					Text {
-						anchors.left: parent.left
-						anchors.leftMargin: parent.width * 0.02
-						anchors.verticalCenter: parent.verticalCenter
-						text: formatTime(mediaPlayer.position)
-						font.bold: true
-						color: colors.primaryForeground
-						font.pixelSize: parent.height * 0.8
-					}
-
-					Text {
-						anchors.right: parent.right
-						anchors.rightMargin: parent.width * 0.02
-						anchors.verticalCenter: parent.verticalCenter
-						text: formatTime(mediaPlayer.duration)
-						font.bold: true
-						color: colors.primaryForeground
-						font.pixelSize: parent.height * 0.8
 					}
 				}
 
-				// Control buttons
+				Text {
+					anchors.left: parent.left
+					anchors.leftMargin: parent.width * 0.02
+					anchors.verticalCenter: parent.verticalCenter
+					text: formatTime(mediaPlayer.position)
+					font.bold: true
+					color: colors.primaryForeground
+					font.pixelSize: parent.height * 0.8
+				}
+
+				Text {
+					anchors.right: parent.right
+					anchors.rightMargin: parent.width * 0.02
+					anchors.verticalCenter: parent.verticalCenter
+					text: formatTime(mediaPlayer.duration)
+					font.bold: true
+					color: colors.primaryForeground
+					font.pixelSize: parent.height * 0.8
+				}
+			}
+
+			// Control buttons
+			Item {
+				width: parent.width
+				height: window.width * 0.1
+
+				// Left side buttons
 				Row {
 					anchors.left: parent.left
 					spacing: parent.width * 0.05
@@ -119,12 +130,28 @@ Item {
 						}
 					}
 				}
-			}
-		}
 
-		Component.onCompleted: {
-			mediaPlayer.source = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
-			mediaPlayer.play();
+				// Right side buttons
+				Row {
+					anchors.right: parent.right
+					spacing: parent.width * 0.05
+
+					// Fullscreen button
+					Icon {
+						width: window.width * 0.1
+						height: window.width * 0.1
+						img: "qrc:/WalletModule/src/img/max.svg"
+
+						MouseArea {
+							anchors.fill: parent
+							onClicked: {
+								root.isVideoFullscreen = !root.isVideoFullscreen;
+								root.fullscreenRequested(root.isVideoFullscreen);
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -133,5 +160,10 @@ Item {
 		var minutes = Math.floor(totalSeconds / 60);
 		var seconds = totalSeconds % 60;
 		return minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+	}
+
+	Component.onCompleted: {
+		mediaPlayer.source = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
+		mediaPlayer.play();
 	}
 }

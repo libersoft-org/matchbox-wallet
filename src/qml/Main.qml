@@ -97,6 +97,7 @@ ApplicationWindow {
 
 	// Track current page/section
 	property string currentPageId: "home"
+	property bool isFullscreen: false
 
 	// Global translation function - available to all child components
 	function tr(key) {
@@ -155,7 +156,7 @@ ApplicationWindow {
 	// Status bar at the very top
 	StatusBar {
 		id: statusBar
-		visible: !window.showSplashScreen
+		visible: !window.showSplashScreen && !window.isFullscreen
 		wifiStrength: window.currentWifiStrength
 		batteryLevel: batteryManager.batteryLevel
 		hasBattery: batteryManager.hasBattery
@@ -167,7 +168,7 @@ ApplicationWindow {
 	// Fixed navigation bar below status bar
 	Navbar {
 		id: fixedNavbar
-		visible: !window.showSplashScreen
+		visible: !window.showSplashScreen && !window.isFullscreen
 		anchors.top: statusBar.bottom
 		anchors.left: parent.left
 		anchors.right: parent.right
@@ -182,7 +183,7 @@ ApplicationWindow {
 	StackView {
 		id: stackView
 		visible: !window.showSplashScreen
-		anchors.top: fixedNavbar.bottom
+		anchors.top: window.isFullscreen ? parent.top : fixedNavbar.bottom
 		anchors.left: parent.left
 		anchors.right: parent.right
 		anchors.bottom: parent.bottom
@@ -506,7 +507,11 @@ ApplicationWindow {
 	// Media Player page
 	Component {
 		id: mediaPlayerPageComponent
-		VideoPlayer {}
+		VideoPlayer {
+			onFullscreenRequested: function(fullscreen) {
+				window.isFullscreen = fullscreen;
+			}
+		}
 	}
 
 	// Virtual Keyboard
