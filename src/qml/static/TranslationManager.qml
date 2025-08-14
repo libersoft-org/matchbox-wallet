@@ -27,7 +27,7 @@ QtObject {
 
 	function loadTranslations(language, onSuccess, onError) {
 		var xhr = new XMLHttpRequest();
-		var url = "qrc:/WalletModule/src/qml/translations/" + language + ".json";
+		var url = "qrc:/WalletModule/src/qml/lang/" + language + ".json";
 		console.log("Loading translations from:", url);
 		xhr.onreadystatechange = function () {
 			console.log("XHR state changed, readyState:", xhr.readyState, "status:", xhr.status);
