@@ -11,6 +11,7 @@ Item {
 	property bool showPowerButton: false
 	property bool isVideoFullscreen: false
 	property bool isRotated: false  // true = 90° rotation, false = 0°
+	property bool controlsVisible: true
 	signal fullscreenRequested(bool fullscreen)
 
 	Rectangle {
@@ -43,6 +44,14 @@ Item {
 			Component.onCompleted: {
 				mediaPlayer.videoOutput = videoOutput;
 			}
+
+			MouseArea {
+				anchors.fill: parent
+				onClicked: {
+					root.controlsVisible = !root.controlsVisible;
+					hideTimer.restart();
+				}
+			}
 		}
 
 		// Control panel at the bottom
@@ -54,6 +63,7 @@ Item {
 			height: window.width * 0.3
 			color: "#AA000000"
 			z: root.isVideoFullscreen ? 1000 : 1
+			visible: root.controlsVisible
 
 			Column {
 				anchors.fill: parent
@@ -81,6 +91,8 @@ Item {
 								var newPosition = (mouse.x / width) * mediaPlayer.duration;
 								mediaPlayer.setPosition(newPosition);
 							}
+							root.controlsVisible = true;
+							hideTimer.restart();
 						}
 					}
 
@@ -128,6 +140,8 @@ Item {
 										mediaPlayer.pause();
 									else
 										mediaPlayer.play();
+									root.controlsVisible = true;
+									hideTimer.restart();
 								}
 							}
 						}
@@ -140,7 +154,11 @@ Item {
 
 							MouseArea {
 								anchors.fill: parent
-								onClicked: mediaPlayer.stop()
+								onClicked: {
+									mediaPlayer.stop();
+									root.controlsVisible = true;
+									hideTimer.restart();
+								}
 							}
 						}
 					}
@@ -160,6 +178,8 @@ Item {
 								anchors.fill: parent
 								onClicked: {
 									root.isRotated = !root.isRotated;
+									root.controlsVisible = true;
+									hideTimer.restart();
 								}
 							}
 						}
@@ -175,6 +195,8 @@ Item {
 								onClicked: {
 									root.isVideoFullscreen = !root.isVideoFullscreen;
 									root.fullscreenRequested(root.isVideoFullscreen);
+									root.controlsVisible = true;
+									hideTimer.restart();
 								}
 							}
 						}
@@ -182,6 +204,14 @@ Item {
 				}
 			}
 		}
+	}
+
+	// Auto-hide timer for controls
+	Timer {
+		id: hideTimer
+		interval: 3000  // 3 seconds
+		repeat: false
+		onTriggered: root.controlsVisible = false
 	}
 
 	function formatTime(milliseconds) {
@@ -194,5 +224,6 @@ Item {
 	Component.onCompleted: {
 		mediaPlayer.source = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
 		mediaPlayer.play();
+		hideTimer.start();
 	}
 }
