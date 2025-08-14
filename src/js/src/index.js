@@ -1,4 +1,4 @@
-const CryptoManager = require('./crypto.js');
+const wallet = require('./wallet.js');
 const WifiManager = require('./wifi.js');
 const BatteryManager = require('./battery.js');
 const PowerManager = require('./power.js');

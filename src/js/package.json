@@ -7,6 +7,7 @@
 	"main": "index.js",
 	"dependencies": {
 		"ethers": "^6.15.0",
+		"libersoft-crypto": "https://github.com/libersoft-org/crypto-utils",
 		"node-wifi": "^2.0.16",
 		"systeminformation": "^5.27.7"
 	}
