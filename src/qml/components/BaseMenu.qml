@@ -27,6 +27,6 @@ ScrollableContainer {
 	Column {
 		id: buttonsContainer
 		width: parent.width
-		spacing: root.height * 0.03
+		spacing: window.width * 0.05
 	}
 }

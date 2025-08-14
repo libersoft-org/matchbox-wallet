@@ -8,15 +8,16 @@ Item {
 	property bool showPowerButton: true
 	signal backRequested
 	signal powerOffRequested
-	height: window.width * 0.1
+	height: window.width * 0.16
 
 	// Debug background
-
+	/*
 	Rectangle {
 		anchors.fill: parent
 		color: "red"
 		opacity: 0.3
 	}
+ */
 
 	// Back button (left)
 	Icon {
