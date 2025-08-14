@@ -86,6 +86,49 @@
 					"button": "LoRa",
 					"title": "LoRa settings"
 				},
+				"firewall": {
+					"button": "Firewall",
+					"title": "Firewall settings",
+					"enable": "Enable firewall",
+					"enabled": "Firewall is enabled",
+					"disabled": "Firewall is disabled",
+					"exceptions": {
+						"title": "Add an exception",
+						"port": "Port number",
+						"portPlaceholder": "Enter port number (1-65535)",
+						"description": "Description (optional)",
+						"descriptionPlaceholder": "Enter port description",
+						"protocol": "Protocol",
+						"tcp": "TCP",
+						"udp": "UDP",
+						"both": "TCP and UDP",
+						"add": "Add port"
+					},
+					"ports": {
+						"title": "Allowed ports",
+						"port": "Port",
+						"description": "Description",
+						"enabled": "Enabled",
+						"allowed": "Allowed",
+						"remove": "Remove",
+						"noPortsMessage": "No ports configured",
+						"addException": "Add exception"
+					},
+					"errors": {
+						"invalidPort": "Invalid port number",
+						"portExists": "Port already exists",
+						"addFailed": "Failed to add port",
+						"removeFailed": "Failed to remove port",
+						"enableFailed": "Failed to enable firewall",
+						"disableFailed": "Failed to disable firewall"
+					},
+					"messages": {
+						"portAdded": "Port added successfully",
+						"portRemoved": "Port removed successfully",
+						"firewallEnabled": "Firewall enabled",
+						"firewallDisabled": "Firewall disabled"
+					}
+				},
 				"display": {
 					"button": "Display",
 					"title": "Display settings",

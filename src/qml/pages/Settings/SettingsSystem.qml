@@ -12,6 +12,7 @@ BaseMenu {
 	signal soundSettingsRequested
 	signal displaySettingsRequested
 	signal updateSettingsRequested
+	signal firewallSettingsRequested
 
 	property string selectedLanguage: "en"
 
@@ -35,6 +36,11 @@ BaseMenu {
 		text: tr("menu.settings.system.lora.button")
 		enabled: false
 		onClicked: console.log("LoRa settings clicked - not implemented yet")
+	}
+
+	MenuButton {
+		text: tr("menu.settings.system.firewall.button")
+		onClicked: root.firewallSettingsRequested()
 	}
 
 	MenuButton {

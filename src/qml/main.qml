@@ -1,6 +1,7 @@
 import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
+import QtQuick.VirtualKeyboard 2.15
 import "static"
 import "components"
 import "pages"
@@ -297,6 +298,7 @@ ApplicationWindow {
 			onSoundSettingsRequested: window.goPage(settingsSystemSoundPageComponent)
 			onDisplaySettingsRequested: window.goPage(settingsSystemDisplayPageComponent)
 			onUpdateSettingsRequested: window.goPage(settingsSystemUpdatePageComponent)
+			onFirewallSettingsRequested: window.goPage(firewallSettingsPageComponent, "firewall-settings")
 		}
 	}
 
@@ -373,6 +375,25 @@ ApplicationWindow {
 				console.log("Volume changed to:", volume);
 				// TODO: Implement actual system volume setting
 			}
+		}
+	}
+
+	// System firewall settings page
+	Component {
+		id: firewallSettingsPageComponent
+		SettingsSystemFirewall {
+			property var parentWindow: window
+			onAddExceptionRequested: parentWindow.goPage(firewallExceptionsPageComponent, "firewall-add-port")
+		}
+	}
+
+	// Firewall add port page
+	Component {
+		id: firewallExceptionsPageComponent
+		SettingsSystemFirewallExceptions {
+			property var parentWindow: window
+			onPortAdded: parentWindow.goBack()
+			onAddCancelled: parentWindow.goBack()
 		}
 	}
 
@@ -486,5 +507,34 @@ ApplicationWindow {
 	Component {
 		id: keyboardTestPageComponent
 		KeyboardTest {}
+	}
+
+	// Virtual Keyboard
+	InputPanel {
+		id: inputPanel
+		z: 99
+		x: 0
+		y: window.height
+		width: window.width
+
+		states: State {
+			name: "visible"
+			when: inputPanel.active
+			PropertyChanges {
+				inputPanel.y: window.height - inputPanel.height
+			}
+		}
+		transitions: Transition {
+			from: ""
+			to: "visible"
+			reversible: true
+			ParallelAnimation {
+				NumberAnimation {
+					properties: "y"
+					duration: 250
+					easing.type: Easing.InOutQuad
+				}
+			}
+		}
 	}
 }

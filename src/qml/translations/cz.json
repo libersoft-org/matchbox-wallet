@@ -106,6 +106,49 @@
 					"title": "Výběr jazyka",
 					"selectLanguage": "Vyberte jazyk"
 				},
+				"firewall": {
+					"button": "Firewall",
+					"title": "Nastavení firewallu",
+					"enable": "Povolit firewall",
+					"enabled": "Firewall je povolen",
+					"disabled": "Firewall je zakázán",
+					"exceptions": {
+						"title": "Přidat výjimku",
+						"port": "Číslo portu",
+						"portPlaceholder": "Zadejte číslo portu (1-65535)",
+						"description": "Popis (volitelné)",
+						"descriptionPlaceholder": "Zadejte popis portu",
+						"protocol": "Protokol",
+						"tcp": "TCP",
+						"udp": "UDP",
+						"both": "TCP a UDP",
+						"add": "Přidat port"
+					},
+					"ports": {
+						"title": "Povolené porty",
+						"port": "Port",
+						"description": "Popis",
+						"enabled": "Povoleno",
+						"allowed": "Povoleno",
+						"remove": "Odebrat",
+						"noPortsMessage": "Žádný port nebyl nakonfigurován",
+						"addException": "Přidat výjimku"
+					},
+					"errors": {
+						"invalidPort": "Neplatné číslo portu",
+						"portExists": "Port již existuje",
+						"addFailed": "Nepodařilo se přidat port",
+						"removeFailed": "Nepodařilo se odebrat port",
+						"enableFailed": "Nepodařilo se povolit firewall",
+						"disableFailed": "Nepodařilo se zakázat firewall"
+					},
+					"success": {
+						"portAdded": "Port přidán",
+						"portRemoved": "Port odebrán",
+						"firewallEnabled": "Firewall povolen",
+						"firewallDisabled": "Firewall zakázán"
+					}
+				},
 				"update": {
 					"button": "Aktualizace",
 					"title": "Aktualizace systému",
