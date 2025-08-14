@@ -43,6 +43,11 @@ class FirewallManager {
 			}
 
 			if (inRulesSection && line.trim()) {
+				// Skip IPv6 rules to avoid duplicates
+				if (line.includes('(v6)')) {
+					continue;
+				}
+
 				const parts = line.trim().split(/\s+/);
 				if (parts.length >= 2) {
 					const portMatch = parts[0].match(/^(\d+)(\/tcp|\/udp)?$/);
