@@ -40,7 +40,7 @@ Rectangle {
 		}
 
 		root.isLoading = true;
-		var description = root.portDescription.trim() || ("Port " + port);
+		var description = descriptionInput.text.trim() || ("Port " + port);
 
 		if (root.portProtocol === "both") {
 			// Add both TCP and UDP
@@ -204,11 +204,10 @@ Rectangle {
 					}
 
 					Input {
+						id: descriptionInput
 						inputWidth: parent.width
 						inputHeight: 50
 						inputPlaceholder: tr("menu.settings.system.firewall.exceptions.descriptionPlaceholder")
-						text: root.portDescription
-						onTextChanged: root.portDescription = text
 					}
 				}
 			}
