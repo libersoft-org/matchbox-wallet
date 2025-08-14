@@ -1,5 +1,4 @@
-const { execSync, exec } = require('child_process');
-const fs = require('fs');
+const { execSync } = require('child_process');
 
 class FirewallManager {
 	// Get current firewall status
@@ -7,10 +6,8 @@ class FirewallManager {
 		try {
 			const status = execSync('ufw status', { encoding: 'utf8' });
 			const isEnabled = status.includes('Status: active');
-
 			// Parse existing rules
 			const rules = this.parseUfwRules(status);
-
 			return {
 				status: 'success',
 				data: {
@@ -28,26 +25,19 @@ class FirewallManager {
 		}
 	}
 
-	/**
-	 * Parse UFW rules output
-	 */
+	// Parse UFW rules output
 	parseUfwRules(statusOutput) {
 		const lines = statusOutput.split('\n');
 		const rules = [];
 		let inRulesSection = false;
-
 		for (const line of lines) {
 			if (line.includes('--')) {
 				inRulesSection = true;
 				continue;
 			}
-
 			if (inRulesSection && line.trim()) {
 				// Skip IPv6 rules to avoid duplicates
-				if (line.includes('(v6)')) {
-					continue;
-				}
-
+				if (line.includes('(v6)')) continue;
 				const parts = line.trim().split(/\s+/);
 				if (parts.length >= 2) {
 					const portMatch = parts[0].match(/^(\d+)(\/tcp|\/udp)?$/);
@@ -55,7 +45,6 @@ class FirewallManager {
 						// Extract comment after # symbol
 						const commentIndex = line.indexOf('#');
 						const description = commentIndex !== -1 ? line.substring(commentIndex + 1).trim() : `Port ${portMatch[1]}`;
-
 						rules.push({
 							port: parseInt(portMatch[1]),
 							protocol: portMatch[2] ? portMatch[2].substring(1) : 'tcp',
@@ -66,13 +55,10 @@ class FirewallManager {
 				}
 			}
 		}
-
 		return rules;
 	}
 
-	/**
-	 * Enable or disable firewall
-	 */
+	// Enable or disable firewall
 	async setFirewallEnabled(enabled) {
 		try {
 			if (enabled) {
@@ -84,7 +70,6 @@ class FirewallManager {
 			} else {
 				execSync('ufw --force disable', { stdio: 'pipe' });
 			}
-
 			return {
 				status: 'success',
 				message: `Firewall ${enabled ? 'enabled' : 'disabled'} successfully`,
@@ -99,9 +84,7 @@ class FirewallManager {
 		}
 	}
 
-	/**
-	 * Add a new firewall rule
-	 */
+	// Add a new firewall rule
 	async addException(port, protocol = 'tcp', description = '') {
 		try {
 			// Validate port number
@@ -112,7 +95,6 @@ class FirewallManager {
 					message: 'Invalid port number. Must be between 1 and 65535.',
 				};
 			}
-
 			// Validate protocol
 			if (!['tcp', 'udp'].includes(protocol.toLowerCase())) {
 				return {
@@ -120,12 +102,10 @@ class FirewallManager {
 					message: 'Invalid protocol. Must be tcp or udp.',
 				};
 			}
-
 			// Add the rule with comment
 			const finalDescription = description || `Port ${portNum}`;
 			const command = `ufw allow ${portNum}/${protocol.toLowerCase()} comment '${finalDescription}'`;
 			execSync(command, { stdio: 'pipe' });
-
 			return {
 				status: 'success',
 				message: `Port ${portNum}/${protocol} added successfully`,
@@ -146,9 +126,7 @@ class FirewallManager {
 		}
 	}
 
-	/**
-	 * Enable or disable a specific port
-	 */
+	// Enable or disable a specific port
 	async setExceptionEnabled(port, protocol = 'tcp', enabled = true, description = '') {
 		try {
 			const portNum = parseInt(port);
@@ -158,7 +136,6 @@ class FirewallManager {
 					message: 'Invalid port number. Must be between 1 and 65535.',
 				};
 			}
-
 			// Validate protocol
 			if (!['tcp', 'udp'].includes(protocol.toLowerCase())) {
 				return {
@@ -166,13 +143,10 @@ class FirewallManager {
 					message: 'Invalid protocol. Must be tcp or udp.',
 				};
 			}
-
 			const action = enabled ? 'allow' : 'deny';
 			const finalDescription = description || `Port ${portNum}`;
-
 			// Use UFW to allow or deny the port with comment
 			execSync(`ufw ${action} ${portNum}/${protocol.toLowerCase()} comment '${finalDescription}'`, { stdio: 'pipe' });
-
 			return {
 				status: 'success',
 				message: `Port ${portNum}/${protocol} ${enabled ? 'enabled' : 'disabled'} successfully`,
@@ -193,9 +167,7 @@ class FirewallManager {
 		}
 	}
 
-	/**
-	 * Remove a firewall rule
-	 */
+	// Remove a firewall rule
 	async removeException(port, protocol = 'tcp') {
 		try {
 			const portNum = parseInt(port);
@@ -205,11 +177,9 @@ class FirewallManager {
 					message: 'Invalid port number',
 				};
 			}
-
 			// Remove the rule
 			const command = `ufw delete allow ${portNum}/${protocol.toLowerCase()}`;
 			execSync(command, { stdio: 'pipe' });
-
 			return {
 				status: 'success',
 				message: `Port ${portNum}/${protocol} removed successfully`,
@@ -224,25 +194,18 @@ class FirewallManager {
 		}
 	}
 
-	/**
-	 * Reset firewall to default configuration
-	 */
+	// Reset firewall to default configuration
 	async resetToDefaults() {
 		try {
 			// Reset UFW
 			execSync('ufw --force reset', { stdio: 'pipe' });
 			execSync('ufw default deny incoming', { stdio: 'pipe' });
 			execSync('ufw default allow outgoing', { stdio: 'pipe' });
-
 			// Add default enabled ports
 			for (const defaultPort of this.defaultPorts) {
-				if (defaultPort.enabled) {
-					await this.addException(defaultPort.port, defaultPort.protocol, defaultPort.description);
-				}
+				if (defaultPort.enabled) await this.addException(defaultPort.port, defaultPort.protocol, defaultPort.description);
 			}
-
 			execSync('ufw --force enable', { stdio: 'pipe' });
-
 			return {
 				status: 'success',
 				message: 'Firewall reset to defaults successfully',
