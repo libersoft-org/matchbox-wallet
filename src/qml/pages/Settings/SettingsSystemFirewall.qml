@@ -112,7 +112,7 @@ Rectangle {
 				Text {
 					text: root.firewallEnabled ? tr("menu.settings.system.firewall.enabled") : tr("menu.settings.system.firewall.disabled")
 					font.pixelSize: 16
-					color: root.firewallEnabled ? colors.success : colors.warning
+					color: root.firewallEnabled ? colors.success : colors.error
 				}
 			}
 
@@ -236,7 +236,6 @@ Rectangle {
 							text: tr("menu.settings.system.firewall.ports.remove")
 							enabled: !root.isLoading
 							width: 80
-							backgroundColor: colors.error
 							onClicked: root.removeException(parent.modelData.port, parent.modelData.protocol)
 						}
 					}
