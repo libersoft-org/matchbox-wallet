@@ -13,41 +13,47 @@ Item {
 	property bool isRotated: false  // true = 90° rotation, false = 0°
 	signal fullscreenRequested(bool fullscreen)
 	
-	transform: Rotation {
-		origin.x: root.width / 2
-		origin.y: root.height / 2
-		angle: root.isRotated ? 90 : 0
-	}
-
 	Rectangle {
 		anchors.fill: parent
 		color: "#000"
 	}
 
-	MediaPlayer {
-		id: mediaPlayer
-		audioOutput: AudioOutput {}
-	}
-
-	VideoOutput {
-		id: videoOutput
-		anchors.fill: root.isVideoFullscreen ? root : parent
-		z: root.isVideoFullscreen ? 999 : 0
-
-		Component.onCompleted: {
-			mediaPlayer.videoOutput = videoOutput;
+	Item {
+		id: contentWrapper
+		anchors.centerIn: parent
+		width: root.isRotated ? parent.height : parent.width
+		height: root.isRotated ? parent.width : parent.height
+		
+		transform: Rotation {
+			origin.x: contentWrapper.width / 2
+			origin.y: contentWrapper.height / 2
+			angle: root.isRotated ? 90 : 0
 		}
-	}
 
-	// Control panel at the bottom
-	Rectangle {
-		id: controlPanel
-		anchors.left: parent.left
-		anchors.right: parent.right
-		anchors.bottom: parent.bottom
-		height: window.width * 0.3
-		color: "#AA000000"
-		z: root.isVideoFullscreen ? 1000 : 1
+		MediaPlayer {
+			id: mediaPlayer
+			audioOutput: AudioOutput {}
+		}
+
+		VideoOutput {
+			id: videoOutput
+			anchors.fill: root.isVideoFullscreen ? root : parent
+			z: root.isVideoFullscreen ? 999 : 0
+
+			Component.onCompleted: {
+				mediaPlayer.videoOutput = videoOutput;
+			}
+		}
+
+		// Control panel at the bottom
+		Rectangle {
+			id: controlPanel
+			anchors.left: parent.left
+			anchors.right: parent.right
+			anchors.bottom: parent.bottom
+			height: window.width * 0.3
+			color: "#AA000000"
+			z: root.isVideoFullscreen ? 1000 : 1
 
 		Column {
 			anchors.fill: parent
@@ -173,6 +179,7 @@ Item {
 						}
 					}
 				}
+			}
 			}
 		}
 	}
