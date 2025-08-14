@@ -10,7 +10,14 @@ Item {
 	property bool showBackButton: true
 	property bool showPowerButton: false
 	property bool isVideoFullscreen: false
+	property bool isRotated: false  // true = 90° rotation, false = 0°
 	signal fullscreenRequested(bool fullscreen)
+	
+	transform: Rotation {
+		origin.x: root.width / 2
+		origin.y: root.height / 2
+		angle: root.isRotated ? 90 : 0
+	}
 
 	Rectangle {
 		anchors.fill: parent
@@ -34,6 +41,7 @@ Item {
 
 	// Control panel at the bottom
 	Rectangle {
+		id: controlPanel
 		anchors.left: parent.left
 		anchors.right: parent.right
 		anchors.bottom: parent.bottom
@@ -135,6 +143,20 @@ Item {
 				Row {
 					anchors.right: parent.right
 					spacing: parent.width * 0.05
+
+					// Rotate button
+					Icon {
+						width: window.width * 0.1
+						height: window.width * 0.1
+						img: "qrc:/WalletModule/src/img/rotate.svg"
+
+						MouseArea {
+							anchors.fill: parent
+							onClicked: {
+								root.isRotated = !root.isRotated;
+							}
+						}
+					}
 
 					// Fullscreen button
 					Icon {
