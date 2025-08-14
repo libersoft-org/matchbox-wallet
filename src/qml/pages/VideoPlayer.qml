@@ -1,6 +1,7 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtMultimedia 6.0
+import "../components"
 
 Item {
 	id: root
@@ -10,7 +11,7 @@ Item {
 
 	Rectangle {
 		anchors.fill: parent
-		color: "#000000"
+		color: "#000"
 
 		MediaPlayer {
 			id: mediaPlayer
@@ -22,18 +23,19 @@ Item {
 			anchors.fill: parent
 
 			Component.onCompleted: {
-				mediaPlayer.videoOutput = videoOutput
+				mediaPlayer.videoOutput = videoOutput;
 			}
 		}
 
-		// Ovládací panel dole
+		// Control panel at the bottom
 		Rectangle {
 			anchors.left: parent.left
 			anchors.right: parent.right
 			anchors.bottom: parent.bottom
-			height: 100
-			color: "#AA000000" // Semi-transparent black
-			
+			height: window.width * 0.2
+			color: "red"
+			opacity: 0.8
+
 			Column {
 				anchors.fill: parent
 				anchors.margins: 10
@@ -42,14 +44,15 @@ Item {
 				// Seek bar
 				Rectangle {
 					width: parent.width
-					height: 30
-					color: "#333333"
+					height: window.width * 0.1
+					color: Qt.lighter(colors.primaryBackground)
 					radius: 15
+					clip: true
 
 					Rectangle {
 						width: (mediaPlayer.duration > 0) ? (parent.width * mediaPlayer.position / mediaPlayer.duration) : 0
 						height: parent.height
-						color: "#FF6600"
+						color: colors.primaryForeground
 						radius: 15
 					}
 
@@ -57,8 +60,8 @@ Item {
 						anchors.fill: parent
 						onClicked: {
 							if (mediaPlayer.duration > 0) {
-								var newPosition = (mouse.x / width) * mediaPlayer.duration
-								mediaPlayer.setPosition(newPosition)
+								var newPosition = (mouse.x / width) * mediaPlayer.duration;
+								mediaPlayer.setPosition(newPosition);
 							}
 						}
 					}
@@ -68,8 +71,8 @@ Item {
 						anchors.leftMargin: 10
 						anchors.verticalCenter: parent.verticalCenter
 						text: formatTime(mediaPlayer.position)
-						color: "white"
-						font.pixelSize: 12
+						color: colors.primaryForeground
+						font.pixelSize: window.width * 0.06
 					}
 
 					Text {
@@ -77,61 +80,43 @@ Item {
 						anchors.rightMargin: 10
 						anchors.verticalCenter: parent.verticalCenter
 						text: formatTime(mediaPlayer.duration)
-						color: "white"
-						font.pixelSize: 12
+						color: colors.primaryForeground
+						font.pixelSize: window.width * 0.06
 					}
 				}
 
-				// Ovládací tlačítka
+				// Control buttons
 				Row {
-					anchors.horizontalCenter: parent.horizontalCenter
-					spacing: 20
+					anchors.left: parent.left
+					anchors.leftMargin: 10
+					spacing: 15
 
-					// Stop tlačítko
-					Rectangle {
-						width: 50
-						height: 50
-						color: "#555555"
-						radius: 25
-
-						Text {
-							anchors.centerIn: parent
-							text: "⏹"
-							color: "white"
-							font.pixelSize: 20
-						}
+					// Play/Pause button
+					Icon {
+						width: window.width * 0.1
+						height: window.width * 0.1
+						img: (mediaPlayer.playbackState === MediaPlayer.PlayingState) ? "qrc:/WalletModule/src/img/pause.svg" : "qrc:/WalletModule/src/img/play.svg"
 
 						MouseArea {
 							anchors.fill: parent
 							onClicked: {
-								mediaPlayer.stop()
+								if (mediaPlayer.playbackState === MediaPlayer.PlayingState)
+									mediaPlayer.pause();
+								else
+									mediaPlayer.play();
 							}
 						}
 					}
 
-					// Play/Pause tlačítko
-					Rectangle {
-						width: 60
-						height: 60
-						color: "#FF6600"
-						radius: 30
-
-						Text {
-							anchors.centerIn: parent
-							text: (mediaPlayer.playbackState === MediaPlayer.PlayingState) ? "⏸" : "▶"
-							color: "white"
-							font.pixelSize: 24
-						}
+					// Stop button
+					Icon {
+						width: window.width * 0.1
+						height: window.width * 0.1
+						img: "qrc:/WalletModule/src/img/stop.svg"
 
 						MouseArea {
 							anchors.fill: parent
-							onClicked: {
-								if (mediaPlayer.playbackState === MediaPlayer.PlayingState) {
-									mediaPlayer.pause()
-								} else {
-									mediaPlayer.play()
-								}
-							}
+							onClicked: mediaPlayer.stop()
 						}
 					}
 				}
@@ -139,15 +124,15 @@ Item {
 		}
 
 		Component.onCompleted: {
-			mediaPlayer.source = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-			mediaPlayer.play()
+			mediaPlayer.source = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
+			mediaPlayer.play();
 		}
 	}
 
 	function formatTime(milliseconds) {
-		var totalSeconds = Math.floor(milliseconds / 1000)
-		var minutes = Math.floor(totalSeconds / 60)
-		var seconds = totalSeconds % 60
-		return minutes + ":" + (seconds < 10 ? "0" : "") + seconds
+		var totalSeconds = Math.floor(milliseconds / 1000);
+		var minutes = Math.floor(totalSeconds / 60);
+		var seconds = totalSeconds % 60;
+		return minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
 	}
 }
