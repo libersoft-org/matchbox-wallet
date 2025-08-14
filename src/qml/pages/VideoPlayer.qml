@@ -155,7 +155,7 @@ Item {
 						color: colors.primaryBackground
 						font.pixelSize: parent.height * 0.8
 
-						// Stejná pozice jako základní text, ale clippovaný
+						// Same position as base text, but clipped
 						x: parent.width - (parent.width * 0.02) - implicitWidth
 						width: Math.max(0, (parent.width * (mediaPlayer.duration > 0 ? mediaPlayer.position / mediaPlayer.duration : 0)) - x)
 						clip: true
@@ -254,7 +254,7 @@ Item {
 	// Auto-hide timer for controls
 	Timer {
 		id: hideTimer
-		interval: 3000  // 3 seconds
+		interval: 5000  // 5 seconds
 		repeat: false
 		onTriggered: root.controlsVisible = false
 	}
