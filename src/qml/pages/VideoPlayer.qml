@@ -12,7 +12,7 @@ Item {
 	property bool isVideoFullscreen: false
 	property bool isRotated: false  // true = 90° rotation, false = 0°
 	signal fullscreenRequested(bool fullscreen)
-	
+
 	Rectangle {
 		anchors.fill: parent
 		color: "#000"
@@ -23,7 +23,7 @@ Item {
 		anchors.centerIn: parent
 		width: root.isRotated ? parent.height : parent.width
 		height: root.isRotated ? parent.width : parent.height
-		
+
 		transform: Rotation {
 			origin.x: contentWrapper.width / 2
 			origin.y: contentWrapper.height / 2
@@ -55,131 +55,131 @@ Item {
 			color: "#AA000000"
 			z: root.isVideoFullscreen ? 1000 : 1
 
-		Column {
-			anchors.fill: parent
-			anchors.margins: 10
-			spacing: parent.height * 0.1
+			Column {
+				anchors.fill: parent
+				anchors.margins: 10
+				spacing: parent.height * 0.1
 
-			// Seek bar
-			Rectangle {
-				width: parent.width
-				height: parent.height * 0.5
-				color: Qt.lighter(colors.primaryBackground)
-				radius: height * 0.5
-				clip: true
-
+				// Seek bar
 				Rectangle {
-					width: (mediaPlayer.duration > 0) ? (parent.width * mediaPlayer.position / mediaPlayer.duration) : 0
-					height: parent.height
-					color: colors.primaryForeground
-				}
+					width: parent.width
+					height: parent.height * 0.5
+					color: Qt.lighter(colors.primaryBackground)
+					radius: height * 0.5
+					clip: true
 
-				MouseArea {
-					anchors.fill: parent
-					onClicked: {
-						if (mediaPlayer.duration > 0) {
-							var newPosition = (mouse.x / width) * mediaPlayer.duration;
-							mediaPlayer.setPosition(newPosition);
-						}
+					Rectangle {
+						width: (mediaPlayer.duration > 0) ? (parent.width * mediaPlayer.position / mediaPlayer.duration) : 0
+						height: parent.height
+						color: colors.primaryForeground
 					}
-				}
 
-				Text {
-					anchors.left: parent.left
-					anchors.leftMargin: parent.width * 0.02
-					anchors.verticalCenter: parent.verticalCenter
-					text: formatTime(mediaPlayer.position)
-					font.bold: true
-					color: colors.primaryForeground
-					font.pixelSize: parent.height * 0.8
-				}
-
-				Text {
-					anchors.right: parent.right
-					anchors.rightMargin: parent.width * 0.02
-					anchors.verticalCenter: parent.verticalCenter
-					text: formatTime(mediaPlayer.duration)
-					font.bold: true
-					color: colors.primaryForeground
-					font.pixelSize: parent.height * 0.8
-				}
-			}
-
-			// Control buttons
-			Item {
-				width: parent.width
-				height: window.width * 0.1
-
-				// Left side buttons
-				Row {
-					anchors.left: parent.left
-					spacing: parent.width * 0.05
-
-					// Play/Pause button
-					Icon {
-						width: window.width * 0.1
-						height: window.width * 0.1
-						img: (mediaPlayer.playbackState === MediaPlayer.PlayingState) ? "qrc:/WalletModule/src/img/pause.svg" : "qrc:/WalletModule/src/img/play.svg"
-
-						MouseArea {
-							anchors.fill: parent
-							onClicked: {
-								if (mediaPlayer.playbackState === MediaPlayer.PlayingState)
-									mediaPlayer.pause();
-								else
-									mediaPlayer.play();
+					MouseArea {
+						anchors.fill: parent
+						onClicked: {
+							if (mediaPlayer.duration > 0) {
+								var newPosition = (mouse.x / width) * mediaPlayer.duration;
+								mediaPlayer.setPosition(newPosition);
 							}
 						}
 					}
 
-					// Stop button
-					Icon {
-						width: window.width * 0.1
-						height: window.width * 0.1
-						img: "qrc:/WalletModule/src/img/stop.svg"
+					Text {
+						anchors.left: parent.left
+						anchors.leftMargin: parent.width * 0.02
+						anchors.verticalCenter: parent.verticalCenter
+						text: formatTime(mediaPlayer.position)
+						font.bold: true
+						color: colors.primaryForeground
+						font.pixelSize: parent.height * 0.8
+					}
 
-						MouseArea {
-							anchors.fill: parent
-							onClicked: mediaPlayer.stop()
-						}
+					Text {
+						anchors.right: parent.right
+						anchors.rightMargin: parent.width * 0.02
+						anchors.verticalCenter: parent.verticalCenter
+						text: formatTime(mediaPlayer.duration)
+						font.bold: true
+						color: colors.primaryForeground
+						font.pixelSize: parent.height * 0.8
 					}
 				}
 
-				// Right side buttons
-				Row {
-					anchors.right: parent.right
-					spacing: parent.width * 0.05
+				// Control buttons
+				Item {
+					width: parent.width
+					height: window.width * 0.1
 
-					// Rotate button
-					Icon {
-						width: window.width * 0.1
-						height: window.width * 0.1
-						img: "qrc:/WalletModule/src/img/rotate.svg"
+					// Left side buttons
+					Row {
+						anchors.left: parent.left
+						spacing: parent.width * 0.05
 
-						MouseArea {
-							anchors.fill: parent
-							onClicked: {
-								root.isRotated = !root.isRotated;
+						// Play/Pause button
+						Icon {
+							width: window.width * 0.1
+							height: window.width * 0.1
+							img: (mediaPlayer.playbackState === MediaPlayer.PlayingState) ? "qrc:/WalletModule/src/img/pause.svg" : "qrc:/WalletModule/src/img/play.svg"
+
+							MouseArea {
+								anchors.fill: parent
+								onClicked: {
+									if (mediaPlayer.playbackState === MediaPlayer.PlayingState)
+										mediaPlayer.pause();
+									else
+										mediaPlayer.play();
+								}
+							}
+						}
+
+						// Stop button
+						Icon {
+							width: window.width * 0.1
+							height: window.width * 0.1
+							img: "qrc:/WalletModule/src/img/stop.svg"
+
+							MouseArea {
+								anchors.fill: parent
+								onClicked: mediaPlayer.stop()
 							}
 						}
 					}
 
-					// Fullscreen button
-					Icon {
-						width: window.width * 0.1
-						height: window.width * 0.1
-						img: "qrc:/WalletModule/src/img/max.svg"
+					// Right side buttons
+					Row {
+						anchors.right: parent.right
+						spacing: parent.width * 0.05
 
-						MouseArea {
-							anchors.fill: parent
-							onClicked: {
-								root.isVideoFullscreen = !root.isVideoFullscreen;
-								root.fullscreenRequested(root.isVideoFullscreen);
+						// Rotate button
+						Icon {
+							width: window.width * 0.1
+							height: window.width * 0.1
+							img: "qrc:/WalletModule/src/img/rotate.svg"
+
+							MouseArea {
+								anchors.fill: parent
+								onClicked: {
+									root.isRotated = !root.isRotated;
+								}
+							}
+						}
+
+						// Fullscreen button
+						Icon {
+							width: window.width * 0.1
+							height: window.width * 0.1
+							img: "qrc:/WalletModule/src/img/max.svg"
+
+							MouseArea {
+								anchors.fill: parent
+								onClicked: {
+									root.isVideoFullscreen = !root.isVideoFullscreen;
+									root.fullscreenRequested(root.isVideoFullscreen);
+								}
 							}
 						}
 					}
 				}
-			}
 			}
 		}
 	}
