@@ -28,6 +28,10 @@
 				"title": "Výběr peněženky"
 			}
 		},
+		"mediaPlayer": {
+			"button": "Přehrávač médií",
+			"title": "Přehrávač médií"
+		},
 		"settings": {
 			"button": "Nastavení",
 			"title": "Nastavení",

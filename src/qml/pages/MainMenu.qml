@@ -14,11 +14,17 @@ BaseMenu {
 	property var powerOffComponent
 	property var cameraPreviewComponent
 	property var keyboardTestComponent
+	property var mediaPlayerComponent
 	property var goPageFunction
 
 	MenuButton {
 		text: tr("menu.wallet.button")
 		onClicked: goPageFunction(walletComponent)
+	}
+
+	MenuButton {
+		text: tr("menu.mediaPlayer.button")
+		onClicked: goPageFunction(mediaPlayerComponent)
 	}
 
 	MenuButton {
@@ -159,21 +165,20 @@ BaseMenu {
 		onClicked: {
 			console.log("stresstest...");
 			for (let i = 0; i < 1000; i++) {
-                Node.msg("audioSetVolume", {
-                    volume: i % 100
-                }, function (response) {
-                    console.log("Volume set response:", JSON.stringify(response));
-                    if (response.status === 'success') {
-                        console.log("Volume successfully changed to:", volume);
-                        root.hasError = false;
-                    } else {
-                        console.error("Failed to change volume:", response.message || "Unknown error");
-                        root.errorMessage = response.message || "Failed to set volume";
-                        root.hasError = true;
-                    }
-                });
-            }
-
+				Node.msg("audioSetVolume", {
+					volume: i % 100
+				}, function (response) {
+					console.log("Volume set response:", JSON.stringify(response));
+					if (response.status === 'success') {
+						console.log("Volume successfully changed to:", volume);
+						root.hasError = false;
+					} else {
+						console.error("Failed to change volume:", response.message || "Unknown error");
+						root.errorMessage = response.message || "Failed to set volume";
+						root.hasError = true;
+					}
+				});
+			}
 		}
 	}
 
@@ -189,7 +194,6 @@ BaseMenu {
 					console.error("Failed to get WiFi strength:", response.message);
 				}
 			});
-
 		}
 	}
 }

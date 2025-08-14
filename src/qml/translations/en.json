@@ -28,6 +28,10 @@
 				"title": "Select wallet"
 			}
 		},
+		"mediaPlayer": {
+			"button": "Media player",
+			"title": "Media player"
+		},
 		"settings": {
 			"button": "Settings",
 			"title": "Settings",
@@ -36,7 +40,7 @@
 				"title": "General settings",
 				"fiat": {
 					"button": "Fiat currency: %1",
-					"title": "Currency Selection"
+					"title": "Currency selection"
 				}
 			},
 			"wallets": {
@@ -45,7 +49,7 @@
 				"balance": "Balance",
 				"send": "Send",
 				"receive": "Receive",
-				"addressbook": "Addressbook"
+				"addressbook": "Address book"
 			},
 			"networks": {
 				"button": "Networks",

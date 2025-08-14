@@ -2,6 +2,7 @@ import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
 import QtQuick.VirtualKeyboard 2.15
+import QtMultimedia 6.0
 import "static"
 import "components"
 import "pages"
@@ -240,6 +241,7 @@ ApplicationWindow {
 			settingsComponent: settingsPageComponent
 			cameraPreviewComponent: cameraPreviewPageComponent
 			keyboardTestComponent: keyboardTestPageComponent
+			mediaPlayerComponent: mediaPlayerPageComponent
 			goPageFunction: window.goPage
 		}
 	}
@@ -499,6 +501,12 @@ ApplicationWindow {
 	Component {
 		id: keyboardTestPageComponent
 		KeyboardTest {}
+	}
+
+	// Media Player page
+	Component {
+		id: mediaPlayerPageComponent
+		VideoPlayer {}
 	}
 
 	// Virtual Keyboard
