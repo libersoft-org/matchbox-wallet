@@ -32,7 +32,7 @@ Item {
 			anchors.left: parent.left
 			anchors.right: parent.right
 			anchors.bottom: parent.bottom
-			height: window.width * 0.2
+			height: window.width * 0.3
 			color: "red"
 			opacity: 0.8
 
@@ -44,16 +44,15 @@ Item {
 				// Seek bar
 				Rectangle {
 					width: parent.width
-					height: window.width * 0.1
+					height: parent.height * 0.5
 					color: Qt.lighter(colors.primaryBackground)
-					radius: 15
+					radius: height * 0.5
 					clip: true
 
 					Rectangle {
 						width: (mediaPlayer.duration > 0) ? (parent.width * mediaPlayer.position / mediaPlayer.duration) : 0
 						height: parent.height
 						color: colors.primaryForeground
-						radius: 15
 					}
 
 					MouseArea {
@@ -68,20 +67,22 @@ Item {
 
 					Text {
 						anchors.left: parent.left
-						anchors.leftMargin: 10
+						anchors.leftMargin: parent.width * 0.02
 						anchors.verticalCenter: parent.verticalCenter
 						text: formatTime(mediaPlayer.position)
+						font.bold: true
 						color: colors.primaryForeground
-						font.pixelSize: window.width * 0.06
+						font.pixelSize: parent.height * 0.8
 					}
 
 					Text {
 						anchors.right: parent.right
-						anchors.rightMargin: 10
+						anchors.rightMargin: parent.width * 0.02
 						anchors.verticalCenter: parent.verticalCenter
 						text: formatTime(mediaPlayer.duration)
+						font.bold: true
 						color: colors.primaryForeground
-						font.pixelSize: window.width * 0.06
+						font.pixelSize: parent.height * 0.8
 					}
 				}
 
