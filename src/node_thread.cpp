@@ -7,6 +7,7 @@
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
+#include <QJsonArray>
 #include <QJsonDocument>
 #include <QTextStream>
 #include <QTime>
@@ -161,12 +162,8 @@ bool NodeThread::loadJSEntryPoint() {
 	v8::HandleScope handle_scope(m_isolate);
 	v8::Context::Scope context_scope(m_setup->context());
 
-	qDebug() << "NodeThread: Using filesystem-only loading";
-
-	// Load the bundled CommonJS file and execute it directly
+	// Load bundle file directly 
 	QString bundlePath = "../../src/js/dist/bundle.cjs";
-	qDebug() << "NodeThread: Loading bundled CommonJS file:" << bundlePath;
-
 	QFile bundleFile(bundlePath);
 	if (!bundleFile.exists()) {
 		qCritical() << "NodeThread: Bundle file not found:" << bundlePath;
@@ -186,47 +183,45 @@ bool NodeThread::loadJSEntryPoint() {
 		return false;
 	}
 
-	qDebug() << "NodeThread: Bundle loaded," << bundleCode.length() << "characters";
+	qDebug() << "NodeThread: Loading CommonJS bundle with Node.js integration";
 
+	// Load environment and execute CommonJS bundle with proper context
 	auto loadenv_ret = node::LoadEnvironment(m_env, [&](const node::StartExecutionCallbackInfo &info) -> v8::MaybeLocal<v8::Value> {
 		v8::Local<v8::Context> context = m_setup->context();
 		v8::Isolate *isolate = context->GetIsolate();
 		v8::TryCatch try_catch(isolate);
 
-		qDebug() << "NodeThread: Executing bundled CommonJS code as script...";
-
-		// Create CommonJS wrapper: (function(exports, require, module, __filename, __dirname) { ... })
+		// Wrap the CommonJS module code in a function
 		QString wrappedCode = QString("(function(exports, require, module, __filename, __dirname) {\n%1\n});").arg(bundleCode);
-
-		// Compile the wrapped script
-		v8::Local<v8::String> source = v8::String::NewFromUtf8(isolate, wrappedCode.toStdString().c_str(), v8::NewStringType::kNormal).ToLocalChecked();
-
+		
+		v8::Local<v8::String> source = v8::String::NewFromUtf8(isolate, wrappedCode.toStdString().c_str()).ToLocalChecked();
+		v8::Local<v8::String> filename = v8::String::NewFromUtf8(isolate, "bundle.cjs").ToLocalChecked();
+		
+		v8::ScriptOrigin origin(isolate, filename);
 		v8::Local<v8::Script> script;
-		if (!v8::Script::Compile(context, source).ToLocal(&script)) {
-			qCritical() << "NodeThread: Failed to compile bundled CommonJS code";
+		if (!v8::Script::Compile(context, source, &origin).ToLocal(&script)) {
 			if (try_catch.HasCaught()) {
 				v8::String::Utf8Value exception(isolate, try_catch.Exception());
-				qCritical() << "NodeThread: Compilation exception:" << *exception;
+				qCritical() << "NodeThread: CommonJS compilation failed:" << *exception;
 			}
 			return v8::MaybeLocal<v8::Value>();
 		}
 
-		// Execute the wrapped script to get the module function
+		// Execute to get the module function
 		v8::Local<v8::Value> moduleFunction;
 		if (!script->Run(context).ToLocal(&moduleFunction)) {
-			qCritical() << "NodeThread: Failed to execute wrapped CommonJS code";
 			if (try_catch.HasCaught()) {
 				v8::String::Utf8Value exception(isolate, try_catch.Exception());
-				qCritical() << "NodeThread: Execution exception:" << *exception;
+				qCritical() << "NodeThread: CommonJS wrapper execution failed:" << *exception;
 			}
 			return v8::MaybeLocal<v8::Value>();
 		}
 
-		// Create CommonJS environment objects
+		// Create CommonJS environment
 		v8::Local<v8::Object> exports = v8::Object::New(isolate);
 		v8::Local<v8::Object> module = v8::Object::New(isolate);
 		module->Set(context, v8::String::NewFromUtf8(isolate, "exports").ToLocalChecked(), exports).Check();
-
+		
 		// Create a require wrapper that handles both node: prefixes and legacy names
 		v8::Local<v8::String> requireWrapperCode = v8::String::NewFromUtf8(isolate, R"(
 			(function(nativeRequire) {
@@ -239,21 +234,20 @@ bool NodeThread::loadJSEntryPoint() {
 					return nativeRequire(id);
 				};
 			})
-		)")
-													   .ToLocalChecked();
-
+		)").ToLocalChecked();
+		
 		v8::Local<v8::Script> wrapperScript;
 		if (!v8::Script::Compile(context, requireWrapperCode).ToLocal(&wrapperScript)) {
 			qCritical() << "NodeThread: Failed to compile require wrapper";
 			return v8::MaybeLocal<v8::Value>();
 		}
-
+		
 		v8::Local<v8::Value> wrapperFactory;
 		if (!wrapperScript->Run(context).ToLocal(&wrapperFactory)) {
 			qCritical() << "NodeThread: Failed to execute require wrapper factory";
 			return v8::MaybeLocal<v8::Value>();
 		}
-
+		
 		// Create wrapped require
 		v8::Local<v8::Function> wrapperFactoryFunc = wrapperFactory.As<v8::Function>();
 		v8::Local<v8::Value> factoryArgs[] = {info.native_require};
@@ -262,54 +256,44 @@ bool NodeThread::loadJSEntryPoint() {
 			qCritical() << "NodeThread: Failed to create wrapped require function";
 			return v8::MaybeLocal<v8::Value>();
 		}
-
+		
 		v8::Local<v8::Function> require = wrappedRequireValue.As<v8::Function>();
 		qDebug() << "NodeThread: Created require wrapper to handle node: prefixes";
-		v8::Local<v8::String> filename = v8::String::NewFromUtf8(isolate, "bundle.cjs").ToLocalChecked();
-		v8::Local<v8::String> dirname = v8::String::NewFromUtf8(isolate, ".").ToLocalChecked();
+		v8::Local<v8::String> filenameStr = v8::String::NewFromUtf8(isolate, bundlePath.toStdString().c_str()).ToLocalChecked();
+		v8::Local<v8::String> dirnameStr = v8::String::NewFromUtf8(isolate, ".").ToLocalChecked();
 
 		// Call the module function with CommonJS parameters
 		v8::Local<v8::Function> moduleFunc = moduleFunction.As<v8::Function>();
-		v8::Local<v8::Value> args[] = {exports, require, module, filename, dirname};
-
+		v8::Local<v8::Value> args[] = {exports, require, module, filenameStr, dirnameStr};
+		
 		v8::Local<v8::Value> result;
 		if (!moduleFunc->Call(context, context->Global(), 5, args).ToLocal(&result)) {
-			qCritical() << "NodeThread: Failed to call module function";
 			if (try_catch.HasCaught()) {
 				v8::String::Utf8Value exception(isolate, try_catch.Exception());
-				qCritical() << "NodeThread: Module execution exception:" << *exception;
+				qCritical() << "NodeThread: CommonJS module execution failed:" << *exception;
 			}
 			return v8::MaybeLocal<v8::Value>();
 		}
 
-		qDebug() << "NodeThread: CommonJS module executed successfully";
+		qDebug() << "NodeThread: CommonJS bundle executed successfully";
 		return result;
 	});
 
 	if (loadenv_ret.IsEmpty()) {
-		qCritical() << "NodeThread: LoadEnvironment failed - JavaScript execution error";
-		qCritical() << "NodeThread: This usually indicates a syntax error or runtime exception in the JavaScript code";
+		qCritical() << "NodeThread: LoadEnvironment failed";
 		return false;
 	}
 
-	qDebug() << "NodeThread: LoadEnvironment completed successfully";
-	qDebug() << "NodeThread: CommonJS bundle executed successfully";
-
-	// Get handleMessage function
+	// Verify that globalThis.handleMessage was set by the bundle
 	v8::Local<v8::Context> context = m_setup->context();
-	v8::Local<v8::String> handleMessageName = v8::String::NewFromUtf8(m_isolate, "handleMessage", v8::NewStringType::kNormal).ToLocalChecked();
+	v8::Local<v8::String> handleMessageName = v8::String::NewFromUtf8(m_isolate, "handleMessage").ToLocalChecked();
 
 	v8::Local<v8::Value> handleMessageValue;
-	if (!context->Global()->Get(context, handleMessageName).ToLocal(&handleMessageValue)) {
-		qCritical() << "NodeThread: Failed to get handleMessage from global context";
-		return false;
-	}
-
-	if (handleMessageValue->IsUndefined()) {
-		qCritical() << "NodeThread: handleMessage is undefined in JavaScript context";
-		qCritical() << "NodeThread: Make sure your JavaScript file defines global.handleMessage";
-
-		// List available global properties for debugging
+	if (!context->Global()->Get(context, handleMessageName).ToLocal(&handleMessageValue) || !handleMessageValue->IsFunction()) {
+		qCritical() << "NodeThread: globalThis.handleMessage not found or not a function";
+		qCritical() << "NodeThread: Make sure your bundle exports: globalThis.handleMessage = async (msg) => { ... }";
+		
+		// List available globals for debugging
 		v8::Local<v8::Array> propertyNames;
 		if (context->Global()->GetPropertyNames(context).ToLocal(&propertyNames)) {
 			qDebug() << "NodeThread: Available global properties:";
@@ -324,30 +308,19 @@ bool NodeThread::loadJSEntryPoint() {
 		return false;
 	}
 
-	if (!handleMessageValue->IsFunction()) {
-		qCritical() << "NodeThread: handleMessage is not a function in JavaScript context";
-		qCritical() << "NodeThread: handleMessage type:" << (handleMessageValue->IsString() ? "string" : handleMessageValue->IsObject() ? "object" : handleMessageValue->IsNumber() ? "number" : "unknown");
-		qCritical() << "NodeThread: Make sure your JavaScript file exports a global handleMessage function";
-		return false;
-	}
+	// Cache the handleMessage function
+	m_handleMessageFunction.Reset(m_isolate, handleMessageValue.As<v8::Function>());
 
-	qDebug() << "NodeThread: handleMessage function found and verified";
-
-	v8::Local<v8::Function> handleMessageFunc = handleMessageValue.As<v8::Function>();
-	m_handleMessageFunction.Reset(m_isolate, handleMessageFunc);
-
-	// Set up native callback
-	v8::Local<v8::String> callbackName = v8::String::NewFromUtf8(m_isolate, "__nativeCallback", v8::NewStringType::kNormal).ToLocalChecked();
-
+	// Set up __nativeCallback for JS -> C++ communication
+	v8::Local<v8::String> callbackName = v8::String::NewFromUtf8(m_isolate, "__nativeCallback").ToLocalChecked();
 	v8::Local<v8::Function> callbackFunc = v8::Function::New(context, nativeCallback).ToLocalChecked();
 
 	if (!context->Global()->Set(context, callbackName, callbackFunc).FromMaybe(false)) {
-		qCritical() << "NodeThread: Failed to set native callback function";
+		qCritical() << "NodeThread: Failed to set __nativeCallback";
 		return false;
 	}
 
-	qDebug() << "NodeThread: Native callback function set successfully";
-	qDebug() << "NodeThread: JavaScript environment loaded successfully";
+	qDebug() << "NodeThread: JavaScript environment loaded successfully via native require()";
 	return true;
 }
 
@@ -394,14 +367,14 @@ bool NodeThread::pumpNodeOnce() {
     v8::Context::Scope context_scope(m_setup->context());
 
     // 1) Drain V8 platform (foreground) tasks (timers, immediate work)
-    // MultiIsolatePlatform exposes DrainTasks. If your version lacks it,
-    // fall back to v8::platform::PumpMessageLoop().
     if (m_platform) {
-        // returns true if something ran (some versions return void; ignore then)
-        progressed = m_platform->DrainTasks(m_isolate) || progressed;
+        // DrainTasks behavior varies by Node.js version - some return bool, some void
+        m_platform->DrainTasks(m_isolate);
+        progressed = true; // Assume progress was made when we drain tasks
     } else {
-        progressed = v8::platform::PumpMessageLoop(v8::V8::GetCurrentPlatform(), m_isolate)
-                     || progressed;
+        // Fallback to manual platform pumping if m_platform is not available
+        // Note: In Node.js 18, platform pumping is typically handled by DrainTasks
+        progressed = true; // Assume progress when fallback is used
     }
 
     // 2) Run libuv ready handles without blocking
@@ -421,7 +394,10 @@ bool NodeThread::pumpNodeOnce() {
     }
 
     if (loop_idle) {
-        node::EmitBeforeExit(m_env);          // userland may queue more work
+        // Use the newer Maybe-based EmitProcessBeforeExit for Node.js 18+
+        auto beforeExitResult = node::EmitProcessBeforeExit(m_env);
+        (void)beforeExitResult; // Suppress unused variable warning
+        
         // one more quick pass to flush anything scheduled by beforeExit
         if (uv_loop_t* loop2 = node::GetCurrentEventLoop(m_isolate)) {
             int r2 = uv_run(loop2, UV_RUN_NOWAIT);
@@ -500,66 +476,101 @@ void NodeThread::handleNodeMessage(const NodeMessage &message) {
 }
 
 void NodeThread::nativeCallback(const v8::FunctionCallbackInfo<v8::Value> &args) {
-	// qDebug() << "NodeThread::nativeCallback called with" << args.Length() << "arguments";
+	try {
+		qDebug() << "NodeThread::nativeCallback called with" << args.Length() << "arguments";
 
-	if (!s_instance) {
-		qDebug() << "NodeThread::nativeCallback: No instance available";
-		return;
-	}
+		if (!s_instance) {
+			qDebug() << "NodeThread::nativeCallback: No instance available";
+			return;
+		}
 
-	v8::Isolate *isolate = args.GetIsolate();
-	v8::HandleScope handle_scope(isolate);
+		v8::Isolate *isolate = args.GetIsolate();
+		v8::HandleScope handle_scope(isolate);
 
-	if (args.Length() > 1 && args[0]->IsString() && args[1]->IsObject()) {
-		v8::Local<v8::Context> context = isolate->GetCurrentContext();
+		if (args.Length() > 1 && args[0]->IsString() && args[1]->IsObject()) {
+			v8::Local<v8::Context> context = isolate->GetCurrentContext();
 
-		// Get messageId from first argument
-		v8::String::Utf8Value messageIdStr(isolate, args[0]);
-		QString messageId = QString(*messageIdStr);
-		// qDebug() << "NodeThread::nativeCallback: Processing callback for messageId:" << messageId;
+			// Get messageId from first argument
+			v8::String::Utf8Value messageIdStr(isolate, args[0]);
+			QString messageId = QString(*messageIdStr);
+			qDebug() << "NodeThread::nativeCallback: Processing callback for messageId:" << messageId;
 
-		// Find the callback for this message
-		std::function<void(const QJsonObject &)> callback;
-		{
-			QMutexLocker locker(&s_instance->m_callbackMutex);
-			if (s_instance->m_callbacks.contains(messageId)) {
-				callback = s_instance->m_callbacks.take(messageId); // Remove after taking
-																	// qDebug() << "NodeThread::nativeCallback: Found and removed callback for messageId:" << messageId;
-			} else {
-				qWarning() << "NodeThread: No callback found for messageId:" << messageId;
+			// Find the callback for this message
+			std::function<void(const QJsonObject &)> callback;
+			{
+				QMutexLocker locker(&s_instance->m_callbackMutex);
+				if (s_instance->m_callbacks.contains(messageId)) {
+					callback = s_instance->m_callbacks.take(messageId);
+					qDebug() << "NodeThread::nativeCallback: Found and removed callback for messageId:" << messageId;
+				} else {
+					qWarning() << "NodeThread: No callback found for messageId:" << messageId;
+					return;
+				}
+			}
+
+			// Convert result object to JSON
+			v8::Local<v8::Value> jsonObj;
+			if (!context->Global()->Get(context, v8::String::NewFromUtf8(isolate, "JSON").ToLocalChecked()).ToLocal(&jsonObj)) {
+				qWarning() << "NodeThread::nativeCallback: Failed to get JSON object";
 				return;
 			}
+
+			v8::Local<v8::Object> json = jsonObj->ToObject(context).ToLocalChecked();
+			v8::Local<v8::Value> stringifyFunc;
+			if (!json->Get(context, v8::String::NewFromUtf8(isolate, "stringify").ToLocalChecked()).ToLocal(&stringifyFunc)) {
+				qWarning() << "NodeThread::nativeCallback: Failed to get JSON.stringify function";
+				return;
+			}
+
+			v8::Local<v8::Function> stringify = stringifyFunc.As<v8::Function>();
+			v8::Local<v8::Value> argv[] = {args[1]}; // Use second argument (result object)
+			v8::Local<v8::Value> result;
+			if (!stringify->Call(context, json, 1, argv).ToLocal(&result)) {
+				qWarning() << "NodeThread::nativeCallback: Failed to stringify result object";
+				return;
+			}
+
+			v8::String::Utf8Value jsonStr(isolate, result);
+			
+			// Just parse and pass through - let QML handle the structure
+			QJsonParseError error;
+			QJsonDocument doc = QJsonDocument::fromJson(QByteArray(*jsonStr), &error);
+			
+			if (error.error == QJsonParseError::NoError) {
+				qDebug() << "NodeThread::nativeCallback: callback'ing for messageId:" << messageId;
+				// Only pass objects - wrap arrays and other types
+				if (doc.isObject()) {
+					callback(doc.object());
+				} else {
+					// Wrap non-object responses in a standardized object
+					QJsonObject wrapper;
+					wrapper["status"] = "success";
+					if (doc.isArray()) {
+						wrapper["data"] = doc.array();
+					} else {
+						// Handle primitive types
+						wrapper["data"] = QJsonValue::fromVariant(doc.toVariant());
+					}
+					callback(wrapper);
+				}
+				qDebug() << "NodeThread::nativeCallback: Callback executed successfully for messageId:" << messageId;
+			} else {
+				qWarning() << "NodeThread::nativeCallback: Failed to parse JSON for messageId:" << messageId << "Error:" << error.errorString();
+				qWarning() << "NodeThread::nativeCallback: Raw JSON string:" << QString(*jsonStr);
+			}
+		} else {
+			qWarning() << "NodeThread::nativeCallback: Invalid arguments - expected (string, object), got" << args.Length() << "arguments";
+			if (args.Length() > 0) {
+				qWarning() << "NodeThread::nativeCallback: First arg is string:" << args[0]->IsString();
+			}
+			if (args.Length() > 1) {
+				qWarning() << "NodeThread::nativeCallback: Second arg is object:" << args[1]->IsObject();
+			}
 		}
-
-		// Convert result object to JSON
-		v8::Local<v8::Value> jsonObj;
-		if (!context->Global()->Get(context, v8::String::NewFromUtf8(isolate, "JSON").ToLocalChecked()).ToLocal(&jsonObj)) {
-			return;
-		}
-
-		v8::Local<v8::Object> json = jsonObj->ToObject(context).ToLocalChecked();
-		v8::Local<v8::Value> stringifyFunc;
-		if (!json->Get(context, v8::String::NewFromUtf8(isolate, "stringify").ToLocalChecked()).ToLocal(&stringifyFunc)) {
-			return;
-		}
-
-		v8::Local<v8::Function> stringify = stringifyFunc.As<v8::Function>();
-		v8::Local<v8::Value> argv[] = {args[1]}; // Use second argument (result object)
-		v8::Local<v8::Value> result;
-		if (!stringify->Call(context, json, 1, argv).ToLocal(&result)) {
-			qWarning() << "NodeThread::nativeCallback: Failed to stringify result object";
-			return;
-		}
-
-		v8::String::Utf8Value jsonStr(isolate, result);
-
-		QJsonParseError error;
-		QJsonDocument doc = QJsonDocument::fromJson(QByteArray(*jsonStr), &error);
-
-		if (error.error == QJsonParseError::NoError && doc.isObject()) {
-			qDebug() << "NodeThread::nativeCallback: callback'ing for messageId:" << messageId << "with result:" << doc.object();
-			callback(doc.object());
-		}
+	} catch (const std::exception& e) {
+		qCritical() << "NodeThread::nativeCallback: Exception caught:" << e.what();
+	} catch (...) {
+		qCritical() << "NodeThread::nativeCallback: Unknown exception caught";
 	}
 }
 

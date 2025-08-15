@@ -1,5 +1,5 @@
 import * as crypto2 from 'libersoft-crypto';
-import { get } from 'svelte/store';
+import { crypto2getAddressBookItems } from './crypto2_helper';
 import { popEvents } from './EventQueue';
 
 // @ts-ignore
@@ -93,7 +93,7 @@ const HANDLERS: { [key: string]: (params?: any) => any } = {
 	crypto2findAddressBookItemByAddress: (params) => crypto2.findAddressBookItemByAddress(params.address),
 	crypto2findAddressBookItemByID: (params) => crypto2.findAddressBookItemByID(params.guid),
 	crypto2hasAddressBookItems: () => crypto2.hasAddressBookItems(),
-	crypto2getAddressBookItems: () => get(crypto2.addressBook),
+	crypto2getAddressBookItems: () => crypto2getAddressBookItems(),
 	crypto2validateAddressBookItem: (params) => crypto2.validateAddressBookItem(params.name, params.address, params.excludeItemGuid),
 	crypto2importAddressBookItems: (params) => crypto2.importAddressBookItems(params.text),
 	crypto2replaceAddressBook: (params) => crypto2.replaceAddressBook(params.text),
@@ -141,6 +141,9 @@ const HANDLERS: { [key: string]: (params?: any) => any } = {
 		if (typeof (global as any).__nativeCallback === 'function') (global as any).__nativeCallback(messageId, errorResult);
 	}
 };
+
+// Export handleMessage to globalThis for native require() compatibility
+(globalThis as any).handleMessage = (global as any).handleMessage;
 
 console.log('js/src/index.ts initialized');
 

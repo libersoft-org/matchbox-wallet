@@ -37,8 +37,8 @@ Rectangle {
 	function loadAddressBook() {
 		isLoading = true
 		Node.msg("crypto2getAddressBookItems", {}, function(response) {
-			console.log("Address book items:", response)
-			addressBookItems = response || []
+			console.log("Address book items:", JSON.stringify(response, null, 2))
+			addressBookItems = response.data || []
 			isLoading = false
 		})
 	}
@@ -48,7 +48,7 @@ Rectangle {
 			name: name,
 			address: address
 		}, function(response) {
-			console.log("Add address book item response:", response)
+			console.log("Add address book item response:", JSON.stringify(response, null, 2))
 			if (response.isValid) {
 				showAddDialog = false
 				loadAddressBook()
@@ -231,11 +231,19 @@ Rectangle {
 				color: colors.primaryText
 			}
 			
-			Input {
+			TextField {
 				id: nameInput
 				Layout.fillWidth: true
 				text: addDialog.nameField
 				onTextChanged: addDialog.nameField = text
+				placeholderText: "Enter name"
+				color: colors.primaryText
+				background: Rectangle {
+					color: colors.secondaryBackground
+					border.color: colors.border
+					border.width: 1
+					radius: 4
+				}
 			}
 			
 			Text {
@@ -243,11 +251,19 @@ Rectangle {
 				color: colors.primaryText
 			}
 			
-			Input {
+			TextField {
 				id: addressInput
 				Layout.fillWidth: true
 				text: addDialog.addressField
 				onTextChanged: addDialog.addressField = text
+				placeholderText: "Enter address"
+				color: colors.primaryText
+				background: Rectangle {
+					color: colors.secondaryBackground
+					border.color: colors.border
+					border.width: 1
+					radius: 4
+				}
 			}
 			
 			Text {
@@ -309,10 +325,18 @@ Rectangle {
 				color: colors.primaryText
 			}
 			
-			Input {
+			TextField {
 				Layout.fillWidth: true
 				text: editDialog.nameField
 				onTextChanged: editDialog.nameField = text
+				placeholderText: "Enter name"
+				color: colors.primaryText
+				background: Rectangle {
+					color: colors.secondaryBackground
+					border.color: colors.border
+					border.width: 1
+					radius: 4
+				}
 			}
 			
 			Text {
@@ -320,10 +344,18 @@ Rectangle {
 				color: colors.primaryText
 			}
 			
-			Input {
+			TextField {
 				Layout.fillWidth: true
 				text: editDialog.addressField
 				onTextChanged: editDialog.addressField = text
+				placeholderText: "Enter address"
+				color: colors.primaryText
+				background: Rectangle {
+					color: colors.secondaryBackground
+					border.color: colors.border
+					border.width: 1
+					radius: 4
+				}
 			}
 			
 			Text {

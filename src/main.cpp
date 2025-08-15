@@ -92,8 +92,13 @@ qDebug() << "QtQuick.LocalStorage: " << QUrl::fromLocalFile(engine.offlineStorag
  int batteryInterval = batteryIntervalEnv.isEmpty() ? 10000 : batteryIntervalEnv.toInt();
  if (batteryInterval <= 0) batteryInterval = 10000; // Ensure positive value
 
+ QByteArray eventsIntervalEnv = qgetenv("EVENTS_POLL_INTERVAL");
+ int eventsInterval = eventsIntervalEnv.isEmpty() ? 3500 : eventsIntervalEnv.toInt();
+ if (eventsInterval <= 0) eventsInterval = 3500; // Ensure positive value
+
  qDebug() << "WiFi strength update interval:" << wifiInterval << "ms";
  qDebug() << "Battery status update interval:" << batteryInterval << "ms";
+ qDebug() << "Events poll interval:" << eventsInterval << "ms";
 
  // Register context properties instead of QML types
  engine.rootContext()->setContextProperty("NodeJS", nodeJS);
@@ -101,6 +106,7 @@ qDebug() << "QtQuick.LocalStorage: " << QUrl::fromLocalFile(engine.offlineStorag
  engine.rootContext()->setContextProperty("applicationVersion", app.applicationVersion());
  engine.rootContext()->setContextProperty("wifiStrengthUpdateInterval", wifiInterval);
  engine.rootContext()->setContextProperty("batteryStatusUpdateInterval", batteryInterval);
+ engine.rootContext()->setContextProperty("eventsPollInterval", eventsInterval);
  const QUrl url(QStringLiteral("qrc:/WalletModule/src/qml/Main.qml"));
  QObject::connect(
 					&engine, &QQmlApplicationEngine::objectCreated, &app,

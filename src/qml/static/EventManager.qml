@@ -7,7 +7,7 @@ QtObject {
 	signal eventReceived(string eventType, var data)
 	
 	property Timer eventTimer: Timer {
-		interval: 3500
+		interval: eventsPollInterval
 		running: true
 		repeat: true
 		onTriggered: pollEvents()
