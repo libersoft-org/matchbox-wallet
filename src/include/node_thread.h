@@ -48,6 +48,9 @@ protected:
  void run() override;
 
 private:
+
+    bool pumpNodeOnce();   // returns true if any progress was made
+
  bool initializeNodeEnvironment();
  bool loadJSEntryPoint();
  void processMessages();

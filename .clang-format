@@ -1,9 +1,9 @@
 ---
 Language: Cpp
-# Based on Google style but with opening braces on same line
-BasedOnStyle: Google
-IndentWidth: 1
-TabWidth: 1
+# Tabs-only formatting style
+BasedOnStyle: LLVM
+IndentWidth: 4
+TabWidth: 4
 UseTab: Always
 BreakBeforeBraces: Attach
 # Attach means opening braces go on the same line
@@ -13,5 +13,9 @@ AllowShortFunctionsOnASingleLine: Empty
 AlignConsecutiveAssignments: false
 AlignConsecutiveDeclarations: false
 ColumnLimit: 10000
+# Force tabs for all alignment
+AlignOperands: DontAlign
+AlignAfterOpenBracket: DontAlign
+ContinuationIndentWidth: 4
 ---
 
