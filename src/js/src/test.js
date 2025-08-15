@@ -24,4 +24,4 @@ class TestManager {
 	}
 }
 
-module.exports = TestManager;
+export default TestManager;

@@ -164,7 +164,7 @@ bool NodeThread::loadJSEntryPoint() {
  qDebug() << "NodeThread: Using filesystem-only loading";
 
  // Load main JavaScript file from filesystem
- QString jsPath = "../../src/js/index.js";		// Relative to build directory
+ QString jsPath = "../../src/js/dist/bundle.cjs";	// Bundled CommonJS file
  qDebug() << "NodeThread: Attempting to load main JS file from:" << jsPath;
 
  QFile jsFile(jsPath);
@@ -224,6 +224,7 @@ bool NodeThread::loadJSEntryPoint() {
  auto loadenv_ret = node::LoadEnvironment(m_env, [&](const node::StartExecutionCallbackInfo& info) -> v8::MaybeLocal<v8::Value> {
 		v8::Local<v8::Context> context = m_setup->context();
 		v8::Isolate* isolate = context->GetIsolate();
+		v8::TryCatch try_catch(isolate);
 
 		v8::Local<v8::Function> require = info.native_require;
 
@@ -233,87 +234,6 @@ bool NodeThread::loadJSEntryPoint() {
 			return v8::MaybeLocal<v8::Value>();
 		}
 
-		// Load bootstrap code from filesystem
-		QString bootstrapPath = "../../src/js/bootstrap.js";		// Relative to build directory
-		qDebug() << "NodeThread: Loading bootstrap file from:" << bootstrapPath;
-
-		QFile bootstrapFile(bootstrapPath);
-		QFileInfo bootstrapFileInfo(bootstrapPath);
-
-		qDebug() << "NodeThread: Bootstrap file exists:" << bootstrapFile.exists();
-		qDebug() << "NodeThread: Bootstrap absolute path:" << bootstrapFileInfo.absoluteFilePath();
-		qDebug() << "NodeThread: Bootstrap file size:" << bootstrapFileInfo.size() << "bytes";
-
-		if (!bootstrapFile.exists()) {
-			qCritical() << "NodeThread: Bootstrap file not found:" << bootstrapPath;
-			qCritical() << "NodeThread: Current working directory:" << QDir::currentPath();
-			return v8::MaybeLocal<v8::Value>();
-		}
-
-		if (!bootstrapFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-			qCritical() << "NodeThread: Failed to open bootstrap file:" << bootstrapPath;
-			qCritical() << "NodeThread: Bootstrap error:" << bootstrapFile.errorString();
-			return v8::MaybeLocal<v8::Value>();
-		}
-
-		qDebug() << "NodeThread: Reading bootstrap file content...";
-		QTextStream bootstrapStream(&bootstrapFile);
-		QString bootstrapCode = bootstrapStream.readAll();
-		bootstrapFile.close();
-
-		qDebug() << "NodeThread: Bootstrap read completed";
-		qDebug() << "NodeThread: Bootstrap content length:" << bootstrapCode.length() << "characters";
-		qDebug() << "NodeThread: Bootstrap preview (first 50 chars):" << bootstrapCode.left(50);
-
-		if (bootstrapCode.isEmpty()) {
-			qCritical() << "NodeThread: Bootstrap file is empty:" << bootstrapPath;
-			return v8::MaybeLocal<v8::Value>();
-		}
-
-		qDebug() << "NodeThread: Loaded bootstrap from filesystem:" << bootstrapPath;
-		qDebug() << "NodeThread: Bootstrap content hash:" << QString::number(qHash(bootstrapCode), 16);
-
-		v8::Local<v8::String> bootstrap = v8::String::NewFromUtf8(isolate, bootstrapCode.toStdString().c_str(), v8::NewStringType::kNormal).ToLocalChecked();
-
-		v8::Local<v8::Script> bootstrapScript;
-		v8::TryCatch try_catch(isolate);
-		if (!v8::Script::Compile(context, bootstrap).ToLocal(&bootstrapScript)) {
-			qCritical() << "NodeThread: Failed to compile bootstrap script";
-			if (try_catch.HasCaught()) {
-				v8::String::Utf8Value exception(isolate, try_catch.Exception());
-				qCritical() << "NodeThread: Bootstrap compilation exception:" << *exception;
-			}
-			return v8::MaybeLocal<v8::Value>();
-		}
-
-		v8::Local<v8::Value> bootstrapFunctionResult;
-		if (!bootstrapScript->Run(context).ToLocal(&bootstrapFunctionResult)) {
-			qCritical() << "NodeThread: Failed to run bootstrap script";
-			if (try_catch.HasCaught()) {
-				v8::String::Utf8Value exception(isolate, try_catch.Exception());
-				qCritical() << "NodeThread: Bootstrap execution exception:" << *exception;
-			}
-			return v8::MaybeLocal<v8::Value>();
-		}
-
-		if (!bootstrapFunctionResult->IsFunction()) {
-			qCritical() << "NodeThread: Bootstrap script did not return a function";
-			return v8::MaybeLocal<v8::Value>();
-		}
-
-		v8::Local<v8::Function> bootstrapFunction = bootstrapFunctionResult.As<v8::Function>();
-		v8::Local<v8::Value> args[] = {require};
-		v8::Local<v8::Value> result;
-		if (!bootstrapFunction->Call(context, context->Global(), 1, args).ToLocal(&result)) {
-			qCritical() << "NodeThread: Failed to call bootstrap function";
-			if (try_catch.HasCaught()) {
-				v8::String::Utf8Value exception(isolate, try_catch.Exception());
-				qCritical() << "NodeThread: Bootstrap call exception:" << *exception;
-			}
-			return v8::MaybeLocal<v8::Value>();
-		}
-
-		qDebug() << "NodeThread: Bootstrap completed successfully";
 		qDebug() << "NodeThread: Now compiling main JavaScript code...";
 		qDebug() << "NodeThread: Converting" << jsCode.length() << "characters to V8 string";
 

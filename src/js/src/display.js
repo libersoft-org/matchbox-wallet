@@ -1,9 +1,11 @@
+import { exec } from 'child_process';
+import { promisify } from 'util';
+
+const execAsync = promisify(exec);
+
 class DisplayManager {
 	async getBrightness() {
 		try {
-			const { exec } = require('child_process');
-			const { promisify } = require('util');
-			const execAsync = promisify(exec);
 			console.log('Getting brightness using brightnessctl');
 			const { stdout } = await execAsync('brightnessctl get');
 			const currentBrightness = parseInt(stdout.trim()) || 0;
@@ -33,9 +35,6 @@ class DisplayManager {
 		try {
 			const brightness = parseInt(params.brightness);
 			if (isNaN(brightness) || brightness < 0 || brightness > 100) throw new Error('Invalid brightness level. Must be between 0 and 100.');
-			const { exec } = require('child_process');
-			const { promisify } = require('util');
-			const execAsync = promisify(exec);
 			console.log('Setting system brightness to ' + brightness + '%');
 			await execAsync('brightnessctl set ' + brightness + '%');
 			const verifyResult = await this.getBrightness();
@@ -57,4 +56,4 @@ class DisplayManager {
 	}
 }
 
-module.exports = DisplayManager;
+export default DisplayManager;

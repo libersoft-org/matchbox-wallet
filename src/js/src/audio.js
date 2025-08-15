@@ -1,9 +1,11 @@
+import { exec } from 'child_process';
+import { promisify } from 'util';
+
+const execAsync = promisify(exec);
+
 class AudioManager {
 	async getVolume() {
 		try {
-			const { exec } = require('child_process');
-			const { promisify } = require('util');
-			const execAsync = promisify(exec);
 
 			// Try different methods to get volume
 			const volumeCommands = ['amixer get Master | grep -o "[0-9]*%" | head -1 | tr -d "%"'];
@@ -49,9 +51,6 @@ class AudioManager {
 				throw new Error('Invalid volume level. Must be between 0 and 100.');
 			}
 
-			const { exec } = require('child_process');
-			const { promisify } = require('util');
-			const execAsync = promisify(exec);
 
 			console.log(`Setting system volume to ${volume}%`);
 
@@ -101,4 +100,4 @@ class AudioManager {
 	}
 }
 
-module.exports = AudioManager;
+export default AudioManager;

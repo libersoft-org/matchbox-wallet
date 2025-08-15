@@ -1,4 +1,4 @@
-const si = require('systeminformation');
+import si from 'systeminformation';
 
 class BatteryManager {
 	async getBatteryInfo() {
@@ -61,4 +61,4 @@ class BatteryManager {
 	}
 }
 
-module.exports = BatteryManager;
+export default BatteryManager;

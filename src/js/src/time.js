@@ -1,3 +1,8 @@
+import { exec } from 'child_process';
+import { promisify } from 'util';
+
+const execAsync = promisify(exec);
+
 class TimeManager {
 	async listTimeZones() {
 		try {
@@ -28,9 +33,6 @@ class TimeManager {
 
 	async loadSystemTimeZones() {
 		try {
-			const { exec } = require('child_process');
-			const { promisify } = require('util');
-			const execAsync = promisify(exec);
 			console.log('Loading timezones using timedatectl only');
 			const { stdout } = await execAsync('timedatectl list-timezones 2>/dev/null');
 			if (stdout && stdout.trim()) {
@@ -72,9 +74,6 @@ class TimeManager {
 	async changeTimeZone(params) {
 		try {
 			console.log('Changing system timezone to:', params.timezone);
-			const { exec } = require('child_process');
-			const { promisify } = require('util');
-			const execAsync = promisify(exec);
 
 			if (!params.timezone) {
 				throw new Error('Timezone parameter is required');
@@ -130,9 +129,6 @@ class TimeManager {
 	async setAutoTimeSync(params) {
 		try {
 			console.log('Setting auto time sync to:', params.enabled);
-			const { exec } = require('child_process');
-			const { promisify } = require('util');
-			const execAsync = promisify(exec);
 			const ntpCommand = params.enabled ? 'timedatectl set-ntp true' : 'timedatectl set-ntp false';
 			const sudoNtpCommand = params.enabled ? 'sudo timedatectl set-ntp true' : 'sudo timedatectl set-ntp false';
 			try {
@@ -165,9 +161,6 @@ class TimeManager {
 	async getCurrentTimezone() {
 		try {
 			console.log('Getting current system timezone');
-			const { exec } = require('child_process');
-			const { promisify } = require('util');
-			const execAsync = promisify(exec);
 
 			// Get current timezone from system
 			const { stdout } = await execAsync('timedatectl show --property=Timezone --value');
@@ -199,9 +192,6 @@ class TimeManager {
 	async getAutoTimeSyncStatus() {
 		try {
 			console.log('Getting current auto time sync status');
-			const { exec } = require('child_process');
-			const { promisify } = require('util');
-			const execAsync = promisify(exec);
 
 			// Get current time sync status
 			const { stdout } = await execAsync('timedatectl status');
@@ -229,9 +219,6 @@ class TimeManager {
 	async setSystemDateTime(params) {
 		try {
 			console.log('Setting system date and time to:', params);
-			const { exec } = require('child_process');
-			const { promisify } = require('util');
-			const execAsync = promisify(exec);
 
 			if (!params.hours || !params.minutes || !params.seconds || !params.day || !params.month || !params.year) {
 				throw new Error('All date and time parameters are required (hours, minutes, seconds, day, month, year)');
@@ -297,4 +284,4 @@ class TimeManager {
 	}
 }
 
-module.exports = TimeManager;
+export default TimeManager;

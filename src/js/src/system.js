@@ -93,4 +93,4 @@ class SystemManager {
 	}
 }
 
-module.exports = SystemManager;
+export default SystemManager;

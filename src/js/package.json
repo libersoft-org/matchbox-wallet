@@ -4,11 +4,27 @@
 	"description": "JavaScript runtime",
 	"author": "LiberSoft",
 	"license": "Unlicense",
-	"main": "index.js",
+	"type": "module",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"scripts": {
+		"build": "bun run clean && bun build src/index.ts --outfile dist/bundle.cjs --target node --format iife",
+		"build:tsc": "bun run clean && tsc && bun run copy-js",
+		"build:watch": "tsc --watch",
+		"clean": "rm -rf dist",
+		"copy-js": "cp src/*.js dist/",
+		"dev": "tsc --watch",
+		"start": "node dist/bundle.cjs"
+	},
 	"dependencies": {
 		"ethers": "^6.15.0",
 		"libersoft-crypto": "https://github.com/libersoft-org/crypto-utils",
 		"node-wifi": "^2.0.16",
 		"systeminformation": "^5.27.7"
+	},
+	"devDependencies": {
+		"@types/node": "^20.10.0",
+		"esbuild": "^0.25.9",
+		"typescript": "^5.3.0"
 	}
 }

@@ -221,4 +221,4 @@ class FirewallManager {
 	}
 }
 
-module.exports = FirewallManager;
+export default FirewallManager;

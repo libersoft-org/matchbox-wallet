@@ -1,10 +1,12 @@
+import { exec } from 'child_process';
+import { promisify } from 'util';
+
+const execAsync = promisify(exec);
+
 class PowerManager {
 	async reboot() {
 		try {
 			console.log('System reboot requested');
-			const { exec } = require('child_process');
-			const { promisify } = require('util');
-			const execAsync = promisify(exec);
 
 			// Try multiple reboot methods in order of preference
 			const rebootCommands = [
@@ -45,9 +47,6 @@ class PowerManager {
 	async shutdown() {
 		try {
 			console.log('System shutdown requested');
-			const { exec } = require('child_process');
-			const { promisify } = require('util');
-			const execAsync = promisify(exec);
 
 			// Try multiple shutdown methods in order of preference
 			const shutdownCommands = [
@@ -90,4 +89,4 @@ class PowerManager {
 	}
 }
 
-module.exports = PowerManager;
+export default PowerManager;

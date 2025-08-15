@@ -1,16 +1,39 @@
-const crypto = require('libersoft-crypto');
+import * as crypto2 from 'libersoft-crypto';
+// @ts-ignore
+import WifiManager from './wifi.js';
+// @ts-ignore
+import BatteryManager from './battery.js';
+// @ts-ignore
+import PowerManager from './power.js';
+// @ts-ignore
+import TimeManager from './time.js';
+// @ts-ignore
+import AudioManager from './audio.js';
+// @ts-ignore
+import DisplayManager from './display.js';
+// @ts-ignore
+import TestManager from './test.js';
+// @ts-ignore
+import SystemManager from './system.js';
+// @ts-ignore
+import FirewallManager from './firewall.js';
 
-const CryptoManager = require('./crypto0.js');
-const WifiManager = require('./wifi.js');
-const BatteryManager = require('./battery.js');
-const PowerManager = require('./power.js');
-const TimeManager = require('./time.js');
-const AudioManager = require('./audio.js');
-const DisplayManager = require('./display.js');
-const TestManager = require('./test.js');
-const SystemManager = require('./system.js');
-const FirewallManager = require('./firewall.js');
-const cryptoManager = new CryptoManager();
+interface Message {
+	messageId: string;
+	action: string;
+	data?: any;
+}
+
+interface ErrorResult {
+	status: 'error';
+	message: string;
+	stack?: string;
+}
+
+declare global {
+	var handleMessage: (message: Message, callback?: any) => Promise<void>;
+	var __nativeCallback: (messageId: string, result: any) => void;
+}
 const wifiManager = new WifiManager();
 const batteryManager = new BatteryManager();
 const powerManager = new PowerManager();
@@ -21,7 +44,7 @@ const testManager = new TestManager();
 const systemManager = new SystemManager();
 const firewallManager = new FirewallManager();
 
-const HANDLERS = {
+const HANDLERS: { [key: string]: (params?: any) => any } = {
 	testPing: () => testManager.ping(),
 	testDelayedPing: (params) => testManager.delayedPing(params),
 	batteryGetInfo: () => batteryManager.getBatteryInfo(),
@@ -55,24 +78,16 @@ const HANDLERS = {
 	firewallAddException: (params) => firewallManager.addException(params.port, params.protocol, params.description),
 	firewallRemoveException: (params) => firewallManager.removeException(params.port, params.protocol),
 	firewallResetToDefaults: () => firewallManager.resetToDefaults(),
-	cryptoHash: (params) => cryptoManager.hash(params),
-	cryptoGenerateKeyPair: () => cryptoManager.generateKeyPair(),
-	cryptoGenerateRandomBytes: (params) => cryptoManager.generateRandomBytes(params),
-	cryptoHmac: (params) => cryptoManager.hmac(params),
-	cryptoCreateWallet: () => cryptoManager.createWallet(),
-	cryptoWalletFromMnemonic: (params) => cryptoManager.walletFromMnemonic(params),
-	cryptoWalletFromPrivateKey: (params) => cryptoManager.walletFromPrivateKey(params),
-	cryptoValidateAddress: (params) => cryptoManager.validateAddress(params),
-	cryptoKeccak256: (params) => cryptoManager.keccak256(params),
-	cryptoGetLatestBlock: (params) => cryptoManager.getLatestBlock(params),
-	cryptoGetBalance: (params) => cryptoManager.getBalance(params),
+
+	crypto2addAddressBookItem: (params) => crypto2.addAddressBookItem(params.name, params.address),
+
 };
 
-global.handleMessage = async function (message, callback) {
+(global as any).handleMessage = async function (message: Message, callback?: any): Promise<void> {
 	console.log('node.js handleMessage ', JSON.stringify(message, null, 2));
 	const { messageId, action, data } = message;
 	try {
-		let result = {};
+		let result: any = {};
 		const handler = HANDLERS[action];
 		console.log('Handler for action', action, ':', typeof handler);
 		if (typeof handler === 'function') {
@@ -83,16 +98,17 @@ global.handleMessage = async function (message, callback) {
 			result = { status: 'error', message: `Unknown action: ${action}` };
 		}
 		console.log('Handler result for', action, ':', result);
-		if (typeof __nativeCallback === 'function') __nativeCallback(messageId, result);
-	} catch (error) {
+		if (typeof (global as any).__nativeCallback === 'function') (global as any).__nativeCallback(messageId, result);
+	} catch (error: any) {
 		console.error('Error in handleMessage for action', action, ':', error);
-		const errorResult = {
+		const errorResult: ErrorResult = {
 			status: 'error',
 			message: error.message,
 			stack: error.stack,
 		};
-		if (typeof __nativeCallback === 'function') __nativeCallback(messageId, errorResult);
+		if (typeof (global as any).__nativeCallback === 'function') (global as any).__nativeCallback(messageId, errorResult);
 	}
 };
 
 console.log('JavaScript runtime initialized');
+

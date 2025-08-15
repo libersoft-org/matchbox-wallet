@@ -1,5 +1,9 @@
-const wifi = require('node-wifi');
-const si = require('systeminformation');
+import wifi from 'node-wifi';
+import si from 'systeminformation';
+import { exec } from 'child_process';
+import { promisify } from 'util';
+
+const execAsync = promisify(exec);
 
 class WifiManager {
 	constructor() {
@@ -17,9 +21,6 @@ class WifiManager {
 			console.log('Detecting WiFi interfaces...');
 
 			// Try system approach first - more reliable
-			const { exec } = require('child_process');
-			const { promisify } = require('util');
-			const execAsync = promisify(exec);
 
 			try {
 				// Use ip command to list interfaces
@@ -570,4 +571,4 @@ class WifiManager {
 	}
 }
 
-module.exports = WifiManager;
+export default WifiManager;
