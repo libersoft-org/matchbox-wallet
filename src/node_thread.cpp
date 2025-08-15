@@ -382,11 +382,9 @@ void NodeThread::processMessages() {
 			// Now GetCurrentEventLoop should work because we have all required scopes
 			uv_loop_t* loop = node::GetCurrentEventLoop(m_isolate);
 			if (loop) {
-				uv_run(loop, UV_RUN_NOWAIT);
-				
-				// Process microtasks again after running the event loop
-				// This ensures promise chains continue to execute
-				m_isolate->PerformMicrotaskCheckpoint();
+                while (uv_run(loop, UV_RUN_NOWAIT) != 0) {
+                      m_isolate->PerformMicrotaskCheckpoint();
+                }
 			} else {
 				qDebug() << "NodeThread: GetCurrentEventLoop still returns null";
 			}
