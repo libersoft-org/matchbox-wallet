@@ -17,7 +17,22 @@
 			},
 			"addressbook": {
 				"button": "Address book",
-				"title": "Address book"
+				"title": "Address book",
+				"empty": "No addresses saved yet",
+				"add": {
+					"title": "Add Address",
+					"name": "Name",
+					"address": "Address"
+				},
+				"edit": {
+					"title": "Edit Address",
+					"name": "Name",
+					"address": "Address"
+				},
+				"delete": {
+					"title": "Delete Address",
+					"confirm": "Are you sure you want to delete"
+				}
 			},
 			"network": {
 				"button": "Change network",
@@ -182,6 +197,10 @@
 		"cancel": "Cancel",
 		"yes": "Yes",
 		"no": "No",
+		"add": "Add",
+		"edit": "Edit",
+		"delete": "Delete",
+		"save": "Save",
 		"loading": "Loading...",
 		"error": "Error",
 		"languages": {

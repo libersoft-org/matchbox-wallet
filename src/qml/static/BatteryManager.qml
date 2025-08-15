@@ -10,7 +10,7 @@ Item {
 
 	// Internal timer for periodic updates
 	property Timer updateTimer: Timer {
-		interval: 10000 // 10 seconds
+		interval: batteryStatusUpdateInterval
 		running: true
 		repeat: true
 		onTriggered: batteryManager.updateBatteryStatus()

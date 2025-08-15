@@ -81,10 +81,26 @@ int main(int argc, char *argv[]) {
  qDebug() << "Node.js integration disabled at compile time";
 #endif
 
+qDebug() << "QtQuick.LocalStorage: " << QUrl::fromLocalFile(engine.offlineStoragePath());
+
+ // Read timer interval environment variables with defaults
+ QByteArray wifiIntervalEnv = qgetenv("WIFI_STRENGTH_UPDATE_INTERVAL");
+ int wifiInterval = wifiIntervalEnv.isEmpty() ? 5000 : wifiIntervalEnv.toInt();
+ if (wifiInterval <= 0) wifiInterval = 5000; // Ensure positive value
+ 
+ QByteArray batteryIntervalEnv = qgetenv("BATTERY_STATUS_UPDATE_INTERVAL");
+ int batteryInterval = batteryIntervalEnv.isEmpty() ? 10000 : batteryIntervalEnv.toInt();
+ if (batteryInterval <= 0) batteryInterval = 10000; // Ensure positive value
+
+ qDebug() << "WiFi strength update interval:" << wifiInterval << "ms";
+ qDebug() << "Battery status update interval:" << batteryInterval << "ms";
+
  // Register context properties instead of QML types
  engine.rootContext()->setContextProperty("NodeJS", nodeJS);
  engine.rootContext()->setContextProperty("applicationName", app.applicationName());
  engine.rootContext()->setContextProperty("applicationVersion", app.applicationVersion());
+ engine.rootContext()->setContextProperty("wifiStrengthUpdateInterval", wifiInterval);
+ engine.rootContext()->setContextProperty("batteryStatusUpdateInterval", batteryInterval);
  const QUrl url(QStringLiteral("qrc:/WalletModule/src/qml/Main.qml"));
  QObject::connect(
 					&engine, &QQmlApplicationEngine::objectCreated, &app,

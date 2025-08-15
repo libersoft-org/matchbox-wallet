@@ -91,7 +91,7 @@ void NodeJS::shutdown() {
 }
 
 void NodeJS::msg(const QString &name, const QJsonObject &params, std::function<void(const QJsonObject &)> callback) {
- qDebug() << "NodeJS::msg() called with action:" << name;
+ //qDebug() << "NodeJS::msg() called with action:" << name;
 
  // Wait for initialization to complete or fail
  {

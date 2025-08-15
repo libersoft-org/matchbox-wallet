@@ -196,4 +196,47 @@ BaseMenu {
 			});
 		}
 	}
+
+	MenuButton {
+        text: "crypto2addAddressBookItem"
+        onClicked: {
+            console.log("Adding address book item...");
+
+            Node.msg("crypto2addAddressBookItem", {
+                "address": "0x39E54b2Ca6535b51333e1Ea4Ef43B4038d23adB4",
+                "name": "Test Address"
+                })
+           }
+    }
+
+
+    MenuButton {
+        text: "batteryCheckStatus"
+        onClicked: {
+            console.log("Checking battery status...");
+			NodeJS.msg("batteryCheckStatus", {}, function (result) {
+				if (result && result.status === "success" && result.data) {
+					var data = result.data;
+					if (data.batteryLevel !== undefined) {
+						batteryLevel = data.batteryLevel;
+					}
+					if (data.charging !== undefined) {
+						charging = data.charging;
+					}
+					if (data.hasBattery !== undefined) {
+						hasBattery = data.hasBattery;
+					}
+				}
+			});
+
+
+        }
+    }
+
+
+
+
+
+
+
 }

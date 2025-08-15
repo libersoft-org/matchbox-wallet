@@ -65,7 +65,7 @@ void NodeThread::sendMessage(const QString& action, const QJsonObject& params, s
  m_messageQueue.enqueue(message);
  m_messageCondition.wakeAll();
 
- qDebug() << "NodeThread: Queued message" << messageId << "with action:" << action;
+ //qDebug() << "NodeThread: Queued message" << messageId << "with action:" << action;
 }
 
 void NodeThread::run() {
@@ -403,7 +403,7 @@ void NodeThread::handleNodeMessage(const NodeMessage& message) {
 		return;
  }
 
- qDebug() << "NodeThread: Processing message:" << message.action;
+ //qDebug() << "NodeThread: Processing message:" << message.action;
 
  v8::Locker locker(m_isolate);
  v8::Isolate::Scope isolate_scope(m_isolate);
@@ -459,11 +459,11 @@ void NodeThread::handleNodeMessage(const NodeMessage& message) {
  // the microtask queue is processed to allow the promise chain to continue
  m_isolate->PerformMicrotaskCheckpoint();
 
- qDebug() << "handleNodeMessage returning.";
+ //qDebug() << "handleNodeMessage returning.";
 }
 
 void NodeThread::nativeCallback(const v8::FunctionCallbackInfo<v8::Value>& args) {
- qDebug() << "NodeThread::nativeCallback called with" << args.Length() << "arguments";
+ //qDebug() << "NodeThread::nativeCallback called with" << args.Length() << "arguments";
  
  if (!s_instance) {
 		qDebug() << "NodeThread::nativeCallback: No instance available";
@@ -479,7 +479,7 @@ void NodeThread::nativeCallback(const v8::FunctionCallbackInfo<v8::Value>& args)
 		// Get messageId from first argument
 		v8::String::Utf8Value messageIdStr(isolate, args[0]);
 		QString messageId = QString(*messageIdStr);
-		qDebug() << "NodeThread::nativeCallback: Processing callback for messageId:" << messageId;
+		//qDebug() << "NodeThread::nativeCallback: Processing callback for messageId:" << messageId;
 
 		// Find the callback for this message
 		std::function<void(const QJsonObject&)> callback;

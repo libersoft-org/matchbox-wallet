@@ -38,7 +38,9 @@ class BatteryManager {
 
 	async checkBatteryStatus() {
 		try {
+			console.log('Checking battery status...');
 			const battery = await si.battery();
+			console.log('Battery status:', battery);
 			return {
 				status: 'success',
 				data: {
@@ -48,6 +50,7 @@ class BatteryManager {
 				},
 			};
 		} catch (error) {
+			console.error('Error checking battery status:', error);
 			return {
 				status: 'error',
 				message: error.message,

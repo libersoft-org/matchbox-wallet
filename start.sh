@@ -22,7 +22,7 @@ fi
 
 # Ensure ethers is available at runtime (install JS deps if missing)
 echo "Installing JS dependencies in src/js before start..."
-(cd src/js && npm install) || echo "Warning: npm install failed; runtime may miss modules"
+(cd src/js && bun install --frozen-lockfile) || echo "Warning: bun install failed; runtime may miss modules"
 
 if [ -f "build/linux/wallet" ]; then
 	echo "Starting the application..."

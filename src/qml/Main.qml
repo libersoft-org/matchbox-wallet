@@ -43,7 +43,7 @@ ApplicationWindow {
 
 	// Timer to periodically update WiFi strength (keep for signal strength only)
 	Timer {
-		interval: 5000  // Update every 5 seconds
+		interval: wifiStrengthUpdateInterval
 		running: true
 		repeat: true
 		onTriggered: updateWifiStrength()
@@ -54,6 +54,7 @@ ApplicationWindow {
 	property var settingsManager: settingsManagerObj
 	property var translationManager: translationManagerObj
 	property var batteryManager: batteryManagerObj
+	property var eventManager: eventManagerObj
 
 	// Global properties for timezone navigation
 	property var globalTimezones: []
@@ -89,6 +90,10 @@ ApplicationWindow {
 
 	BatteryManager {
 		id: batteryManagerObj
+	}
+
+	EventManager {
+		id: eventManagerObj
 	}
 
 	// Global settings - use SettingsManager instance

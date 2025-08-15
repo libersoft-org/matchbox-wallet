@@ -1,4 +1,7 @@
 import * as crypto2 from 'libersoft-crypto';
+import { get } from 'svelte/store';
+import { popEvents } from './EventQueue';
+
 // @ts-ignore
 import WifiManager from './wifi.js';
 // @ts-ignore
@@ -17,6 +20,8 @@ import TestManager from './test.js';
 import SystemManager from './system.js';
 // @ts-ignore
 import FirewallManager from './firewall.js';
+// @ts-ignore
+import CryptoManager from './crypto0.js';
 
 interface Message {
 	messageId: string;
@@ -43,8 +48,11 @@ const displayManager = new DisplayManager();
 const testManager = new TestManager();
 const systemManager = new SystemManager();
 const firewallManager = new FirewallManager();
+const cryptoManager = new CryptoManager();
 
 const HANDLERS: { [key: string]: (params?: any) => any } = {
+	popEvents: () => popEvents(),
+
 	testPing: () => testManager.ping(),
 	testDelayedPing: (params) => testManager.delayedPing(params),
 	batteryGetInfo: () => batteryManager.getBatteryInfo(),
@@ -80,27 +88,51 @@ const HANDLERS: { [key: string]: (params?: any) => any } = {
 	firewallResetToDefaults: () => firewallManager.resetToDefaults(),
 
 	crypto2addAddressBookItem: (params) => crypto2.addAddressBookItem(params.name, params.address),
+	crypto2editAddressBookItem: (params) => crypto2.editAddressBookItem(params.itemGuid, params.name, params.address),
+	crypto2deleteAddressBookItem: (params) => crypto2.deleteAddressBookItem(params.itemGuid),
+	crypto2findAddressBookItemByAddress: (params) => crypto2.findAddressBookItemByAddress(params.address),
+	crypto2findAddressBookItemByID: (params) => crypto2.findAddressBookItemByID(params.guid),
+	crypto2hasAddressBookItems: () => crypto2.hasAddressBookItems(),
+	crypto2getAddressBookItems: () => get(crypto2.addressBook),
+	crypto2validateAddressBookItem: (params) => crypto2.validateAddressBookItem(params.name, params.address, params.excludeItemGuid),
+	crypto2importAddressBookItems: (params) => crypto2.importAddressBookItems(params.text),
+	crypto2replaceAddressBook: (params) => crypto2.replaceAddressBook(params.text),
+	crypto2reorderAddressBook: (params) => crypto2.reorderAddressBook(params.reorderedItems),
+	crypto2validateAddressBookImport: (params) => crypto2.validateAddressBookImport(params.text),
+
+	// crypto0.js handlers
+	cryptoHash: (params) => cryptoManager.hash(params),
+	cryptoGenerateKeyPair: () => cryptoManager.generateKeyPair(),
+	cryptoGenerateRandomBytes: (params) => cryptoManager.generateRandomBytes(params),
+	cryptoHmac: (params) => cryptoManager.hmac(params),
+	cryptoCreateWallet: () => cryptoManager.createWallet(),
+	cryptoWalletFromMnemonic: (params) => cryptoManager.walletFromMnemonic(params),
+	cryptoWalletFromPrivateKey: (params) => cryptoManager.walletFromPrivateKey(params),
+	cryptoValidateAddress: (params) => cryptoManager.validateAddress(params),
+	cryptoKeccak256: (params) => cryptoManager.keccak256(params),
+	cryptoGetLatestBlock: (params) => cryptoManager.getLatestBlock(params),
+	cryptoGetBalance: (params) => cryptoManager.getBalance(params),
 
 };
 
 (global as any).handleMessage = async function (message: Message, callback?: any): Promise<void> {
-	console.log('node.js handleMessage ', JSON.stringify(message, null, 2));
+	//console.log('node.js handleMessage ', JSON.stringify(message, null, 2));
 	const { messageId, action, data } = message;
 	try {
 		let result: any = {};
 		const handler = HANDLERS[action];
-		console.log('Handler for action', action, ':', typeof handler);
+		//console.log('Handler for action', action, ':', typeof handler);
 		if (typeof handler === 'function') {
-			console.log('Calling handler for', action, 'with data:', data);
+			//console.log('Calling handler for', action, 'with data:', data);
 			result = await handler(data);
 		} else {
-			console.log('No handler found for action:', action);
+			//console.log('No handler found for action:', action);
 			result = { status: 'error', message: `Unknown action: ${action}` };
 		}
-		console.log('Handler result for', action, ':', result);
+		//console.log('Handler result for', action, ':', result);
 		if (typeof (global as any).__nativeCallback === 'function') (global as any).__nativeCallback(messageId, result);
 	} catch (error: any) {
-		console.error('Error in handleMessage for action', action, ':', error);
+		//console.error('Error in handleMessage for action', action, ':', error);
 		const errorResult: ErrorResult = {
 			status: 'error',
 			message: error.message,
@@ -110,5 +142,5 @@ const HANDLERS: { [key: string]: (params?: any) => any } = {
 	}
 };
 
-console.log('JavaScript runtime initialized');
+console.log('js/src/index.ts initialized');
 
