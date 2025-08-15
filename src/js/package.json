@@ -8,7 +8,7 @@
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"scripts": {
-		"build": "bun run clean && bun build src/index.ts --outfile dist/bundle.cjs --target node --format iife",
+		"build": "bun run clean && bun build src/index.ts --outfile dist/bundle.cjs --target node --format cjs --conditions node",
 		"build:tsc": "bun run clean && tsc && bun run copy-js",
 		"build:watch": "tsc --watch",
 		"clean": "rm -rf dist",

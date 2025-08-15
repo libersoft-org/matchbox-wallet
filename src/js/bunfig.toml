@@ -1,0 +1,5 @@
+[build]
+# Use legacy module names instead of node: prefixes for compatibility
+target = "node"
+format = "cjs"
+conditions = ["node", "import", "require"]

@@ -107,7 +107,7 @@ void NodeThread::run() {
 
 bool NodeThread::initializeNodeEnvironment() {
  try {
-		// Initialize Node.js platform
+		// Initialize Node.js platform with V8 flags but keep platform control
 		std::vector<std::string> args = {"wallet"};
 		m_initResult = node::InitializeOncePerProcess(args, {node::ProcessInitializationFlags::kNoInitializeV8, node::ProcessInitializationFlags::kNoInitializeNodeV8Platform});
 
@@ -163,124 +163,126 @@ bool NodeThread::loadJSEntryPoint() {
 
  qDebug() << "NodeThread: Using filesystem-only loading";
 
- // Load main JavaScript file from filesystem
- QString jsPath = "../../src/js/dist/bundle.cjs";	// Bundled CommonJS file
- qDebug() << "NodeThread: Attempting to load main JS file from:" << jsPath;
+ // Load the bundled CommonJS file and execute it directly
+ QString bundlePath = "../../src/js/dist/bundle.cjs";
+ qDebug() << "NodeThread: Loading bundled CommonJS file:" << bundlePath;
 
- QFile jsFile(jsPath);
- QFileInfo jsFileInfo(jsPath);
-
- qDebug() << "NodeThread: File exists check:" << jsFile.exists();
- qDebug() << "NodeThread: Absolute path:" << jsFileInfo.absoluteFilePath();
- qDebug() << "NodeThread: File size:" << jsFileInfo.size() << "bytes";
- qDebug() << "NodeThread: File readable:" << jsFileInfo.isReadable();
- qDebug() << "NodeThread: Last modified:" << jsFileInfo.lastModified().toString();
-
- if (!jsFile.exists()) {
-		qCritical() << "NodeThread: JavaScript file not found:" << jsPath;
-		qCritical() << "NodeThread: Working directory:" << QDir::currentPath();
+ QFile bundleFile(bundlePath);
+ if (!bundleFile.exists()) {
+		qCritical() << "NodeThread: Bundle file not found:" << bundlePath;
 		return false;
  }
 
- if (!jsFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-		qCritical() << "NodeThread: Failed to open JavaScript file:" << jsPath;
-		qCritical() << "NodeThread: Error:" << jsFile.errorString();
+ if (!bundleFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+		qCritical() << "NodeThread: Failed to open bundle file:" << bundlePath;
 		return false;
  }
 
- qDebug() << "NodeThread: Reading JavaScript file content...";
- QTextStream in(&jsFile);
- QString jsCode = in.readAll();
- jsFile.close();
+ QString bundleCode = QTextStream(&bundleFile).readAll();
+ bundleFile.close();
 
- qDebug() << "NodeThread: File read completed";
- qDebug() << "NodeThread: Content length:" << jsCode.length() << "characters";
- qDebug() << "NodeThread: Content preview (first 100 chars):" << jsCode.left(100);
-
- if (jsCode.isEmpty()) {
-		qCritical() << "NodeThread: JavaScript file is empty:" << jsPath;
+ if (bundleCode.isEmpty()) {
+		qCritical() << "NodeThread: Bundle file is empty:" << bundlePath;
 		return false;
  }
 
- qDebug() << "NodeThread: Successfully loaded" << jsCode.length() << "characters from" << jsPath;
- qDebug() << "NodeThread: Content hash:" << QString::number(qHash(jsCode), 16);
-
- // Validate JavaScript content before proceeding
- if (jsCode.trimmed().isEmpty()) {
-		qCritical() << "NodeThread: JavaScript content is empty or contains only whitespace";
-		return false;
- }
-
- // Basic validation to ensure it looks like JavaScript
- if (!jsCode.contains("handleMessage")) {
-		qWarning() << "NodeThread: JavaScript code does not contain 'handleMessage' - this may cause runtime errors";
-		qWarning() << "NodeThread: First 200 characters of loaded code:" << jsCode.left(200);
- }
-
- // Use src/js as working directory for Node.js modules
- QString workingDir = "src/js";
- qDebug() << "NodeThread: Using working directory:" << workingDir;
+ qDebug() << "NodeThread: Bundle loaded," << bundleCode.length() << "characters";
 
  auto loadenv_ret = node::LoadEnvironment(m_env, [&](const node::StartExecutionCallbackInfo& info) -> v8::MaybeLocal<v8::Value> {
 		v8::Local<v8::Context> context = m_setup->context();
 		v8::Isolate* isolate = context->GetIsolate();
 		v8::TryCatch try_catch(isolate);
 
-		v8::Local<v8::Function> require = info.native_require;
+		qDebug() << "NodeThread: Executing bundled CommonJS code as script...";
 
-		// Validate require function
-		if (require.IsEmpty()) {
-			qCritical() << "NodeThread: Native require function is empty";
-			return v8::MaybeLocal<v8::Value>();
-		}
-
-		qDebug() << "NodeThread: Now compiling main JavaScript code...";
-		qDebug() << "NodeThread: Converting" << jsCode.length() << "characters to V8 string";
-
-		v8::Local<v8::String> source = v8::String::NewFromUtf8(isolate, jsCode.toStdString().c_str(), v8::NewStringType::kNormal).ToLocalChecked();
-
-		qDebug() << "NodeThread: V8 string conversion completed";
-
-		qDebug() << "NodeThread: Starting V8 script compilation...";
+		// Create CommonJS wrapper: (function(exports, require, module, __filename, __dirname) { ... })
+		QString wrappedCode = QString("(function(exports, require, module, __filename, __dirname) {\n%1\n});").arg(bundleCode);
+		
+		// Compile the wrapped script
+		v8::Local<v8::String> source = v8::String::NewFromUtf8(isolate, wrappedCode.toStdString().c_str(), v8::NewStringType::kNormal).ToLocalChecked();
+		
 		v8::Local<v8::Script> script;
 		if (!v8::Script::Compile(context, source).ToLocal(&script)) {
-			qCritical() << "NodeThread: Failed to compile main JavaScript code";
-			qCritical() << "NodeThread: Code length:" << jsCode.length() << "characters";
-			qCritical() << "NodeThread: First 100 characters:" << jsCode.left(100);
+			qCritical() << "NodeThread: Failed to compile bundled CommonJS code";
 			if (try_catch.HasCaught()) {
 				v8::String::Utf8Value exception(isolate, try_catch.Exception());
-				qCritical() << "NodeThread: Main script compilation exception:" << *exception;
-				v8::Local<v8::Message> message = try_catch.Message();
-				if (!message.IsEmpty()) {
-					qCritical() << "NodeThread: Error line number:" << message->GetLineNumber(context).FromMaybe(-1);
-					qCritical() << "NodeThread: Error start column:" << message->GetStartColumn(context).FromMaybe(-1);
-				}
+				qCritical() << "NodeThread: Compilation exception:" << *exception;
 			}
 			return v8::MaybeLocal<v8::Value>();
 		}
 
-		qDebug() << "NodeThread: Main JavaScript code compiled successfully";
-		qDebug() << "NodeThread: Script compilation took" << QTime::currentTime().toString();
-
-		qDebug() << "NodeThread: Starting main JavaScript execution...";
-		v8::Local<v8::Value> scriptResult;
-		if (!script->Run(context).ToLocal(&scriptResult)) {
-			qCritical() << "NodeThread: Failed to execute main JavaScript code";
+		// Execute the wrapped script to get the module function
+		v8::Local<v8::Value> moduleFunction;
+		if (!script->Run(context).ToLocal(&moduleFunction)) {
+			qCritical() << "NodeThread: Failed to execute wrapped CommonJS code";
 			if (try_catch.HasCaught()) {
 				v8::String::Utf8Value exception(isolate, try_catch.Exception());
-				qCritical() << "NodeThread: Main script execution exception:" << *exception;
-				v8::Local<v8::Message> message = try_catch.Message();
-				if (!message.IsEmpty()) {
-					qCritical() << "NodeThread: Runtime error line:" << message->GetLineNumber(context).FromMaybe(-1);
-					qCritical() << "NodeThread: Runtime error column:" << message->GetStartColumn(context).FromMaybe(-1);
-				}
+				qCritical() << "NodeThread: Execution exception:" << *exception;
 			}
 			return v8::MaybeLocal<v8::Value>();
 		}
 
-		qDebug() << "NodeThread: Main JavaScript code executed successfully";
-		qDebug() << "NodeThread: Script result type:" << (scriptResult->IsUndefined() ? "undefined" : scriptResult->IsFunction() ? "function" : scriptResult->IsObject() ? "object" : scriptResult->IsString() ? "string" : "other");
-		return scriptResult;
+		// Create CommonJS environment objects
+		v8::Local<v8::Object> exports = v8::Object::New(isolate);
+		v8::Local<v8::Object> module = v8::Object::New(isolate);
+		module->Set(context, v8::String::NewFromUtf8(isolate, "exports").ToLocalChecked(), exports).Check();
+		
+		// Create a require wrapper that handles both node: prefixes and legacy names
+		v8::Local<v8::String> requireWrapperCode = v8::String::NewFromUtf8(isolate, R"(
+			(function(nativeRequire) {
+				return function wrappedRequire(id) {
+					// Convert node: prefixed modules to legacy names
+					if (id.startsWith('node:')) {
+						const legacyName = id.substring(5); // Remove 'node:' prefix
+						return nativeRequire(legacyName);
+					}
+					return nativeRequire(id);
+				};
+			})
+		)").ToLocalChecked();
+		
+		v8::Local<v8::Script> wrapperScript;
+		if (!v8::Script::Compile(context, requireWrapperCode).ToLocal(&wrapperScript)) {
+			qCritical() << "NodeThread: Failed to compile require wrapper";
+			return v8::MaybeLocal<v8::Value>();
+		}
+		
+		v8::Local<v8::Value> wrapperFactory;
+		if (!wrapperScript->Run(context).ToLocal(&wrapperFactory)) {
+			qCritical() << "NodeThread: Failed to execute require wrapper factory";
+			return v8::MaybeLocal<v8::Value>();
+		}
+		
+		// Create wrapped require
+		v8::Local<v8::Function> wrapperFactoryFunc = wrapperFactory.As<v8::Function>();
+		v8::Local<v8::Value> factoryArgs[] = {info.native_require};
+		v8::Local<v8::Value> wrappedRequireValue;
+		if (!wrapperFactoryFunc->Call(context, context->Global(), 1, factoryArgs).ToLocal(&wrappedRequireValue)) {
+			qCritical() << "NodeThread: Failed to create wrapped require function";
+			return v8::MaybeLocal<v8::Value>();
+		}
+		
+		v8::Local<v8::Function> require = wrappedRequireValue.As<v8::Function>();
+		qDebug() << "NodeThread: Created require wrapper to handle node: prefixes";
+		v8::Local<v8::String> filename = v8::String::NewFromUtf8(isolate, "bundle.cjs").ToLocalChecked();
+		v8::Local<v8::String> dirname = v8::String::NewFromUtf8(isolate, ".").ToLocalChecked();
+
+		// Call the module function with CommonJS parameters
+		v8::Local<v8::Function> moduleFunc = moduleFunction.As<v8::Function>();
+		v8::Local<v8::Value> args[] = {exports, require, module, filename, dirname};
+		
+		v8::Local<v8::Value> result;
+		if (!moduleFunc->Call(context, context->Global(), 5, args).ToLocal(&result)) {
+			qCritical() << "NodeThread: Failed to call module function";
+			if (try_catch.HasCaught()) {
+				v8::String::Utf8Value exception(isolate, try_catch.Exception());
+				qCritical() << "NodeThread: Module execution exception:" << *exception;
+			}
+			return v8::MaybeLocal<v8::Value>();
+		}
+
+		qDebug() << "NodeThread: CommonJS module executed successfully";
+		return result;
  });
 
  if (loadenv_ret.IsEmpty()) {
@@ -290,7 +292,7 @@ bool NodeThread::loadJSEntryPoint() {
  }
 
  qDebug() << "NodeThread: LoadEnvironment completed successfully";
- qDebug() << "NodeThread: JavaScript loaded from filesystem";
+ qDebug() << "NodeThread: CommonJS bundle executed successfully";
 
  // Get handleMessage function
  v8::Local<v8::Context> context = m_setup->context();
