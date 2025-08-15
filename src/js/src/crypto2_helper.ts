@@ -3,6 +3,7 @@ import * as crypto2 from 'libersoft-crypto';
 import { get } from 'svelte/store';
 
 crypto2.addressBook.subscribe((value) => {
+    console.log('crypto2.addressBook updated:', value);
     eventQueue.events.push({
         type: 'crypto2.addressBook.subscribe',
         value: value

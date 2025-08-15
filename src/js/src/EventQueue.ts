@@ -15,6 +15,6 @@ export const eventQueue =
 
 export function popEvents(): IEvent[] {
     const events = eventQueue.events;
-    eventQueue.events.length = 0;
+    eventQueue.events = [];
     return events;
 }
