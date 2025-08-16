@@ -33,6 +33,9 @@ Button {
 		color: control.enabled ? control.textColor : colors.disabledForeground
 		horizontalAlignment: Text.AlignHCenter
 		verticalAlignment: Text.AlignVCenter
+		wrapMode: Text.WordWrap
+		elide: Text.ElideRight
+		anchors.margins: control.height * 0.1
 		Behavior on color {
 			ColorAnimation {
 				duration: 150
