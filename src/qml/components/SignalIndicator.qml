@@ -10,8 +10,8 @@ Rectangle {
 	property int signalStrength: 0
 	property color backgroundColor: "transparent"
 	property string pageId: ""
-	property var pageComponent: null
-	property var onNavigate: undefined  // function(pageComponent, pageId)
+	property string pagePath: ""
+	property var onNavigate: undefined  // function(pagePath, pageId)
 
 	color: backgroundColor
 
@@ -19,7 +19,7 @@ Rectangle {
 		anchors.fill: parent
 		onClicked: {
 			if (root.onNavigate)
-				root.onNavigate(root.pageComponent, root.pageId);
+				root.onNavigate(root.pagePath, root.pageId);
 		}
 		onPressed: root.opacity = 0.7
 		onReleased: root.opacity = 1.0

@@ -143,7 +143,7 @@ Rectangle {
 				text: tr("menu.settings.firewall.exceptions.title")
 				width: parent.width
 				backgroundColor: colors.primaryForeground
-				onClicked: window.goPage(firewallExceptionsPageComponent, "firewall-add-port")
+				onClicked: window.goPage('Settings/SettingsFirewallExceptions.qml', "firewall-add-port")
 			}
 
 			// Ports list

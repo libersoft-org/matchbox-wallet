@@ -7,11 +7,11 @@ BaseMenu {
 
 	MenuButton {
 		text: tr("menu.player.local")
-		onClicked: window.goPage(playerLocalPageComponent)
+		onClicked: window.goPage('Player/PlayerLocal.qml')
 	}
 
 	MenuButton {
 		text: tr("menu.player.network")
-		onClicked: window.goPage(playerNetworkPageComponent)
+		onClicked: window.goPage('Player/PlayerNetwork.qml')
 	}
 }

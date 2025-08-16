@@ -21,7 +21,7 @@ BaseMenu {
 	}
 
 	function handleTimezoneSettingsRequested() {
-		window.goPage(settingsTimeZonesPageComponent);
+		window.goPage('Settings/SettingsTimeZones.qml');
 	}
 
 	// Refresh timezone when page becomes visible (when returning from timezone settings)

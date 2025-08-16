@@ -147,7 +147,7 @@ Rectangle {
 		MenuButton {
 			id: changeMenuButton
 			text: tr('menu.settings.wifi.change')
-			onClicked: window.goPage(wifiListPageComponent)
+			onClicked: window.goPage('Settings/SettingsWiFiList.qml')
 		}
 
 		// Disconnect button

@@ -7,44 +7,29 @@ import "."
 BaseMenu {
 	id: root
 	title: tr("menu.wallet.title")
-	property Component balanceComponent: Component {
-		WalletBalance {}
-	}
-	property Component sendComponent: Component {
-		WalletSend {}
-	}
-	property Component receiveComponent: Component {
-		WalletReceive {}
-	}
-	property Component addressBookComponent: Component {
-		WalletAddressbook {}
-	}
-	property Component networkComponent: Component {
-		WalletNetwork {}
-	}
 
 	function handleSettingsRequest() {
-		window.goPage(walletSettingsPageComponent);
+		window.goPage('Wallet/WalletSettings.qml');
 	}
 
 	MenuButton {
 		text: tr("menu.wallet.balance.button")
-		onClicked: window.goPage(root.balanceComponent)
+		onClicked: window.goPage('Wallet/WalletBalance.qml')
 	}
 
 	MenuButton {
 		text: tr("menu.wallet.send.button")
-		onClicked: window.goPage(root.sendComponent)
+		onClicked: window.goPage('Wallet/WalletSend.qml')
 	}
 
 	MenuButton {
 		text: tr("menu.wallet.receive.button")
-		onClicked: window.goPage(root.receiveComponent)
+		onClicked: window.goPage('Wallet/WalletReceive.qml')
 	}
 
 	MenuButton {
 		text: tr("menu.wallet.addressbook.button")
-		onClicked: window.goPage(root.addressBookComponent)
+		onClicked: window.goPage('Wallet/WalletAddressbook.qml')
 	}
 
 	MenuButton {

@@ -155,8 +155,7 @@ BaseMenu {
 					window.timezoneNavigationDepth++;
 
 					// Create a new timezone page - it will use global properties
-					var subPage = settingsTimeZonesSubPageComponent.createObject(null);
-					window.stackView.push(subPage);
+					window.goPage('Settings/SettingsTimeZones.qml');
 				}
 			}
 		}

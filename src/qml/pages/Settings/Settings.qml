@@ -21,7 +21,7 @@ BaseMenu {
 
 	MenuButton {
 		text: tr("menu.settings.wifi.button")
-		onClicked: window.goPage(settingsWifiPageComponent, "wifi-settings")
+		onClicked: window.goPage('Settings/SettingsWiFi.qml', "wifi-settings")
 	}
 
 	MenuButton {
@@ -32,22 +32,22 @@ BaseMenu {
 
 	MenuButton {
 		text: tr("menu.settings.firewall.button")
-		onClicked: window.goPage(settingsFirewallPageComponent, "firewall-settings")
+		onClicked: window.goPage('Settings/SettingsFirewall.qml', "firewall-settings")
 	}
 
 	MenuButton {
 		text: tr("menu.settings.display.button")
-		onClicked: window.goPage(settingsDisplayPageComponent)
+		onClicked: window.goPage('Settings/SettingsDisplay.qml')
 	}
 
 	MenuButton {
 		text: tr("menu.settings.sound.button")
-		onClicked: window.goPage(settingsSoundPageComponent)
+		onClicked: window.goPage('Settings/SettingsSound.qml')
 	}
 
 	MenuButton {
 		text: tr("menu.settings.time.button")
-		onClicked: window.goPage(settingsTimePageComponent)
+		onClicked: window.goPage('Settings/SettingsTime.qml')
 	}
 
 	MenuButton {
@@ -57,11 +57,11 @@ BaseMenu {
 			var template = tr("menu.settings.language.button");
 			return template.replace("%1", displayName);
 		}
-		onClicked: window.goPage(settingsLanguagePageComponent)
+		onClicked: window.goPage('Settings/SettingsLanguage.qml')
 	}
 
 	MenuButton {
 		text: tr("menu.settings.update.button")
-		onClicked: window.goPage(settingsUpdatePageComponent)
+		onClicked: window.goPage('Settings/SettingsUpdate.qml')
 	}
 }

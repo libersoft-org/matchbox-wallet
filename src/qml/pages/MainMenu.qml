@@ -12,27 +12,27 @@ BaseMenu {
 
 	MenuButton {
 		text: tr("menu.wallet.button")
-		onClicked: window.goPage(walletPageComponent)
+		onClicked: window.goPage('Wallet/Wallet.qml')
 	}
 
 	MenuButton {
 		text: tr("menu.player.button")
-		onClicked: window.goPage(mediaPlayerPageComponent)
+		onClicked: window.goPage('Player/Player.qml')
 	}
 
 	MenuButton {
 		text: tr("menu.settings.button")
-		onClicked: window.goPage(settingsPageComponent)
+		onClicked: window.goPage('Settings/Settings.qml')
 	}
 	/*
 	MenuButton {
 		text: "Camera test"
-		onClicked: window.goPage(cameraPreviewPageComponent)
+		onClicked: window.goPage('CameraPreview.qml')
 	}
 
 	MenuButton {
 		text: "Test keyboard"
-		onClicked: window.goPage(keyboardTestPageComponent)
+		onClicked: window.goPage('KeyboardTest.qml')
 	}
 
 	MenuButton {

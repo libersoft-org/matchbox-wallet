@@ -8,7 +8,7 @@ BaseMenu {
 	title: tr("menu.wallet.settings.title")
 
 	function handleGeneralSettingsRequest() {
-		window.goPage(walletSettingsGeneralPageComponent);
+		window.goPage('Wallet/WalletSettingsGeneral.qml');
 	}
 
 	MenuButton {

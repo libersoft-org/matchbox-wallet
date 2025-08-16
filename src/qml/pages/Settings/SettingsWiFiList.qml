@@ -134,11 +134,10 @@ Rectangle {
 									var isSecured = modelData.secured || false;
 									if (isSecured) {
 										// Open password page for secured networks
-										var passwordPage = window.wifiPasswordPageComponent.createObject(null, {
+										window.goPage('Settings/SettingsWiFiListPassword.qml', null, {
 											"networkName": modelData.name,
 											"isSecured": isSecured
 										});
-										window.stackView.push(passwordPage);
 									} else {
 										// Connect directly to open networks
 										connectToNetwork(modelData.name, "");

@@ -19,9 +19,9 @@ Rectangle {
 	property bool hasBattery: false  // Whether device has battery
 	property string currentTime: "00:00"
 
-	function navigateTo(component, pageId) {
-		if (component && window.currentPageId !== pageId) {
-			window.goPage(component, pageId);
+	function navigateTo(pagePath, pageId) {
+		if (pagePath && window.currentPageId !== pageId) {
+			window.goPage(pagePath, pageId);
 		}
 	}
 
@@ -74,7 +74,7 @@ Rectangle {
 		signalStrength: statusBar.wifiStrength
 		//backgroundColor: "blue"
 		pageId: "wifi-settings"
-		pageComponent: settingsWifiPageComponent
+		pagePath: 'Settings/SettingsWiFi.qml'
 		onNavigate: statusBar.navigateTo
 	}
 
@@ -89,7 +89,7 @@ Rectangle {
 		signalStrength: statusBar.loraStrength
 		//backgroundColor: "green"
 		pageId: "lora-settings"
-		pageComponent: settingsWifiPageComponent  // TODO: change to correct component
+		pagePath: 'Settings/SettingsWiFi.qml'  // TODO: change to correct component
 		onNavigate: statusBar.navigateTo
 	}
 
@@ -104,7 +104,7 @@ Rectangle {
 		signalStrength: statusBar.gsmStrength
 		//backgroundColor: "orange"
 		pageId: "gsm-settings"
-		pageComponent: settingsWifiPageComponent  // TODO: change to correct component
+		pagePath: 'Settings/SettingsWiFi.qml'  // TODO: change to correct component
 		onNavigate: statusBar.navigateTo
 	}
 
@@ -142,7 +142,7 @@ Rectangle {
 				anchors.fill: parent
 				onClicked: {
 					if (window.currentPageId !== "time-settings") {
-						window.goPage(settingsTimePageComponent, "time-settings");
+						window.goPage('Settings/SettingsTime.qml', "time-settings");
 					}
 				}
 				onPressed: timeText.opacity = 0.7

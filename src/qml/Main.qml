@@ -5,10 +5,6 @@ import QtQuick.VirtualKeyboard 2.15
 import QtMultimedia 6.0
 import "static"
 import "components"
-import "pages"
-import "pages/Settings"
-import "pages/Player"
-import "pages/Wallet"
 import "utils/NodeUtils.js" as Node
 
 ApplicationWindow {
@@ -83,11 +79,29 @@ ApplicationWindow {
 		console.log("ApplicationWindow completed");
 	}
 
-	function goPage(component, pageId) {
-		if (stackView && component) {
-			stackView.push(component);
-			if (pageId)
-				window.currentPageId = pageId;
+	function goPage(componentName, pageId, properties) {
+		if (stackView) {
+			var fullPath = componentName.startsWith('pages/') ? componentName : 'pages/' + componentName;
+			var component = Qt.createComponent(fullPath);
+			if (component.status === Component.Error) {
+				console.error("Failed to load component:", fullPath, "Error:", component.errorString());
+				return;
+			}
+			
+			var componentInstance;
+			if (properties) {
+				componentInstance = component.createObject(null, properties);
+			} else {
+				componentInstance = component.createObject(null);
+			}
+			
+			if (componentInstance) {
+				stackView.push(componentInstance);
+				if (pageId)
+					window.currentPageId = pageId;
+			} else {
+				console.error("Failed to create component instance:", fullPath);
+			}
 		}
 	}
 
@@ -132,7 +146,7 @@ ApplicationWindow {
 		showBackButton: stackView.currentItem && stackView.currentItem.hasOwnProperty("showBackButton") ? stackView.currentItem.showBackButton : true
 		showPowerButton: stackView.currentItem && stackView.currentItem.hasOwnProperty("showPowerButton") ? stackView.currentItem.showPowerButton : true
 		onBackRequested: window.goBack()
-		onPowerRequested: window.goPage(powerPageComponent)
+		onPowerRequested: window.goPage('Power.qml')
 	}
 
 	// Content area with animations
@@ -143,7 +157,7 @@ ApplicationWindow {
 		anchors.left: parent.left
 		anchors.right: parent.right
 		anchors.bottom: parent.bottom
-		initialItem: mainMenuComponent
+		initialItem: Qt.createComponent("pages/MainMenu.qml")
 		pushEnter: Transition {
 			PropertyAnimation {
 				property: "x"
@@ -217,130 +231,5 @@ ApplicationWindow {
 				}
 			}
 		}
-	}
-
-	Component {
-		id: mainMenuComponent
-		MainMenu {}
-	}
-
-	Component {
-		id: walletPageComponent
-		Wallet {}
-	}
-
-	Component {
-		id: walletSettingsPageComponent
-		WalletSettings {}
-	}
-
-	Component {
-		id: walletSettingsGeneralPageComponent
-		WalletSettingsGeneral {}
-	}
-
-	Component {
-		id: settingsPageComponent
-		Settings {}
-	}
-
-	Component {
-		id: walletSettingsGeneralFiatPageComponent
-		WalletSettingsGeneralFiat {}
-	}
-
-	Component {
-		id: settingsWifiPageComponent
-		SettingsWiFi {}
-	}
-
-	Component {
-		id: wifiListPageComponent
-		SettingsWiFiList {}
-	}
-
-	Component {
-		id: wifiPasswordPageComponent
-		SettingsWiFiListPassword {}
-	}
-
-	Component {
-		id: settingsLanguagePageComponent
-		SettingsLanguage {}
-	}
-
-	Component {
-		id: settingsTimePageComponent
-		SettingsTime {}
-	}
-
-	Component {
-		id: settingsSoundPageComponent
-		SettingsSound {}
-	}
-
-	Component {
-		id: settingsFirewallPageComponent
-		SettingsFirewall {}
-	}
-
-	Component {
-		id: firewallExceptionsPageComponent
-		SettingsFirewallExceptions {}
-	}
-
-	Component {
-		id: settingsDisplayPageComponent
-		SettingsDisplay {}
-	}
-
-	Component {
-		id: settingsTimeZonesPageComponent
-		SettingsTimeZones {}
-	}
-
-	Component {
-		id: settingsTimeZonesSubPageComponent
-		SettingsTimeZones {}
-	}
-
-	Component {
-		id: settingsUpdatePageComponent
-		SettingsUpdate {}
-	}
-
-	Component {
-		id: powerPageComponent
-		Power {}
-	}
-
-	Component {
-		id: cameraPreviewPageComponent
-		CameraPreview {}
-	}
-
-	Component {
-		id: keyboardTestPageComponent
-		KeyboardTest {}
-	}
-
-	Component {
-		id: mediaPlayerPageComponent
-		Player {}
-	}
-
-	Component {
-		id: playerLocalPageComponent
-		PlayerLocal {}
-	}
-
-	Component {
-		id: playerNetworkPageComponent
-		PlayerNetwork {}
-	}
-
-	Component {
-		id: playerVideoPageComponent
-		PlayerVideo {}
 	}
 }

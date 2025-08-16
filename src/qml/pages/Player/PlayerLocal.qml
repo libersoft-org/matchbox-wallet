@@ -103,10 +103,9 @@ Item {
 					} else {
 						// Play video file
 						console.log("Opening local video file:", filePath);
-						var videoPage = playerVideoPageComponent.createObject(null, {
+						window.goPage('Player/PlayerVideo.qml', null, {
 							"sourceUrl": "file://" + filePath
 						});
-						window.stackView.push(videoPage);
 					}
 				}
 			}

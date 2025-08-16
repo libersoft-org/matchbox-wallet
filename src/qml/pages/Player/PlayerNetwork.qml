@@ -20,10 +20,9 @@ BaseMenu {
 			text: tr("menu.player.open")
 			onClicked: {
 				if (urlInput.text.length > 0) {
-					var videoPage = playerVideoPageComponent.createObject(null, {
+					window.goPage('Player/PlayerVideo.qml', null, {
 						"sourceUrl": urlInput.text
 					});
-					window.stackView.push(videoPage);
 				}
 			}
 		}

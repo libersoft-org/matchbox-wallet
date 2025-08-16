@@ -10,7 +10,7 @@ BaseMenu {
 	property string selectedCurrency: window.settingsManager ? window.settingsManager.selectedCurrency : "USD"
 
 	function handleCurrencySelectionRequest() {
-		window.goPage(walletSettingsGeneralFiatPageComponent);
+		window.goPage('Wallet/WalletSettingsGeneralFiat.qml');
 	}
 
 	MenuButton {
