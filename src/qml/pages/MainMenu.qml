@@ -31,11 +31,6 @@ BaseMenu {
 	}
 
 	MenuButton {
-		text: "Test keyboard"
-		onClicked: window.goPage('KeyboardTest.qml')
-	}
-
-	MenuButton {
 		text: "Test ping"
 		onClicked: {
 			Node.msg("testPing", {}, function (result) {
