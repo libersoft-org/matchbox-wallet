@@ -118,7 +118,7 @@ Item {
 						text: formatTime(mediaPlayer.position)
 						font.bold: true
 						color: colors.primaryForeground
-						font.pixelSize: parent.height * 0.8
+						font.pixelSize: parent.height * 0.6
 					}
 
 					// Left time text - overlaid inverted text (clipped by progress)
@@ -129,7 +129,7 @@ Item {
 						text: formatTime(mediaPlayer.position)
 						font.bold: true
 						color: colors.primaryBackground
-						font.pixelSize: parent.height * 0.8
+						font.pixelSize: parent.height * 0.6
 						width: Math.max(0, (parent.width * (mediaPlayer.duration > 0 ? mediaPlayer.position / mediaPlayer.duration : 0)) - anchors.leftMargin)
 						clip: true
 					}
@@ -142,7 +142,7 @@ Item {
 						text: formatTime(mediaPlayer.duration)
 						font.bold: true
 						color: colors.primaryForeground
-						font.pixelSize: parent.height * 0.8
+						font.pixelSize: parent.height * 0.6
 					}
 
 					// Right time text - overlaid inverted text (clipped by progress)
@@ -151,7 +151,7 @@ Item {
 						text: formatTime(mediaPlayer.duration)
 						font.bold: true
 						color: colors.primaryBackground
-						font.pixelSize: parent.height * 0.8
+						font.pixelSize: parent.height * 0.6
 
 						// Same position as base text, but clipped
 						x: parent.width - (parent.width * 0.02) - implicitWidth
@@ -259,9 +259,15 @@ Item {
 
 	function formatTime(milliseconds) {
 		var totalSeconds = Math.floor(milliseconds / 1000);
-		var minutes = Math.floor(totalSeconds / 60);
+		var hours = Math.floor(totalSeconds / 3600);
+		var minutes = Math.floor((totalSeconds % 3600) / 60);
 		var seconds = totalSeconds % 60;
-		return minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+
+		if (hours > 0) {
+			return hours + ":" + (minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+		} else {
+			return minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+		}
 	}
 
 	Component.onCompleted: {
