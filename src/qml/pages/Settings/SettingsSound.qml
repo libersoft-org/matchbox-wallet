@@ -15,7 +15,6 @@ BaseMenu {
 	property bool hasError: false
 	property bool isMuted: false
 	property int volumeBeforeMute: 0
-	signal volumeChanged(int volume)
 
 	// Load current volume when component is loaded
 	Component.onCompleted: {
@@ -122,7 +121,9 @@ BaseMenu {
 			onRangeValueChanged: function (newValue) {
 				if (root.volumeLoaded && !root.updatingFromSystem && !root.isMuted) {
 					root.soundVolume = newValue;
-					root.volumeChanged(newValue);
+					// Handle volume change directly
+					console.log("Volume changed to:", newValue);
+					// TODO: Implement actual system volume setting
 					root.saveVolume(newValue);
 				}
 			}

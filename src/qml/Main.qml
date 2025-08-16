@@ -242,6 +242,35 @@ ApplicationWindow {
 		}
 	}
 
+	// Virtual Keyboard
+	InputPanel {
+		id: inputPanel
+		z: 99
+		x: 0
+		y: window.height
+		width: window.width
+
+		states: State {
+			name: "visible"
+			when: inputPanel.active
+			PropertyChanges {
+				inputPanel.y: window.height - inputPanel.height
+			}
+		}
+		transitions: Transition {
+			from: ""
+			to: "visible"
+			reversible: true
+			ParallelAnimation {
+				NumberAnimation {
+					properties: "y"
+					duration: 250
+					easing.type: Easing.InOutQuad
+				}
+			}
+		}
+	}
+
 	Component {
 		id: mainMenuComponent
 		MainMenu {}
@@ -299,12 +328,7 @@ ApplicationWindow {
 
 	Component {
 		id: settingsSoundPageComponent
-		SettingsSound {
-			onVolumeChanged: function (volume) {
-				console.log("Volume changed to:", volume);
-				// TODO: Implement actual system volume setting
-			}
-		}
+		SettingsSound {}
 	}
 
 	Component {
@@ -459,35 +483,6 @@ ApplicationWindow {
 		PlayerVideo {
 			onFullscreenRequested: function (fullscreen) {
 				window.isFullscreen = fullscreen;
-			}
-		}
-	}
-
-	// Virtual Keyboard
-	InputPanel {
-		id: inputPanel
-		z: 99
-		x: 0
-		y: window.height
-		width: window.width
-
-		states: State {
-			name: "visible"
-			when: inputPanel.active
-			PropertyChanges {
-				inputPanel.y: window.height - inputPanel.height
-			}
-		}
-		transitions: Transition {
-			from: ""
-			to: "visible"
-			reversible: true
-			ParallelAnimation {
-				NumberAnimation {
-					properties: "y"
-					duration: 250
-					easing.type: Easing.InOutQuad
-				}
 			}
 		}
 	}
