@@ -1,8 +1,8 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
-import "../components"
-import "Wallet"
+import "../../components"
+import "."
 
 BaseMenu {
 	id: root
@@ -11,23 +11,23 @@ BaseMenu {
 
 	// Component definitions
 	property Component balanceComponent: Component {
-		Balance {}
+		WalletBalance {}
 	}
 
 	property Component sendComponent: Component {
-		Send {}
+		WalletSend {}
 	}
 
 	property Component receiveComponent: Component {
-		Receive {}
+		WalletReceive {}
 	}
 
 	property Component addressBookComponent: Component {
-		AddressBook {}
+		WalletAddressBook {}
 	}
 
 	property Component networkComponent: Component {
-		Network {}
+		WalletNetwork {}
 	}
 
 	MenuButton {
@@ -57,6 +57,6 @@ BaseMenu {
 
 	MenuButton {
 		text: tr("menu.wallet.address.button")
-		onClicked: goPageFunction(root.addressComponent)
+		onClicked: goPageFunction(root.addressBookComponent)
 	}
 }

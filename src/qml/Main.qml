@@ -8,6 +8,7 @@ import "components"
 import "pages"
 import "pages/Settings"
 import "pages/Player"
+import "pages/Wallet"
 import "utils/NodeUtils.js" as Node
 
 ApplicationWindow {
