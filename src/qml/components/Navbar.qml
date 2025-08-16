@@ -33,11 +33,19 @@ Item {
 
 	// Title text (center)
 	Text {
-		anchors.centerIn: parent
+		anchors.left: parent.left
+		anchors.right: parent.right
+		anchors.verticalCenter: parent.verticalCenter
+		anchors.leftMargin: parent.height + window.width * 0.02  // Always reserve space for back button
+		anchors.rightMargin: parent.height + window.width * 0.02  // Always reserve space for power button
 		text: root.title
 		font.pixelSize: window.width * 0.05
 		font.bold: true
 		color: colors.primaryForeground
+		wrapMode: Text.WordWrap
+		horizontalAlignment: Text.AlignHCenter
+		verticalAlignment: Text.AlignVCenter
+		elide: Text.ElideRight
 	}
 
 	// Power button (right)

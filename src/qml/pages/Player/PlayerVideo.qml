@@ -5,9 +5,7 @@ import "../../components"
 
 Item {
 	id: root
-	property string title: tr("menu.mediaPlayer.title")
-	property bool showBackButton: true
-	property bool showPowerButton: false
+	property string title: sourceUrl ? sourceUrl.substring(sourceUrl.lastIndexOf("/") + 1) : ""
 	property bool isVideoFullscreen: false
 	property bool isRotated: false  // true = 90° rotation, false = 0°
 	property bool controlsVisible: true

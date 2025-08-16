@@ -1,5 +1,6 @@
 pragma ComponentBehavior: Bound
 import QtQuick 2.15
+import QtCore
 import Qt.labs.folderlistmodel 2.15
 import "../../components"
 
@@ -8,17 +9,42 @@ Item {
 	property string title: tr("menu.player.local")
 	property var goPageFunction
 	property var playerVideoComponent
-	property string currentPath: "/root"
+	property string currentPath: StandardPaths.standardLocations(StandardPaths.HomeLocation)[0]
 	property var pathHistory: []
+
+	Component.onCompleted: {
+		// Ensure we start in the home directory
+		var homeLocation = StandardPaths.standardLocations(StandardPaths.HomeLocation)[0];
+		console.log("PlayerLocal: Initializing with home directory:", homeLocation);
+		root.currentPath = homeLocation;
+		folderModel.folder = "file://" + homeLocation;
+	}
 
 	FolderListModel {
 		id: folderModel
-		folder: "file://" + root.currentPath
+		folder: "file://" + StandardPaths.standardLocations(StandardPaths.HomeLocation)[0]
 		//nameFilters: ["*.mp4", "*.avi", "*.mkv", "*.mov", "*.wmv", "*.flv", "*.webm", "*.m4v"]
 		showDirs: true
 		showFiles: true
 		showDotAndDotDot: false
 		showOnlyReadable: true
+
+		onFolderChanged: {
+			console.log("FolderListModel: folder changed to:", folder);
+		}
+
+		onCountChanged: {
+			console.log("FolderListModel: count changed to:", count);
+			for (var i = 0; i < count; i++) {
+				console.log("  File", i + ":", get(i, "fileName"), "isDir:", get(i, "fileIsDir"));
+			}
+		}
+	}
+
+	// Watch for path changes and update folder model
+	onCurrentPathChanged: {
+		console.log("Current path changed to:", currentPath);
+		folderModel.folder = "file://" + currentPath;
 	}
 
 	BaseMenu {
@@ -34,18 +60,24 @@ Item {
 			enabled: false
 		}
 
-		// Back to parent directory button (shown when not in root)
 		MenuButton {
-			visible: root.currentPath !== "/root"
-			text: "⬆️ " + tr("menu.player.back")
+			visible: root.currentPath !== StandardPaths.standardLocations(StandardPaths.HomeLocation)[0]
+			text: tr("menu.player.back")
+			backgroundColor: colors.success
 			onClicked: {
+				var homeLocation = StandardPaths.standardLocations(StandardPaths.HomeLocation)[0];
 				if (root.pathHistory.length > 0) {
-					root.currentPath = root.pathHistory.pop();
+					var previousPath = root.pathHistory.pop();
+					// Only go back if the previous path is within home directory
+					if (previousPath.startsWith(homeLocation))
+						root.currentPath = previousPath;
+					else
+						root.currentPath = homeLocation;
 				} else {
-					// Go to parent directory
+					// Go to parent directory, but not above home
 					var parentPath = root.currentPath.substring(0, root.currentPath.lastIndexOf("/"));
-					if (parentPath === "")
-						parentPath = "/";
+					if (parentPath === "" || !parentPath.startsWith(homeLocation))
+						parentPath = homeLocation;
 					root.currentPath = parentPath;
 				}
 			}
