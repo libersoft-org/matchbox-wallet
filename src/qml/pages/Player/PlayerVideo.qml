@@ -21,10 +21,9 @@ Item {
 
 	Item {
 		id: contentWrapper
-		anchors.fill: root.isVideoFullscreen ? parent : undefined
-		anchors.centerIn: root.isVideoFullscreen ? undefined : parent
-		width: root.isVideoFullscreen ? parent.width : (root.isRotated ? parent.height : parent.width)
-		height: root.isVideoFullscreen ? parent.height : (root.isRotated ? parent.width : parent.height)
+		anchors.centerIn: parent
+		width: root.isRotated ? parent.height : parent.width
+		height: root.isRotated ? parent.width : parent.height
 
 		transform: Rotation {
 			origin.x: contentWrapper.width / 2
@@ -39,7 +38,8 @@ Item {
 
 		VideoOutput {
 			id: videoOutput
-			anchors.fill: parent
+			anchors.fill: root.isVideoFullscreen ? root : parent
+			z: root.isVideoFullscreen ? 999 : 0
 
 			Component.onCompleted: {
 				mediaPlayer.videoOutput = videoOutput;
@@ -288,5 +288,10 @@ Item {
 			console.log("PlayerVideo became invisible, pausing playback");
 			mediaPlayer.pause();
 		}
+	}
+
+	// Monitor parent changes
+	onParentChanged: {
+		console.log("PlayerVideo parent changed to:", parent);
 	}
 }
