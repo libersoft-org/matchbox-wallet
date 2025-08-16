@@ -447,10 +447,6 @@ ApplicationWindow {
 
 	Component {
 		id: playerVideoPageComponent
-		PlayerVideo {
-			onFullscreenRequested: function (fullscreen) {
-				window.isFullscreen = fullscreen;
-			}
-		}
+		PlayerVideo {}
 	}
 }

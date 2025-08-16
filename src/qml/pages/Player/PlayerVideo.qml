@@ -10,7 +10,6 @@ Item {
 	property bool isRotated: false  // true = 90° rotation, false = 0°
 	property bool controlsVisible: true
 	property string sourceUrl: "" // https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4
-	signal fullscreenRequested(bool fullscreen)
 
 	Rectangle {
 		anchors.fill: parent
@@ -238,7 +237,7 @@ Item {
 								anchors.fill: parent
 								onClicked: {
 									root.isVideoFullscreen = !root.isVideoFullscreen;
-									root.fullscreenRequested(root.isVideoFullscreen);
+									window.isFullscreen = root.isVideoFullscreen;
 									root.controlsVisible = true;
 									hideTimer.restart();
 								}
