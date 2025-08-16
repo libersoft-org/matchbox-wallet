@@ -8,8 +8,6 @@ Rectangle {
 	id: root
 	color: colors.primaryBackground
 	property string title: tr("menu.settings.wifi.list.title")
-	signal backRequested
-	signal passwordPageRequested(string networkName, bool isSecured)
 
 	// WiFi state
 	property var networks: []
@@ -76,7 +74,7 @@ Rectangle {
 					window.wifiStatusUpdated();
 				}
 				// Go back to main WiFi page after successful connection
-				root.backRequested();
+				window.goBack();
 			} else {
 				console.log("Failed to connect to", ssid, "Error:", response.message);
 			}
@@ -136,7 +134,11 @@ Rectangle {
 									var isSecured = modelData.secured || false;
 									if (isSecured) {
 										// Open password page for secured networks
-										root.passwordPageRequested(modelData.name, isSecured);
+										var passwordPage = window.wifiPasswordPageComponent.createObject(null, {
+											"networkName": modelData.name,
+											"isSecured": isSecured
+										});
+										window.stackView.push(passwordPage);
 									} else {
 										// Connect directly to open networks
 										connectToNetwork(modelData.name, "");

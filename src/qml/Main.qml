@@ -278,35 +278,13 @@ ApplicationWindow {
 	// WiFi settings page
 	Component {
 		id: settingsWifiPageComponent
-		SettingsWiFi {
-			onWifiListRequested: window.goPage(wifiListPageComponent)
-			onWifiDisconnected: {
-				Node.msg("wifiDisconnect", {}, function (response) {
-					if (response.status === 'success') {
-						console.log("WiFi disconnected successfully");
-						window.wifiConnectionChanged();
-						window.wifiStatusUpdated();
-					} else {
-						console.log("Failed to disconnect WiFi:", response.message);
-					}
-				});
-			}
-		}
+		SettingsWiFi {}
 	}
 
 	// WiFi list page
 	Component {
 		id: wifiListPageComponent
-		SettingsWiFiList {
-			onPasswordPageRequested: function (networkName, isSecured) {
-				console.log("Password page requested for network:", networkName, "secured:", isSecured);
-				var passwordPage = wifiPasswordPageComponent.createObject(null, {
-					"networkName": networkName,
-					"isSecured": isSecured
-				});
-				stackView.push(passwordPage);
-			}
-		}
+		SettingsWiFiList {}
 	}
 
 	// WiFi password page

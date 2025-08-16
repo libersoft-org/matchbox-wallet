@@ -8,8 +8,6 @@ Rectangle {
 	id: root
 	color: colors.primaryBackground
 	property string title: tr('menu.settings.wifi.title')
-	signal wifiListRequested
-	signal wifiDisconnected
 	property var networks: []
 	property bool isScanning: false
 	property var currentConnection: null
@@ -82,8 +80,9 @@ Rectangle {
 				console.log('WiFi disconnected successfully');
 				// Immediately update connection status
 				updateCurrentConnection();
-				// Emit signal for main window
-				root.wifiDisconnected();
+				// Call window functions directly
+				window.wifiConnectionChanged();
+				window.wifiStatusUpdated();
 			} else {
 				console.log('Failed to disconnect WiFi:', response.message);
 			}
@@ -148,7 +147,7 @@ Rectangle {
 		MenuButton {
 			id: changeMenuButton
 			text: tr('menu.settings.wifi.change')
-			onClicked: root.wifiListRequested()
+			onClicked: window.goPage(wifiListPageComponent)
 		}
 
 		// Disconnect button
