@@ -52,8 +52,7 @@
 			"select": "Select file",
 			"url": "Enter URL",
 			"open": "Open",
-			"localFiles": "Local Files",
-			"noFiles": "No video files found"
+			"back": "Back"
 		},
 		"settings": {
 			"button": "Settings",

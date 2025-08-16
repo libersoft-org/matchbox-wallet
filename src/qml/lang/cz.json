@@ -37,8 +37,7 @@
 			"select": "Vybrat soubor",
 			"url": "Zadejte URL",
 			"open": "Otevřít",
-			"localFiles": "Místní soubory",
-			"noFiles": "Žádné video soubory nenalezeny"
+			"back": "Zpět"
 		},
 		"settings": {
 			"button": "Nastavení",

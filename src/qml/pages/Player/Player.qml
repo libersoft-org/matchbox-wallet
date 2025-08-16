@@ -9,20 +9,12 @@ BaseMenu {
 	property var playerNetworkComponent
 
 	MenuButton {
-		text: tr("menu.player.open_local")
-		onClicked: {
-			if (goPageFunction && playerLocalComponent) {
-				goPageFunction(playerLocalComponent);
-			}
-		}
+		text: tr("menu.player.local")
+		onClicked: goPageFunction(playerLocalComponent)
 	}
 
 	MenuButton {
-		text: tr("menu.player.open_network")
-		onClicked: {
-			if (goPageFunction && playerNetworkComponent) {
-				goPageFunction(playerNetworkComponent);
-			}
-		}
+		text: tr("menu.player.network")
+		onClicked: goPageFunction(playerNetworkComponent)
 	}
 }
