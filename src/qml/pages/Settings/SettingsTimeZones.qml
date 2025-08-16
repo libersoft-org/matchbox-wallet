@@ -4,17 +4,21 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 import "../../components"
 import "../../utils/NodeUtils.js" as NodeUtils
+import "../../utils/NodeUtils.js" as Node
 
 BaseMenu {
 	id: root
 	title: currentPath ? (tr("menu.settings.time.timezone") + " - " + currentPath.replace(/\//g, " / ")) : tr("menu.settings.time.timezone")
-	signal timezoneSelected(string tz)
-	signal pathSelected(string path)
 	property var timezones: []
 	property string currentPath: ""  // Current path (e.g., "" -> "America" -> "America/Argentina")
 	property var displayItems: []
 
 	Component.onCompleted: {
+		// Initialize navigation depth if this is the first timezone page
+		if (!currentPath) {
+			window.timezoneNavigationDepth = 1;
+		}
+
 		if (currentPath) {
 			// We're showing items for a specific path
 			extractItemsForPath();
@@ -116,10 +120,41 @@ BaseMenu {
 			text: modelData.text
 			onClicked: {
 				if (modelData.isTimezone) {
-					root.timezoneSelected(modelData.timezone);
+					// Change system timezone using NodeUtils
+					Node.msg("timeChangeTimeZone", {
+						timezone: modelData.timezone
+					}, function (response) {
+						console.log("Timezone change response:", JSON.stringify(response));
+						if (response.status === 'success') {
+							console.log("Timezone successfully changed to:", modelData.timezone);
+						} else {
+							console.error("Failed to change timezone:", response.message || "Unknown error");
+						}
+					});
+
+					// Navigate back based on depth
+					if (window.timezoneNavigationDepth > 1) {
+						// Clear global state and go back the exact number of steps
+						var stepsBack = window.timezoneNavigationDepth;
+						window.globalSelectedPath = "";
+						window.globalTimezones = [];
+						window.timezoneNavigationDepth = 0;
+						window.goBackMultiple(stepsBack);
+					} else {
+						window.goBack();
+					}
 				} else {
-					// Emit signal to navigate deeper into this path
-					root.pathSelected(modelData.path);
+					// Navigate deeper into this path
+					window.globalTimezones = root.timezones;
+					window.globalSelectedPath = modelData.path;
+					window.timezoneNavigationDepth++;
+
+					// Create a new timezone page with the selected path
+					var subPage = settingsTimeZonesSubPageComponent.createObject(null, {
+						"currentPath": modelData.path,
+						"timezones": root.timezones
+					});
+					window.stackView.push(subPage);
 				}
 			}
 		}

@@ -332,34 +332,7 @@ ApplicationWindow {
 
 	Component {
 		id: settingsTimeZonesPageComponent
-		SettingsTimeZones {
-			Component.onCompleted: {
-				// Reset navigation depth when entering timezone selection
-				window.timezoneNavigationDepth = 1;
-			}
-			onTimezoneSelected: function (tz) {
-				// Change system timezone using NodeUtils
-				Node.msg("timeChangeTimeZone", {
-					timezone: tz
-				}, function (response) {
-					console.log("Timezone change response:", JSON.stringify(response));
-					if (response.status === 'success') {
-						console.log("Timezone successfully changed to:", tz);
-					} else {
-						console.error("Failed to change timezone:", response.message || "Unknown error");
-					}
-				});
-
-				window.goBack();
-			}
-			onPathSelected: function (path) {
-				// Store timezones globally and navigate deeper
-				window.globalTimezones = timezones;
-				window.globalSelectedPath = path;
-				window.timezoneNavigationDepth++;
-				window.goPage(settingsTimeZonesSubPageComponent);
-			}
-		}
+		SettingsTimeZones {}
 	}
 
 	Component {
@@ -367,41 +340,6 @@ ApplicationWindow {
 		SettingsTimeZones {
 			currentPath: window.globalSelectedPath
 			timezones: window.globalTimezones || []
-
-			Component.onDestruction: {
-				// When going back (not selecting timezone), decrement depth
-				if (window.timezoneNavigationDepth > 0) {
-					window.timezoneNavigationDepth--;
-					console.log("Back navigation, depth now:", window.timezoneNavigationDepth);
-				}
-			}
-
-			onTimezoneSelected: function (tz) {
-				// Change system timezone using NodeUtils
-				Node.msg("timeChangeTimeZone", {
-					timezone: tz
-				}, function (response) {
-					console.log("Timezone change response:", JSON.stringify(response));
-					if (response.status === 'success') {
-						console.log("Timezone successfully changed to:", tz);
-					} else {
-						console.error("Failed to change timezone:", response.message || "Unknown error");
-					}
-				});
-
-				// Clear global state and go back the exact number of steps
-				var stepsBack = window.timezoneNavigationDepth;
-				window.globalSelectedPath = "";
-				window.globalTimezones = [];
-				window.timezoneNavigationDepth = 0;
-				window.goBackMultiple(stepsBack);
-			}
-			onPathSelected: function (path) {
-				// Navigate deeper - create new instance with deeper path
-				window.globalSelectedPath = path;
-				window.timezoneNavigationDepth++;
-				window.goPage(settingsTimeZonesSubPageComponent);
-			}
 		}
 	}
 
