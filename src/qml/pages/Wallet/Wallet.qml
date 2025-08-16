@@ -30,6 +30,8 @@ BaseMenu {
 		WalletNetwork {}
 	}
 
+	property var settingsPageFunction
+
 	MenuButton {
 		text: tr("menu.wallet.balance.button")
 		onClicked: goPageFunction(root.balanceComponent)
@@ -58,5 +60,10 @@ BaseMenu {
 	MenuButton {
 		text: tr("menu.wallet.address.button")
 		onClicked: goPageFunction(root.addressBookComponent)
+	}
+
+	MenuButton {
+		text: tr("menu.wallet.settings.button")
+		onClicked: root.settingsPageFunction()
 	}
 }

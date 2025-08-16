@@ -5,7 +5,7 @@ import "../../components"
 
 BaseMenu {
 	id: root
-	title: tr("menu.settings.general.title")
+	title: tr("menu.wallet.settings.general.title")
 
 	signal currencySelectionRequested
 
@@ -13,7 +13,7 @@ BaseMenu {
 
 	MenuButton {
 		text: {
-			var template = tr("menu.settings.general.fiat.button");
+			var template = tr("menu.wallet.settings.general.fiat.button");
 			return template.replace("%1", root.selectedCurrency);
 		}
 		onClicked: {

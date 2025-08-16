@@ -41,6 +41,14 @@
 			"address": {
 				"button": "Addresses",
 				"title": "Select wallet"
+			},
+			"settings": {
+				"button": "Settings",
+				"title": "Wallet settings",
+				"fiat": {
+					"button": "Fiat currency: %1",
+					"title": "Currency selection"
+				}
 			}
 		},
 		"player": {
@@ -56,13 +64,18 @@
 		},
 		"settings": {
 			"button": "Settings",
-			"title": "Settings",
+			"title": "System settings",
 			"general": {
 				"button": "General",
 				"title": "General settings",
-				"fiat": {
-					"button": "Fiat currency: %1",
-					"title": "Currency selection"
+				"language": {
+					"button": "Language"
+				},
+				"timezone": {
+					"button": "Timezone"
+				},
+				"display": {
+					"button": "Display"
 				}
 			},
 			"wallets": {

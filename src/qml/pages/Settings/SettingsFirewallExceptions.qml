@@ -17,7 +17,7 @@ Rectangle {
 	}
 
 	color: colors.primaryBackground
-	property string title: tr("menu.settings.system.firewall.exceptions.title")
+	property string title: tr("menu.settings.firewall.exceptions.title")
 
 	signal portAdded(var portData)
 	signal addCancelled
@@ -130,16 +130,14 @@ Rectangle {
 					spacing: 10
 
 					Text {
-						text: tr("menu.settings.system.firewall.exceptions.port")
+						text: tr("menu.settings.firewall.exceptions.port")
 						font.pixelSize: 16
 						color: colors.primaryForeground
 					}
 
 					Input {
 						id: portInput
-						inputWidth: parent.width
-						inputHeight: 50
-						inputPlaceholder: tr("menu.settings.system.firewall.exceptions.portPlaceholder")
+						inputPlaceholder: tr("menu.settings.firewall.exceptions.portPlaceholder")
 						inputType: "number"
 						inputAutoFocus: true
 					}
@@ -151,7 +149,7 @@ Rectangle {
 					spacing: 10
 
 					Text {
-						text: tr("menu.settings.system.firewall.exceptions.protocol")
+						text: tr("menu.settings.firewall.exceptions.protocol")
 						font.pixelSize: 16
 						color: colors.primaryForeground
 					}
@@ -198,16 +196,14 @@ Rectangle {
 					spacing: 10
 
 					Text {
-						text: tr("menu.settings.system.firewall.exceptions.description")
+						text: tr("menu.settings.firewall.exceptions.description")
 						font.pixelSize: 16
 						color: colors.primaryForeground
 					}
 
 					Input {
 						id: descriptionInput
-						inputWidth: parent.width
-						inputHeight: 50
-						inputPlaceholder: tr("menu.settings.system.firewall.exceptions.descriptionPlaceholder")
+						inputPlaceholder: tr("menu.settings.firewall.exceptions.descriptionPlaceholder")
 					}
 				}
 			}
@@ -218,7 +214,7 @@ Rectangle {
 				spacing: 15
 
 				MenuButton {
-					text: tr("menu.settings.system.firewall.exceptions.add")
+					text: tr("menu.settings.firewall.exceptions.add")
 					enabled: !root.isLoading && portInput.text.trim() !== ""
 					width: parent.width
 					backgroundColor: colors.success

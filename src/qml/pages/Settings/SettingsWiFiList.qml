@@ -7,7 +7,7 @@ import "../../utils/NodeUtils.js" as NodeUtils
 Rectangle {
 	id: root
 	color: colors.primaryBackground
-	property string title: tr("menu.settings.system.wifi.list.title")
+	property string title: tr("menu.settings.wifi.list.title")
 	signal backRequested
 	signal passwordPageRequested(string networkName, bool isSecured)
 
@@ -100,7 +100,7 @@ Rectangle {
 			// Refresh button
 			MenuButton {
 				width: parent.width
-				text: root.isScanning ? tr("menu.settings.system.wifi.list.scanning") : tr("menu.settings.system.wifi.list.refresh")
+				text: root.isScanning ? tr("menu.settings.wifi.list.scanning") : tr("menu.settings.wifi.list.refresh")
 				enabled: !root.isScanning
 				onClicked: {
 					root.scanNetworks();

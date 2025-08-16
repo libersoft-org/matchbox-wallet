@@ -29,11 +29,7 @@ Item {
 		showDotAndDotDot: false
 		showOnlyReadable: true
 		sortField: FolderListModel.Name
-
-		onFolderChanged: {
-			console.log("FolderListModel: folder changed to:", folder);
-		}
-
+		onFolderChanged: console.log("FolderListModel: folder changed to:", folder)
 		onCountChanged: {
 			console.log("FolderListModel: count changed to:", count);
 			for (var i = 0; i < count; i++) {
@@ -57,6 +53,7 @@ Item {
 		Text {
 			text: root.currentPath.replace("file://", "")
 			font.pixelSize: window.width * 0.05
+			font.bold: true
 			color: colors.primaryForeground
 		}
 

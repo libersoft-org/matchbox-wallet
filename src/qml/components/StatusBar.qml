@@ -51,7 +51,7 @@ Rectangle {
 		signalStrength: statusBar.wifiStrength
 		//backgroundColor: "blue"
 		pageId: "wifi-settings"
-		pageComponent: wifiSettingsPageComponent
+		pageComponent: settingsWifiPageComponent
 		onNavigate: statusBar.navigateTo
 	}
 
@@ -66,7 +66,7 @@ Rectangle {
 		signalStrength: statusBar.loraStrength
 		//backgroundColor: "green"
 		pageId: "lora-settings"
-		pageComponent: wifiSettingsPageComponent  // TODO: change to correct component
+		pageComponent: settingsWifiPageComponent  // TODO: change to correct component
 		onNavigate: statusBar.navigateTo
 	}
 
@@ -81,7 +81,7 @@ Rectangle {
 		signalStrength: statusBar.gsmStrength
 		//backgroundColor: "orange"
 		pageId: "gsm-settings"
-		pageComponent: wifiSettingsPageComponent  // TODO: change to correct component
+		pageComponent: settingsWifiPageComponent  // TODO: change to correct component
 		onNavigate: statusBar.navigateTo
 	}
 
@@ -119,7 +119,7 @@ Rectangle {
 				anchors.fill: parent
 				onClicked: {
 					if (window.currentPageId !== "time-settings") {
-						window.goPage(settingsSystemTimePageComponent, "time-settings");
+						window.goPage(settingsTimePageComponent, "time-settings");
 					}
 				}
 				onPressed: timeText.opacity = 0.7

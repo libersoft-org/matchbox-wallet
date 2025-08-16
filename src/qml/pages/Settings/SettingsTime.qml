@@ -6,7 +6,7 @@ import "../../utils/NodeUtils.js" as NodeUtils
 
 BaseMenu {
 	id: root
-	title: tr("menu.settings.system.time.title")
+	title: tr("menu.settings.time.title")
 	signal timeChanged(string newTime)
 	signal timezoneSettingsRequested
 	signal timezoneChanged
@@ -19,7 +19,7 @@ BaseMenu {
 	// Refresh timezone when page becomes visible (when returning from timezone settings)
 	onVisibleChanged: {
 		if (visible) {
-			console.log("SettingsSystemTime became visible, refreshing timezone");
+			console.log("SettingsTime became visible, refreshing timezone");
 			refreshTimezone();
 		}
 	}
@@ -163,7 +163,7 @@ BaseMenu {
 					spacing: parent.height * 0.2
 
 					Text {
-						text: tr("menu.settings.system.time.auto") + ':'
+						text: tr("menu.settings.time.auto") + ':'
 						color: colors.primaryForeground
 						font.pixelSize: parent.height * 0.35
 						Layout.alignment: Qt.AlignVCenter
@@ -325,7 +325,7 @@ BaseMenu {
 
 	// Save button
 	MenuButton {
-		text: tr("menu.settings.system.time.set")
+		text: tr("menu.settings.time.set")
 		visible: !loadingSystemState && !autoSyncSwitch.checked  // Hide when loading or auto sync is enabled
 		onClicked: {
 			console.log("Saving date and time...");
@@ -351,7 +351,7 @@ BaseMenu {
 	}
 
 	MenuButton {
-		text: tr("menu.settings.system.time.timezone") + ": " + root.currentTimezone
+		text: tr("menu.settings.time.timezone") + ": " + root.currentTimezone
 		onClicked: root.timezoneSettingsRequested()
 	}
 }

@@ -258,30 +258,47 @@ ApplicationWindow {
 		id: walletPageComponent
 		Wallet {
 			goPageFunction: window.goPage
+			settingsPageFunction: function () {
+				window.goPage(walletSettingsPageComponent);
+			}
+		}
+	}
+
+	// Wallet settings page
+	Component {
+		id: walletSettingsPageComponent
+		WalletSettings {
+			onGeneralSettingsRequested: window.goPage(walletSettingsGeneralPageComponent)
+		}
+	}
+
+	// Wallet settings general page
+	Component {
+		id: walletSettingsGeneralPageComponent
+		WalletSettingsGeneral {
+			selectedCurrency: window.selectedCurrency
+			onCurrencySelectionRequested: window.goPage(walletSettingsGeneralFiatPageComponent)
 		}
 	}
 
 	Component {
 		id: settingsPageComponent
 		Settings {
-			onGeneralSettingsRequested: window.goPage(generalSettingsPageComponent)
-			onSystemSettingsRequested: window.goPage(systemSettingsPageComponent)
-		}
-	}
-
-	// General settings page
-	Component {
-		id: generalSettingsPageComponent
-		SettingsGeneral {
-			selectedCurrency: window.selectedCurrency
-			onCurrencySelectionRequested: window.goPage(settingsGeneralFiatPageComponent)
+			selectedLanguage: window.selectedLanguage
+			onSettingsWifiRequested: window.goPage(settingsWifiPageComponent, "wifi-settings")
+			onSettingsLanguageRequested: window.goPage(settingsLanguagePageComponent)
+			onSettingsTimeRequested: window.goPage(settingsTimePageComponent)
+			onSettingsSoundRequested: window.goPage(settingsSoundPageComponent)
+			onSettingsDisplayRequested: window.goPage(settingsDisplayPageComponent)
+			onSettingsUpdateRequested: window.goPage(settingsUpdatePageComponent)
+			onSettingsFirewallRequested: window.goPage(settingsFirewallPageComponent, "firewall-settings")
 		}
 	}
 
 	// Currency selection page
 	Component {
-		id: settingsGeneralFiatPageComponent
-		SettingsGeneralFiat {
+		id: walletSettingsGeneralFiatPageComponent
+		WalletSettingsGeneralFiat {
 			onCurrencySelected: function (currency) {
 				window.settingsManager.saveCurrency(currency);
 				window.goBack();
@@ -289,25 +306,10 @@ ApplicationWindow {
 		}
 	}
 
-	// System settings page
-	Component {
-		id: systemSettingsPageComponent
-		SettingsSystem {
-			selectedLanguage: window.selectedLanguage
-			onWifiSettingsRequested: window.goPage(wifiSettingsPageComponent, "wifi-settings")
-			onLanguageSelectionRequested: window.goPage(settingsSystemLanguagePageComponent)
-			onTimeSettingsRequested: window.goPage(settingsSystemTimePageComponent)
-			onSoundSettingsRequested: window.goPage(settingsSystemSoundPageComponent)
-			onDisplaySettingsRequested: window.goPage(settingsSystemDisplayPageComponent)
-			onUpdateSettingsRequested: window.goPage(settingsSystemUpdatePageComponent)
-			onFirewallSettingsRequested: window.goPage(firewallSettingsPageComponent, "firewall-settings")
-		}
-	}
-
 	// WiFi settings page
 	Component {
-		id: wifiSettingsPageComponent
-		SettingsSystemWiFi {
+		id: settingsWifiPageComponent
+		SettingsWiFi {
 			onWifiListRequested: window.goPage(wifiListPageComponent)
 			onWifiDisconnected: {
 				Node.msg("wifiDisconnect", {}, function (response) {
@@ -326,7 +328,7 @@ ApplicationWindow {
 	// WiFi list page
 	Component {
 		id: wifiListPageComponent
-		SettingsSystemWiFiList {
+		SettingsWiFiList {
 			onPasswordPageRequested: function (networkName, isSecured) {
 				console.log("Password page requested for network:", networkName, "secured:", isSecured);
 				var passwordPage = wifiPasswordPageComponent.createObject(null, {
@@ -341,13 +343,13 @@ ApplicationWindow {
 	// WiFi password page
 	Component {
 		id: wifiPasswordPageComponent
-		SettingsSystemWiFiListPassword {}
+		SettingsWiFiListPassword {}
 	}
 
-	// System language selection page
+	// Language selection page
 	Component {
-		id: settingsSystemLanguagePageComponent
-		SettingsSystemLanguage {
+		id: settingsLanguagePageComponent
+		SettingsLanguage {
 			onLanguageSelected: function (languageCode) {
 				window.settingsManager.saveLanguage(languageCode);
 				window.translationManager.setLanguage(languageCode);
@@ -358,21 +360,21 @@ ApplicationWindow {
 
 	// System time settings page
 	Component {
-		id: settingsSystemTimePageComponent
-		SettingsSystemTime {
+		id: settingsTimePageComponent
+		SettingsTime {
 			onTimeChanged: function (timeString) {
 				console.log("Time changed to:", timeString);
 				// TODO: Implement actual system time setting
 				window.goBack();
 			}
-			onTimezoneSettingsRequested: window.goPage(settingsSystemTimeZonesPageComponent)
+			onTimezoneSettingsRequested: window.goPage(settingsTimeZonesPageComponent)
 		}
 	}
 
 	// System sound settings page
 	Component {
-		id: settingsSystemSoundPageComponent
-		SettingsSystemSound {
+		id: settingsSoundPageComponent
+		SettingsSound {
 			onVolumeChanged: function (volume) {
 				console.log("Volume changed to:", volume);
 				// TODO: Implement actual system volume setting
@@ -382,8 +384,8 @@ ApplicationWindow {
 
 	// System firewall settings page
 	Component {
-		id: firewallSettingsPageComponent
-		SettingsSystemFirewall {
+		id: settingsFirewallPageComponent
+		SettingsFirewall {
 			property var parentWindow: window
 			onAddExceptionRequested: parentWindow.goPage(firewallExceptionsPageComponent, "firewall-add-port")
 		}
@@ -392,7 +394,7 @@ ApplicationWindow {
 	// Firewall add port page
 	Component {
 		id: firewallExceptionsPageComponent
-		SettingsSystemFirewallExceptions {
+		SettingsFirewallExceptions {
 			property var parentWindow: window
 			onPortAdded: parentWindow.goBack()
 			onAddCancelled: parentWindow.goBack()
@@ -401,8 +403,8 @@ ApplicationWindow {
 
 	// System display settings page
 	Component {
-		id: settingsSystemDisplayPageComponent
-		SettingsSystemDisplay {
+		id: settingsDisplayPageComponent
+		SettingsDisplay {
 			onBrightnessChanged: function (brightness) {
 				console.log("Brightness changed to:", brightness);
 				// TODO: Implement actual system brightness setting
@@ -412,8 +414,8 @@ ApplicationWindow {
 
 	// System timezone selection page (continents)
 	Component {
-		id: settingsSystemTimeZonesPageComponent
-		SettingsSystemTimeZones {
+		id: settingsTimeZonesPageComponent
+		SettingsTimeZones {
 			Component.onCompleted: {
 				// Reset navigation depth when entering timezone selection
 				window.timezoneNavigationDepth = 1;
@@ -438,15 +440,15 @@ ApplicationWindow {
 				window.globalTimezones = timezones;
 				window.globalSelectedPath = path;
 				window.timezoneNavigationDepth++;
-				window.goPage(settingsSystemTimeZonesSubPageComponent);
+				window.goPage(settingsTimeZonesSubPageComponent);
 			}
 		}
 	}
 
 	// System timezone sub-level selection page (can handle any depth)
 	Component {
-		id: settingsSystemTimeZonesSubPageComponent
-		SettingsSystemTimeZones {
+		id: settingsTimeZonesSubPageComponent
+		SettingsTimeZones {
 			currentPath: window.globalSelectedPath
 			timezones: window.globalTimezones || []
 
@@ -482,15 +484,15 @@ ApplicationWindow {
 				// Navigate deeper - create new instance with deeper path
 				window.globalSelectedPath = path;
 				window.timezoneNavigationDepth++;
-				window.goPage(settingsSystemTimeZonesSubPageComponent);
+				window.goPage(settingsTimeZonesSubPageComponent);
 			}
 		}
 	}
 
 	// System update page
 	Component {
-		id: settingsSystemUpdatePageComponent
-		SettingsSystemUpdate {}
+		id: settingsUpdatePageComponent
+		SettingsUpdate {}
 	}
 
 	// Power off page
@@ -520,7 +522,7 @@ ApplicationWindow {
 			playerNetworkComponent: playerNetworkPageComponent
 		}
 	}
-	
+
 	// Player Local page
 	Component {
 		id: playerLocalPageComponent
@@ -529,7 +531,7 @@ ApplicationWindow {
 			playerVideoComponent: playerVideoPageComponent
 		}
 	}
-	
+
 	// Player Network page
 	Component {
 		id: playerNetworkPageComponent
@@ -538,7 +540,7 @@ ApplicationWindow {
 			playerVideoComponent: playerVideoPageComponent
 		}
 	}
-	
+
 	// Player Video page
 	Component {
 		id: playerVideoPageComponent

@@ -31,7 +31,7 @@ BaseMenu {
 		text: tr("menu.settings.button")
 		onClicked: goPageFunction(settingsComponent)
 	}
-
+	/*
 	MenuButton {
 		text: "Camera test"
 		onClicked: goPageFunction(cameraPreviewComponent)
@@ -229,4 +229,5 @@ BaseMenu {
 			});
 		}
 	}
+	*/
 }

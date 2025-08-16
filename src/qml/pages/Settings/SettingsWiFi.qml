@@ -7,7 +7,7 @@ import "../../utils/NodeUtils.js" as NodeUtils
 Rectangle {
 	id: root
 	color: colors.primaryBackground
-	property string title: tr('menu.settings.system.wifi.title')
+	property string title: tr('menu.settings.wifi.title')
 	signal wifiListRequested
 	signal wifiDisconnected
 	property var networks: []
@@ -92,7 +92,7 @@ Rectangle {
 
 	// Scan on component load
 	Component.onCompleted: {
-		console.log('SettingsSystemWiFi component loaded');
+		console.log('SettingsWiFi component loaded');
 		updateCurrentConnection(); // Immediate update of connection status
 		scanNetworks();
 	}
@@ -114,8 +114,8 @@ Rectangle {
 			id: statusText
 			text: {
 				if (root.isConnected)
-					return tr('menu.settings.system.wifi.connected') + ':';
-				return tr('menu.settings.system.wifi.disconnected');
+					return tr('menu.settings.wifi.connected') + ':';
+				return tr('menu.settings.wifi.disconnected');
 			}
 			font.pixelSize: window.width * 0.06
 			font.bold: true
@@ -147,14 +147,14 @@ Rectangle {
 		// Change button
 		MenuButton {
 			id: changeMenuButton
-			text: tr('menu.settings.system.wifi.change')
+			text: tr('menu.settings.wifi.change')
 			onClicked: root.wifiListRequested()
 		}
 
 		// Disconnect button
 		MenuButton {
 			id: disconnectMenuButton
-			text: tr('menu.settings.system.wifi.disconnect')
+			text: tr('menu.settings.wifi.disconnect')
 			visible: root.isConnected
 			onClicked: {
 				console.log('Disconnect button clicked');

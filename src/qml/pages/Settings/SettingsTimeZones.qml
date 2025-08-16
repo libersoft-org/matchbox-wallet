@@ -7,7 +7,7 @@ import "../../utils/NodeUtils.js" as NodeUtils
 
 BaseMenu {
 	id: root
-	title: currentPath ? (tr("menu.settings.system.time.timezone") + " - " + currentPath.replace(/\//g, " / ")) : tr("menu.settings.system.time.timezone")
+	title: currentPath ? (tr("menu.settings.time.timezone") + " - " + currentPath.replace(/\//g, " / ")) : tr("menu.settings.time.timezone")
 	signal timezoneSelected(string tz)
 	signal pathSelected(string path)
 	property var timezones: []

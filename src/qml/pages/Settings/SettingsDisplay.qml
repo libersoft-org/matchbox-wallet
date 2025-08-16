@@ -7,7 +7,7 @@ import "../../utils/NodeUtils.js" as Node
 
 BaseMenu {
 	id: root
-	title: tr("menu.settings.system.display.title")
+	title: tr("menu.settings.display.title")
 	property int displayBrightness: 50
 	property bool brightnessLoaded: false
 	property bool updatingFromSystem: false  // Guard flag
@@ -70,7 +70,7 @@ BaseMenu {
 
 		Text {
 			anchors.horizontalCenter: parent.horizontalCenter
-			text: tr("menu.settings.system.display.brightness")
+			text: tr("menu.settings.display.brightness")
 			font.pixelSize: root.height * 0.04
 			color: colors.primaryForeground
 			horizontalAlignment: Text.AlignHCenter

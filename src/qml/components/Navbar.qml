@@ -46,6 +46,7 @@ Item {
 		horizontalAlignment: Text.AlignHCenter
 		verticalAlignment: Text.AlignVCenter
 		elide: Text.ElideRight
+		maximumLineCount: 2
 	}
 
 	// Power button (right)

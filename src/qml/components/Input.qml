@@ -14,9 +14,9 @@ Item {
 	signal inputReturnPressed
 
 	// Accessible properties for external configuration
-	property real inputWidth: 300
-	property real inputHeight: 50
-	property real inputFontSize: 16
+	property real inputWidth: parent.width
+	property real inputHeight: window.width * 0.12
+	property real inputFontSize: window.width * 0.04
 	property string inputPlaceholder: ""
 	property int inputEchoMode: TextInput.Normal
 	property bool inputAutoFocus: false
@@ -31,7 +31,7 @@ Item {
 	property color inputBackgroundColor: colors.primaryBackground
 	property color inputBorderColor: colors.primaryForeground
 	property real inputBorderWidth: 2
-	property real inputBorderRadius: 10
+	property real inputBorderRadius: inputHeight * 0.3
 
 	// Text property to access content
 	property string text: inputMultiline ? textArea.text : textField.text

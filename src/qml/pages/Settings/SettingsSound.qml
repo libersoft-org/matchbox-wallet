@@ -7,7 +7,7 @@ import "../../utils/NodeUtils.js" as Node
 
 BaseMenu {
 	id: root
-	title: tr("menu.settings.system.sound.title")
+	title: tr("menu.settings.sound.title")
 	property int soundVolume: 0
 	property bool volumeLoaded: false
 	property bool updatingFromSystem: false  // Guard flag
@@ -90,7 +90,7 @@ BaseMenu {
 
 		Text {
 			anchors.horizontalCenter: parent.horizontalCenter
-			text: tr("menu.settings.system.sound.volume")
+			text: tr("menu.settings.sound.volume")
 			font.pixelSize: root.height * 0.04
 			color: colors.primaryForeground
 			horizontalAlignment: Text.AlignHCenter
@@ -101,7 +101,7 @@ BaseMenu {
 			anchors.horizontalCenter: parent.horizontalCenter
 			width: parent.width * 0.6
 			height: root.height * 0.08
-			text: root.isMuted ? tr("menu.settings.system.sound.unmute") : tr("menu.settings.system.sound.mute")
+			text: root.isMuted ? tr("menu.settings.sound.unmute") : tr("menu.settings.sound.mute")
 			enabled: root.volumeLoaded
 			opacity: root.volumeLoaded ? 1.0 : 0.5
 			onClicked: root.toggleMute()

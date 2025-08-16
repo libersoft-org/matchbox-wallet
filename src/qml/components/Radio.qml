@@ -18,21 +18,21 @@ RadioButton {
 	}
 
 	indicator: Rectangle {
-		implicitWidth: 20
-		implicitHeight: 20
+		implicitWidth: window.width * 0.05
+		implicitHeight: window.width * 0.05
 		x: control.leftPadding
 		y: parent.height / 2 - height / 2
-		radius: 10
+		radius: implicitHeight * 0.5
 		border.color: control.checked ? colors.primaryForeground : colors.disabledForeground
 		border.width: 2
 		color: "transparent"
 
 		Rectangle {
-			width: 10
-			height: 10
-			x: 5
-			y: 5
-			radius: 5
+			width: parent.width * 0.5
+			height: parent.height * 0.5
+			x: parent.width * 0.25
+			y: parent.height * 0.25
+			radius: width * 0.5
 			color: colors.primaryForeground
 			visible: control.checked
 		}
