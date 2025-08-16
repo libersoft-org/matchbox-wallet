@@ -33,6 +33,59 @@ ApplicationWindow {
 	signal wifiConnectionChanged
 	signal wifiStatusUpdated
 
+	// Global translation function - available to all child components
+	function tr(key) {
+		try {
+			if (translationManager && translationManager.tr)
+				return translationManager.tr(key);
+		} catch (e) {
+			console.log("Translation error:", e);
+		}
+		// Fallback - return key
+		return key;
+	}
+
+	function goPage(componentName, pageId, properties) {
+		if (stackView) {
+			var fullPath = componentName.startsWith('pages/') ? componentName : 'pages/' + componentName;
+			var component = Qt.createComponent(fullPath);
+			if (component.status === Component.Error) {
+				console.error("Failed to load component:", fullPath, "Error:", component.errorString());
+				return;
+			}
+			var componentInstance;
+			if (properties)
+				componentInstance = component.createObject(null, properties);
+			else
+				componentInstance = component.createObject(null);
+			if (componentInstance) {
+				stackView.push(componentInstance);
+				if (pageId)
+					window.currentPageId = pageId;
+			} else
+				console.error("Failed to create component instance:", fullPath);
+		}
+	}
+
+	function goBack() {
+		stackView.pop();
+		if (stackView.currentItem && stackView.currentItem.pageId)
+			window.currentPageId = stackView.currentItem.pageId;
+		else
+			window.currentPageId = "home";
+	}
+
+	function goBackMultiple(count) {
+		for (var i = 0; i < count; i++) {
+			if (stackView.depth > 1)
+				stackView.pop();
+		}
+		if (stackView.currentItem && stackView.currentItem.pageId)
+			window.currentPageId = stackView.currentItem.pageId;
+		else
+			window.currentPageId = "home";
+	}
+
 	Colors {
 		id: colors
 	}
@@ -57,18 +110,6 @@ ApplicationWindow {
 		id: eventManagerObj
 	}
 
-	// Global translation function - available to all child components
-	function tr(key) {
-		try {
-			if (translationManager && translationManager.tr)
-				return translationManager.tr(key);
-		} catch (e) {
-			console.log("Translation error:", e);
-		}
-		// Fallback - return key
-		return key;
-	}
-
 	background: Rectangle {
 		color: colors.primaryBackground
 	}
@@ -77,51 +118,6 @@ ApplicationWindow {
 		x = (Screen.width - width) / 2;
 		y = (Screen.height - height) / 2;
 		console.log("ApplicationWindow completed");
-	}
-
-	function goPage(componentName, pageId, properties) {
-		if (stackView) {
-			var fullPath = componentName.startsWith('pages/') ? componentName : 'pages/' + componentName;
-			var component = Qt.createComponent(fullPath);
-			if (component.status === Component.Error) {
-				console.error("Failed to load component:", fullPath, "Error:", component.errorString());
-				return;
-			}
-			
-			var componentInstance;
-			if (properties) {
-				componentInstance = component.createObject(null, properties);
-			} else {
-				componentInstance = component.createObject(null);
-			}
-			
-			if (componentInstance) {
-				stackView.push(componentInstance);
-				if (pageId)
-					window.currentPageId = pageId;
-			} else {
-				console.error("Failed to create component instance:", fullPath);
-			}
-		}
-	}
-
-	function goBack() {
-		stackView.pop();
-		if (stackView.currentItem && stackView.currentItem.pageId)
-			window.currentPageId = stackView.currentItem.pageId;
-		else
-			window.currentPageId = "home";
-	}
-
-	function goBackMultiple(count) {
-		for (var i = 0; i < count; i++) {
-			if (stackView.depth > 1)
-				stackView.pop();
-		}
-		if (stackView.currentItem && stackView.currentItem.pageId)
-			window.currentPageId = stackView.currentItem.pageId;
-		else
-			window.currentPageId = "home";
 	}
 
 	// Status bar at the very top
