@@ -266,16 +266,7 @@ ApplicationWindow {
 
 	Component {
 		id: settingsPageComponent
-		Settings {
-			selectedLanguage: window.selectedLanguage
-			onSettingsWifiRequested: window.goPage(settingsWifiPageComponent, "wifi-settings")
-			onSettingsLanguageRequested: window.goPage(settingsLanguagePageComponent)
-			onSettingsTimeRequested: window.goPage(settingsTimePageComponent)
-			onSettingsSoundRequested: window.goPage(settingsSoundPageComponent)
-			onSettingsDisplayRequested: window.goPage(settingsDisplayPageComponent)
-			onSettingsUpdateRequested: window.goPage(settingsUpdatePageComponent)
-			onSettingsFirewallRequested: window.goPage(settingsFirewallPageComponent, "firewall-settings")
-		}
+		Settings {}
 	}
 
 	// Currency selection page

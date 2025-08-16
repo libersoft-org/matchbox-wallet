@@ -6,14 +6,7 @@ import "../../components"
 BaseMenu {
 	id: root
 	title: tr("menu.settings.title")
-	signal settingsWifiRequested
-	signal settingsLanguageRequested
-	signal settingsTimeRequested
-	signal settingsSoundRequested
-	signal settingsDisplayRequested
-	signal settingsUpdateRequested
-	signal settingsFirewallRequested
-	property string selectedLanguage: "en"
+	property string selectedLanguage: window.settingsManager ? window.settingsManager.selectedLanguage : "en"
 
 	function getLanguageDisplayName(langCode) {
 		switch (langCode) {
@@ -28,7 +21,7 @@ BaseMenu {
 
 	MenuButton {
 		text: tr("menu.settings.wifi.button")
-		onClicked: root.settingsWifiRequested()
+		onClicked: window.goPage(settingsWifiPageComponent, "wifi-settings")
 	}
 
 	MenuButton {
@@ -39,22 +32,22 @@ BaseMenu {
 
 	MenuButton {
 		text: tr("menu.settings.firewall.button")
-		onClicked: root.settingsFirewallRequested()
+		onClicked: window.goPage(settingsFirewallPageComponent, "firewall-settings")
 	}
 
 	MenuButton {
 		text: tr("menu.settings.display.button")
-		onClicked: root.settingsDisplayRequested()
+		onClicked: window.goPage(settingsDisplayPageComponent)
 	}
 
 	MenuButton {
 		text: tr("menu.settings.sound.button")
-		onClicked: root.settingsSoundRequested()
+		onClicked: window.goPage(settingsSoundPageComponent)
 	}
 
 	MenuButton {
 		text: tr("menu.settings.time.button")
-		onClicked: root.settingsTimeRequested()
+		onClicked: window.goPage(settingsTimePageComponent)
 	}
 
 	MenuButton {
@@ -64,11 +57,11 @@ BaseMenu {
 			var template = tr("menu.settings.language.button");
 			return template.replace("%1", displayName);
 		}
-		onClicked: root.settingsLanguageRequested()
+		onClicked: window.goPage(settingsLanguagePageComponent)
 	}
 
 	MenuButton {
 		text: tr("menu.settings.update.button")
-		onClicked: root.settingsUpdateRequested()
+		onClicked: window.goPage(settingsUpdatePageComponent)
 	}
 }
