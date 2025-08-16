@@ -21,6 +21,11 @@ BaseMenu {
 	}
 
 	MenuButton {
+		text: tr("menu.calculator.button")
+		onClicked: window.goPage('Calculator/Calculator.qml')
+	}
+
+	MenuButton {
 		text: tr("menu.settings.button")
 		onClicked: window.goPage('Settings/Settings.qml')
 	}

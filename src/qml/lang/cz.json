@@ -51,6 +51,10 @@
 			"open": "Otevřít",
 			"back": "Zpět"
 		},
+		"calculator": {
+			"button": "Kalkulačka",
+			"title": "Kalkulačka"
+		},
 		"settings": {
 			"button": "Nastavení",
 			"title": "Nastavení systému",

@@ -51,6 +51,10 @@
 			"open": "Open",
 			"back": "Back"
 		},
+		"calculator": {
+			"button": "Calculator",
+			"title": "Calculator"
+		},
 		"settings": {
 			"button": "Settings",
 			"title": "System settings",
