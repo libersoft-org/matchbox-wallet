@@ -7,6 +7,7 @@ import "static"
 import "components"
 import "pages"
 import "pages/Settings"
+import "pages/Player"
 import "utils/NodeUtils.js" as Node
 
 ApplicationWindow {
@@ -512,8 +513,8 @@ ApplicationWindow {
 	// Media Player page
 	Component {
 		id: mediaPlayerPageComponent
-		VideoPlayer {
-			onFullscreenRequested: function(fullscreen) {
+		PlayerVideo {
+			onFullscreenRequested: function (fullscreen) {
 				window.isFullscreen = fullscreen;
 			}
 		}
