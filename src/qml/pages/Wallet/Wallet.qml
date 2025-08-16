@@ -23,7 +23,7 @@ BaseMenu {
 	}
 
 	property Component addressBookComponent: Component {
-		WalletAddressBook {}
+		WalletAddressbook {}
 	}
 
 	property Component networkComponent: Component {

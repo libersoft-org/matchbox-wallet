@@ -183,7 +183,7 @@ ApplicationWindow {
 		showBackButton: stackView.currentItem && stackView.currentItem.hasOwnProperty("showBackButton") ? stackView.currentItem.showBackButton : true
 		showPowerButton: stackView.currentItem && stackView.currentItem.hasOwnProperty("showPowerButton") ? stackView.currentItem.showPowerButton : true
 		onBackRequested: window.goBack()
-		onPowerOffRequested: window.goPage(powerOffPageComponent)
+		onPowerRequested: window.goPage(powerPageComponent)
 	}
 
 	// Content area with animations - this part animates
@@ -495,8 +495,8 @@ ApplicationWindow {
 
 	// Power off page
 	Component {
-		id: powerOffPageComponent
-		PowerOff {}
+		id: powerPageComponent
+		Power {}
 	}
 
 	// Camera preview page

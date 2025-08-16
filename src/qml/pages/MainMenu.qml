@@ -11,7 +11,7 @@ BaseMenu {
 	property bool showBackButton: false
 	property var walletComponent
 	property var settingsComponent
-	property var powerOffComponent
+	property var powerComponent
 	property var cameraPreviewComponent
 	property var keyboardTestComponent
 	property var mediaPlayerComponent
@@ -198,22 +198,21 @@ BaseMenu {
 	}
 
 	MenuButton {
-        text: "crypto2addAddressBookItem"
-        onClicked: {
-            console.log("Adding address book item...");
+		text: "crypto2addAddressBookItem"
+		onClicked: {
+			console.log("Adding address book item...");
 
-            Node.msg("crypto2addAddressBookItem", {
-                "address": "0x39E54b2Ca6535b51333e1Ea4Ef43B4038d23adB4",
-                "name": "Test Address"
-                })
-           }
-    }
+			Node.msg("crypto2addAddressBookItem", {
+				"address": "0x39E54b2Ca6535b51333e1Ea4Ef43B4038d23adB4",
+				"name": "Test Address"
+			});
+		}
+	}
 
-
-    MenuButton {
-        text: "batteryCheckStatus"
-        onClicked: {
-            console.log("Checking battery status...");
+	MenuButton {
+		text: "batteryCheckStatus"
+		onClicked: {
+			console.log("Checking battery status...");
 			NodeJS.msg("batteryCheckStatus", {}, function (result) {
 				if (result && result.status === "success" && result.data) {
 					var data = result.data;
@@ -228,15 +227,6 @@ BaseMenu {
 					}
 				}
 			});
-
-
-        }
-    }
-
-
-
-
-
-
-
+		}
+	}
 }

@@ -9,7 +9,6 @@ Rectangle {
 	color: colors.primaryBackground
 	property string title: tr("menu.settings.system.wifi.list.title")
 	signal backRequested
-	signal powerOffRequested
 	signal passwordPageRequested(string networkName, bool isSecured)
 
 	// WiFi state

@@ -9,7 +9,6 @@ Rectangle {
 	color: colors.primaryBackground
 	property string title: tr("menu.settings.system.wifi.list.password.title")
 	signal backRequested
-	signal powerOffRequested
 	signal passwordEntered(string password)
 
 	// Network properties

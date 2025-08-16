@@ -7,7 +7,7 @@ Item {
 	property bool showBackButton: true
 	property bool showPowerButton: true
 	signal backRequested
-	signal powerOffRequested
+	signal powerRequested
 	height: window.width * 0.16
 
 	// Debug background
@@ -49,6 +49,6 @@ Item {
 		width: parent.height
 		height: parent.height
 		img: Qt.resolvedUrl("../../img/power.svg")
-		onClicked: root.powerOffRequested()
+		onClicked: root.powerRequested()
 	}
 }
