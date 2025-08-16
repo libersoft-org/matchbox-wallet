@@ -28,6 +28,7 @@ Item {
 		showFiles: true
 		showDotAndDotDot: false
 		showOnlyReadable: true
+		sortField: FolderListModel.Name
 
 		onFolderChanged: {
 			console.log("FolderListModel: folder changed to:", folder);
@@ -54,14 +55,15 @@ Item {
 
 		// Current path display
 		Text {
-			text: root.currentPath
+			text: root.currentPath.replace("file://", "")
 			font.pixelSize: window.width * 0.05
 			color: colors.primaryForeground
-			enabled: false
 		}
 
 		MenuButton {
-			visible: root.currentPath !== StandardPaths.standardLocations(StandardPaths.HomeLocation)[0]
+			property string cleanCurrentPath: root.currentPath.toString().replace("file://", "")
+			property string homeLocation: StandardPaths.standardLocations(StandardPaths.HomeLocation)[0].toString().replace("file://", "")
+			visible: cleanCurrentPath !== homeLocation
 			text: tr("menu.player.back")
 			backgroundColor: colors.success
 			onClicked: {
