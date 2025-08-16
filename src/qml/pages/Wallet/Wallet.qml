@@ -8,28 +8,21 @@ BaseMenu {
 	id: root
 	title: tr("menu.wallet.title")
 	property var goPageFunction
-
-	// Component definitions
 	property Component balanceComponent: Component {
 		WalletBalance {}
 	}
-
 	property Component sendComponent: Component {
 		WalletSend {}
 	}
-
 	property Component receiveComponent: Component {
 		WalletReceive {}
 	}
-
 	property Component addressBookComponent: Component {
 		WalletAddressbook {}
 	}
-
 	property Component networkComponent: Component {
 		WalletNetwork {}
 	}
-
 	property var settingsPageFunction
 
 	MenuButton {
@@ -54,12 +47,14 @@ BaseMenu {
 
 	MenuButton {
 		text: tr("menu.wallet.network.button")
-		onClicked: goPageFunction(root.networkComponent)
+		enabled: false
+		//onClicked: goPageFunction()
 	}
 
 	MenuButton {
 		text: tr("menu.wallet.address.button")
-		onClicked: goPageFunction(root.addressBookComponent)
+		enabled: false
+		//onClicked: goPageFunction()
 	}
 
 	MenuButton {
