@@ -7,9 +7,11 @@ BaseMenu {
 	id: root
 	title: tr("menu.wallet.settings.general.title")
 
-	signal currencySelectionRequested
+	property string selectedCurrency: window.settingsManager ? window.settingsManager.selectedCurrency : "USD"
 
-	property string selectedCurrency: "USD"
+	function handleCurrencySelectionRequest() {
+		window.goPage(walletSettingsGeneralFiatPageComponent);
+	}
 
 	MenuButton {
 		text: {
@@ -17,7 +19,7 @@ BaseMenu {
 			return template.replace("%1", root.selectedCurrency);
 		}
 		onClicked: {
-			root.currencySelectionRequested();
+			root.handleCurrencySelectionRequest();
 		}
 	}
 }

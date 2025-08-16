@@ -244,14 +244,7 @@ ApplicationWindow {
 
 	Component {
 		id: mainMenuComponent
-		MainMenu {
-			walletComponent: walletPageComponent
-			settingsComponent: settingsPageComponent
-			cameraPreviewComponent: cameraPreviewPageComponent
-			keyboardTestComponent: keyboardTestPageComponent
-			mediaPlayerComponent: mediaPlayerPageComponent
-			goPageFunction: window.goPage
-		}
+		MainMenu {}
 	}
 
 	Component {
@@ -268,10 +261,7 @@ ApplicationWindow {
 	// Wallet settings general page
 	Component {
 		id: walletSettingsGeneralPageComponent
-		WalletSettingsGeneral {
-			selectedCurrency: window.selectedCurrency
-			onCurrencySelectionRequested: window.goPage(walletSettingsGeneralFiatPageComponent)
-		}
+		WalletSettingsGeneral {}
 	}
 
 	Component {

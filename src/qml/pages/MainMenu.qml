@@ -9,37 +9,30 @@ BaseMenu {
 	id: root
 	title: applicationName
 	property bool showBackButton: false
-	property var walletComponent
-	property var settingsComponent
-	property var powerComponent
-	property var cameraPreviewComponent
-	property var keyboardTestComponent
-	property var mediaPlayerComponent
-	property var goPageFunction
 
 	MenuButton {
 		text: tr("menu.wallet.button")
-		onClicked: goPageFunction(walletComponent)
+		onClicked: window.goPage(walletPageComponent)
 	}
 
 	MenuButton {
 		text: tr("menu.player.button")
-		onClicked: goPageFunction(mediaPlayerComponent)
+		onClicked: window.goPage(mediaPlayerPageComponent)
 	}
 
 	MenuButton {
 		text: tr("menu.settings.button")
-		onClicked: goPageFunction(settingsComponent)
+		onClicked: window.goPage(settingsPageComponent)
 	}
 	/*
 	MenuButton {
 		text: "Camera test"
-		onClicked: goPageFunction(cameraPreviewComponent)
+		onClicked: window.goPage(cameraPreviewPageComponent)
 	}
 
 	MenuButton {
 		text: "Test keyboard"
-		onClicked: goPageFunction(keyboardTestComponent)
+		onClicked: window.goPage(keyboardTestPageComponent)
 	}
 
 	MenuButton {
