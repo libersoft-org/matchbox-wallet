@@ -128,7 +128,7 @@ ApplicationWindow {
 		console.log("ApplicationWindow completed");
 		// Initialize WiFi strength
 		updateWifiStrength();
-		// Language initialization is now handled by settingsManager.onSettingsLoaded
+		// Language initialization is now handled by settingsManager.onSettingsLoadedgoPage(
 	}
 
 	function goPage(component, pageId) {
@@ -349,21 +349,13 @@ ApplicationWindow {
 	// Language selection page
 	Component {
 		id: settingsLanguagePageComponent
-		SettingsLanguage {
-		}
+		SettingsLanguage {}
 	}
 
 	// System time settings page
 	Component {
 		id: settingsTimePageComponent
-		SettingsTime {
-			onTimeChanged: function (timeString) {
-				console.log("Time changed to:", timeString);
-				// TODO: Implement actual system time setting
-				window.goBack();
-			}
-			onTimezoneSettingsRequested: window.goPage(settingsTimeZonesPageComponent)
-		}
+		SettingsTime {}
 	}
 
 	// System sound settings page

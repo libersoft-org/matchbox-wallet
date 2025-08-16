@@ -7,14 +7,22 @@ import "../../utils/NodeUtils.js" as NodeUtils
 BaseMenu {
 	id: root
 	title: tr("menu.settings.time.title")
-	signal timeChanged(string newTime)
-	signal timezoneSettingsRequested
 	signal timezoneChanged
 	property date displayTime: new Date()  // Time shown in the top display
 	property date spinBoxTime: new Date()  // Independent time for spinboxes
 	property bool updatingFromTimer: false  // Flag to prevent onCurrentValueChanged during timer updates
 	property bool loadingSystemState: true  // Track if we're still loading system state
 	property string currentTimezone: "UTC"  // Current system timezone
+
+	function handleTimeChange(timeString) {
+		console.log("Time changed to:", timeString);
+		// TODO: Implement actual system time setting
+		window.goBack();
+	}
+
+	function handleTimezoneSettingsRequested() {
+		window.goPage(settingsTimeZonesPageComponent);
+	}
 
 	// Refresh timezone when page becomes visible (when returning from timezone settings)
 	onVisibleChanged: {
@@ -340,7 +348,7 @@ BaseMenu {
 				console.log("Set date/time result:", JSON.stringify(result));
 				if (result.status === "success") {
 					console.log("Date and time set successfully");
-					root.timeChanged(Qt.formatTime(new Date(), "hh:mm:ss"));
+					root.handleTimeChange(Qt.formatTime(new Date(), "hh:mm:ss"));
 					// Keep SpinBox time as it is - it's already set to what user wanted
 					// No need to change spinBoxTime as it should continue from user-set values
 				} else {
@@ -352,6 +360,6 @@ BaseMenu {
 
 	MenuButton {
 		text: tr("menu.settings.time.timezone") + ": " + root.currentTimezone
-		onClicked: root.timezoneSettingsRequested()
+		onClicked: root.handleTimezoneSettingsRequested()
 	}
 }
