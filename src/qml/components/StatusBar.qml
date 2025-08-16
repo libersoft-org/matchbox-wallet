@@ -1,6 +1,7 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
+import "../utils/NodeUtils.js" as Node
 
 Rectangle {
 	id: statusBar
@@ -30,6 +31,17 @@ Rectangle {
 		statusBar.currentTime = Qt.formatTime(now, "hh:mm");
 	}
 
+	// Function to update WiFi strength
+	function updateWifiStrength() {
+		Node.msg("wifiGetCurrentStrength", {}, function (response) {
+			if (response.status === 'success') {
+				statusBar.wifiStrength = response.data.strength || 0;
+			} else {
+				statusBar.wifiStrength = 0;
+			}
+		});
+	}
+
 	// Update time
 	Timer {
 		interval: 1000
@@ -38,7 +50,18 @@ Rectangle {
 		onTriggered: updateCurrentTime()
 	}
 
-	Component.onCompleted: updateCurrentTime()
+	// Update WiFi strength periodically
+	Timer {
+		interval: 5000 // Update every 5 seconds
+		running: true
+		repeat: true
+		onTriggered: updateWifiStrength()
+	}
+
+	Component.onCompleted: {
+		updateCurrentTime();
+		updateWifiStrength();
+	}
 
 	// WiFi Rectangle
 	SignalIndicator {

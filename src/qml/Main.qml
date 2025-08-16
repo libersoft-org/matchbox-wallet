@@ -22,7 +22,6 @@ ApplicationWindow {
 	readonly property int animationDuration: 500
 	readonly property var animationEasing: Easing.OutCubic
 	property bool showSplashScreen: true
-	property int currentWifiStrength: 0
 	property var colors: colors
 	property var settingsManager: settingsManagerObj
 	property var translationManager: translationManagerObj
@@ -38,25 +37,6 @@ ApplicationWindow {
 	signal wifiConnectionChanged
 	signal wifiStatusUpdated
 
-	// Function to update WiFi strength
-	function updateWifiStrength() {
-		Node.msg("wifiGetCurrentStrength", {}, function (response) {
-			if (response.status === 'success') {
-				currentWifiStrength = response.data.strength || 0;
-			} else {
-				currentWifiStrength = 0;
-			}
-		});
-	}
-
-	// Timer to periodically update WiFi strength (keep for signal strength only)
-	Timer {
-		interval: wifiStrengthUpdateInterval
-		running: true
-		repeat: true
-		onTriggered: updateWifiStrength()
-	}
-
 	Colors {
 		id: colors
 	}
@@ -66,17 +46,6 @@ ApplicationWindow {
 		onSettingsLoaded: {
 			console.log("Settings loaded, setting language to:", selectedLanguage);
 			translationManager.setLanguage(selectedLanguage);
-
-			// Auto-sync time on startup if enabled
-			// TODO: Implement time sync via Node.js if needed
-			// if (SystemManager) {
-			//	if (SystemManager.setNtpServer && settingsManagerObj.ntpServer)
-			//		SystemManager.setNtpServer(settingsManagerObj.ntpServer);
-			//	if (SystemManager.setTimeZone && settingsManagerObj.timeZone)
-			//		SystemManager.setTimeZone(settingsManagerObj.timeZone);
-			//	if (settingsManagerObj.autoTimeSync && SystemManager.syncSystemTime)
-			//		SystemManager.syncSystemTime();
-			// }
 		}
 	}
 
@@ -112,9 +81,6 @@ ApplicationWindow {
 		x = (Screen.width - width) / 2;
 		y = (Screen.height - height) / 2;
 		console.log("ApplicationWindow completed");
-		// Initialize WiFi strength
-		updateWifiStrength();
-		// Language initialization is now handled by settingsManager.onSettingsLoadedgoPage(
 	}
 
 	function goPage(component, pageId) {
@@ -148,10 +114,9 @@ ApplicationWindow {
 	StatusBar {
 		id: statusBar
 		visible: !window.showSplashScreen && !window.isFullscreen
-		wifiStrength: window.currentWifiStrength
 		batteryLevel: batteryManager.batteryLevel
 		hasBattery: batteryManager.hasBattery
-		// Mock values for LoRa and GSM (not implemented yet)
+		// TODO: Mock values for LoRa and GSM (not implemented yet)
 		loraStrength: 0
 		gsmStrength: 0  // 0 means no signal/not available
 	}
@@ -170,7 +135,7 @@ ApplicationWindow {
 		onPowerRequested: window.goPage(powerPageComponent)
 	}
 
-	// Content area with animations - this part animates
+	// Content area with animations
 	StackView {
 		id: stackView
 		visible: !window.showSplashScreen
@@ -233,7 +198,6 @@ ApplicationWindow {
 		x: 0
 		y: window.height
 		width: window.width
-
 		states: State {
 			name: "visible"
 			when: inputPanel.active
