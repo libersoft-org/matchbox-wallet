@@ -337,10 +337,7 @@ ApplicationWindow {
 
 	Component {
 		id: settingsTimeZonesSubPageComponent
-		SettingsTimeZones {
-			currentPath: window.globalSelectedPath
-			timezones: window.globalTimezones || []
-		}
+		SettingsTimeZones {}
 	}
 
 	Component {

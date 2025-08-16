@@ -15,8 +15,14 @@ BaseMenu {
 
 	Component.onCompleted: {
 		// Initialize navigation depth if this is the first timezone page
-		if (!currentPath) {
+		if (!currentPath && !window.globalSelectedPath) {
 			window.timezoneNavigationDepth = 1;
+		}
+
+		// Use global properties if available (for sub-pages)
+		if (window.globalSelectedPath && !currentPath) {
+			currentPath = window.globalSelectedPath;
+			timezones = window.globalTimezones || [];
 		}
 
 		if (currentPath) {
@@ -27,7 +33,6 @@ BaseMenu {
 			loadTimeZones();
 		}
 	}
-
 	function loadTimeZones() {
 		console.log("Loading time zones...");
 		NodeUtils.msg("timeListTimeZones", {}, function (response) {
@@ -149,11 +154,8 @@ BaseMenu {
 					window.globalSelectedPath = modelData.path;
 					window.timezoneNavigationDepth++;
 
-					// Create a new timezone page with the selected path
-					var subPage = settingsTimeZonesSubPageComponent.createObject(null, {
-						"currentPath": modelData.path,
-						"timezones": root.timezones
-					});
+					// Create a new timezone page - it will use global properties
+					var subPage = settingsTimeZonesSubPageComponent.createObject(null);
 					window.stackView.push(subPage);
 				}
 			}
