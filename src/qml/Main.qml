@@ -252,13 +252,11 @@ ApplicationWindow {
 		Wallet {}
 	}
 
-	// Wallet settings page
 	Component {
 		id: walletSettingsPageComponent
 		WalletSettings {}
 	}
 
-	// Wallet settings general page
 	Component {
 		id: walletSettingsGeneralPageComponent
 		WalletSettingsGeneral {}
@@ -269,43 +267,36 @@ ApplicationWindow {
 		Settings {}
 	}
 
-	// Currency selection page
 	Component {
 		id: walletSettingsGeneralFiatPageComponent
 		WalletSettingsGeneralFiat {}
 	}
 
-	// WiFi settings page
 	Component {
 		id: settingsWifiPageComponent
 		SettingsWiFi {}
 	}
 
-	// WiFi list page
 	Component {
 		id: wifiListPageComponent
 		SettingsWiFiList {}
 	}
 
-	// WiFi password page
 	Component {
 		id: wifiPasswordPageComponent
 		SettingsWiFiListPassword {}
 	}
 
-	// Language selection page
 	Component {
 		id: settingsLanguagePageComponent
 		SettingsLanguage {}
 	}
 
-	// System time settings page
 	Component {
 		id: settingsTimePageComponent
 		SettingsTime {}
 	}
 
-	// System sound settings page
 	Component {
 		id: settingsSoundPageComponent
 		SettingsSound {
@@ -316,7 +307,6 @@ ApplicationWindow {
 		}
 	}
 
-	// System firewall settings page
 	Component {
 		id: settingsFirewallPageComponent
 		SettingsFirewall {
@@ -325,7 +315,6 @@ ApplicationWindow {
 		}
 	}
 
-	// Firewall add port page
 	Component {
 		id: firewallExceptionsPageComponent
 		SettingsFirewallExceptions {
@@ -335,7 +324,6 @@ ApplicationWindow {
 		}
 	}
 
-	// System display settings page
 	Component {
 		id: settingsDisplayPageComponent
 		SettingsDisplay {
@@ -346,7 +334,6 @@ ApplicationWindow {
 		}
 	}
 
-	// System timezone selection page (continents)
 	Component {
 		id: settingsTimeZonesPageComponent
 		SettingsTimeZones {
@@ -379,7 +366,6 @@ ApplicationWindow {
 		}
 	}
 
-	// System timezone sub-level selection page (can handle any depth)
 	Component {
 		id: settingsTimeZonesSubPageComponent
 		SettingsTimeZones {
@@ -423,31 +409,26 @@ ApplicationWindow {
 		}
 	}
 
-	// System update page
 	Component {
 		id: settingsUpdatePageComponent
 		SettingsUpdate {}
 	}
 
-	// Power off page
 	Component {
 		id: powerPageComponent
 		Power {}
 	}
 
-	// Camera preview page
 	Component {
 		id: cameraPreviewPageComponent
 		CameraPreview {}
 	}
 
-	// Keyboard test page
 	Component {
 		id: keyboardTestPageComponent
 		KeyboardTest {}
 	}
 
-	// Media Player page
 	Component {
 		id: mediaPlayerPageComponent
 		Player {
@@ -457,7 +438,6 @@ ApplicationWindow {
 		}
 	}
 
-	// Player Local page
 	Component {
 		id: playerLocalPageComponent
 		PlayerLocal {
@@ -466,7 +446,6 @@ ApplicationWindow {
 		}
 	}
 
-	// Player Network page
 	Component {
 		id: playerNetworkPageComponent
 		PlayerNetwork {
@@ -475,7 +454,6 @@ ApplicationWindow {
 		}
 	}
 
-	// Player Video page
 	Component {
 		id: playerVideoPageComponent
 		PlayerVideo {
