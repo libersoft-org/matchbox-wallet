@@ -327,12 +327,7 @@ ApplicationWindow {
 
 	Component {
 		id: settingsDisplayPageComponent
-		SettingsDisplay {
-			onBrightnessChanged: function (brightness) {
-				console.log("Brightness changed to:", brightness);
-				// TODO: Implement actual system brightness setting
-			}
-		}
+		SettingsDisplay {}
 	}
 
 	Component {

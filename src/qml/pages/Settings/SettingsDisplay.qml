@@ -14,7 +14,6 @@ BaseMenu {
 	property string errorMessage: ""
 	property bool hasError: false
 	property bool loadError: false  // New property for load errors
-	signal brightnessChanged(int brightness)
 
 	// Load current brightness when component is loaded
 	Component.onCompleted: {
@@ -96,7 +95,9 @@ BaseMenu {
 				console.log("Range value changed:", newValue, "enabled:", enabled, "loadError:", root.loadError);
 				if (root.brightnessLoaded && !root.updatingFromSystem && !root.loadError) {
 					root.displayBrightness = newValue;
-					root.brightnessChanged(newValue);
+					// Handle brightness change directly
+					console.log("Brightness changed to:", newValue);
+					// TODO: Implement actual system brightness setting
 					root.saveBrightness(newValue);
 				}
 			}
