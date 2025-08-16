@@ -21,14 +21,20 @@ ApplicationWindow {
 	property string iconSource: Qt.resolvedUrl("../img/wallet.svg")
 	readonly property int animationDuration: 500
 	readonly property var animationEasing: Easing.OutCubic
-
-	// Splash screen state
 	property bool showSplashScreen: true
-
-	// WiFi state for status bar
 	property int currentWifiStrength: 0
-
-	// Global signals for WiFi state changes
+	property var colors: colors
+	property var settingsManager: settingsManagerObj
+	property var translationManager: translationManagerObj
+	property var batteryManager: batteryManagerObj
+	property var eventManager: eventManagerObj
+	property var globalTimezones: []
+	property string globalSelectedPath: ""
+	property int timezoneNavigationDepth: 0
+	property string selectedCurrency: settingsManager.selectedCurrency
+	property string selectedLanguage: settingsManager.selectedLanguage
+	property string currentPageId: "home"
+	property bool isFullscreen: false
 	signal wifiConnectionChanged
 	signal wifiStatusUpdated
 
@@ -50,18 +56,6 @@ ApplicationWindow {
 		repeat: true
 		onTriggered: updateWifiStrength()
 	}
-
-	// Create instances of our "singleton" objects
-	property var colors: colors
-	property var settingsManager: settingsManagerObj
-	property var translationManager: translationManagerObj
-	property var batteryManager: batteryManagerObj
-	property var eventManager: eventManagerObj
-
-	// Global properties for timezone navigation
-	property var globalTimezones: []
-	property string globalSelectedPath: ""
-	property int timezoneNavigationDepth: 0
 
 	Colors {
 		id: colors
@@ -98,14 +92,6 @@ ApplicationWindow {
 		id: eventManagerObj
 	}
 
-	// Global settings - use SettingsManager instance
-	property string selectedCurrency: settingsManager.selectedCurrency
-	property string selectedLanguage: settingsManager.selectedLanguage
-
-	// Track current page/section
-	property string currentPageId: "home"
-	property bool isFullscreen: false
-
 	// Global translation function - available to all child components
 	function tr(key) {
 		try {
@@ -141,7 +127,6 @@ ApplicationWindow {
 
 	function goBack() {
 		stackView.pop();
-		// Update currentPageId based on what's now on top
 		if (stackView.currentItem && stackView.currentItem.pageId)
 			window.currentPageId = stackView.currentItem.pageId;
 		else
@@ -153,7 +138,6 @@ ApplicationWindow {
 			if (stackView.depth > 1)
 				stackView.pop();
 		}
-		// Update currentPageId based on what's now on top
 		if (stackView.currentItem && stackView.currentItem.pageId)
 			window.currentPageId = stackView.currentItem.pageId;
 		else
@@ -448,27 +432,17 @@ ApplicationWindow {
 
 	Component {
 		id: mediaPlayerPageComponent
-		Player {
-			goPageFunction: window.goPage
-			playerLocalComponent: playerLocalPageComponent
-			playerNetworkComponent: playerNetworkPageComponent
-		}
+		Player {}
 	}
 
 	Component {
 		id: playerLocalPageComponent
-		PlayerLocal {
-			goPageFunction: window.goPage
-			playerVideoComponent: playerVideoPageComponent
-		}
+		PlayerLocal {}
 	}
 
 	Component {
 		id: playerNetworkPageComponent
-		PlayerNetwork {
-			goPageFunction: window.goPage
-			playerVideoComponent: playerVideoPageComponent
-		}
+		PlayerNetwork {}
 	}
 
 	Component {

@@ -7,8 +7,6 @@ import "../../components"
 Item {
 	id: root
 	property string title: tr("menu.player.local")
-	property var goPageFunction
-	property var playerVideoComponent
 	property string currentPath: StandardPaths.standardLocations(StandardPaths.HomeLocation)[0]
 	property var pathHistory: []
 
@@ -105,22 +103,10 @@ Item {
 					} else {
 						// Play video file
 						console.log("Opening local video file:", filePath);
-						if (root.goPageFunction) {
-							var component = Qt.createComponent("PlayerVideo.qml");
-							if (component.status === Component.Ready) {
-								var videoPage = component.createObject(null, {
-									"sourceUrl": "file://" + filePath
-								});
-								if (videoPage) {
-									console.log("Local video component created successfully");
-									root.goPageFunction(videoPage);
-								} else {
-									console.error("Failed to create local video page object");
-								}
-							} else {
-								console.error("Failed to create component:", component.errorString());
-							}
-						}
+						var videoPage = playerVideoPageComponent.createObject(null, {
+							"sourceUrl": "file://" + filePath
+						});
+						window.stackView.push(videoPage);
 					}
 				}
 			}

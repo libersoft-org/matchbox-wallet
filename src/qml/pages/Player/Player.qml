@@ -4,17 +4,14 @@ import "../../components"
 BaseMenu {
 	id: root
 	title: tr("menu.player.title")
-	property var goPageFunction
-	property var playerLocalComponent
-	property var playerNetworkComponent
 
 	MenuButton {
 		text: tr("menu.player.local")
-		onClicked: goPageFunction(playerLocalComponent)
+		onClicked: window.goPage(playerLocalPageComponent)
 	}
 
 	MenuButton {
 		text: tr("menu.player.network")
-		onClicked: goPageFunction(playerNetworkComponent)
+		onClicked: window.goPage(playerNetworkPageComponent)
 	}
 }
