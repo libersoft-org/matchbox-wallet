@@ -13,7 +13,6 @@ Rectangle {
 	property bool firewallEnabled: false
 	property var allowedExceptions: []
 	property bool isLoading: false
-	signal addExceptionRequested
 
 	Colors {
 		id: colors
@@ -144,7 +143,7 @@ Rectangle {
 				text: tr("menu.settings.firewall.exceptions.title")
 				width: parent.width
 				backgroundColor: colors.primaryForeground
-				onClicked: root.addExceptionRequested()
+				onClicked: window.goPage(firewallExceptionsPageComponent, "firewall-add-port")
 			}
 
 			// Ports list

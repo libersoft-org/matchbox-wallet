@@ -333,19 +333,12 @@ ApplicationWindow {
 
 	Component {
 		id: settingsFirewallPageComponent
-		SettingsFirewall {
-			property var parentWindow: window
-			onAddExceptionRequested: parentWindow.goPage(firewallExceptionsPageComponent, "firewall-add-port")
-		}
+		SettingsFirewall {}
 	}
 
 	Component {
 		id: firewallExceptionsPageComponent
-		SettingsFirewallExceptions {
-			property var parentWindow: window
-			onPortAdded: parentWindow.goBack()
-			onAddCancelled: parentWindow.goBack()
-		}
+		SettingsFirewallExceptions {}
 	}
 
 	Component {

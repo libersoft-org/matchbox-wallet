@@ -19,9 +19,6 @@ Rectangle {
 	color: colors.primaryBackground
 	property string title: tr("menu.settings.firewall.exceptions.title")
 
-	signal portAdded(var portData)
-	signal addCancelled
-
 	property bool isLoading: false
 	property string portNumber: ""
 	property string portDescription: ""
@@ -53,11 +50,7 @@ Rectangle {
 				if (addCount === totalAdds && !hasError) {
 					root.isLoading = false;
 					console.log('Both TCP and UDP ports added successfully');
-					root.portAdded({
-						port: port,
-						protocol: "both",
-						description: description
-					});
+					window.goBack();
 				}
 			}
 
@@ -100,11 +93,7 @@ Rectangle {
 				root.isLoading = false;
 				if (response.status === 'success') {
 					console.log('Port added successfully');
-					root.portAdded({
-						port: port,
-						protocol: root.portProtocol,
-						description: description
-					});
+					window.goBack();
 				} else {
 					console.log('Failed to add port:', response.message);
 				}
