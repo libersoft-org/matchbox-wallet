@@ -7,10 +7,12 @@ BaseMenu {
 	id: root
 	title: tr("menu.wallet.settings.title")
 
-	signal generalSettingsRequested
+	function handleGeneralSettingsRequest() {
+		window.goPage(walletSettingsGeneralPageComponent);
+	}
 
 	MenuButton {
 		text: tr("menu.wallet.settings.general.button")
-		onClicked: root.generalSettingsRequested()
+		onClicked: root.handleGeneralSettingsRequest()
 	}
 }

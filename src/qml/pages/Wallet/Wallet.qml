@@ -7,7 +7,6 @@ import "."
 BaseMenu {
 	id: root
 	title: tr("menu.wallet.title")
-	property var goPageFunction
 	property Component balanceComponent: Component {
 		WalletBalance {}
 	}
@@ -23,26 +22,29 @@ BaseMenu {
 	property Component networkComponent: Component {
 		WalletNetwork {}
 	}
-	property var settingsPageFunction
+
+	function handleSettingsRequest() {
+		window.goPage(walletSettingsPageComponent);
+	}
 
 	MenuButton {
 		text: tr("menu.wallet.balance.button")
-		onClicked: goPageFunction(root.balanceComponent)
+		onClicked: window.goPage(root.balanceComponent)
 	}
 
 	MenuButton {
 		text: tr("menu.wallet.send.button")
-		onClicked: goPageFunction(root.sendComponent)
+		onClicked: window.goPage(root.sendComponent)
 	}
 
 	MenuButton {
 		text: tr("menu.wallet.receive.button")
-		onClicked: goPageFunction(root.receiveComponent)
+		onClicked: window.goPage(root.receiveComponent)
 	}
 
 	MenuButton {
 		text: tr("menu.wallet.addressbook.button")
-		onClicked: goPageFunction(root.addressBookComponent)
+		onClicked: window.goPage(root.addressBookComponent)
 	}
 
 	MenuButton {
@@ -59,6 +61,6 @@ BaseMenu {
 
 	MenuButton {
 		text: tr("menu.wallet.settings.button")
-		onClicked: root.settingsPageFunction()
+		onClicked: root.handleSettingsRequest()
 	}
 }

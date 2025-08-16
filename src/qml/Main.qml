@@ -256,20 +256,13 @@ ApplicationWindow {
 
 	Component {
 		id: walletPageComponent
-		Wallet {
-			goPageFunction: window.goPage
-			settingsPageFunction: function () {
-				window.goPage(walletSettingsPageComponent);
-			}
-		}
+		Wallet {}
 	}
 
 	// Wallet settings page
 	Component {
 		id: walletSettingsPageComponent
-		WalletSettings {
-			onGeneralSettingsRequested: window.goPage(walletSettingsGeneralPageComponent)
-		}
+		WalletSettings {}
 	}
 
 	// Wallet settings general page
