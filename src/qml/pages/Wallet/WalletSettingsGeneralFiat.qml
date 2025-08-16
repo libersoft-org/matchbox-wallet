@@ -6,15 +6,19 @@ import "../../components"
 BaseMenu {
 	id: root
 	title: tr("menu.wallet.settings.general.fiat.title")
-	signal currencySelected(string currency)
 	property var currencies: ["USD", "EUR", "GBP", "CHF", "CZK", "PLN", "HUF"]
+
+	function selectCurrency(currency) {
+		window.settingsManager.saveCurrency(currency);
+		window.goBack();
+	}
 
 	Repeater {
 		model: root.currencies
 
 		MenuButton {
 			text: modelData
-			onClicked: root.currencySelected(modelData)
+			onClicked: root.selectCurrency(modelData)
 		}
 	}
 }

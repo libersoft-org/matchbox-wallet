@@ -272,12 +272,7 @@ ApplicationWindow {
 	// Currency selection page
 	Component {
 		id: walletSettingsGeneralFiatPageComponent
-		WalletSettingsGeneralFiat {
-			onCurrencySelected: function (currency) {
-				window.settingsManager.saveCurrency(currency);
-				window.goBack();
-			}
-		}
+		WalletSettingsGeneralFiat {}
 	}
 
 	// WiFi settings page
