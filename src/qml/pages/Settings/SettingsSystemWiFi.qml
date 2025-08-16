@@ -117,7 +117,8 @@ Rectangle {
 					return tr('menu.settings.system.wifi.connected') + ':';
 				return tr('menu.settings.system.wifi.disconnected');
 			}
-			font.pixelSize: window.height * 0.05
+			font.pixelSize: window.width * 0.06
+			font.bold: true
 			color: root.isConnected ? colors.success : colors.error
 			anchors.horizontalCenter: parent.horizontalCenter
 			horizontalAlignment: Text.AlignHCenter
@@ -127,7 +128,7 @@ Rectangle {
 		Text {
 			id: connectedNetworkText
 			text: root.connectedSSID
-			font.pixelSize: window.height * 0.05
+			font.pixelSize: window.width * 0.06
 			font.bold: true
 			anchors.horizontalCenter: parent.horizontalCenter
 			horizontalAlignment: Text.AlignHCenter
