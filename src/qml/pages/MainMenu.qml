@@ -23,7 +23,7 @@ BaseMenu {
 	}
 
 	MenuButton {
-		text: tr("menu.mediaPlayer.button")
+		text: tr("menu.player.button")
 		onClicked: goPageFunction(mediaPlayerComponent)
 	}
 

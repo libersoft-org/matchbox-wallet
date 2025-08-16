@@ -28,9 +28,17 @@
 				"title": "Výběr peněženky"
 			}
 		},
-		"mediaPlayer": {
+		"player": {
 			"button": "Přehrávač médií",
-			"title": "Přehrávač médií"
+			"title": "Přehrávač médií",
+			"local": "Místní soubor",
+			"network": "Síťový proud",
+			"storage": "Místní úložiště",
+			"select": "Vybrat soubor",
+			"url": "Zadejte URL",
+			"open": "Otevřít",
+			"localFiles": "Místní soubory",
+			"noFiles": "Žádné video soubory nenalezeny"
 		},
 		"settings": {
 			"button": "Nastavení",

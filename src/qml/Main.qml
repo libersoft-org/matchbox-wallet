@@ -514,6 +514,34 @@ ApplicationWindow {
 	// Media Player page
 	Component {
 		id: mediaPlayerPageComponent
+		Player {
+			goPageFunction: window.goPage
+			playerLocalComponent: playerLocalPageComponent
+			playerNetworkComponent: playerNetworkPageComponent
+		}
+	}
+	
+	// Player Local page
+	Component {
+		id: playerLocalPageComponent
+		PlayerLocal {
+			goPageFunction: window.goPage
+			playerVideoComponent: playerVideoPageComponent
+		}
+	}
+	
+	// Player Network page
+	Component {
+		id: playerNetworkPageComponent
+		PlayerNetwork {
+			goPageFunction: window.goPage
+			playerVideoComponent: playerVideoPageComponent
+		}
+	}
+	
+	// Player Video page
+	Component {
+		id: playerVideoPageComponent
 		PlayerVideo {
 			onFullscreenRequested: function (fullscreen) {
 				window.isFullscreen = fullscreen;

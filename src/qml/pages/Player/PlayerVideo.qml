@@ -11,6 +11,7 @@ Item {
 	property bool isVideoFullscreen: false
 	property bool isRotated: false  // true = 90° rotation, false = 0°
 	property bool controlsVisible: true
+	property string sourceUrl: "" // https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4
 	signal fullscreenRequested(bool fullscreen)
 
 	Rectangle {
@@ -20,9 +21,10 @@ Item {
 
 	Item {
 		id: contentWrapper
-		anchors.centerIn: parent
-		width: root.isRotated ? parent.height : parent.width
-		height: root.isRotated ? parent.width : parent.height
+		anchors.fill: root.isVideoFullscreen ? parent : undefined
+		anchors.centerIn: root.isVideoFullscreen ? undefined : parent
+		width: root.isVideoFullscreen ? parent.width : (root.isRotated ? parent.height : parent.width)
+		height: root.isVideoFullscreen ? parent.height : (root.isRotated ? parent.width : parent.height)
 
 		transform: Rotation {
 			origin.x: contentWrapper.width / 2
@@ -37,8 +39,7 @@ Item {
 
 		VideoOutput {
 			id: videoOutput
-			anchors.fill: root.isVideoFullscreen ? root : parent
-			z: root.isVideoFullscreen ? 999 : 0
+			anchors.fill: parent
 
 			Component.onCompleted: {
 				mediaPlayer.videoOutput = videoOutput;
@@ -267,8 +268,25 @@ Item {
 	}
 
 	Component.onCompleted: {
-		mediaPlayer.source = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
+		console.log("PlayerVideo component completed with sourceUrl:", sourceUrl);
+		console.log("PlayerVideo component ID:", root);
+		if (sourceUrl && sourceUrl.length > 0)
+			mediaPlayer.source = sourceUrl;
 		mediaPlayer.play();
 		hideTimer.start();
+	}
+
+	Component.onDestruction: {
+		console.log("PlayerVideo component ID being destroyed:", root);
+		mediaPlayer.stop();
+	}
+
+	// Monitor visibility changes
+	onVisibleChanged: {
+		console.log("PlayerVideo visibility changed to:", visible);
+		if (!visible) {
+			console.log("PlayerVideo became invisible, pausing playback");
+			mediaPlayer.pause();
+		}
 	}
 }

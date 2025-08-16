@@ -43,9 +43,17 @@
 				"title": "Select wallet"
 			}
 		},
-		"mediaPlayer": {
+		"player": {
 			"button": "Media player",
-			"title": "Media player"
+			"title": "Media player",
+			"local": "Local file",
+			"network": "Network stream",
+			"storage": "Local storage",
+			"select": "Select file",
+			"url": "Enter URL",
+			"open": "Open",
+			"localFiles": "Local Files",
+			"noFiles": "No video files found"
 		},
 		"settings": {
 			"button": "Settings",
