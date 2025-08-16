@@ -163,18 +163,6 @@
 					"button": "Aktualizovat systém"
 				}
 			}
-		},
-		"wallets": {
-			"button": "Peněženky",
-			"title": "Vaše peněženky",
-			"balance": "Zůstatek",
-			"send": "Odeslat",
-			"receive": "Přijmout",
-			"addressbook": "Adresář"
-		},
-		"networks": {
-			"button": "Sítě",
-			"title": "Nastavení sítí"
 		}
 	},
 	"power": {

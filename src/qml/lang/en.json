@@ -17,37 +17,26 @@
 			},
 			"addressbook": {
 				"button": "Address book",
-				"title": "Address book",
-				"empty": "No addresses saved yet",
-				"add": {
-					"title": "Add Address",
-					"name": "Name",
-					"address": "Address"
-				},
-				"edit": {
-					"title": "Edit Address",
-					"name": "Name",
-					"address": "Address"
-				},
-				"delete": {
-					"title": "Delete Address",
-					"confirm": "Are you sure you want to delete"
-				}
+				"title": "Address book"
 			},
 			"network": {
 				"button": "Change network",
 				"title": "Select network"
 			},
 			"address": {
-				"button": "Addresses",
-				"title": "Select wallet"
+				"button": "Change address",
+				"title": "Select address"
 			},
 			"settings": {
 				"button": "Settings",
 				"title": "Wallet settings",
-				"fiat": {
-					"button": "Fiat currency: %1",
-					"title": "Currency selection"
+				"general": {
+					"button": "General",
+					"title": "General wallet settings",
+					"fiat": {
+						"button": "Fiat currency: %1",
+						"title": "Currency selection"
+					}
 				}
 			}
 		},
@@ -65,151 +54,122 @@
 		"settings": {
 			"button": "Settings",
 			"title": "System settings",
-			"general": {
-				"button": "General",
-				"title": "General settings",
-				"language": {
-					"button": "Language"
-				},
-				"timezone": {
-					"button": "Timezone"
-				},
-				"display": {
-					"button": "Display"
+			"wifi": {
+				"button": "WiFi",
+				"title": "WiFi settings",
+				"connected": "Connected to network",
+				"disconnected": "Disconnected",
+				"change": "Change network",
+				"disconnect": "Disconnect",
+				"list": {
+					"title": "Available networks",
+					"scanning": "Scanning...",
+					"refresh": "Refresh",
+					"password": {
+						"title": "WiFi Password",
+						"network": "Network",
+						"secured": "This network is secured",
+						"open": "This network is open",
+						"enter": "Enter password",
+						"placeholder": "Password",
+						"connect": "Connect",
+						"error": "Connection failed"
+					}
 				}
 			},
-			"wallets": {
-				"button": "Wallets",
-				"title": "Your wallets",
-				"balance": "Balance",
-				"send": "Send",
-				"receive": "Receive",
-				"addressbook": "Address book"
+			"lora": {
+				"button": "LoRa",
+				"title": "LoRa settings"
 			},
-			"networks": {
-				"button": "Networks",
-				"title": "Network settings"
+			"display": {
+				"button": "Display",
+				"title": "Display settings",
+				"brightness": "Screen brightness"
 			},
-			"system": {
-				"button": "System",
-				"title": "System settings",
-				"language": {
-					"button": "Language: %1",
-					"title": "Language Selection",
-					"selectLanguage": "Select Language"
+			"sound": {
+				"button": "Sound",
+				"title": "Sound settings",
+				"volume": "Volume",
+				"mute": "Mute",
+				"unmute": "Unmute"
+			},
+			"time": {
+				"button": "Date & time",
+				"title": "Date & time settings",
+				"set": "Set manually",
+				"auto": "Auto-sync time",
+				"server": "NTP server",
+				"timezone": "Time zone"
+			},
+			"language": {
+				"button": "Language: %1",
+				"title": "Language selection",
+				"selectLanguage": "Select language"
+			},
+			"firewall": {
+				"button": "Firewall",
+				"title": "Firewall settings",
+				"enable": "Enable firewall",
+				"enabled": "Firewall is enabled",
+				"disabled": "Firewall is disabled",
+				"exceptions": {
+					"title": "Add an exception",
+					"port": "Port number",
+					"portPlaceholder": "Enter port number (1-65535)",
+					"description": "Description (optional)",
+					"descriptionPlaceholder": "Enter port description",
+					"protocol": "Protocol",
+					"tcp": "TCP",
+					"udp": "UDP",
+					"both": "TCP and UDP",
+					"add": "Add port"
 				},
-				"wifi": {
-					"button": "WiFi",
-					"title": "WiFi settings",
-					"connected": "Connected to network",
-					"disconnected": "Disconnected",
-					"change": "Change network",
-					"disconnect": "Disconnect",
-					"list": {
-						"title": "Available networks",
-						"scanning": "Scanning...",
-						"refresh": "Refresh",
-						"password": {
-							"title": "WiFi Password",
-							"network": "Network",
-							"secured": "This network is secured",
-							"open": "This network is open",
-							"enter": "Enter password",
-							"placeholder": "Password",
-							"connect": "Connect",
-							"error": "Connection failed"
-						}
-					}
+				"ports": {
+					"title": "Allowed ports",
+					"port": "Port",
+					"description": "Description",
+					"enabled": "Enabled",
+					"allowed": "Allowed",
+					"remove": "Remove",
+					"noPortsMessage": "No ports configured",
+					"addException": "Add exception"
 				},
-				"lora": {
-					"button": "LoRa",
-					"title": "LoRa settings"
+				"errors": {
+					"invalidPort": "Invalid port number",
+					"portExists": "Port already exists",
+					"addFailed": "Failed to add port",
+					"removeFailed": "Failed to remove port",
+					"enableFailed": "Failed to enable firewall",
+					"disableFailed": "Failed to disable firewall"
 				},
-				"firewall": {
-					"button": "Firewall",
-					"title": "Firewall settings",
-					"enable": "Enable firewall",
-					"enabled": "Firewall is enabled",
-					"disabled": "Firewall is disabled",
-					"exceptions": {
-						"title": "Add an exception",
-						"port": "Port number",
-						"portPlaceholder": "Enter port number (1-65535)",
-						"description": "Description (optional)",
-						"descriptionPlaceholder": "Enter port description",
-						"protocol": "Protocol",
-						"tcp": "TCP",
-						"udp": "UDP",
-						"both": "TCP and UDP",
-						"add": "Add port"
-					},
-					"ports": {
-						"title": "Allowed ports",
-						"port": "Port",
-						"description": "Description",
-						"enabled": "Enabled",
-						"allowed": "Allowed",
-						"remove": "Remove",
-						"noPortsMessage": "No ports configured",
-						"addException": "Add exception"
-					},
-					"errors": {
-						"invalidPort": "Invalid port number",
-						"portExists": "Port already exists",
-						"addFailed": "Failed to add port",
-						"removeFailed": "Failed to remove port",
-						"enableFailed": "Failed to enable firewall",
-						"disableFailed": "Failed to disable firewall"
-					},
-					"messages": {
-						"portAdded": "Port added successfully",
-						"portRemoved": "Port removed successfully",
-						"firewallEnabled": "Firewall enabled",
-						"firewallDisabled": "Firewall disabled"
-					}
+				"success": {
+					"portAdded": "Port added",
+					"portRemoved": "Port removed",
+					"firewallEnabled": "Firewall enabled",
+					"firewallDisabled": "Firewall disabled"
+				}
+			},
+			"update": {
+				"button": "Update",
+				"title": "System Updates",
+				"app": {
+					"current": "Your app version",
+					"latest": "Latest app version",
+					"button": "Update application"
 				},
-				"display": {
-					"button": "Display",
-					"title": "Display settings",
-					"brightness": "Screen brightness"
-				},
-				"sound": {
-					"button": "Sound",
-					"title": "Sound settings",
-					"volume": "Volume",
-					"mute": "Mute",
-					"unmute": "Unmute"
-				},
-				"time": {
-					"button": "Date & time",
-					"title": "Date & time settings",
-					"set": "Set manually",
-					"auto": "Auto-sync time",
-					"server": "NTP server",
-					"timezone": "Time zone"
-				},
-				"update": {
-					"button": "Update",
-					"title": "System Updates",
-					"app": {
-						"current": "Your app version",
-						"latest": "Latest app version",
-						"button": "Update application"
-					},
-					"system": {
-						"current": "Your system version",
-						"latest": "Latest system version",
-						"button": "Update system"
-					}
+				"system": {
+					"current": "Your system version",
+					"latest": "Latest system version",
+					"button": "Update system"
 				}
 			}
-		},
-		"power": {
-			"title": "Power Off",
-			"quit": "Exit application",
-			"reboot": "Reboot",
-			"shutdown": "Shutdown"
 		}
+	},
+	"power": {
+		"title": "Power Off",
+		"quit": "Exit application",
+		"reboot": "Reboot",
+		"shutdown": "Shutdown"
 	},
 	"common": {
 		"back": "Back",
@@ -217,10 +177,6 @@
 		"cancel": "Cancel",
 		"yes": "Yes",
 		"no": "No",
-		"add": "Add",
-		"edit": "Edit",
-		"delete": "Delete",
-		"save": "Save",
 		"loading": "Loading...",
 		"error": "Error",
 		"languages": {
