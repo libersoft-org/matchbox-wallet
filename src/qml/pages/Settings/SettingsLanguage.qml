@@ -7,21 +7,21 @@ BaseMenu {
 	id: root
 	title: tr("menu.settings.language.title")
 
-	signal languageSelected(string languageCode)
+	function selectLanguage(languageCode) {
+		window.settingsManager.saveLanguage(languageCode);
+		window.translationManager.setLanguage(languageCode);
+		window.goBack();
+	}
 
 	MenuButton {
 		id: englishButton
 		text: tr("common.languages.english")
-		onClicked: {
-			root.languageSelected("en");
-		}
+		onClicked: root.selectLanguage("en")
 	}
 
 	MenuButton {
 		id: czechButton
 		text: tr("common.languages.czech")
-		onClicked: {
-			root.languageSelected("cz");
-		}
+		onClicked: root.selectLanguage("cz")
 	}
 }

@@ -350,11 +350,6 @@ ApplicationWindow {
 	Component {
 		id: settingsLanguagePageComponent
 		SettingsLanguage {
-			onLanguageSelected: function (languageCode) {
-				window.settingsManager.saveLanguage(languageCode);
-				window.translationManager.setLanguage(languageCode);
-				window.goBack();
-			}
 		}
 	}
 
