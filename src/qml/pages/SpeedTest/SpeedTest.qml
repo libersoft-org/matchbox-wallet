@@ -316,7 +316,7 @@ BaseMenu {
 						anchors.horizontalCenter: parent.horizontalCenter
 						text: 'Ping'
 						font.pixelSize: 12
-						color: '#bdc3c7'
+						color: colors.primaryForeground
 					}
 
 					Text {
@@ -324,7 +324,7 @@ BaseMenu {
 						text: pingLatencyText
 						font.pixelSize: 24
 						font.bold: true
-						color: '#ecf0f1'
+						color: colors.primaryForeground
 					}
 				}
 			}
