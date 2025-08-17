@@ -56,8 +56,20 @@
 			"title": "Kalkulačka"
 		},
 		"speedtest": {
-			"button": "Test rychlosti",
-			"title": "Test rychlosti internetu"
+			"button": "Měření rychlosti",
+			"title": "Měření rychlosti internetu",
+			"download": "Stahování",
+			"upload": "Odesílání",
+			"ping": "Odezva",
+			"test_ready": "Připraveno k měření",
+			"test_start": "Zahajuji měření ...",
+			"test_download": "Měřím stahování ...",
+			"test_upload": "Měřím odesílání ...",
+			"test_ping": "Měřím odezvu ...",
+			"test_completed": "Měření dokončeno",
+			"start": "Spustit měření",
+			"network_error": "Chyba sítě",
+			"timeout": "Vypršel časový limit"
 		},
 		"settings": {
 			"button": "Nastavení",

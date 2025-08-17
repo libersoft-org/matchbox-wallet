@@ -57,7 +57,9 @@
 		},
 		"speedtest": {
 			"button": "Speed test",
-			"title": "Internet speed test"
+			"title": "Internet speed test",
+			"start": "Start test",
+			"progress": "Testing ..."
 		},
 		"settings": {
 			"button": "Settings",
