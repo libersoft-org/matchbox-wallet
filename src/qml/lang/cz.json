@@ -55,6 +55,10 @@
 			"button": "Kalkulačka",
 			"title": "Kalkulačka"
 		},
+		"speedtest": {
+			"button": "Test rychlosti",
+			"title": "Test rychlosti internetu"
+		},
 		"settings": {
 			"button": "Nastavení",
 			"title": "Nastavení systému",

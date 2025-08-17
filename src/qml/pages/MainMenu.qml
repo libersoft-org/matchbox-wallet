@@ -26,6 +26,11 @@ BaseMenu {
 	}
 
 	MenuButton {
+		text: tr("menu.speedtest.button")
+		onClicked: window.goPage('SpeedTest/SpeedTest.qml')
+	}
+
+	MenuButton {
 		text: tr("menu.settings.button")
 		onClicked: window.goPage('Settings/Settings.qml')
 	}

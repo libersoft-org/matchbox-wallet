@@ -55,6 +55,10 @@
 			"button": "Calculator",
 			"title": "Calculator"
 		},
+		"speedtest": {
+			"button": "Speed Test",
+			"title": "Internet speed test"
+		},
 		"settings": {
 			"button": "Settings",
 			"title": "System settings",

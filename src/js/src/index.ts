@@ -112,7 +112,6 @@ const HANDLERS: { [key: string]: (params?: any) => any } = {
 	cryptoKeccak256: (params) => cryptoManager.keccak256(params),
 	cryptoGetLatestBlock: (params) => cryptoManager.getLatestBlock(params),
 	cryptoGetBalance: (params) => cryptoManager.getBalance(params),
-
 };
 
 (global as any).handleMessage = async function (message: Message, callback?: any): Promise<void> {
@@ -146,4 +145,3 @@ const HANDLERS: { [key: string]: (params?: any) => any } = {
 (globalThis as any).handleMessage = (global as any).handleMessage;
 
 console.log('js/src/index.ts initialized');
-
