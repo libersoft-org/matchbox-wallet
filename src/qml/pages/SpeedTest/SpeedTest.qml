@@ -73,7 +73,7 @@ BaseMenu {
 		var totalBytes = 0;
 		var testCompleted = false;
 		var xhr = new XMLHttpRequest();
-		xhr.timeout = 60000;
+		xhr.timeout = 5000;
 		xhr.responseType = 'arraybuffer';
 		xhr.onprogress = function (event) {
 			if (event.lengthComputable) {
@@ -132,18 +132,18 @@ BaseMenu {
 			console.log('Download test timeout');
 			finishDownloadTest();
 		};
-		xhr.open('GET', 'https://speed.cloudflare.com/__down?bytes=10485760&_=' + Date.now(), true); // 10MB
+		xhr.open('GET', 'https://speed.cloudflare.com/__down?bytes=104857600&_=' + Date.now(), true); // 100MB
 		xhr.send();
 	}
 
 	function testUpload() {
 		currentStatus = tr('menu.speedtest.test_upload');
 		console.log('Starting upload test...');
-		var testData = new Array(10 * 1024 * 1024).join('x'); // 10MB of 'x' characters for upload test
+		var testData = new Array(100 * 1024 * 1024).join('x'); // 100MB of 'x' characters for upload test
 		console.log('Created test data size:', testData.length, 'bytes');
 		var startTime = Date.now();
 		var xhr = new XMLHttpRequest();
-		xhr.timeout = 60000;
+		xhr.timeout = 5000;
 		var testCompleted = false;
 		if (xhr.upload) {
 			xhr.upload.onprogress = function (event) {
