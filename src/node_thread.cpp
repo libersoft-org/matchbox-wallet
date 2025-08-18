@@ -24,7 +24,7 @@ NodeThread::~NodeThread() {
 }
 
 bool NodeThread::initialize() {
-	qDebug() << "NodeThread: Starting Node.js in dedicated thread";
+	// qDebug() << "NodeThread: Starting Node.js in dedicated thread";
 
 	m_running = true;
 	start(); // Start the QThread
@@ -34,7 +34,7 @@ bool NodeThread::initialize() {
 
 void NodeThread::shutdown() {
 	if (m_running) {
-		qDebug() << "NodeThread: Shutting down Node.js thread";
+		// qDebug() << "NodeThread: Shutting down Node.js thread";
 		m_running = false;
 		m_messageCondition.wakeAll();
 
@@ -70,7 +70,7 @@ void NodeThread::sendMessage(const QString &action, const QJsonObject &params, s
 }
 
 void NodeThread::run() {
-	qDebug() << "NodeThread: Thread started, initializing Node.js environment";
+	// qDebug() << "NodeThread: Thread started, initializing Node.js environment";
 
 	if (!initializeNodeEnvironment()) {
 		qCritical() << "NodeThread: Failed to initialize Node.js environment";
@@ -79,7 +79,7 @@ void NodeThread::run() {
 		return;
 	}
 
-	qDebug() << "NodeThread: Node.js environment initialized, starting message loop";
+	// qDebug() << "NodeThread: Node.js environment initialized, starting message loop";
 	processMessages();
 
 	// Cleanup when thread exits
@@ -103,7 +103,7 @@ void NodeThread::run() {
 		tornDown = true;
 	}
 
-	qDebug() << "NodeThread: Thread cleanup completed";
+	// qDebug() << "NodeThread: Thread cleanup completed";
 }
 
 bool NodeThread::initializeNodeEnvironment() {
@@ -162,7 +162,7 @@ bool NodeThread::loadJSEntryPoint() {
 	v8::HandleScope handle_scope(m_isolate);
 	v8::Context::Scope context_scope(m_setup->context());
 
-	// Load bundle file directly 
+	// Load bundle file directly
 	QString bundlePath = "../../src/js/dist/bundle.cjs";
 	QFile bundleFile(bundlePath);
 	if (!bundleFile.exists()) {
@@ -183,7 +183,7 @@ bool NodeThread::loadJSEntryPoint() {
 		return false;
 	}
 
-	qDebug() << "NodeThread: Loading CommonJS bundle with Node.js integration";
+	// qDebug() << "NodeThread: Loading CommonJS bundle with Node.js integration";
 
 	// Load environment and execute CommonJS bundle with proper context
 	auto loadenv_ret = node::LoadEnvironment(m_env, [&](const node::StartExecutionCallbackInfo &info) -> v8::MaybeLocal<v8::Value> {
@@ -193,10 +193,10 @@ bool NodeThread::loadJSEntryPoint() {
 
 		// Wrap the CommonJS module code in a function
 		QString wrappedCode = QString("(function(exports, require, module, __filename, __dirname) {\n%1\n});").arg(bundleCode);
-		
+
 		v8::Local<v8::String> source = v8::String::NewFromUtf8(isolate, wrappedCode.toStdString().c_str()).ToLocalChecked();
 		v8::Local<v8::String> filename = v8::String::NewFromUtf8(isolate, "bundle.cjs").ToLocalChecked();
-		
+
 		v8::ScriptOrigin origin(isolate, filename);
 		v8::Local<v8::Script> script;
 		if (!v8::Script::Compile(context, source, &origin).ToLocal(&script)) {
@@ -221,7 +221,7 @@ bool NodeThread::loadJSEntryPoint() {
 		v8::Local<v8::Object> exports = v8::Object::New(isolate);
 		v8::Local<v8::Object> module = v8::Object::New(isolate);
 		module->Set(context, v8::String::NewFromUtf8(isolate, "exports").ToLocalChecked(), exports).Check();
-		
+
 		// Create a require wrapper that handles both node: prefixes and legacy names
 		v8::Local<v8::String> requireWrapperCode = v8::String::NewFromUtf8(isolate, R"(
 			(function(nativeRequire) {
@@ -234,20 +234,21 @@ bool NodeThread::loadJSEntryPoint() {
 					return nativeRequire(id);
 				};
 			})
-		)").ToLocalChecked();
-		
+		)")
+													   .ToLocalChecked();
+
 		v8::Local<v8::Script> wrapperScript;
 		if (!v8::Script::Compile(context, requireWrapperCode).ToLocal(&wrapperScript)) {
 			qCritical() << "NodeThread: Failed to compile require wrapper";
 			return v8::MaybeLocal<v8::Value>();
 		}
-		
+
 		v8::Local<v8::Value> wrapperFactory;
 		if (!wrapperScript->Run(context).ToLocal(&wrapperFactory)) {
 			qCritical() << "NodeThread: Failed to execute require wrapper factory";
 			return v8::MaybeLocal<v8::Value>();
 		}
-		
+
 		// Create wrapped require
 		v8::Local<v8::Function> wrapperFactoryFunc = wrapperFactory.As<v8::Function>();
 		v8::Local<v8::Value> factoryArgs[] = {info.native_require};
@@ -256,16 +257,16 @@ bool NodeThread::loadJSEntryPoint() {
 			qCritical() << "NodeThread: Failed to create wrapped require function";
 			return v8::MaybeLocal<v8::Value>();
 		}
-		
+
 		v8::Local<v8::Function> require = wrappedRequireValue.As<v8::Function>();
-		qDebug() << "NodeThread: Created require wrapper to handle node: prefixes";
+		// qDebug() << "NodeThread: Created require wrapper to handle node: prefixes";
 		v8::Local<v8::String> filenameStr = v8::String::NewFromUtf8(isolate, bundlePath.toStdString().c_str()).ToLocalChecked();
 		v8::Local<v8::String> dirnameStr = v8::String::NewFromUtf8(isolate, ".").ToLocalChecked();
 
 		// Call the module function with CommonJS parameters
 		v8::Local<v8::Function> moduleFunc = moduleFunction.As<v8::Function>();
 		v8::Local<v8::Value> args[] = {exports, require, module, filenameStr, dirnameStr};
-		
+
 		v8::Local<v8::Value> result;
 		if (!moduleFunc->Call(context, context->Global(), 5, args).ToLocal(&result)) {
 			if (try_catch.HasCaught()) {
@@ -275,7 +276,7 @@ bool NodeThread::loadJSEntryPoint() {
 			return v8::MaybeLocal<v8::Value>();
 		}
 
-		qDebug() << "NodeThread: CommonJS bundle executed successfully";
+		// qDebug() << "NodeThread: CommonJS bundle executed successfully";
 		return result;
 	});
 
@@ -292,16 +293,16 @@ bool NodeThread::loadJSEntryPoint() {
 	if (!context->Global()->Get(context, handleMessageName).ToLocal(&handleMessageValue) || !handleMessageValue->IsFunction()) {
 		qCritical() << "NodeThread: globalThis.handleMessage not found or not a function";
 		qCritical() << "NodeThread: Make sure your bundle exports: globalThis.handleMessage = async (msg) => { ... }";
-		
+
 		// List available globals for debugging
 		v8::Local<v8::Array> propertyNames;
 		if (context->Global()->GetPropertyNames(context).ToLocal(&propertyNames)) {
-			qDebug() << "NodeThread: Available global properties:";
+			// qDebug() << "NodeThread: Available global properties:";
 			for (uint32_t i = 0; i < propertyNames->Length(); i++) {
 				v8::Local<v8::Value> propertyName;
 				if (propertyNames->Get(context, i).ToLocal(&propertyName)) {
 					v8::String::Utf8Value utf8(m_isolate, propertyName);
-					qDebug() << "  -" << *utf8;
+					// qDebug() << "  -" << *utf8;
 				}
 			}
 		}
@@ -320,95 +321,93 @@ bool NodeThread::loadJSEntryPoint() {
 		return false;
 	}
 
-	qDebug() << "NodeThread: JavaScript environment loaded successfully via native require()";
+	// qDebug() << "NodeThread: JavaScript environment loaded successfully via native require()";
 	return true;
 }
 
 void NodeThread::processMessages() {
-    qDebug() << "NodeThread: Starting non-blocking pump for Node/Qt integration";
+	// qDebug() << "NodeThread: Starting non-blocking pump for Node/Qt integration";
 
-    while (m_running) {
-        bool didWork = false;
+	while (m_running) {
+		bool didWork = false;
 
-        // 0) Pull exactly one message if present (don’t hold the lock while executing JS)
-        {
-            QMutexLocker locker(&m_messageMutex);
-            if (!m_messageQueue.isEmpty()) {
-                NodeMessage message = m_messageQueue.dequeue();
-                locker.unlock();
-                handleNodeMessage(message);
-                didWork = true;
-            }
-        }
+		// 0) Pull exactly one message if present (don’t hold the lock while executing JS)
+		{
+			QMutexLocker locker(&m_messageMutex);
+			if (!m_messageQueue.isEmpty()) {
+				NodeMessage message = m_messageQueue.dequeue();
+				locker.unlock();
+				handleNodeMessage(message);
+				didWork = true;
+			}
+		}
 
-        // 1..4) Pump Node/V8 once (non-blocking) and note if anything progressed
-        didWork = pumpNodeOnce() || didWork;
+		// 1..4) Pump Node/V8 once (non-blocking) and note if anything progressed
+		didWork = pumpNodeOnce() || didWork;
 
-        // If nothing happened, sleep or wait on the condition to avoid busy spin
-        if (!didWork) {
-            // Wait until we either get a message, or a short timeout to pulse the loop.
-            QMutexLocker locker(&m_messageMutex);
-            // Wakeups also come from shutdown() via wakeAll()
-            m_messageCondition.wait(&m_messageMutex, 1 /* ms */);
-        }
-        // If you prefer no condition wait, at least:
-        // else QThread::msleep(0); // yield
-    }
+		// If nothing happened, sleep or wait on the condition to avoid busy spin
+		if (!didWork) {
+			// Wait until we either get a message, or a short timeout to pulse the loop.
+			QMutexLocker locker(&m_messageMutex);
+			// Wakeups also come from shutdown() via wakeAll()
+			m_messageCondition.wait(&m_messageMutex, 1 /* ms */);
+		}
+		// If you prefer no condition wait, at least:
+		// else QThread::msleep(0); // yield
+	}
 }
 
 bool NodeThread::pumpNodeOnce() {
-    if (!m_env || !m_isolate) return false;
+	if (!m_env || !m_isolate) return false;
 
-    bool progressed = false;
+	bool progressed = false;
 
-    v8::Locker lock(m_isolate);
-    v8::Isolate::Scope isolate_scope(m_isolate);
-    v8::HandleScope handle_scope(m_isolate);
-    v8::Context::Scope context_scope(m_setup->context());
+	v8::Locker lock(m_isolate);
+	v8::Isolate::Scope isolate_scope(m_isolate);
+	v8::HandleScope handle_scope(m_isolate);
+	v8::Context::Scope context_scope(m_setup->context());
 
-    // 1) Drain V8 platform (foreground) tasks (timers, immediate work)
-    if (m_platform) {
-        // DrainTasks behavior varies by Node.js version - some return bool, some void
-        m_platform->DrainTasks(m_isolate);
-        progressed = true; // Assume progress was made when we drain tasks
-    } else {
-        // Fallback to manual platform pumping if m_platform is not available
-        // Note: In Node.js 18, platform pumping is typically handled by DrainTasks
-        progressed = true; // Assume progress when fallback is used
-    }
+	// 1) Drain V8 platform (foreground) tasks (timers, immediate work)
+	if (m_platform) {
+		// DrainTasks behavior varies by Node.js version - some return bool, some void
+		m_platform->DrainTasks(m_isolate);
+		progressed = true; // Assume progress was made when we drain tasks
+	} else {
+		// Fallback to manual platform pumping if m_platform is not available
+		// Note: In Node.js 18, platform pumping is typically handled by DrainTasks
+		progressed = true; // Assume progress when fallback is used
+	}
 
-    // 2) Run libuv ready handles without blocking
-    if (uv_loop_t* loop = node::GetCurrentEventLoop(m_isolate)) {
-        int r = uv_run(loop, UV_RUN_NOWAIT);  // >0 if work was done
-        progressed = (r != 0) || progressed;
-    }
+	// 2) Run libuv ready handles without blocking
+	if (uv_loop_t *loop = node::GetCurrentEventLoop(m_isolate)) {
+		int r = uv_run(loop, UV_RUN_NOWAIT); // >0 if work was done
+		progressed = (r != 0) || progressed;
+	}
 
-    // 3) Run pending promise microtasks (continuations)
-    m_isolate->PerformMicrotaskCheckpoint();
+	// 3) Run pending promise microtasks (continuations)
+	m_isolate->PerformMicrotaskCheckpoint();
 
-    // 4) If the loop appears idle, give Node a chance to flush beforeExit
-    bool loop_idle = false;
-    if (uv_loop_t* loop = node::GetCurrentEventLoop(m_isolate)) {
-        loop_idle = !uv_loop_alive(loop);
+	// 4) If the loop appears idle, give Node a chance to flush beforeExit
+	bool loop_idle = false;
+	if (uv_loop_t *loop = node::GetCurrentEventLoop(m_isolate)) {
+		loop_idle = !uv_loop_alive(loop);
+	}
 
-    }
+	if (loop_idle) {
+		// Use the newer Maybe-based EmitProcessBeforeExit for Node.js 18+
+		auto beforeExitResult = node::EmitProcessBeforeExit(m_env);
+		(void)beforeExitResult; // Suppress unused variable warning
 
-    if (loop_idle) {
-        // Use the newer Maybe-based EmitProcessBeforeExit for Node.js 18+
-        auto beforeExitResult = node::EmitProcessBeforeExit(m_env);
-        (void)beforeExitResult; // Suppress unused variable warning
-        
-        // one more quick pass to flush anything scheduled by beforeExit
-        if (uv_loop_t* loop2 = node::GetCurrentEventLoop(m_isolate)) {
-            int r2 = uv_run(loop2, UV_RUN_NOWAIT);
-            progressed = (r2 != 0) || progressed;
-        }
-        m_isolate->PerformMicrotaskCheckpoint();
-    }
+		// one more quick pass to flush anything scheduled by beforeExit
+		if (uv_loop_t *loop2 = node::GetCurrentEventLoop(m_isolate)) {
+			int r2 = uv_run(loop2, UV_RUN_NOWAIT);
+			progressed = (r2 != 0) || progressed;
+		}
+		m_isolate->PerformMicrotaskCheckpoint();
+	}
 
-    return progressed;
+	return progressed;
 }
-
 
 void NodeThread::handleNodeMessage(const NodeMessage &message) {
 	if (!m_env || !m_isolate) {
@@ -416,7 +415,7 @@ void NodeThread::handleNodeMessage(const NodeMessage &message) {
 		return;
 	}
 
-	qDebug() << "NodeThread: Processing message:" << message.action << "with ID:" << message.messageId;
+	// qDebug() << "NodeThread: Processing message:" << message.action << "with ID:" << message.messageId;
 
 	v8::Locker locker(m_isolate);
 	v8::Isolate::Scope isolate_scope(m_isolate);
@@ -477,10 +476,10 @@ void NodeThread::handleNodeMessage(const NodeMessage &message) {
 
 void NodeThread::nativeCallback(const v8::FunctionCallbackInfo<v8::Value> &args) {
 	try {
-		qDebug() << "NodeThread::nativeCallback called with" << args.Length() << "arguments";
+		// qDebug() << "NodeThread::nativeCallback called with" << args.Length() << "arguments";
 
 		if (!s_instance) {
-			qDebug() << "NodeThread::nativeCallback: No instance available";
+			// qDebug() << "NodeThread::nativeCallback: No instance available";
 			return;
 		}
 
@@ -493,7 +492,7 @@ void NodeThread::nativeCallback(const v8::FunctionCallbackInfo<v8::Value> &args)
 			// Get messageId from first argument
 			v8::String::Utf8Value messageIdStr(isolate, args[0]);
 			QString messageId = QString(*messageIdStr);
-			qDebug() << "NodeThread::nativeCallback: Processing callback for messageId:" << messageId;
+			// qDebug() << "NodeThread::nativeCallback: Processing callback for messageId:" << messageId;
 
 			// Find the callback for this message
 			std::function<void(const QJsonObject &)> callback;
@@ -501,7 +500,7 @@ void NodeThread::nativeCallback(const v8::FunctionCallbackInfo<v8::Value> &args)
 				QMutexLocker locker(&s_instance->m_callbackMutex);
 				if (s_instance->m_callbacks.contains(messageId)) {
 					callback = s_instance->m_callbacks.take(messageId);
-					qDebug() << "NodeThread::nativeCallback: Found and removed callback for messageId:" << messageId;
+					// qDebug() << "NodeThread::nativeCallback: Found and removed callback for messageId:" << messageId;
 				} else {
 					qWarning() << "NodeThread: No callback found for messageId:" << messageId;
 					return;
@@ -531,14 +530,14 @@ void NodeThread::nativeCallback(const v8::FunctionCallbackInfo<v8::Value> &args)
 			}
 
 			v8::String::Utf8Value jsonStr(isolate, result);
-			
+
 			// Just parse and pass through - let QML handle the structure
 			QJsonParseError error;
 			QJsonDocument doc = QJsonDocument::fromJson(QByteArray(*jsonStr), &error);
-			
+
 			if (error.error == QJsonParseError::NoError) {
-				qDebug() << "NodeThread::nativeCallback: callback'ing for messageId:" << messageId;
-				// Only pass objects - wrap arrays and other types
+				// qDebug() << "NodeThread::nativeCallback: callback'ing for messageId:" << messageId;
+				//  Only pass objects - wrap arrays and other types
 				if (doc.isObject()) {
 					callback(doc.object());
 				} else {
@@ -553,7 +552,7 @@ void NodeThread::nativeCallback(const v8::FunctionCallbackInfo<v8::Value> &args)
 					}
 					callback(wrapper);
 				}
-				qDebug() << "NodeThread::nativeCallback: Callback executed successfully for messageId:" << messageId;
+				// qDebug() << "NodeThread::nativeCallback: Callback executed successfully for messageId:" << messageId;
 			} else {
 				qWarning() << "NodeThread::nativeCallback: Failed to parse JSON for messageId:" << messageId << "Error:" << error.errorString();
 				qWarning() << "NodeThread::nativeCallback: Raw JSON string:" << QString(*jsonStr);
@@ -567,7 +566,7 @@ void NodeThread::nativeCallback(const v8::FunctionCallbackInfo<v8::Value> &args)
 				qWarning() << "NodeThread::nativeCallback: Second arg is object:" << args[1]->IsObject();
 			}
 		}
-	} catch (const std::exception& e) {
+	} catch (const std::exception &e) {
 		qCritical() << "NodeThread::nativeCallback: Exception caught:" << e.what();
 	} catch (...) {
 		qCritical() << "NodeThread::nativeCallback: Unknown exception caught";

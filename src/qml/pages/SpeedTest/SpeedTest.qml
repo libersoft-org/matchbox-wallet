@@ -73,7 +73,23 @@ Item {
 		var xhr = new XMLHttpRequest();
 		xhr.timeout = 5000;
 		xhr.responseType = 'arraybuffer';
+		
+		// Timer to force finish after 5 seconds
+		var forceFinishTimer = Qt.createQmlObject(
+			'import QtQuick 2.15; Timer { interval: 5000; running: true; repeat: false }',
+			root, "forceFinishTimer"
+		);
+		forceFinishTimer.triggered.connect(function() {
+			if (!testCompleted) {
+				console.log('Download test forced to finish after 5 seconds');
+				// Don't abort - just mark as completed and let it finish naturally
+				finishDownloadTest();
+			}
+		});
+		
 		xhr.onprogress = function (event) {
+			if (testCompleted) return;
+			
 			if (event.lengthComputable) {
 				totalBytes = event.loaded;
 				var currentTime = Date.now();
@@ -83,6 +99,13 @@ Item {
 					var speedBps = totalBytes / duration;
 					var speedMbps = (speedBps * 8) / (1024 * 1024);
 					downloadSpeedText = formatSpeed(speedMbps) + ' (' + Math.round(totalBytes / 1024) + ' kB)';
+					
+					// If we have enough data and time, finish early
+					if (duration >= 3.0 && totalBytes > 1024 * 1024) { // 3+ seconds and 1+ MB
+						console.log('Download test finishing early - enough data collected');
+						finishDownloadTest();
+						return;
+					}
 				}
 			}
 		};
@@ -91,11 +114,28 @@ Item {
 			if (testCompleted)
 				return;
 			testCompleted = true;
+			
+			// Calculate final result if we have data
+			if (totalBytes > 1000) { // At least 1KB downloaded
+				var endTime = Date.now();
+				var duration = (endTime - startTime) / 1000;
+				if (duration > 0.2) { // At least 0.2s duration
+					var speedBps = totalBytes / duration;
+					var speedMbps = (speedBps * 8) / (1024 * 1024);
+					downloadSpeed = speedMbps;
+					downloadSpeedText = formatSpeed(speedMbps);
+					console.log('Download speed (final):', speedMbps.toFixed(2) + ' Mbps');
+				}
+			}
+			
+			forceFinishTimer.destroy();
 			testUpload();
 		}
 
 		xhr.onreadystatechange = function () {
 			if (xhr.readyState === XMLHttpRequest.DONE) {
+				if (testCompleted) return; // Already handled by force finish
+				
 				var endTime = Date.now();
 				var duration = (endTime - startTime) / 1000;
 				var responseSize = 0;
@@ -105,14 +145,23 @@ Item {
 					responseSize = xhr.responseText.length;
 				else if (totalBytes > 0)
 					responseSize = totalBytes;
-				console.log('Download test completed. Status:', xhr.status, 'Bytes:', responseSize, 'Duration:', duration + 's');
+				
+				console.log('Download test completed naturally. Status:', xhr.status, 'Bytes:', responseSize, 'Duration:', duration + 's');
+				
 				if (xhr.status === 200 && responseSize > 1000 && duration > 0.2) {
-					// At least 1KB and 0.2s
+					// Natural completion with good data
 					var speedBps = responseSize / duration;
 					var speedMbps = (speedBps * 8) / (1024 * 1024);
 					downloadSpeed = speedMbps;
 					downloadSpeedText = formatSpeed(speedMbps);
 					console.log('Download speed:', speedMbps.toFixed(2) + ' Mbps');
+				} else if (responseSize > 1000 && duration > 0.2) {
+					// Had good data but bad status (e.g., aborted)
+					var speedBps = responseSize / duration;
+					var speedMbps = (speedBps * 8) / (1024 * 1024);
+					downloadSpeed = speedMbps;
+					downloadSpeedText = formatSpeed(speedMbps);
+					console.log('Download speed (despite bad status):', speedMbps.toFixed(2) + ' Mbps');
 				} else {
 					downloadSpeedText = tr('common.error') + ': ' + xhr.status + ' (' + responseSize + ' B)';
 					console.log('Download test failed - too small or too fast');
@@ -121,11 +170,13 @@ Item {
 			}
 		};
 		xhr.onerror = function () {
+			if (testCompleted) return; // Already handled
 			downloadSpeedText = tr('menu.speedtest.network_error');
 			console.log('Download test network error');
 			finishDownloadTest();
 		};
 		xhr.ontimeout = function () {
+			if (testCompleted) return; // Already handled
 			downloadSpeedText = tr('menu.speedtest.timeout');
 			console.log('Download test timeout');
 			finishDownloadTest();

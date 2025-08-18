@@ -9,28 +9,28 @@
 NodeJS::NodeJS(QObject *parent) : QObject(parent), m_initState(InitState::NotInitialized) {}
 
 NodeJS::~NodeJS() {
- shutdown();
+	shutdown();
 }
 
 bool NodeJS::initialize() {
- {
+	{
 		QMutexLocker locker(&m_initMutex);
 		if (m_initState == InitState::Initialized) {
-			qDebug() << "Node.js already initialized";
+			//() << "Node.js already initialized";
 			return true;
 		}
 		if (m_initState == InitState::Initializing) {
-			qDebug() << "Node.js initialization already in progress";
+			// qDebug() << "Node.js initialization already in progress";
 			return false;
 		}
 		m_initState = InitState::Initializing;
- }
+	}
 
- qDebug() << "NodeJS: Initializing with NodeThread";
+	// qDebug() << "NodeJS: Initializing with NodeThread";
 
- m_nodeThread = std::make_unique<NodeThread>(this);
+	m_nodeThread = std::make_unique<NodeThread>(this);
 
- connect(m_nodeThread.get(), &NodeThread::initializationFailed, this, [this](const QString &error) {
+	connect(m_nodeThread.get(), &NodeThread::initializationFailed, this, [this](const QString &error) {
 		qCritical() << "Critical Node.js failure:" << error;
 
 		// Update state and wake up waiting threads
@@ -41,9 +41,9 @@ bool NodeJS::initialize() {
 		}
 
 		QCoreApplication::exit(1);
- });
+	});
 
- if (!m_nodeThread->initialize()) {
+	if (!m_nodeThread->initialize()) {
 		qWarning() << "NodeJS: Failed to initialize NodeThread";
 
 		// Update state and wake up waiting threads
@@ -54,50 +54,50 @@ bool NodeJS::initialize() {
 		}
 
 		return false;
- }
+	}
 
- // Initialization successful
- {
+	// Initialization successful
+	{
 		QMutexLocker locker(&m_initMutex);
 		m_initState = InitState::Initialized;
 		m_initCondition.wakeAll();
- }
+	}
 
- qDebug() << "NodeJS: Initialization completed successfully";
- return true;
+	// qDebug() << "NodeJS: Initialization completed successfully";
+	return true;
 }
 
 void NodeJS::shutdown() {
- {
+	{
 		QMutexLocker locker(&m_initMutex);
 		if (m_initState != InitState::Initialized) {
 			return;
 		}
- }
+	}
 
- qDebug() << "NodeJS: Shutting down";
+	//	qDebug() << "NodeJS: Shutting down";
 
- if (m_nodeThread) {
+	if (m_nodeThread) {
 		m_nodeThread->shutdown();
 		m_nodeThread.reset();
- }
+	}
 
- {
+	{
 		QMutexLocker locker(&m_initMutex);
 		m_initState = InitState::NotInitialized;
- }
+	}
 
- qDebug() << "NodeJS: Shutdown completed";
+	// qDebug() << "NodeJS: Shutdown completed";
 }
 
 void NodeJS::msg(const QString &name, const QJsonObject &params, std::function<void(const QJsonObject &)> callback) {
- //qDebug() << "NodeJS::msg() called with action:" << name;
+	// qDebug() << "NodeJS::msg() called with action:" << name;
 
- // Wait for initialization to complete or fail
- {
+	// Wait for initialization to complete or fail
+	{
 		QMutexLocker locker(&m_initMutex);
 		while (m_initState == InitState::NotInitialized || m_initState == InitState::Initializing) {
-			qDebug() << "NodeJS::msg() waiting for initialization to complete...";
+			// qDebug() << "NodeJS::msg() waiting for initialization to complete...";
 			m_initCondition.wait(&m_initMutex);
 		}
 
@@ -106,49 +106,47 @@ void NodeJS::msg(const QString &name, const QJsonObject &params, std::function<v
 			callback(QJsonObject{{"status", "error"}, {"message", "Node.js initialization failed"}});
 			return;
 		}
- }
+	}
 
- if (!m_nodeThread) {
+	if (!m_nodeThread) {
 		qWarning() << "NodeJS: NodeThread is null after initialization";
 		callback(QJsonObject{{"status", "error"}, {"message", "Node.js thread unavailable"}});
 		return;
- }
+	}
 
- m_nodeThread->sendMessage(name, params, callback);
+	m_nodeThread->sendMessage(name, params, callback);
 }
 
 void NodeJS::msg(const QString &name, const QJsonObject &params, const QJSValue &callback) {
- if (callback.isCallable()) {
-		qDebug() << "NodeJS::msg creating callback wrapper for action:" << name;
+	if (callback.isCallable()) {
+		// qDebug() << "NodeJS::msg creating callback wrapper for action:" << name;
 
 		msg(name, params, [this, callback, name](const QJsonObject &result) mutable {
-
-			qDebug() << "NodeJS::msg callback triggered for action:" << name;
+			// qDebug() << "NodeJS::msg callback triggered for action:" << name;
 			QJsonDocument doc(result);
 			QString jsonString = doc.toJson(QJsonDocument::Compact);
 
-
-			qDebug() << "NodeJS::msg marshalling JS callback to main thread with JSON:" << jsonString;
+			// qDebug() << "NodeJS::msg marshalling JS callback to main thread with JSON:" << jsonString;
 
 			// Marshal the callback execution to the main thread
-			QMetaObject::invokeMethod(this, [callback, jsonString, name]() mutable {
-				qDebug() << "NodeJS::msg executing JS callback on main thread for action:" << name;
-				QJSValue callResult = callback.call({QJSValue(jsonString)});
-				if (callResult.isError()) {
-					qWarning() << "JavaScript callback error:" << callResult.toString();
-				} else {
-					qDebug() << "NodeJS::msg JS callback executed successfully";
-				}
-			}, Qt::QueuedConnection);
-
+			QMetaObject::invokeMethod(
+				this,
+				[callback, jsonString, name]() mutable {
+					// qDebug() << "NodeJS::msg executing JS callback on main thread for action:" << name;
+					QJSValue callResult = callback.call({QJSValue(jsonString)});
+					if (callResult.isError()) {
+						qWarning() << "JavaScript callback error:" << callResult.toString();
+					} // else qDebug() << "NodeJS::msg JS callback executed successfully";
+				},
+				Qt::QueuedConnection);
 		});
- } else {
+	} else {
 		msg(name, params);
- }
+	}
 }
 
 void NodeJS::msg(const QString &name, const QJsonObject &params) {
- msg(name, params, [this](const QJsonObject &result) { emit messageResponse(result); });
+	msg(name, params, [this](const QJsonObject &result) { emit messageResponse(result); });
 }
 
 #endif // ENABLE_NODEJS

@@ -133,28 +133,26 @@ class WifiManager {
 
 	// Ensure WiFi is initialized before any operation
 	async ensureWifiInit() {
-		console.log('ensureWifiInit called at', new Date().toISOString());
-		console.log('Current state - wifiInitialized:', this.wifiInitialized, 'wifiInitializing:', this.wifiInitializing);
-
+		//console.log('ensureWifiInit called at', new Date().toISOString());
+		//console.log('Current state - wifiInitialized:', this.wifiInitialized, 'wifiInitializing:', this.wifiInitializing);
 		if (!this.wifiInitialized && !this.wifiInitializing) {
-			console.log('WiFi not initialized, starting initialization...');
+			//console.log('WiFi not initialized, starting initialization...');
 			await this.initializeWifi();
 		}
-
 		// Wait for initialization to complete
 		let waitCount = 0;
 		while (this.wifiInitializing) {
 			waitCount++;
-			console.log(`Waiting for WiFi initialization to complete... (attempt ${waitCount})`);
+			//console.log(`Waiting for WiFi initialization to complete... (attempt ${waitCount})`);
 			await new Promise((resolve) => setTimeout(resolve, 100));
-			if (waitCount > 50) { // Safety check - max 5 seconds wait
+			if (waitCount > 50) {
+				// Safety check - max 5 seconds wait
 				console.error('WiFi initialization timeout - breaking out of wait loop');
 				this.wifiInitializing = false;
 				break;
 			}
 		}
-
-		console.log('WiFi initialization check complete, final state - wifiInitialized:', this.wifiInitialized, 'wifiInitializing:', this.wifiInitializing);
+		//console.log('WiFi initialization check complete, final state - wifiInitialized:', this.wifiInitialized, 'wifiInitializing:', this.wifiInitializing);
 	}
 
 	// Helper function to convert signal quality to bars (1-4)
@@ -383,16 +381,15 @@ class WifiManager {
 	}
 
 	async getConnectionStatus() {
-		console.log('getConnectionStatus called at', new Date().toISOString());
+		//console.log('getConnectionStatus called at', new Date().toISOString());
 		try {
-			console.log('About to call ensureWifiInit from getConnectionStatus...');
+			//console.log('About to call ensureWifiInit from getConnectionStatus...');
 			await this.ensureWifiInit();
-			console.log('ensureWifiInit completed in getConnectionStatus');
-
-			console.log('About to call wifi.getCurrentConnections...');
+			//console.log('ensureWifiInit completed in getConnectionStatus');
+			//console.log('About to call wifi.getCurrentConnections...');
 			const currentConnections = await wifi.getCurrentConnections();
-			console.log('wifi.getCurrentConnections returned:', currentConnections);
-
+			//console.log('wifi.getCurrentConnections returned:', currentConnections);
+			console.log('Updating WiFi connection status');
 			if (currentConnections && currentConnections.length > 0) {
 				const connection = currentConnections[0];
 				return {
@@ -434,12 +431,12 @@ class WifiManager {
 	}
 
 	async getCurrentStrength() {
-		console.log('getCurrentStrength called at', new Date().toISOString());
-		console.log('wifiInitialized:', this.wifiInitialized, 'wifiInitializing:', this.wifiInitializing);
+		//console.log('getCurrentStrength called at', new Date().toISOString());
+		//console.log('wifiInitialized:', this.wifiInitialized, 'wifiInitializing:', this.wifiInitializing);
 		try {
-			console.log('About to call getConnectionStatus...')
+			//console.log('About to call getConnectionStatus...');
 			const status = await this.getConnectionStatus();
-			console.log('getConnectionStatus returned:', JSON.stringify(status));
+			//console.log('getConnectionStatus returned:', JSON.stringify(status));
 			if (status.status === 'success' && status.data.connected) {
 				const result = {
 					status: 'success',
@@ -448,7 +445,7 @@ class WifiManager {
 						quality: status.data.quality,
 					},
 				};
-				console.log('getCurrentStrength returning connected result:', result);
+				//console.log('getCurrentStrength returning connected result:', result);
 				return result;
 			} else {
 				const result = {
@@ -458,7 +455,7 @@ class WifiManager {
 						quality: 0,
 					},
 				};
-				console.log('getCurrentStrength returning disconnected result:', result);
+				//console.log('getCurrentStrength returning disconnected result:', result);
 				return result;
 			}
 		} catch (error) {
@@ -471,7 +468,7 @@ class WifiManager {
 					quality: 0,
 				},
 			};
-			console.log('getCurrentStrength returning error result:', result);
+			//console.log('getCurrentStrength returning error result:', result);
 			return result;
 		}
 	}
