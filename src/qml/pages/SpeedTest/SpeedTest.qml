@@ -4,11 +4,9 @@ import QtQuick.Layouts 1.15
 import QtQuick.Controls.Material
 import "../../components"
 
-BaseMenu {
+Item {
 	id: root
-	title: tr('menu.speedtest.title')
-	property bool showBackButton: true
-
+	property string title: tr('menu.speedtest.title')
 	property bool testRunning: false
 	property string currentStatus: ''
 	property real downloadSpeed: 0
@@ -219,14 +217,13 @@ BaseMenu {
 
 	Column {
 		anchors.fill: parent
-		anchors.margins: 20
-		spacing: 20
+		anchors.margins: window.width * 0.05
+		spacing: window.width * 0.03
 
 		// Status
 		Frame {
 			width: parent.width
-			height: window.width * 0.1
-			borderRadius: window.width * 0.02
+			height: statusLabel.implicitHeight + (window.width * 0.03)
 
 			Text {
 				id: statusLabel
@@ -239,27 +236,55 @@ BaseMenu {
 			}
 		}
 
+		// Ping latency (spans both columns)
+		Frame {
+			width: parent.width
+			height: pingColumn.implicitHeight + (window.width * 0.03)
+
+			Column {
+				id: pingColumn
+				anchors.centerIn: parent
+				spacing: window.width * 0.01
+
+				Text {
+					anchors.horizontalCenter: parent.horizontalCenter
+					text: tr('menu.speedtest.ping')
+					font.pixelSize: window.width * 0.04
+					font.bold: true
+					color: colors.primaryForeground
+				}
+
+				Text {
+					anchors.horizontalCenter: parent.horizontalCenter
+					text: pingLatencyText
+					font.pixelSize: window.width * 0.06
+					font.bold: true
+					color: colors.primaryForeground
+				}
+			}
+		}
+
 		// Results grid
 		GridLayout {
 			width: parent.width
 			columns: 2
-			rowSpacing: 15
-			columnSpacing: 15
+			rowSpacing: window.width * 0.03
+			columnSpacing: window.width * 0.03
 
 			// Download speed
 			Frame {
 				Layout.fillWidth: true
-				Layout.preferredHeight: downloadColumn.height + 20
+				Layout.preferredHeight: downloadColumn.implicitHeight + (window.width * 0.03)
 
 				Column {
 					id: downloadColumn
 					anchors.centerIn: parent
-					spacing: window.width * 0.02
+					spacing: window.width * 0.01
 
 					Text {
 						anchors.horizontalCenter: parent.horizontalCenter
 						text: tr('menu.speedtest.download')
-						font.pixelSize: window.width * 0.02
+						font.pixelSize: window.width * 0.04
 						font.bold: true
 						color: colors.primaryForeground
 					}
@@ -267,7 +292,7 @@ BaseMenu {
 					Text {
 						anchors.horizontalCenter: parent.horizontalCenter
 						text: downloadSpeedText
-						font.pixelSize: window.width * 0.04
+						font.pixelSize: window.width * 0.06
 						font.bold: true
 						color: colors.primaryForeground
 					}
@@ -277,52 +302,25 @@ BaseMenu {
 			// Upload speed
 			Frame {
 				Layout.fillWidth: true
-				Layout.preferredHeight: uploadColumn.height + 20
+				Layout.preferredHeight: uploadColumn.implicitHeight + (window.width * 0.03)
 
 				Column {
 					id: uploadColumn
 					anchors.centerIn: parent
-					spacing: 8
+					spacing: window.width * 0.01
 
 					Text {
 						anchors.horizontalCenter: parent.horizontalCenter
-						text: 'Upload'
-						font.pixelSize: 12
+						text: tr('menu.speedtest.upload')
+						font.pixelSize: window.width * 0.04
+						font.bold: true
 						color: colors.primaryForeground
 					}
 
 					Text {
 						anchors.horizontalCenter: parent.horizontalCenter
 						text: uploadSpeedText
-						font.pixelSize: 24
-						font.bold: true
-						color: colors.primaryForeground
-					}
-				}
-			}
-
-			// Ping latency (spans both columns)
-			Frame {
-				Layout.fillWidth: true
-				Layout.columnSpan: 2
-				Layout.preferredHeight: pingColumn.height + 20
-
-				Column {
-					id: pingColumn
-					anchors.centerIn: parent
-					spacing: 8
-
-					Text {
-						anchors.horizontalCenter: parent.horizontalCenter
-						text: 'Ping'
-						font.pixelSize: 12
-						color: colors.primaryForeground
-					}
-
-					Text {
-						anchors.horizontalCenter: parent.horizontalCenter
-						text: pingLatencyText
-						font.pixelSize: 24
+						font.pixelSize: window.width * 0.06
 						font.bold: true
 						color: colors.primaryForeground
 					}

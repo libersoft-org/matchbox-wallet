@@ -4,7 +4,7 @@ import "../static"
 Rectangle {
 	id: root
 	property alias contentItem: contentContainer
-	property real borderRadius: height / 3
+	property real borderRadius: window.width * 0.03
 	property color backgroundColor: "transparent"
 	property color borderColor: colors.primaryForeground
 	property real borderWidth: window.width * 0.005
