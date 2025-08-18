@@ -22,6 +22,8 @@ import SystemManager from './system.js';
 import FirewallManager from './firewall.js';
 // @ts-ignore
 import CryptoManager from './crypto0.js';
+// @ts-ignore
+import SpeedTestManager from './speedtest.js';
 
 interface Message {
 	messageId: string;
@@ -49,6 +51,7 @@ const testManager = new TestManager();
 const systemManager = new SystemManager();
 const firewallManager = new FirewallManager();
 const cryptoManager = new CryptoManager();
+const speedTestManager = new SpeedTestManager();
 
 const HANDLERS: { [key: string]: (params?: any) => any } = {
 	popEvents: () => popEvents(),
@@ -112,6 +115,9 @@ const HANDLERS: { [key: string]: (params?: any) => any } = {
 	cryptoKeccak256: (params) => cryptoManager.keccak256(params),
 	cryptoGetLatestBlock: (params) => cryptoManager.getLatestBlock(params),
 	cryptoGetBalance: (params) => cryptoManager.getBalance(params),
+	speedPing: (params) => speedTestManager.ping(params),
+	speedDownload: (params) => speedTestManager.download(params),
+	speedUpload: (params) => speedTestManager.upload(params),
 };
 
 (global as any).handleMessage = async function (message: Message, callback?: any): Promise<void> {
