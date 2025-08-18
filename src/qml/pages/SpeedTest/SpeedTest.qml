@@ -10,22 +10,22 @@ Item {
 	property string title: tr('menu.speedtest.title')
 	property bool testRunning: false
 	property string currentStatus: ''
-	property real downloadSpeed: 0
-	property real uploadSpeed: 0
-	property real pingLatency: 0
 	property string downloadSpeedText: '---'
 	property string uploadSpeedText: '---'
 	property string pingLatencyText: '---'
-	property int step: 0
-	property bool verbose: true
 
-	function formatSpeed(speed) {
-		if (speed >= 1000)
-			return (speed / 1000).toFixed(1) + ' Gbps';
-		else if (speed >= 1)
-			return speed.toFixed(1) + ' Mbps';
-		else
-			return (speed * 1000).toFixed(0) + ' kbps';
+	function formatSpeed(bytes, seconds) {
+		if (!seconds || seconds <= 0)
+			return '0 bps';
+		let bps = (bytes * 8) / seconds;
+		const units = ['bps', 'kbps', 'Mbps', 'Gbps'];
+		let unitIndex = 0;
+		while (bps >= 1000 && unitIndex < units.length - 1) {
+			bps /= 1000;
+			unitIndex++;
+		}
+		const value = unitIndex === 0 ? Math.round(bps) : bps.toFixed(1);
+		return value + ' ' + units[unitIndex];
 	}
 
 	function formatPing(ping) {
@@ -36,14 +36,11 @@ Item {
 
 	function runPing() {
 		root.currentStatus = tr('menu.speedtest.test_ping');
-		if (verbose)
-			console.log('[SpeedTest] ping start');
+		//console.log('[SpeedTest] ping start');
 		NodeUtils.msg('speedPing', {}, function (res) {
-			if (verbose)
-				console.log('[SpeedTest] ping result', JSON.stringify(res));
+			//console.log('[SpeedTest] ping result', JSON.stringify(res));
 			if (res.status === 'success') {
-				pingLatency = res.latencyMs;
-				pingLatencyText = formatPing(pingLatency);
+				pingLatencyText = formatPing(res.latencyMs);
 			} else {
 				pingLatencyText = tr('common.error');
 			}
@@ -53,19 +50,15 @@ Item {
 
 	function runDownload() {
 		root.currentStatus = tr('menu.speedtest.test_download');
-		if (verbose)
-			console.log('[SpeedTest] download start');
+		console.log('[SpeedTest] download start');
 		NodeUtils.msg('speedDownload', {
 			maxSeconds: 5
 		}, function (res) {
-			if (verbose)
-				console.log('[SpeedTest] download result', JSON.stringify(res));
+			console.log('[SpeedTest] download result', JSON.stringify(res));
 			if (res.status === 'success') {
-				var mbps = res.mbps || 0;
-				downloadSpeed = mbps;
-				downloadSpeedText = formatSpeed(mbps / 1); // already Mbps
+				root.downloadSpeedText = formatSpeed(res.bytes, res.duration);
 			} else {
-				downloadSpeedText = tr('common.error');
+				root.downloadSpeedText = tr('common.error');
 			}
 			runUpload();
 		});
@@ -73,17 +66,13 @@ Item {
 
 	function runUpload() {
 		root.currentStatus = tr('menu.speedtest.test_upload');
-		if (verbose)
-			console.log('[SpeedTest] upload start');
+		//console.log('[SpeedTest] upload start');
 		NodeUtils.msg('speedUpload', {
 			maxSeconds: 5
 		}, function (res) {
-			if (verbose)
-				console.log('[SpeedTest] upload result', JSON.stringify(res));
+			//console.log('[SpeedTest] upload result', JSON.stringify(res));
 			if (res.status === 'success') {
-				var mbps = res.mbps || 0;
-				uploadSpeed = mbps;
-				uploadSpeedText = formatSpeed(mbps / 1);
+				uploadSpeedText = formatSpeed(res.bytes, res.duration);
 			} else {
 				uploadSpeedText = tr('common.error');
 			}
@@ -100,7 +89,6 @@ Item {
 		downloadSpeedText = '---';
 		uploadSpeedText = '---';
 		pingLatencyText = '---';
-
 		runPing();
 	}
 

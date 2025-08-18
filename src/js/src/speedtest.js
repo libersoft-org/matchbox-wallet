@@ -3,7 +3,6 @@ import http from 'http';
 import { performance } from 'perf_hooks';
 import { URL } from 'url';
 
-// Helper to fetch a URL and measure bytes/time with cutoff
 function downloadUrl(url, maxSeconds = 5) {
 	return new Promise((resolve, reject) => {
 		const start = performance.now();
@@ -11,8 +10,6 @@ function downloadUrl(url, maxSeconds = 5) {
 		let finished = false;
 		const u = new URL(url);
 		const lib = u.protocol === 'http:' ? http : https;
-
-		// Force cutoff after maxSeconds
 		const cutoffTimer = setTimeout(() => {
 			if (!finished) {
 				finished = true;
@@ -32,16 +29,13 @@ function downloadUrl(url, maxSeconds = 5) {
 				return reject(new Error('HTTP ' + res.statusCode));
 			}
 			res.on('data', (chunk) => {
-				if (!finished) {
-					bytes += chunk.length;
-				}
+				if (!finished) bytes += chunk.length;
 			});
 			res.on('end', () => {
 				if (!finished) {
 					finished = true;
 					clearTimeout(cutoffTimer);
-					const end = performance.now();
-					const duration = (end - start) / 1000;
+					const duration = (performance.now() - start) / 1000;
 					resolve({ bytes, duration, cut: false });
 				}
 			});
@@ -67,13 +61,12 @@ function downloadUrl(url, maxSeconds = 5) {
 	});
 }
 
-// Upload: send random buffer continuously until cutoff time reached
 function uploadTest(url, totalSizeBytes = Infinity, maxSeconds = 5) {
 	return new Promise((resolve, reject) => {
 		const start = performance.now();
 		let sent = 0;
 		let finished = false;
-		const chunk = Buffer.alloc(256 * 1024, 'x'); // 256KB
+		const chunk = Buffer.alloc(256 * 1024, 'x');
 		const u = new URL(url);
 		const lib = u.protocol === 'http:' ? http : https;
 		const options = {
@@ -84,7 +77,6 @@ function uploadTest(url, totalSizeBytes = Infinity, maxSeconds = 5) {
 			headers: { 'Content-Type': 'application/octet-stream' },
 		};
 
-		// Force cutoff after maxSeconds
 		const cutoffTimer = setTimeout(() => {
 			if (!finished) {
 				finished = true;
@@ -147,22 +139,15 @@ function uploadTest(url, totalSizeBytes = Infinity, maxSeconds = 5) {
 
 class SpeedTestManager {
 	constructor() {
-		// Single large (1 GiB) file; we will abort after cutoff (default 5s)
 		this.downloadUrl = 'https://speed.cloudflare.com/__down?bytes=1073741824';
-		this.uploadTarget = 'https://speed.cloudflare.com/__up'; // may fail; keep placeholder
+		this.uploadTarget = 'https://speed.cloudflare.com/__up';
 	}
 
-	formatMbps(bytes, seconds) {
-		if (!seconds || seconds <= 0) return 0;
-		return (bytes * 8) / (1024 * 1024) / seconds;
-	}
-
-	async ping(params = {}) {
-		const host = params.host || '1.1.1.1';
+	async ping() {
 		const start = performance.now();
 		return new Promise((resolve) => {
 			https
-				.get('https://' + host + '/cdn-cgi/trace?_=' + Date.now(), (res) => {
+				.get('https://1.1.1.1/cdn-cgi/trace?_=' + Date.now(), (res) => {
 					res.resume();
 					res.on('end', () => {
 						const latency = performance.now() - start;
@@ -179,8 +164,7 @@ class SpeedTestManager {
 		const maxSeconds = params.maxSeconds || 5;
 		try {
 			const { bytes, duration, cut } = await downloadUrl(this.downloadUrl, maxSeconds);
-			const mbps = this.formatMbps(bytes, duration);
-			return { status: 'success', url: this.downloadUrl, bytes, duration, mbps, cutoff: cut };
+			return { status: 'success', url: this.downloadUrl, bytes, duration, cutoff: cut };
 		} catch (e) {
 			return { status: 'error', message: e.message };
 		}
@@ -190,18 +174,10 @@ class SpeedTestManager {
 		const maxSeconds = params.maxSeconds || 5;
 		try {
 			const { bytes, duration, cut } = await uploadTest(this.uploadTarget, Infinity, maxSeconds);
-			const mbps = this.formatMbps(bytes, duration);
-			return { status: 'success', bytes, duration, mbps, cutoff: cut };
+			return { status: 'success', bytes, duration, cutoff: cut };
 		} catch (e) {
 			return { status: 'error', message: e.message };
 		}
-	}
-
-	async full(params = {}) {
-		const ping = await this.ping(params);
-		const download = await this.download(params);
-		const upload = await this.upload(params);
-		return { status: 'success', ping, download, upload };
 	}
 }
 
