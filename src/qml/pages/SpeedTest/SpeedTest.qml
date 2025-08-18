@@ -20,8 +20,8 @@ Item {
 		let bps = (bytes * 8) / seconds;
 		const units = ['bps', 'kbps', 'Mbps', 'Gbps'];
 		let unitIndex = 0;
-		while (bps >= 1000 && unitIndex < units.length - 1) {
-			bps /= 1000;
+		while (bps >= 1024 && unitIndex < units.length - 1) {
+			bps /= 1024;
 			unitIndex++;
 		}
 		const value = unitIndex === 0 ? Math.round(bps) : bps.toFixed(1);
