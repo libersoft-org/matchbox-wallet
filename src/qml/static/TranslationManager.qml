@@ -19,40 +19,41 @@ QtObject {
 		});
 	}
 
+	/*
 	Component.onCompleted: {
-		console.log("TranslationManager singleton initializing...");
-		// Don't load translations immediately - wait for setLanguage call
-		console.log("TranslationManager ready, waiting for language to be set");
+	 console.log("TranslationManager initializing...");
+ 	console.log("TranslationManager ready, waiting for language to be set");
 	}
+ */
 
 	function loadTranslations(language, onSuccess, onError) {
 		var xhr = new XMLHttpRequest();
 		var url = "qrc:/WalletModule/src/qml/lang/" + language + ".json";
-		console.log("Loading translations from:", url);
+		//console.log("Loading translations from:", url);
 		xhr.onreadystatechange = function () {
-			console.log("XHR state changed, readyState:", xhr.readyState, "status:", xhr.status);
+			//console.log("XHR state changed, readyState:", xhr.readyState, "status:", xhr.status);
 			if (xhr.readyState === XMLHttpRequest.DONE) {
-				console.log("XHR finished - Status:", xhr.status, "Response length:", xhr.responseText.length);
+				//console.log("XHR finished - Status:", xhr.status, "Response length:", xhr.responseText.length);
 				if (xhr.status >= 200 && xhr.status < 300 || xhr.status === 0) {
 					// status 0 for local files
 					try {
 						var parsed = JSON.parse(xhr.responseText);
-						console.log("JSON parsed successfully, keys:", Object.keys(parsed));
+						//console.log("JSON parsed successfully, keys:", Object.keys(parsed));
 						translations = parsed;
 						console.log("Translations assigned, current keys:", Object.keys(translations));
 						languageVersion++; // Trigger binding updates
 						languageChanged();
-						console.log("Language loaded:", language);
+						//console.log("Language loaded:", language);
 						if (onSuccess && typeof onSuccess === 'function')
 							onSuccess(translations);
 					} catch (e) {
-						console.log("Error parsing translations:", e);
+						console.error("Error parsing translations:", e);
 						if (onError && typeof onError === 'function')
 							onError("Parse error: " + e.toString());
 					}
 				} else {
 					var errorMsg = "HTTP " + xhr.status + ": " + xhr.statusText;
-					console.log("Error loading translations for", language, ":", errorMsg);
+					console.error("Error loading translations for", language, ":", errorMsg);
 					// Call error callback if provided
 					if (onError && typeof onError === 'function')
 						onError(errorMsg);

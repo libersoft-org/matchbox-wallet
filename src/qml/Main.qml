@@ -117,7 +117,7 @@ ApplicationWindow {
 	Component.onCompleted: {
 		x = (Screen.width - width) / 2;
 		y = (Screen.height - height) / 2;
-		console.log("ApplicationWindow completed");
+		//console.log("ApplicationWindow completed");
 	}
 
 	// Status bar at the very top
