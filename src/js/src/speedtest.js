@@ -2,6 +2,7 @@ import https from 'https';
 import http from 'http';
 import { performance } from 'perf_hooks';
 import { URL } from 'url';
+import { exec } from 'child_process';
 
 function downloadUrl(url, maxSeconds = 5) {
 	return new Promise((resolve, reject) => {
@@ -21,7 +22,6 @@ function downloadUrl(url, maxSeconds = 5) {
 				resolve({ bytes, duration, cut: true });
 			}
 		}, maxSeconds * 1000);
-
 		const req = lib.get(u, (res) => {
 			if (res.statusCode && res.statusCode >= 400) {
 				clearTimeout(cutoffTimer);
@@ -138,33 +138,31 @@ function uploadTest(url, totalSizeBytes = Infinity, maxSeconds = 5) {
 }
 
 class SpeedTestManager {
-	constructor() {
-		this.downloadUrl = 'https://speed.cloudflare.com/__down?bytes=1073741824';
-		this.uploadTarget = 'https://speed.cloudflare.com/__up';
-	}
-
 	async ping() {
-		const start = performance.now();
 		return new Promise((resolve) => {
-			https
-				.get('https://1.1.1.1/cdn-cgi/trace?_=' + Date.now(), (res) => {
-					res.resume();
-					res.on('end', () => {
-						const latency = performance.now() - start;
-						resolve({ status: 'success', latencyMs: latency });
-					});
-				})
-				.on('error', (e) => {
-					resolve({ status: 'error', message: e.message });
-				});
+			const cmd = 'ping -c 1 -W 3000 1.1.1.1';
+			exec(cmd, (error, stdout, stderr) => {
+				if (error) {
+					resolve({ status: 'error', message: error.message });
+					return;
+				}
+				const timeMatch = stdout.match(/time=([0-9.]+)\s*ms/);
+				if (timeMatch) {
+					const latency = parseFloat(timeMatch[1]);
+					resolve({ status: 'success', latencyMs: latency });
+				} else {
+					resolve({ status: 'error', message: 'Could not parse ping output' });
+				}
+			});
 		});
 	}
 
 	async download(params = {}) {
 		const maxSeconds = params.maxSeconds || 5;
 		try {
-			const { bytes, duration, cut } = await downloadUrl(this.downloadUrl, maxSeconds);
-			return { status: 'success', url: this.downloadUrl, bytes, duration, cutoff: cut };
+			const url = 'https://speed.cloudflare.com/__down?bytes=1073741824';
+			const { bytes, duration, cut } = await downloadUrl(url, maxSeconds);
+			return { status: 'success', url, bytes, duration, cutoff: cut };
 		} catch (e) {
 			return { status: 'error', message: e.message };
 		}
@@ -173,7 +171,7 @@ class SpeedTestManager {
 	async upload(params = {}) {
 		const maxSeconds = params.maxSeconds || 5;
 		try {
-			const { bytes, duration, cut } = await uploadTest(this.uploadTarget, Infinity, maxSeconds);
+			const { bytes, duration, cut } = await uploadTest('https://speed.cloudflare.com/__up', Infinity, maxSeconds);
 			return { status: 'success', bytes, duration, cutoff: cut };
 		} catch (e) {
 			return { status: 'error', message: e.message };
