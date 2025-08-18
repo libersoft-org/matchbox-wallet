@@ -132,14 +132,14 @@ BaseMenu {
 			console.log('Download test timeout');
 			finishDownloadTest();
 		};
-		xhr.open('GET', 'https://speed.cloudflare.com/__down?bytes=209715200&_=' + Date.now(), true); // 200MB
+		xhr.open('GET', 'https://speed.cloudflare.com/__down?bytes=10485760&_=' + Date.now(), true); // 10MB
 		xhr.send();
 	}
 
 	function testUpload() {
 		currentStatus = tr('menu.speedtest.test_upload');
 		console.log('Starting upload test...');
-		var testData = new Array(100 * 1024 * 1024).join('x'); // 100MB of 'x' characters for upload test
+		var testData = new Array(10 * 1024 * 1024).join('x'); // 10MB of 'x' characters for upload test
 		console.log('Created test data size:', testData.length, 'bytes');
 		var startTime = Date.now();
 		var xhr = new XMLHttpRequest();
