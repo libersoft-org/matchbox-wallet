@@ -24,7 +24,7 @@ PACKAGES=(
  "libgl1-mesa-dev:arm64"
  "libegl1-mesa-dev:arm64"
  "libgles2-mesa-dev:arm64"
- "pkg-config-aarch64-linux-gnu"
+# "pkg-config-aarch64-linux-gnu"
 )
 
 
