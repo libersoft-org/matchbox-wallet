@@ -54,6 +54,24 @@ jobs:
         deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports noble-security main restricted universe multiverse
         EOF
 
+
+
+
+        sudo tee /etc/apt/sources.list.d/ports-proposed.list >/dev/null <<'EOF'
+        deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports noble-proposed main restricted universe multiverse
+        EOF
+        
+        # 1) Pin proposed low by default, high only for GLib (and optionally Qt deps)
+        sudo tee /etc/apt/preferences.d/ports-proposed-pin >/dev/null <<'EOF'
+        Package: *
+        Pin: release a=noble-proposed
+        Pin-Priority: 100
+        
+        Package: libglib2.0* 
+        Pin: release a=noble-proposed
+        Pin-Priority: 990
+        EOF
+
         # Update indexes (both arches), then install cross toolchains
         sudo apt-get update
         
@@ -68,6 +86,14 @@ jobs:
           g++-aarch64-linux-gnu \
           pkgconf \
           cmake ninja-build
+
+        # 2) Pull the exact GLib arm64 dev bits, then your Qt arm64 devs
+        sudo apt-get install -y \
+          libglib2.0-dev:arm64 libglib2.0-dev-bin:arm64 libglib2.0-dev-bin-linux:arm64
+        
+        sudo apt-get install -y \
+          qt6-base-dev:arm64 qt6-declarative-dev:arm64 qt6-multimedia-dev:arm64 qt6-svg-dev:arm64
+
 
     - name: Make build script executable
       run: chmod +x build-arm64.sh
