@@ -13,7 +13,7 @@ fi
 # Build JavaScript bundle for embedded Node runtime
 if [ -d "src/js" ]; then
  echo "Building JavaScript/TypeScript bundle..."
- (cd src/js && bun install) || {
+ (cd src/js && bun install --frozen-lockfile) || {
   echo "bun install failed in src/js"
   exit 1
  }

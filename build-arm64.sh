@@ -23,7 +23,7 @@ echo "Enabling ARM64 architecture..."
 if ! dpkg --print-foreign-architectures | grep -q arm64; then
  echo "Adding arm64 architecture..."
  dpkg --add-architecture arm64
- apt update
+ sudo apt update
 fi
 for package in "${PACKAGES[@]}"; do
 	if ! is_installed "$package"; then
@@ -34,10 +34,12 @@ done
 
 if [ ${#MISSING_PACKAGES[@]} -gt 0 ]; then
  echo "Installing missing packages: ${MISSING_PACKAGES[*]}"
- apt update && apt install -y "${MISSING_PACKAGES[@]}"
+ sudo apt update && sudo apt install -y "${MISSING_PACKAGES[@]}"
 else
  echo "All dependencies are already installed."
 fi
+
+./build-js.sh
 
 echo "Building the application for ARM64..."
 if [ -d "build" ]; then
