@@ -5,7 +5,9 @@ is_installed() {
  dpkg -l "$1" 2>/dev/null | grep -q "^ii"
 }
 PACKAGES=(
- "cmake" 
+ "cmake"
+ "crossbuild-essential-arm64"
+ "g++-aarch64-linux-gnu"
  "g++-aarch64-linux-gnu"
  "qt6-base-dev:arm64"
  "qt6-declarative-dev:arm64"
