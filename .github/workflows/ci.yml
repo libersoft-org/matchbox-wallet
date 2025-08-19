@@ -60,7 +60,7 @@ jobs:
           crossbuild-essential-arm64 \
           gcc-aarch64-linux-gnu \
           g++-aarch64-linux-gnu \
-          pkgconf
+          pkgconf \
           cmake ninja-build
 
     - name: Make build script executable
