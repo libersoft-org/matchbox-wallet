@@ -18,10 +18,17 @@ if(ENABLE_NODEJS)
 		PATH_SUFFIXES nodejs node
 	)
 
+	# Determine the correct library path suffix based on the target architecture
+	if(CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64")
+		set(LIB_ARCH_SUFFIX "aarch64-linux-gnu")
+	else()
+		set(LIB_ARCH_SUFFIX "x86_64-linux-gnu")
+	endif()
+
 	find_library(NODEJS_LIBRARY 
 		NAMES node libnode
 		HINTS /usr/lib /usr/local/lib /opt/homebrew/lib
-		PATH_SUFFIXES x86_64-linux-gnu
+		PATH_SUFFIXES ${LIB_ARCH_SUFFIX}
 	)
 
 	message(STATUS "Found Node.js headers: ${NODEJS_INCLUDE_DIR}")
@@ -35,25 +42,25 @@ if(ENABLE_NODEJS)
 	find_library(V8_LIBRARY 
 		NAMES v8 libv8
 		HINTS /usr/lib /usr/local/lib /opt/homebrew/lib
-		PATH_SUFFIXES x86_64-linux-gnu
+		PATH_SUFFIXES ${LIB_ARCH_SUFFIX}
 	)
 
 	find_library(V8_LIBBASE_LIBRARY 
 		NAMES v8_libbase libv8_libbase
 		HINTS /usr/lib /usr/local/lib /opt/homebrew/lib
-		PATH_SUFFIXES x86_64-linux-gnu
+		PATH_SUFFIXES ${LIB_ARCH_SUFFIX}
 	)
 
 	find_library(V8_LIBPLATFORM_LIBRARY 
 		NAMES v8_libplatform libv8_libplatform
 		HINTS /usr/lib /usr/local/lib /opt/homebrew/lib
-		PATH_SUFFIXES x86_64-linux-gnu
+		PATH_SUFFIXES ${LIB_ARCH_SUFFIX}
 	)
 
 	find_library(UV_LIBRARY 
 		NAMES uv libuv
 		HINTS /usr/lib /usr/local/lib /opt/homebrew/lib
-		PATH_SUFFIXES x86_64-linux-gnu
+		PATH_SUFFIXES ${LIB_ARCH_SUFFIX}
 	)
 
 	# Define ENABLE_NODEJS macro for C++ code

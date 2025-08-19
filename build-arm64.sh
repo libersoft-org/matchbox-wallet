@@ -13,7 +13,7 @@ is_installed() {
 
 PACKAGES=(
  "cmake"
- "libnode-dev"
+ "libnode-dev:arm64"
  "crossbuild-essential-arm64"
  "g++-aarch64-linux-gnu"
  "qt6-base-dev:arm64"
