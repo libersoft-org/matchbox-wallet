@@ -1,13 +1,16 @@
 #!/bin/bash
 
+set -euo pipefail
+export DEBIAN_FRONTEND=noninteractive
+
 echo "Checking dependencies for ARM64 cross-compilation..."
 is_installed() {
  dpkg -l "$1" 2>/dev/null | grep -q "^ii"
 }
+
 PACKAGES=(
  "cmake"
  "crossbuild-essential-arm64"
- "g++-aarch64-linux-gnu"
  "g++-aarch64-linux-gnu"
  "qt6-base-dev:arm64"
  "qt6-declarative-dev:arm64"
@@ -18,8 +21,10 @@ PACKAGES=(
  "libgl1-mesa-dev:arm64"
  "libegl1-mesa-dev:arm64"
  "libgles2-mesa-dev:arm64"
- "libgl-dev:arm64"
+ "pkg-config-aarch64-linux-gnu"
 )
+
+
 MISSING_PACKAGES=()
 echo "Enabling ARM64 architecture..."
 if ! dpkg --print-foreign-architectures | grep -q arm64; then

@@ -29,26 +29,36 @@ jobs:
     
     - name: Setup ARM64 cross-compilation environment
       run: |
-        # Add arm64 architecture
+        set -euxo pipefail
+
+        # Add arm64 architecture once
         sudo dpkg --add-architecture arm64
-        
-        # Create a proper sources.list for ARM64 packages using ports.ubuntu.com
-        sudo tee /etc/apt/sources.list.d/arm64.list > /dev/null <<EOF
+
+        # Overwrite the default sources to be AMD64-only (host)
+        sudo tee /etc/apt/sources.list > /dev/null <<'EOF'
+        deb [arch=amd64] http://azure.archive.ubuntu.com/ubuntu noble main restricted universe multiverse
+        deb [arch=amd64] http://azure.archive.ubuntu.com/ubuntu noble-updates main restricted universe multiverse
+        deb [arch=amd64] http://azure.archive.ubuntu.com/ubuntu noble-backports main restricted universe multiverse
+        deb [arch=amd64] http://security.ubuntu.com/ubuntu noble-security main restricted universe multiverse
+        EOF
+
+        # Add ARM64 repos from ports.ubuntu.com (including security/updates/backports)
+        sudo tee /etc/apt/sources.list.d/arm64.list > /dev/null <<'EOF'
         deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports noble main restricted universe multiverse
         deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports noble-updates main restricted universe multiverse
         deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports noble-backports main restricted universe multiverse
         deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports noble-security main restricted universe multiverse
         EOF
-        
-        # Update package lists
+
+        # Update indexes (both arches), then install cross toolchains
         sudo apt-get update
-        
-        # Install cross-compilation tools
         sudo apt-get install -y \
           crossbuild-essential-arm64 \
+          gcc-aarch64-linux-gnu \
           g++-aarch64-linux-gnu \
-          gcc-aarch64-linux-gnu
-    
+          pkg-config-aarch64-linux-gnu \
+          cmake ninja-build
+
     - name: Make build script executable
       run: chmod +x build-arm64.sh
     
