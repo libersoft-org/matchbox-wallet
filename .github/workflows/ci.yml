@@ -87,7 +87,13 @@ jobs:
           pkgconf \
           cmake ninja-build
 
-        # 2) Pull the exact GLib arm64 dev bits, then your Qt arm64 devs
+        # 2) Install Python packaging first to resolve dependency chain
+        sudo apt-get install -y python3-packaging
+        
+        # Try installing python3-packaging for arm64 from proposed
+        sudo apt-get install -y -t noble-proposed python3-packaging:arm64 || true
+        
+        # Now install GLib arm64 dev bits
         sudo apt-get install -y \
           libglib2.0-dev:arm64 libglib2.0-dev-bin:arm64 libglib2.0-dev-bin-linux:arm64
         
