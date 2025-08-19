@@ -68,11 +68,6 @@ jobs:
           g++-aarch64-linux-gnu \
           pkgconf \
           cmake ninja-build
-          
-        # Install ARM64 glib development dependencies to fix broken package issues
-        sudo apt-get install -y \
-          libglib2.0-dev-bin:arm64 \
-          libglib2.0-dev-bin-linux:arm64
 
     - name: Make build script executable
       run: chmod +x build-arm64.sh

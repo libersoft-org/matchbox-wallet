@@ -11,44 +11,71 @@ is_installed() {
  dpkg -l "$1" 2>/dev/null | grep -q "^ii"
 }
 
-PACKAGES=(
+# Install ARM64 packages in stages to avoid dependency conflicts
+CORE_PACKAGES=(
  "cmake"
- "libnode-dev:arm64"
  "crossbuild-essential-arm64"
  "g++-aarch64-linux-gnu"
+)
+
+QT_PACKAGES=(
  "qt6-base-dev:arm64"
  "qt6-declarative-dev:arm64"
  "qt6-multimedia-dev:arm64"
  "qt6-svg-dev:arm64"
+)
+
+MEDIA_PACKAGES=(
  "libgstreamer1.0-dev:arm64"
  "libgstreamer-plugins-base1.0-dev:arm64"
  "libgl1-mesa-dev:arm64"
  "libegl1-mesa-dev:arm64"
  "libgles2-mesa-dev:arm64"
-# "pkg-config-aarch64-linux-gnu"
+)
+
+NODE_PACKAGES=(
+ "libnode-dev:arm64"
 )
 
 
-MISSING_PACKAGES=()
 echo "Enabling ARM64 architecture..."
 if ! dpkg --print-foreign-architectures | grep -q arm64; then
  echo "Adding arm64 architecture..."
  sudo dpkg --add-architecture arm64
  sudo apt update
 fi
-for package in "${PACKAGES[@]}"; do
-	if ! is_installed "$package"; then
-		MISSING_PACKAGES+=("$package")
-		echo "Missing: $package"
-	fi
-done
 
-if [ ${#MISSING_PACKAGES[@]} -gt 0 ]; then
- echo "Installing missing packages: ${MISSING_PACKAGES[*]}"
- sudo apt update && sudo apt install -y "${MISSING_PACKAGES[@]}"
-else
- echo "All dependencies are already installed."
-fi
+# Install packages in stages to avoid dependency conflicts
+install_packages() {
+    local package_array=("$@")
+    local missing_packages=()
+    
+    for package in "${package_array[@]}"; do
+        if ! is_installed "$package"; then
+            missing_packages+=("$package")
+            echo "Missing: $package"
+        fi
+    done
+    
+    if [ ${#missing_packages[@]} -gt 0 ]; then
+        echo "Installing missing packages: ${missing_packages[*]}"
+        sudo apt update && sudo apt install -y "${missing_packages[@]}"
+    else
+        echo "All packages in this stage are already installed."
+    fi
+}
+
+echo "Installing core packages..."
+install_packages "${CORE_PACKAGES[@]}"
+
+echo "Installing Qt packages..."
+install_packages "${QT_PACKAGES[@]}"
+
+echo "Installing media packages..."
+install_packages "${MEDIA_PACKAGES[@]}"
+
+echo "Installing Node.js packages..."
+install_packages "${NODE_PACKAGES[@]}"
 
 ./build-js.sh
 
