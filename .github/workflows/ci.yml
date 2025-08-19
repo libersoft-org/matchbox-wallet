@@ -56,6 +56,9 @@ jobs:
 
         # Update indexes (both arches), then install cross toolchains
         sudo apt-get update
+        
+        sudo apt remove firefox snapd apache2 "dotnet*"
+        
         sudo apt-get dist-upgrade -y
         sudo apt-get install -y \
           crossbuild-essential-arm64 \
