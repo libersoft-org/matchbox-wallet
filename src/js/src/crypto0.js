@@ -1,3 +1,5 @@
+// proof of concept of loading nodejs crypto module and ethers.js library in embedded environment
+
 const crypto0 = require('crypto');
 
 // Lazy-load ethers to avoid module loading issues in embedded environment
