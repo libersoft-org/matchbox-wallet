@@ -3,6 +3,9 @@
 set -euo pipefail
 export DEBIAN_FRONTEND=noninteractive
 
+export PKG_CONFIG_LIBDIR=/usr/lib/aarch64-linux-gnu/pkgconfig:/usr/share/pkgconfig
+export PKG_CONFIG=/usr/bin/pkg-config
+
 echo "Checking dependencies for ARM64 cross-compilation..."
 is_installed() {
  dpkg -l "$1" 2>/dev/null | grep -q "^ii"
