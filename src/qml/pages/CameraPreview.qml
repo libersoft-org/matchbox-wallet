@@ -4,8 +4,7 @@ import QtMultimedia 6.0
 Rectangle {
 	id: root
 	property string title: "Camera test"
-
-	color: "black"
+	color: "#000"
 
 	CaptureSession {
 		id: captureSession
