@@ -20,9 +20,9 @@ jobs:
     - name: Run build script
       run: ./build.sh
 
-  build-arm64:
+  build-cross-x86-arm64:
     runs-on: ubuntu-latest
-    name: Build ARM64
+    name: Cross-build x86_64 to ARM64
     
     steps:
     - uses: actions/checkout@v4
@@ -102,7 +102,34 @@ jobs:
 
 
     - name: Make build script executable
-      run: chmod +x build-arm64.sh
+      run: chmod +x build-cross-x86-arm64.sh
     
     - name: Run ARM64 build script
+      run: ./build-cross-x86-arm64.sh
+
+
+
+  build-arm64:
+    runs-on: ubuntu-24.04-arm
+    name: Build ARM64
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup ARM64 cross-compilation environment
+      run: |
+        set -euxo pipefail
+
+        sudo apt-get install -y \
+          gcc-aarch64-linux-gnu \
+          g++-aarch64-linux-gnu \
+          pkgconf \
+          cmake ninja-build
+
+
+    - name: Make build script executable
+      run: chmod +x build-arm64.sh
+
+    - name: Run ARM64 build script
       run: ./build-arm64.sh
+

@@ -14,6 +14,7 @@ is_installed() {
 # Install ARM64 packages in stages to avoid dependency conflicts
 CORE_PACKAGES=(
  "cmake"
+ "crossbuild-essential-arm64"
  "g++-aarch64-linux-gnu"
 )
 
@@ -36,6 +37,13 @@ NODE_PACKAGES=(
  "libnode-dev:arm64"
 )
 
+
+echo "Enabling ARM64 architecture..."
+if ! dpkg --print-foreign-architectures | grep -q arm64; then
+ echo "Adding arm64 architecture..."
+ sudo dpkg --add-architecture arm64
+ sudo apt update
+fi
 
 # Install packages in stages to avoid dependency conflicts
 install_packages() {
@@ -79,7 +87,9 @@ mkdir -p build/linux
 cd build/linux
 
 # Configure with CMake for ARM64 cross-compilation
-cmake .. -DCMAKE_BUILD_TYPE=Release
+cmake ../.. \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_TOOLCHAIN_FILE=../../arm64-toolchain.cmake
 
 if [ $? -ne 0 ]; then
     echo "CMAKE configuration failed!"
@@ -95,7 +105,9 @@ if [ $? -ne 0 ]; then
  exit 1
 fi
 
+echo "ARM64 cross-compilation complete!"
 echo "Binary location: ./build/linux/wallet"
+echo "To run on ARM64 device, copy the binary and install required Qt6 libraries."
 
 # Display binary info
 if [ -f "wallet" ]; then
