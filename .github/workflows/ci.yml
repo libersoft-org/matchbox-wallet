@@ -56,6 +56,7 @@ jobs:
 
         # Update indexes (both arches), then install cross toolchains
         sudo apt-get update
+        sudo apt-get dist-upgrade -y
         sudo apt-get install -y \
           crossbuild-essential-arm64 \
           gcc-aarch64-linux-gnu \
