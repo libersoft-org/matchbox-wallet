@@ -29,16 +29,21 @@ jobs:
     
     - name: Setup ARM64 cross-compilation environment
       run: |
-        # Add arm64 architecture but fix repository sources first
+        # Add arm64 architecture
         sudo dpkg --add-architecture arm64
         
-        # Replace security.ubuntu.com sources with ports.ubuntu.com for arm64
-        sudo sed -i 's|security.ubuntu.com/ubuntu|ports.ubuntu.com/ubuntu-ports|g' /etc/apt/sources.list.d/ubuntu.sources
+        # Create a proper sources.list for ARM64 packages using ports.ubuntu.com
+        sudo tee /etc/apt/sources.list.d/arm64.list > /dev/null <<EOF
+        deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports noble main restricted universe multiverse
+        deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports noble-updates main restricted universe multiverse
+        deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports noble-backports main restricted universe multiverse
+        deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports noble-security main restricted universe multiverse
+        EOF
         
         # Update package lists
         sudo apt-get update
         
-        # Install cross-compilation tools and ARM64 Qt packages
+        # Install cross-compilation tools
         sudo apt-get install -y \
           crossbuild-essential-arm64 \
           g++-aarch64-linux-gnu \
