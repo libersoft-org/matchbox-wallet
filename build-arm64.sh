@@ -79,7 +79,7 @@ mkdir -p build/linux
 cd build/linux
 
 # Configure with CMake for ARM64 cross-compilation
-cmake .. -DCMAKE_BUILD_TYPE=Release
+cmake ../.. -DCMAKE_BUILD_TYPE=Release
 
 if [ $? -ne 0 ]; then
     echo "CMAKE configuration failed!"
