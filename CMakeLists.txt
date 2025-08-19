@@ -11,9 +11,10 @@ find_package(Qt6 QUIET COMPONENTS Multimedia VirtualKeyboard)
 
 # Node.js integration (conditional)
 if(ENABLE_NODEJS)
+
 	find_path(NODEJS_INCLUDE_DIR
 		NAMES node.h
-		HINTS /usr/include/node /usr/local/include/node /opt/homebrew/include/node
+		HINTS /usr/include/node /usr/include/nodejs /usr/local/include/node /opt/homebrew/include/node
 		PATH_SUFFIXES nodejs node
 	)
 
@@ -22,6 +23,14 @@ if(ENABLE_NODEJS)
 		HINTS /usr/lib /usr/local/lib /opt/homebrew/lib
 		PATH_SUFFIXES x86_64-linux-gnu
 	)
+
+	message(STATUS "Found Node.js headers: ${NODEJS_INCLUDE_DIR}")
+	message(STATUS "Found Node.js library: ${NODEJS_LIBRARY}")
+
+	if(NOT NODEJS_INCLUDE_DIR OR NOT NODEJS_LIBRARY)
+		message(FATAL_ERROR "Node.js development files not found. Please install nodejs-dev or libnode-dev package.")
+	endif()
+
 
 	find_library(V8_LIBRARY 
 		NAMES v8 libv8
@@ -47,13 +56,6 @@ if(ENABLE_NODEJS)
 		PATH_SUFFIXES x86_64-linux-gnu
 	)
 
-	if(NOT NODEJS_INCLUDE_DIR OR NOT NODEJS_LIBRARY)
-		message(FATAL_ERROR "Node.js development files not found. Please install nodejs-dev or libnode-dev package.")
-	endif()
-
-	message(STATUS "Found Node.js headers: ${NODEJS_INCLUDE_DIR}")
-	message(STATUS "Found Node.js library: ${NODEJS_LIBRARY}")
-	
 	# Define ENABLE_NODEJS macro for C++ code
 	add_compile_definitions(ENABLE_NODEJS)
 else()
