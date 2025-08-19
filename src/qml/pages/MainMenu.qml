@@ -34,12 +34,12 @@ BaseMenu {
 		text: tr("menu.settings.button")
 		onClicked: window.goPage('Settings/Settings.qml')
 	}
-	/*
+
 	MenuButton {
 		text: "Camera test"
 		onClicked: window.goPage('CameraPreview.qml')
 	}
-
+	/*
 	MenuButton {
 		text: "Test ping"
 		onClicked: {
