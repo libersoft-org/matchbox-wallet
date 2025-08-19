@@ -22,7 +22,7 @@ MISSING_PACKAGES=()
 echo "Enabling ARM64 architecture..."
 if ! dpkg --print-foreign-architectures | grep -q arm64; then
  echo "Adding arm64 architecture..."
- dpkg --add-architecture arm64
+ sudo dpkg --add-architecture arm64
  sudo apt update
 fi
 for package in "${PACKAGES[@]}"; do
