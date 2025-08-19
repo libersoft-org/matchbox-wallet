@@ -34,6 +34,10 @@ jobs:
         # Add arm64 architecture once
         sudo dpkg --add-architecture arm64
 
+        sudo rm -f /etc/apt/sources.list
+        sudo rm -f /etc/apt/sources.list.d/*    # remove .list
+        sudo rm -f /etc/apt/sources.list.d/*.sources
+
         # Overwrite the default sources to be AMD64-only (host)
         sudo tee /etc/apt/sources.list > /dev/null <<'EOF'
         deb [arch=amd64] http://azure.archive.ubuntu.com/ubuntu noble main restricted universe multiverse
