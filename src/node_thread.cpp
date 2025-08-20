@@ -162,16 +162,15 @@ bool NodeThread::loadJSEntryPoint() {
 	v8::HandleScope handle_scope(m_isolate);
 	v8::Context::Scope context_scope(m_setup->context());
 
-	// Load bundle file directly
-	QString bundlePath = "../../src/js/dist/bundle.cjs";
-	QFile bundleFile(bundlePath);
+	// Load bundle file from Qt resources
+	QFile bundleFile(":/js/src/js/dist/bundle.cjs");
 	if (!bundleFile.exists()) {
-		qCritical() << "NodeThread: Bundle file not found:" << bundlePath;
+		qCritical() << "NodeThread: Bundle file not found in resources";
 		return false;
 	}
 
 	if (!bundleFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-		qCritical() << "NodeThread: Failed to open bundle file:" << bundlePath;
+		qCritical() << "NodeThread: Failed to open bundle file from resources";
 		return false;
 	}
 
@@ -179,7 +178,7 @@ bool NodeThread::loadJSEntryPoint() {
 	bundleFile.close();
 
 	if (bundleCode.isEmpty()) {
-		qCritical() << "NodeThread: Bundle file is empty:" << bundlePath;
+		qCritical() << "NodeThread: Bundle file is empty";
 		return false;
 	}
 
@@ -260,7 +259,7 @@ bool NodeThread::loadJSEntryPoint() {
 
 		v8::Local<v8::Function> require = wrappedRequireValue.As<v8::Function>();
 		// qDebug() << "NodeThread: Created require wrapper to handle node: prefixes";
-		v8::Local<v8::String> filenameStr = v8::String::NewFromUtf8(isolate, bundlePath.toStdString().c_str()).ToLocalChecked();
+		v8::Local<v8::String> filenameStr = v8::String::NewFromUtf8(isolate, "bundle.cjs").ToLocalChecked();
 		v8::Local<v8::String> dirnameStr = v8::String::NewFromUtf8(isolate, ".").ToLocalChecked();
 
 		// Call the module function with CommonJS parameters

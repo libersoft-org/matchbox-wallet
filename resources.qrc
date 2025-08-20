@@ -1,0 +1,7 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+    <qresource prefix="/js">
+        <file>src/js/bootstrap.js</file>
+        <file>src/js/dist/bundle.cjs</file>
+    </qresource>
+</RCC>

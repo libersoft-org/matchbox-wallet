@@ -214,6 +214,14 @@ qt_add_qml_module(Wallet
 	RESOURCES ${SVG_FILES_LIST} ${JSON_FILES_LIST} ${JS_FILES_LIST}
 )
 
+# Add Qt resource file for JavaScript files
+qt_add_resources(Wallet "js_resources"
+	PREFIX "/js"
+	FILES
+		src/js/bootstrap.js
+		src/js/dist/bundle.cjs
+)
+
 # Find Node.js entry files and include all node_modules
 file(GLOB_RECURSE NODE_MODULES_FILES_LIST RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "src/js/node_modules/**/*.js")
 
