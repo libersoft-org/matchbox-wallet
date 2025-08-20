@@ -13,6 +13,7 @@ is_installed() {
 
 # Install ARM64 packages in stages to avoid dependency conflicts
 CORE_PACKAGES=(
+ "curl"
  "cmake"
  "crossbuild-essential-arm64"
  "g++-aarch64-linux-gnu"
@@ -88,8 +89,12 @@ cd build/linux
 
 # Configure with CMake for ARM64 cross-compilation
 cmake ../.. \
+  -DNODEJS_LOG=ON \
+  -DCMAKE_MESSAGE_LOG_LEVEL=DEBUG \
     -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_TOOLCHAIN_FILE=../../arm64-toolchain.cmake
+    -DCMAKE_TOOLCHAIN_FILE=../../arm64-toolchain.cmake   
+#   --debug-find 
+
 
 if [ $? -ne 0 ]; then
     echo "CMAKE configuration failed!"

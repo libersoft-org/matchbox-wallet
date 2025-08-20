@@ -7,7 +7,7 @@ set(CMAKE_C_COMPILER aarch64-linux-gnu-gcc)
 set(CMAKE_CXX_COMPILER aarch64-linux-gnu-g++)
 
 # Find root path for libraries and headers
-set(CMAKE_FIND_ROOT_PATH /usr/aarch64-linux-gnu)
+#set(CMAKE_FIND_ROOT_PATH /usr/aarch64-linux-gnu)
 
 # Search programs in host environment
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)

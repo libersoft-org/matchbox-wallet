@@ -9,65 +9,158 @@ option(ENABLE_NODEJS "Enable Node.js integration" ON)
 find_package(Qt6 REQUIRED COMPONENTS Core Quick Svg)
 find_package(Qt6 QUIET COMPONENTS Multimedia VirtualKeyboard)
 
+
+
+
+
+
+
 # Node.js integration (conditional)
 if(ENABLE_NODEJS)
 
-	find_path(NODEJS_INCLUDE_DIR
-		NAMES node.h
-		HINTS /usr/include/node /usr/include/nodejs /usr/local/include/node /opt/homebrew/include/node
-		PATH_SUFFIXES nodejs node
-	)
+  # ---- Toggle verbose logs for this block
+  option(NODEJS_LOG "Verbose Node.js find logging" ON)
 
-	# Determine the correct library path suffix based on the target architecture
-	if(CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64")
-		set(LIB_ARCH_SUFFIX "aarch64-linux-gnu")
-	else()
-		set(LIB_ARCH_SUFFIX "x86_64-linux-gnu")
-	endif()
+  function(_node_log msg)
+    if(NODEJS_LOG)
+      message(STATUS "[NODEJS] ${msg}")
+    endif()
+  endfunction()
 
-	find_library(NODEJS_LIBRARY 
-		NAMES node libnode
-		HINTS /usr/lib /usr/local/lib /opt/homebrew/lib
-		PATH_SUFFIXES ${LIB_ARCH_SUFFIX}
-	)
+  macro(_node_log_var varname)
+    if(NODEJS_LOG)
+      if(DEFINED ${varname})
+        # Show lists nicely too
+        if(${varname})
+          string(REPLACE ";" ", " __v "${${varname}}")
+          message(STATUS "[NODEJS] ${varname} = ${__v}")
+        else()
+          message(STATUS "[NODEJS] ${varname} = (empty)")
+        endif()
+      else()
+        message(STATUS "[NODEJS] ${varname} = (undefined)")
+      endif()
+    endif()
+  endmacro()
 
-	message(STATUS "Found Node.js headers: ${NODEJS_INCLUDE_DIR}")
-	message(STATUS "Found Node.js library: ${NODEJS_LIBRARY}")
+  include(GNUInstallDirs)
 
-	if(NOT NODEJS_INCLUDE_DIR OR NOT NODEJS_LIBRARY)
-		message(FATAL_ERROR "Node.js development files not found. Please install nodejs-dev or libnode-dev package.")
-	endif()
+  _node_log("---- Environment & toolchain ----")
+  _node_log_var(CMAKE_SYSTEM_NAME)
+  _node_log_var(CMAKE_SYSTEM_PROCESSOR)
+  _node_log_var(CMAKE_LIBRARY_ARCHITECTURE)
+  _node_log_var(CMAKE_C_COMPILER)
+  _node_log_var(CMAKE_CXX_COMPILER)
+  _node_log_var(CMAKE_SYSROOT)
+  _node_log_var(CMAKE_PREFIX_PATH)
+  _node_log_var(CMAKE_FIND_ROOT_PATH)
+  _node_log_var(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM)
+  _node_log_var(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY)
+  _node_log_var(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE)
+  _node_log_var(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE)
 
+  # ---- Header search
+  set(_NODE_INCLUDE_BASES
+    /usr/include
+    /usr/local/include
+    /opt/homebrew/include
+  )
+  set(_NODE_INCLUDE_SUFFIXES node nodejs)
 
-	find_library(V8_LIBRARY 
-		NAMES v8 libv8
-		HINTS /usr/lib /usr/local/lib /opt/homebrew/lib
-		PATH_SUFFIXES ${LIB_ARCH_SUFFIX}
-	)
+  _node_log("---- Header search config ----")
+  _node_log_var(_NODE_INCLUDE_BASES)
+  _node_log_var(_NODE_INCLUDE_SUFFIXES)
 
-	find_library(V8_LIBBASE_LIBRARY 
-		NAMES v8_libbase libv8_libbase
-		HINTS /usr/lib /usr/local/lib /opt/homebrew/lib
-		PATH_SUFFIXES ${LIB_ARCH_SUFFIX}
-	)
+  find_path(NODEJS_INCLUDE_DIR
+    NAMES node.h
+    PATHS ${_NODE_INCLUDE_BASES}
+    PATH_SUFFIXES ${_NODE_INCLUDE_SUFFIXES}
+  )
 
-	find_library(V8_LIBPLATFORM_LIBRARY 
-		NAMES v8_libplatform libv8_libplatform
-		HINTS /usr/lib /usr/local/lib /opt/homebrew/lib
-		PATH_SUFFIXES ${LIB_ARCH_SUFFIX}
-	)
+  _node_log_var(NODEJS_INCLUDE_DIR)
 
-	find_library(UV_LIBRARY 
-		NAMES uv libuv
-		HINTS /usr/lib /usr/local/lib /opt/homebrew/lib
-		PATH_SUFFIXES ${LIB_ARCH_SUFFIX}
-	)
+  if(NODEJS_INCLUDE_DIR)
+    set(_candidate_header "${NODEJS_INCLUDE_DIR}/node.h")
+    if(EXISTS "${_candidate_header}")
+      _node_log("Found header file: ${_candidate_header}")
+    else()
+      _node_log("WARNING: include dir found but node.h missing at ${_candidate_header}")
+      file(GLOB __ls "${NODEJS_INCLUDE_DIR}/*")
+      if(__ls)
+        string(REPLACE ";" ", " __ls_print "${__ls}")
+        _node_log("Contents of ${NODEJS_INCLUDE_DIR}: ${__ls_print}")
+      endif()
+    endif()
+  endif()
 
-	# Define ENABLE_NODEJS macro for C++ code
-	add_compile_definitions(ENABLE_NODEJS)
+  # ---- Library search
+  set(_ARCH_SUFFIX_CANDIDATES
+    ${CMAKE_LIBRARY_ARCHITECTURE}
+    aarch64-linux-gnu
+    arm64
+    x86_64-linux-gnu
+  )
+
+  _node_log("---- Library search config ----")
+  _node_log_var(_ARCH_SUFFIX_CANDIDATES)
+
+  find_library(NODEJS_LIBRARY
+    NAMES node libnode
+    PATHS /usr/lib /usr/local/lib /opt/homebrew/lib
+    PATH_SUFFIXES ${_ARCH_SUFFIX_CANDIDATES}
+  )
+
+  _node_log_var(NODEJS_LIBRARY)
+
+  if(NODEJS_LIBRARY)
+    get_filename_component(_NODELIB_REAL "${NODEJS_LIBRARY}" REALPATH)
+    _node_log("libnode resolved realpath: ${_NODELIB_REAL}")
+  else()
+    foreach(_sfx IN LISTS _ARCH_SUFFIX_CANDIDATES)
+      set(_probe "/usr/lib/${_sfx}/libnode.so")
+      if(EXISTS "${_probe}")
+        _node_log("NOTE: libnode exists at ${_probe} but find_library did not pick it up")
+      endif()
+    endforeach()
+  endif()
+
+  # ---- Final check
+  if(NOT NODEJS_INCLUDE_DIR OR NOT NODEJS_LIBRARY)
+    _node_log("FAIL: Node.js development files not found with the above settings.")
+    message(FATAL_ERROR "Node.js development files not found. Please install libnode-dev for the target arch or fix search paths.")
+  endif()
+
+  # ---- Optional extras (V8/libuv) with logging
+  foreach(_pair
+      "V8_LIBRARY;v8;libv8"
+      "V8_LIBBASE_LIBRARY;v8_libbase;libv8_libbase"
+      "V8_LIBPLATFORM_LIBRARY;v8_libplatform;libv8_libplatform"
+      "UV_LIBRARY;uv;libuv")
+    list(GET _pair 0 _var)
+    list(GET _pair 1 _n1)
+    list(GET _pair 2 _n2)
+    find_library(${_var}
+      NAMES ${_n1} ${_n2}
+      PATHS /usr/lib /usr/local/lib /opt/homebrew/lib
+      PATH_SUFFIXES ${_ARCH_SUFFIX_CANDIDATES}
+    )
+    _node_log_var(${_var})
+  endforeach()
+
+  add_compile_definitions(ENABLE_NODEJS)
+
 else()
-	message(STATUS "Node.js integration disabled")
+  message(STATUS "Node.js integration disabled")
 endif()
+
+
+
+
+
+
+
+
+
 
 # TODO: Felgo doesnt work on ARM
 #find_package(FelgoHotReload REQUIRED)
