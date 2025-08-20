@@ -24,4 +24,11 @@ Rectangle {
 	Component.onCompleted: {
 		camera.start();
 	}
+
+	Component.onDestruction: {
+		if (camera) {
+			camera.stop();
+			camera.active = false;
+		}
+	}
 }
