@@ -67,7 +67,7 @@
 			"wifi": {
 				"button": "WiFi",
 				"title": "WiFi settings",
-				"connected": "Connected to network",
+				"connected": "Connected to",
 				"disconnected": "Disconnected",
 				"change": "Change network",
 				"disconnect": "Disconnect",

@@ -77,7 +77,7 @@
 			"wifi": {
 				"button": "WiFi",
 				"title": "Nastavení WiFi",
-				"connected": "Připojeno k síti",
+				"connected": "Připojeno k",
 				"disconnected": "Odpojeno",
 				"change": "Změnit síť",
 				"disconnect": "Odpojit",
