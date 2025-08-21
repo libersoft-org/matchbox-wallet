@@ -5,7 +5,7 @@ is_installed() {
  dpkg -l "$1" 2>/dev/null | grep -q "^ii"
 }
 
-PACKAGES=("cmake" "qt6-base-dev" "qt6-declarative-dev" "qt6-declarative-dev-tools" "qt6-multimedia-dev" "qt6-svg-dev" "qml6-module-qtquick" "qml6-module-qtmultimedia" "libnode-dev" "curl" "unzip")
+PACKAGES=("build-essential" "cmake" "qt6-base-dev" "qt6-declarative-dev" "qt6-declarative-dev-tools" "qt6-multimedia-dev" "qt6-svg-dev" "qml6-module-qtquick" "qml6-module-qtmultimedia" "libnode-dev" "curl" "unzip")
 # "clang-format")
 
 MISSING_PACKAGES=()
