@@ -30,7 +30,23 @@ if [ -d "build" ]; then
 fi
 mkdir -p build/linux
 cd build/linux
-cmake ../.. -DCMAKE_BUILD_TYPE=Release -DENABLE_NODEJS=ON
+
+# Detect host architecture and set library paths accordingly
+HOST_ARCH=$(uname -m)
+if [ "$HOST_ARCH" = "x86_64" ]; then
+    echo "Configuring for x86_64 native build..."
+    export PKG_CONFIG_LIBDIR=/usr/lib/x86_64-linux-gnu/pkgconfig:/usr/share/pkgconfig
+    CMAKE_LIBRARY_ARCH="-DCMAKE_LIBRARY_ARCHITECTURE=x86_64-linux-gnu"
+elif [ "$HOST_ARCH" = "aarch64" ]; then
+    echo "Configuring for aarch64 native build..."
+    export PKG_CONFIG_LIBDIR=/usr/lib/aarch64-linux-gnu/pkgconfig:/usr/share/pkgconfig
+    CMAKE_LIBRARY_ARCH="-DCMAKE_LIBRARY_ARCHITECTURE=aarch64-linux-gnu"
+else
+    echo "Warning: Unknown architecture $HOST_ARCH, proceeding without explicit library architecture"
+    CMAKE_LIBRARY_ARCH=""
+fi
+
+cmake ../.. -DCMAKE_BUILD_TYPE=Release -DENABLE_NODEJS=ON $CMAKE_LIBRARY_ARCH
 if [ $? -ne 0 ]; then
  echo "CMAKE configuration failed!"
  exit 1
