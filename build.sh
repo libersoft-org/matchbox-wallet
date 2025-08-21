@@ -1,12 +1,34 @@
 #!/bin/bash
 
 echo "Checking dependencies..."
+
+# Detect host architecture
+HOST_ARCH=$(uname -m)
+if [ "$HOST_ARCH" = "x86_64" ]; then
+    ARCH_SUFFIX="amd64"
+elif [ "$HOST_ARCH" = "aarch64" ]; then
+    ARCH_SUFFIX="arm64"
+else
+    ARCH_SUFFIX=""
+fi
+
 is_installed() {
  dpkg -l "$1" 2>/dev/null | grep -q "^ii"
 }
 
-PACKAGES=("build-essential" "cmake" "qt6-base-dev" "qt6-declarative-dev" "qt6-declarative-dev-tools" "qt6-multimedia-dev" "qt6-svg-dev" "qt6-tools-dev" "qml6-module-qtquick" "qml6-module-qtmultimedia" "libnode-dev" "curl" "unzip")
-# "clang-format")
+# Packages that should have architecture suffix
+ARCH_PACKAGES=("qt6-base-dev" "qt6-declarative-dev" "qt6-multimedia-dev" "qt6-svg-dev" "qt6-tools-dev" "libnode-dev")
+# Packages that don't need architecture suffix
+BASE_PACKAGES=("build-essential" "cmake" "qt6-declarative-dev-tools" "qml6-module-qtquick" "qml6-module-qtmultimedia" "curl" "unzip")
+
+PACKAGES=("${BASE_PACKAGES[@]}")
+if [ -n "$ARCH_SUFFIX" ]; then
+    for pkg in "${ARCH_PACKAGES[@]}"; do
+        PACKAGES+=("${pkg}:${ARCH_SUFFIX}")
+    done
+else
+    PACKAGES+=("${ARCH_PACKAGES[@]}")
+fi
 
 MISSING_PACKAGES=()
 for package in "${PACKAGES[@]}"; do
@@ -31,8 +53,7 @@ fi
 mkdir -p build/linux
 cd build/linux
 
-# Detect host architecture and set library paths accordingly
-HOST_ARCH=$(uname -m)
+# Set architecture-specific library paths
 if [ "$HOST_ARCH" = "x86_64" ]; then
     echo "Configuring for x86_64 native build..."
     export PKG_CONFIG_LIBDIR=/usr/lib/x86_64-linux-gnu/pkgconfig:/usr/share/pkgconfig
