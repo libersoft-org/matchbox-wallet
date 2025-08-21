@@ -100,7 +100,6 @@ Item {
 		// Status
 		Frame {
 			width: parent.width
-			height: statusLabel.implicitHeight + (window.width * 0.03)
 
 			Text {
 				id: statusLabel
@@ -116,7 +115,6 @@ Item {
 		// Ping latency (spans both columns)
 		Frame {
 			width: parent.width
-			height: pingColumn.implicitHeight + (window.width * 0.03)
 
 			Column {
 				id: pingColumn
@@ -151,7 +149,6 @@ Item {
 			// Download speed
 			Frame {
 				Layout.fillWidth: true
-				Layout.preferredHeight: downloadColumn.implicitHeight + (window.width * 0.03)
 
 				Column {
 					id: downloadColumn
@@ -179,7 +176,6 @@ Item {
 			// Upload speed
 			Frame {
 				Layout.fillWidth: true
-				Layout.preferredHeight: uploadColumn.implicitHeight + (window.width * 0.03)
 
 				Column {
 					id: uploadColumn

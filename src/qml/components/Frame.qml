@@ -8,7 +8,8 @@ Rectangle {
 	property color backgroundColor: "transparent"
 	property color borderColor: colors.primaryForeground
 	property real borderWidth: window.width * 0.005
-	property real padding: window.width * 0.02
+	property real padding: window.width * 0.03
+	height: contentContainer.childrenRect.height + (padding * 2)
 	color: backgroundColor
 	radius: borderRadius
 	border.color: borderColor
