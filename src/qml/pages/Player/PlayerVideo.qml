@@ -1,5 +1,5 @@
-import QtQuick 2.15
-import QtQuick.Window 2.15
+import QtQuick 6.8
+import QtQuick.Window 6.8
 import QtMultimedia 6.0
 import "../../components"
 

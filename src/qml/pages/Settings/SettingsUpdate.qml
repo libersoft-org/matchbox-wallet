@@ -1,12 +1,10 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
+import QtQuick 6.8
 import "../../components"
 import "../../utils/NodeUtils.js" as Node
 
 ScrollableContainer {
 	id: root
-	property string title: tr("menu.settings.update.title")
+	property string title: tr("settings.update.title")
 	property string appVersion: applicationVersion
 	property string latestAppVersion: tr("common.loading")
 	property string systemVersion: tr("common.loading")
@@ -58,7 +56,7 @@ ScrollableContainer {
 			spacing: 10
 
 			Text {
-				text: tr("menu.settings.update.app.current") + ":"
+				text: tr("settings.update.app.current") + ":"
 				color: colors.primaryForeground
 				font.pixelSize: window.height * 0.03
 				anchors.horizontalCenter: parent.horizontalCenter
@@ -73,7 +71,7 @@ ScrollableContainer {
 			}
 
 			Text {
-				text: tr("menu.settings.update.app.latest") + ":"
+				text: tr("settings.update.app.latest") + ":"
 				color: colors.primaryForeground
 				font.pixelSize: window.height * 0.03
 				anchors.horizontalCenter: parent.horizontalCenter
@@ -94,7 +92,7 @@ ScrollableContainer {
 			spacing: 10
 
 			Text {
-				text: tr("menu.settings.update.system.current") + ":"
+				text: tr("settings.update.system.current") + ":"
 				color: colors.primaryForeground
 				font.pixelSize: window.height * 0.03
 				anchors.horizontalCenter: parent.horizontalCenter
@@ -109,7 +107,7 @@ ScrollableContainer {
 			}
 
 			Text {
-				text: tr("menu.settings.update.system.latest") + ":"
+				text: tr("settings.update.system.latest") + ":"
 				color: colors.primaryForeground
 				font.pixelSize: window.height * 0.03
 				anchors.horizontalCenter: parent.horizontalCenter
@@ -131,7 +129,7 @@ ScrollableContainer {
 			width: parent.width * 0.8
 
 			MenuButton {
-				text: tr("menu.settings.update.app.button")
+				text: tr("settings.update.app.button")
 				anchors.horizontalCenter: parent.horizontalCenter
 				onClicked: {
 					console.log("Update application clicked");
@@ -140,7 +138,7 @@ ScrollableContainer {
 			}
 
 			MenuButton {
-				text: tr("menu.settings.update.system.button")
+				text: tr("settings.update.system.button")
 				anchors.horizontalCenter: parent.horizontalCenter
 				onClicked: {
 					console.log("Update system clicked");

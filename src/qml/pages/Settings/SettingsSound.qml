@@ -1,13 +1,10 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
+import QtQuick 6.8
 import "../../components"
-import "../../static"
 import "../../utils/NodeUtils.js" as Node
 
 BaseMenu {
 	id: root
-	title: tr("menu.settings.sound.title")
+	title: tr("settings.sound.title")
 	property int soundVolume: 0
 	property bool volumeLoaded: false
 	property bool updatingFromSystem: false  // Guard flag
@@ -89,7 +86,7 @@ BaseMenu {
 
 		Text {
 			anchors.horizontalCenter: parent.horizontalCenter
-			text: tr("menu.settings.sound.volume")
+			text: tr("settings.sound.volume")
 			font.pixelSize: root.height * 0.04
 			color: colors.primaryForeground
 			horizontalAlignment: Text.AlignHCenter
@@ -100,7 +97,7 @@ BaseMenu {
 			anchors.horizontalCenter: parent.horizontalCenter
 			width: parent.width * 0.6
 			height: root.height * 0.08
-			text: root.isMuted ? tr("menu.settings.sound.unmute") : tr("menu.settings.sound.mute")
+			text: root.isMuted ? tr("settings.sound.unmute") : tr("settings.sound.mute")
 			enabled: root.volumeLoaded
 			opacity: root.volumeLoaded ? 1.0 : 0.5
 			onClicked: root.toggleMute()

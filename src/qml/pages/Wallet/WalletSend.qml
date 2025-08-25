@@ -1,9 +1,6 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
 import "../../components"
 
 BaseMenu {
 	id: root
-	title: tr("menu.wallet.send.title")
+	title: tr("wallet.send.title")
 }

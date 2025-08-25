@@ -1,24 +1,22 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
+import QtQuick 6.8
 import "../components"
 
 BaseMenu {
 	id: root
-	title: tr("menu.power.title")
+	title: tr("power.title")
 	property bool showPowerButton: false
 
 	MenuButton {
-		text: tr("menu.power.quit")
+		text: tr("power.quit")
 		onClicked: Qt.quit()
 	}
 
 	MenuButton {
-		text: tr("menu.power.reboot")
+		text: tr("power.reboot")
 		onClicked: {
 			console.log("Reboot requested");
 			if (typeof NodeJS !== 'undefined') {
-				NodeJS.msg("powerReboot", {}, function(result) {
+				NodeJS.msg("powerReboot", {}, function (result) {
 					console.log("Reboot result:", JSON.stringify(result));
 					if (result.status === 'success') {
 						console.log("System reboot initiated successfully");
@@ -31,11 +29,11 @@ BaseMenu {
 	}
 
 	MenuButton {
-		text: tr("menu.power.shutdown")
+		text: tr("power.shutdown")
 		onClicked: {
 			console.log("Shutdown requested");
 			if (typeof NodeJS !== 'undefined') {
-				NodeJS.msg("powerShutdown", {}, function(result) {
+				NodeJS.msg("powerShutdown", {}, function (result) {
 					console.log("Shutdown result:", JSON.stringify(result));
 					if (result.status === 'success') {
 						console.log("System shutdown initiated successfully");

@@ -1,7 +1,6 @@
 pragma ComponentBehavior: Bound
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
+import QtQuick 6.8
+import QtQuick.Controls 6.8
 import "../../components"
 import "../../static"
 import "../../utils/NodeUtils.js" as NodeUtils
@@ -9,7 +8,7 @@ import "../../utils/NodeUtils.js" as NodeUtils
 Rectangle {
 	id: root
 	color: colors.primaryBackground
-	property string title: tr("menu.settings.firewall.title")
+	property string title: tr("settings.firewall.title")
 	property bool firewallEnabled: false
 	property var allowedExceptions: []
 	property bool isLoading: false
@@ -109,7 +108,7 @@ Rectangle {
 				spacing: 10
 
 				Text {
-					text: root.firewallEnabled ? tr("menu.settings.firewall.enabled") : tr("menu.settings.firewall.disabled")
+					text: root.firewallEnabled ? tr("settings.firewall.enabled") : tr("settings.firewall.disabled")
 					font.pixelSize: window.width * 0.04
 					color: root.firewallEnabled ? colors.success : colors.error
 				}
@@ -121,7 +120,7 @@ Rectangle {
 				spacing: 15
 
 				Text {
-					text: tr("menu.settings.firewall.enable")
+					text: tr("settings.firewall.enable")
 					font.pixelSize: window.width * 0.04
 					color: colors.primaryForeground
 					anchors.verticalCenter: parent.verticalCenter
@@ -140,7 +139,7 @@ Rectangle {
 
 			// Add port button
 			MenuButton {
-				text: tr("menu.settings.firewall.exceptions.title")
+				text: tr("settings.firewall.exceptions.title")
 				width: parent.width
 				backgroundColor: colors.primaryForeground
 				onClicked: window.goPage('Settings/SettingsFirewallExceptions.qml', "firewall-add-port")
@@ -152,7 +151,7 @@ Rectangle {
 				spacing: 15
 
 				Text {
-					text: tr("menu.settings.firewall.ports.title")
+					text: tr("settings.firewall.ports.title")
 					font.pixelSize: window.width * 0.06
 					font.bold: true
 					color: colors.primaryForeground
@@ -164,7 +163,7 @@ Rectangle {
 					spacing: 10
 
 					Text {
-						text: tr("menu.settings.firewall.ports.port")
+						text: tr("settings.firewall.ports.port")
 						font.pixelSize: window.width * 0.04
 						font.bold: true
 						color: colors.primaryForeground
@@ -172,7 +171,7 @@ Rectangle {
 					}
 
 					Text {
-						text: tr("menu.settings.firewall.ports.description")
+						text: tr("settings.firewall.ports.description")
 						font.pixelSize: window.width * 0.04
 						font.bold: true
 						color: colors.primaryForeground
@@ -180,7 +179,7 @@ Rectangle {
 					}
 
 					Text {
-						text: tr("menu.settings.firewall.ports.enabled")
+						text: tr("settings.firewall.ports.enabled")
 						font.pixelSize: window.width * 0.04
 						font.bold: true
 						color: colors.primaryForeground
@@ -232,7 +231,7 @@ Rectangle {
 						}
 
 						MenuButton {
-							text: tr("menu.settings.firewall.ports.remove")
+							text: tr("settings.firewall.ports.remove")
 							enabled: !root.isLoading
 							width: 80
 							onClicked: root.removeException(parent.modelData.port, parent.modelData.protocol)
@@ -242,7 +241,7 @@ Rectangle {
 
 				// No ports message
 				Text {
-					text: tr("menu.settings.firewall.ports.noPortsMessage")
+					text: tr("settings.firewall.ports.noPortsMessage")
 					font.pixelSize: window.width * 0.04
 					color: colors.primaryForeground
 					visible: root.allowedExceptions.length === 0 && !root.isLoading

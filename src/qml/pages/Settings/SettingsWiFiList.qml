@@ -1,13 +1,12 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
+import QtQuick 6.8
+import QtQuick.Controls 6.8
 import "../../components"
 import "../../utils/NodeUtils.js" as NodeUtils
 
 Rectangle {
 	id: root
 	color: colors.primaryBackground
-	property string title: tr("menu.settings.wifi.list.title")
+	property string title: tr("settings.wifi.list.title")
 
 	// WiFi state
 	property var networks: []
@@ -98,7 +97,7 @@ Rectangle {
 			// Refresh button
 			MenuButton {
 				width: parent.width
-				text: root.isScanning ? tr("menu.settings.wifi.list.scanning") : tr("menu.settings.wifi.list.refresh")
+				text: root.isScanning ? tr("settings.wifi.list.scanning") : tr("settings.wifi.list.refresh")
 				enabled: !root.isScanning
 				onClicked: {
 					root.scanNetworks();

@@ -1,13 +1,11 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
+import QtQuick 6.8
 import "../../components"
 import "../../utils/NodeUtils.js" as NodeUtils
 
 Rectangle {
 	id: root
 	color: colors.primaryBackground
-	property string title: tr('menu.settings.wifi.title')
+	property string title: tr('settings.wifi.title')
 	property var networks: []
 	property bool isScanning: false
 	property var currentConnection: null
@@ -113,8 +111,8 @@ Rectangle {
 			id: statusText
 			text: {
 				if (root.isConnected)
-					return tr('menu.settings.wifi.connected') + ':';
-				return tr('menu.settings.wifi.disconnected');
+					return tr('settings.wifi.connected') + ':';
+				return tr('settings.wifi.disconnected');
 			}
 			font.pixelSize: window.width * 0.06
 			font.bold: true
@@ -146,14 +144,14 @@ Rectangle {
 		// Change button
 		MenuButton {
 			id: changeMenuButton
-			text: tr('menu.settings.wifi.change')
+			text: tr('settings.wifi.change')
 			onClicked: window.goPage('Settings/SettingsWiFiList.qml')
 		}
 
 		// Disconnect button
 		MenuButton {
 			id: disconnectMenuButton
-			text: tr('menu.settings.wifi.disconnect')
+			text: tr('settings.wifi.disconnect')
 			visible: root.isConnected
 			onClicked: {
 				console.log('Disconnect button clicked');

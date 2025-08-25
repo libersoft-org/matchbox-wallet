@@ -1,11 +1,9 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
+import QtQuick 6.8
 import "../../components"
 
 BaseMenu {
 	id: root
-	title: tr("menu.wallet.settings.general.fiat.title")
+	title: tr("wallet.settings.general.fiat.title")
 	property var currencies: ["USD", "EUR", "GBP", "CHF", "CZK", "PLN", "HUF"]
 
 	function selectCurrency(currency) {

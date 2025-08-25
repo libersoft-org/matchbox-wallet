@@ -1,13 +1,11 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
+import QtQuick 6.8
 import "../../components"
 import "../../utils/NodeUtils.js" as NodeUtils
 
 Rectangle {
 	id: root
 	color: colors.primaryBackground
-	property string title: tr("menu.settings.wifi.list.password.title")
+	property string title: tr("settings.wifi.list.password.title")
 	signal backRequested
 	signal passwordEntered(string password)
 
@@ -39,7 +37,7 @@ Rectangle {
 				root.backRequested();
 			} else {
 				console.log("Failed to connect to", root.networkName, "Error:", response.message);
-				errorText.text = tr("menu.settings.wifi.list.password.error") + ": " + response.message;
+				errorText.text = tr("settings.wifi.list.password.error") + ": " + response.message;
 				errorText.visible = true;
 			}
 		});
@@ -56,7 +54,7 @@ Rectangle {
 
 			// Network name display
 			Text {
-				text: tr("menu.settings.wifi.list.password.network") + ": " + root.networkName
+				text: tr("settings.wifi.list.password.network") + ": " + root.networkName
 				font.pixelSize: window.height * 0.04
 				font.bold: true
 				color: colors.primaryForeground
@@ -67,7 +65,7 @@ Rectangle {
 
 			// Security info
 			Text {
-				text: root.isSecured ? tr("menu.settings.wifi.list.password.secured") : tr("menu.settings.wifi.list.password.open")
+				text: root.isSecured ? tr("settings.wifi.list.password.secured") : tr("settings.wifi.list.password.open")
 				font.pixelSize: window.height * 0.035
 				color: colors.primaryForeground
 				anchors.horizontalCenter: parent.horizontalCenter
@@ -82,7 +80,7 @@ Rectangle {
 				visible: root.isSecured
 
 				Text {
-					text: tr("menu.settings.wifi.list.password.enter")
+					text: tr("settings.wifi.list.password.enter")
 					font.pixelSize: window.height * 0.035
 					color: colors.primaryForeground
 					anchors.horizontalCenter: parent.horizontalCenter
@@ -93,7 +91,7 @@ Rectangle {
 					inputWidth: window.width * 0.8
 					inputHeight: window.height * 0.06
 					inputFontSize: window.height * 0.035
-					inputPlaceholder: tr("menu.settings.wifi.list.password.placeholder")
+					inputPlaceholder: tr("settings.wifi.list.password.placeholder")
 					inputEchoMode: TextInput.Password
 					inputTextColor: colors.primaryForeground
 					inputBackgroundColor: colors.primaryBackground
@@ -120,7 +118,7 @@ Rectangle {
 
 			// Connect button
 			MenuButton {
-				text: tr("menu.settings.wifi.list.password.connect")
+				text: tr("settings.wifi.list.password.connect")
 				anchors.horizontalCenter: parent.horizontalCenter
 				onClicked: root.connectToNetwork()
 			}

@@ -1,11 +1,9 @@
-import QtQuick 2.15
-import QtQuick.Window 2.15
-import QtQuick.Controls 2.15
-import QtQuick.VirtualKeyboard 2.15
-import QtMultimedia 6.0
+import QtQuick 6.8
+import QtQuick.Window 6.8
+import QtQuick.Controls 6.8
+import QtQuick.VirtualKeyboard 6.8
 import "static"
 import "components"
-import "utils/NodeUtils.js" as Node
 
 ApplicationWindow {
 	id: window

@@ -1,11 +1,10 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
+import QtQuick 6.8
+
 import "../../components"
 
 ScrollableContainer {
 	id: root
-	property string title: tr("menu.wallet.balance.title")
+	property string title: tr("wallet.balance.title")
 
 	Column {
 		width: parent.width

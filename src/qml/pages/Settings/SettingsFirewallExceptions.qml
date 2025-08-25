@@ -1,6 +1,4 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
+import QtQuick 6.8
 import "../../components"
 import "../../static"
 import "../../utils/NodeUtils.js" as NodeUtils
@@ -17,7 +15,7 @@ Rectangle {
 	}
 
 	color: colors.primaryBackground
-	property string title: tr("menu.settings.firewall.exceptions.title")
+	property string title: tr("settings.firewall.exceptions.title")
 
 	property bool isLoading: false
 	property string portNumber: ""
@@ -119,14 +117,14 @@ Rectangle {
 					spacing: 10
 
 					Text {
-						text: tr("menu.settings.firewall.exceptions.port")
+						text: tr("settings.firewall.exceptions.port")
 						font.pixelSize: 16
 						color: colors.primaryForeground
 					}
 
 					Input {
 						id: portInput
-						inputPlaceholder: tr("menu.settings.firewall.exceptions.portPlaceholder")
+						inputPlaceholder: tr("settings.firewall.exceptions.portPlaceholder")
 						inputType: "number"
 						inputAutoFocus: true
 					}
@@ -138,7 +136,7 @@ Rectangle {
 					spacing: 10
 
 					Text {
-						text: tr("menu.settings.firewall.exceptions.protocol")
+						text: tr("settings.firewall.exceptions.protocol")
 						font.pixelSize: 16
 						color: colors.primaryForeground
 					}
@@ -185,14 +183,14 @@ Rectangle {
 					spacing: 10
 
 					Text {
-						text: tr("menu.settings.firewall.exceptions.description")
+						text: tr("settings.firewall.exceptions.description")
 						font.pixelSize: 16
 						color: colors.primaryForeground
 					}
 
 					Input {
 						id: descriptionInput
-						inputPlaceholder: tr("menu.settings.firewall.exceptions.descriptionPlaceholder")
+						inputPlaceholder: tr("settings.firewall.exceptions.descriptionPlaceholder")
 					}
 				}
 			}
@@ -203,7 +201,7 @@ Rectangle {
 				spacing: 15
 
 				MenuButton {
-					text: tr("menu.settings.firewall.exceptions.add")
+					text: tr("settings.firewall.exceptions.add")
 					enabled: !root.isLoading && portInput.text.trim() !== ""
 					width: parent.width
 					backgroundColor: colors.success

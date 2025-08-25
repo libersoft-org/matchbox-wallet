@@ -1,17 +1,16 @@
-import QtQuick 2.15
 import "../../components"
 
 BaseMenu {
 	id: root
-	title: tr("menu.player.title")
+	title: tr("player.title")
 
 	MenuButton {
-		text: tr("menu.player.local")
+		text: tr("player.local")
 		onClicked: window.goPage('Player/PlayerLocal.qml')
 	}
 
 	MenuButton {
-		text: tr("menu.player.network")
+		text: tr("player.network")
 		onClicked: window.goPage('Player/PlayerNetwork.qml')
 	}
 }

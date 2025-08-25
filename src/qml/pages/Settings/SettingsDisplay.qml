@@ -1,13 +1,10 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
+import QtQuick 6.8
 import "../../components"
-import "../../static"
 import "../../utils/NodeUtils.js" as Node
 
 BaseMenu {
 	id: root
-	title: tr("menu.settings.display.title")
+	title: tr("settings.display.title")
 	property int displayBrightness: 50
 	property bool brightnessLoaded: false
 	property bool updatingFromSystem: false  // Guard flag
@@ -69,7 +66,7 @@ BaseMenu {
 
 		Text {
 			anchors.horizontalCenter: parent.horizontalCenter
-			text: tr("menu.settings.display.brightness")
+			text: tr("settings.display.brightness")
 			font.pixelSize: root.height * 0.04
 			color: colors.primaryForeground
 			horizontalAlignment: Text.AlignHCenter

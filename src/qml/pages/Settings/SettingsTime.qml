@@ -1,12 +1,12 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
+import QtQuick 6.8
+import QtQuick.Controls 6.8
 import QtQuick.Layouts 1.15
 import "../../components"
 import "../../utils/NodeUtils.js" as NodeUtils
 
 BaseMenu {
 	id: root
-	title: tr("menu.settings.time.title")
+	title: tr("settings.time.title")
 	signal timezoneChanged
 	property date displayTime: new Date()  // Time shown in the top display
 	property date spinBoxTime: new Date()  // Independent time for spinboxes
@@ -171,7 +171,7 @@ BaseMenu {
 					spacing: parent.height * 0.2
 
 					Text {
-						text: tr("menu.settings.time.auto") + ':'
+						text: tr("settings.time.auto") + ':'
 						color: colors.primaryForeground
 						font.pixelSize: parent.height * 0.35
 						Layout.alignment: Qt.AlignVCenter
@@ -333,7 +333,7 @@ BaseMenu {
 
 	// Save button
 	MenuButton {
-		text: tr("menu.settings.time.set")
+		text: tr("settings.time.set")
 		visible: !loadingSystemState && !autoSyncSwitch.checked  // Hide when loading or auto sync is enabled
 		onClicked: {
 			console.log("Saving date and time...");
@@ -359,7 +359,7 @@ BaseMenu {
 	}
 
 	MenuButton {
-		text: tr("menu.settings.time.timezone") + ": " + root.currentTimezone
+		text: tr("settings.time.timezone") + ": " + root.currentTimezone
 		onClicked: root.handleTimezoneSettingsRequested()
 	}
 }
