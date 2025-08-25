@@ -1,7 +1,5 @@
 pragma ComponentBehavior: Bound
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
+import QtQuick 6.8
 import "../../components"
 import "../../utils/NodeUtils.js" as NodeUtils
 import "../../utils/NodeUtils.js" as Node

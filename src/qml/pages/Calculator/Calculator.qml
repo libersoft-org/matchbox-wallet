@@ -1,7 +1,6 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
+import QtQuick 6.8
+import QtQuick.Controls 6.8
 import QtQuick.Layouts 1.15
-import "../../"
 import "../../components"
 
 BaseMenu {

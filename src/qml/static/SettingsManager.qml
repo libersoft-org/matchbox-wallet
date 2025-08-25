@@ -1,5 +1,5 @@
-import QtQuick 2.15
-import QtQuick.LocalStorage 2.15
+import QtQuick 6.8
+import QtQuick.LocalStorage 6.8
 
 QtObject {
 	id: root
@@ -127,5 +127,4 @@ QtObject {
 			tx.executeSql('INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)', [key, value]);
 		});
 	}
-
 }
