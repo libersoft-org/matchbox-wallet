@@ -11,27 +11,27 @@ BaseMenu {
 	property bool showBackButton: false
 
 	MenuButton {
-		text: tr("menu.wallet.button")
+		text: tr("wallet.button")
 		onClicked: window.goPage('Wallet/Wallet.qml')
 	}
 
 	MenuButton {
-		text: tr("menu.player.button")
+		text: tr("player.button")
 		onClicked: window.goPage('Player/Player.qml')
 	}
 
 	MenuButton {
-		text: tr("menu.calculator.button")
+		text: tr("calculator.button")
 		onClicked: window.goPage('Calculator/Calculator.qml')
 	}
 
 	MenuButton {
-		text: tr("menu.speedtest.button")
+		text: tr("speedtest.button")
 		onClicked: window.goPage('SpeedTest/SpeedTest.qml')
 	}
 
 	MenuButton {
-		text: tr("menu.settings.button")
+		text: tr("settings.button")
 		onClicked: window.goPage('Settings/Settings.qml')
 	}
 

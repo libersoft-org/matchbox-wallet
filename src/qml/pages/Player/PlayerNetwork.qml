@@ -3,7 +3,7 @@ import "../../components"
 
 BaseMenu {
 	id: root
-	title: tr("menu.player.network")
+	title: tr("player.network")
 
 	Column {
 		width: parent.width
@@ -12,12 +12,12 @@ BaseMenu {
 		Input {
 			id: urlInput
 			width: parent.width
-			inputPlaceholder: tr("menu.player.url")
+			inputPlaceholder: tr("player.url")
 			inputType: "text"
 		}
 
 		MenuButton {
-			text: tr("menu.player.open")
+			text: tr("player.open")
 			onClicked: {
 				if (urlInput.text.length > 0) {
 					window.goPage('Player/PlayerVideo.qml', null, {

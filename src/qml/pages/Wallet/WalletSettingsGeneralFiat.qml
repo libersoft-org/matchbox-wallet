@@ -5,7 +5,7 @@ import "../../components"
 
 BaseMenu {
 	id: root
-	title: tr("menu.wallet.settings.general.fiat.title")
+	title: tr("wallet.settings.general.fiat.title")
 	property var currencies: ["USD", "EUR", "GBP", "CHF", "CZK", "PLN", "HUF"]
 
 	function selectCurrency(currency) {

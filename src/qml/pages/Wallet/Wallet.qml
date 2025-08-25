@@ -6,46 +6,46 @@ import "."
 
 BaseMenu {
 	id: root
-	title: tr("menu.wallet.title")
+	title: tr("wallet.title")
 
 	function handleSettingsRequest() {
 		window.goPage('Wallet/WalletSettings.qml');
 	}
 
 	MenuButton {
-		text: tr("menu.wallet.balance.button")
+		text: tr("wallet.balance.button")
 		onClicked: window.goPage('Wallet/WalletBalance.qml')
 	}
 
 	MenuButton {
-		text: tr("menu.wallet.send.button")
+		text: tr("wallet.send.button")
 		onClicked: window.goPage('Wallet/WalletSend.qml')
 	}
 
 	MenuButton {
-		text: tr("menu.wallet.receive.button")
+		text: tr("wallet.receive.button")
 		onClicked: window.goPage('Wallet/WalletReceive.qml')
 	}
 
 	MenuButton {
-		text: tr("menu.wallet.addressbook.button")
+		text: tr("wallet.addressbook.button")
 		onClicked: window.goPage('Wallet/WalletAddressbook.qml')
 	}
 
 	MenuButton {
-		text: tr("menu.wallet.network.button")
+		text: tr("wallet.network.button")
 		enabled: false
 		//onClicked: goPageFunction()
 	}
 
 	MenuButton {
-		text: tr("menu.wallet.address.button")
+		text: tr("wallet.address.button")
 		enabled: false
 		//onClicked: goPageFunction()
 	}
 
 	MenuButton {
-		text: tr("menu.wallet.settings.button")
+		text: tr("wallet.settings.button")
 		onClicked: root.handleSettingsRequest()
 	}
 }

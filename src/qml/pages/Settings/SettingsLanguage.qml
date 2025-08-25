@@ -5,7 +5,7 @@ import "../../components"
 
 BaseMenu {
 	id: root
-	title: tr("menu.settings.language.title")
+	title: tr("settings.language.title")
 
 	function selectLanguage(languageCode) {
 		window.settingsManager.saveLanguage(languageCode);

@@ -5,14 +5,14 @@ import "../../components"
 
 BaseMenu {
 	id: root
-	title: tr("menu.wallet.settings.title")
+	title: tr("wallet.settings.title")
 
 	function handleGeneralSettingsRequest() {
 		window.goPage('Wallet/WalletSettingsGeneral.qml');
 	}
 
 	MenuButton {
-		text: tr("menu.wallet.settings.general.button")
+		text: tr("wallet.settings.general.button")
 		onClicked: root.handleGeneralSettingsRequest()
 	}
 }

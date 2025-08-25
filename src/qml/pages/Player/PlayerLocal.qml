@@ -6,7 +6,7 @@ import "../../components"
 
 Item {
 	id: root
-	property string title: tr("menu.player.local")
+	property string title: tr("player.local")
 	property string currentPath: StandardPaths.standardLocations(StandardPaths.HomeLocation)[0]
 	property var pathHistory: []
 
@@ -44,7 +44,7 @@ Item {
 
 	BaseMenu {
 		id: menu
-		title: tr("menu.player.local")
+		title: tr("player.local")
 		anchors.fill: parent
 
 		// Current path display
@@ -59,7 +59,7 @@ Item {
 			property string cleanCurrentPath: root.currentPath.toString().replace("file://", "")
 			property string homeLocation: StandardPaths.standardLocations(StandardPaths.HomeLocation)[0].toString().replace("file://", "")
 			visible: cleanCurrentPath !== homeLocation
-			text: tr("menu.player.back")
+			text: tr("player.back")
 			backgroundColor: colors.success
 			onClicked: {
 				var homeLocation = StandardPaths.standardLocations(StandardPaths.HomeLocation)[0];

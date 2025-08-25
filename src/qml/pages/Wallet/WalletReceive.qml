@@ -5,5 +5,5 @@ import "../../components"
 
 BaseMenu {
 	id: root
-	title: tr("menu.wallet.receive.title")
+	title: tr("wallet.receive.title")
 }

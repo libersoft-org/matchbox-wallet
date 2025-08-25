@@ -1,187 +1,185 @@
 {
-	"menu": {
-		"wallet": {
-			"button": "Peněženka",
-			"title": "Peněženka",
-			"balance": {
-				"button": "Zůstatek",
-				"title": "Zůstatek peněženky"
-			},
-			"send": {
-				"button": "Odeslat",
-				"title": "Odeslat platbu"
-			},
-			"receive": {
-				"button": "Přijmout",
-				"title": "Přijmout platbu"
-			},
-			"addressbook": {
-				"button": "Adresář",
-				"title": "Adresář peněženky"
-			},
-			"network": {
-				"button": "Změnit síť",
-				"title": "Výběr sítě"
-			},
-			"address": {
-				"button": "Změnit adresu",
-				"title": "Výběr adresy"
-			},
-			"settings": {
-				"button": "Nastavení",
-				"title": "Nastavení peněženky",
-				"general": {
-					"button": "Obecné",
-					"title": "Obecná nastavení peněženky",
-					"fiat": {
-						"button": "Fiat měna: %1",
-						"title": "Výběr fiat měny"
-					}
-				}
-			}
+	"wallet": {
+		"button": "Peněženka",
+		"title": "Peněženka",
+		"balance": {
+			"button": "Zůstatek",
+			"title": "Zůstatek peněženky"
 		},
-		"player": {
-			"button": "Přehrávač médií",
-			"title": "Přehrávač médií",
-			"local": "Místní soubor",
-			"network": "Síťový proud",
-			"storage": "Místní úložiště",
-			"select": "Vybrat soubor",
-			"url": "Zadejte URL",
-			"open": "Otevřít",
-			"back": "Zpět"
+		"send": {
+			"button": "Odeslat",
+			"title": "Odeslat platbu"
 		},
-		"calculator": {
-			"button": "Kalkulačka",
-			"title": "Kalkulačka"
+		"receive": {
+			"button": "Přijmout",
+			"title": "Přijmout platbu"
 		},
-		"speedtest": {
-			"button": "Měření rychlosti",
-			"title": "Měření rychlosti internetu",
-			"download": "Stahování",
-			"upload": "Odesílání",
-			"ping": "Odezva",
-			"test_ready": "Připraveno k měření",
-			"test_start": "Zahajuji měření ...",
-			"test_download": "Měřím stahování ...",
-			"test_upload": "Měřím odesílání ...",
-			"test_ping": "Měřím odezvu ...",
-			"test_completed": "Měření dokončeno",
-			"start": "Spustit měření",
-			"network_error": "Chyba sítě",
-			"timeout": "Vypršel časový limit"
+		"addressbook": {
+			"button": "Adresář",
+			"title": "Adresář peněženky"
+		},
+		"network": {
+			"button": "Změnit síť",
+			"title": "Výběr sítě"
+		},
+		"address": {
+			"button": "Změnit adresu",
+			"title": "Výběr adresy"
 		},
 		"settings": {
 			"button": "Nastavení",
-			"title": "Nastavení systému",
-			"wifi": {
-				"button": "WiFi",
-				"title": "Nastavení WiFi",
-				"connected": "Připojeno k",
-				"disconnected": "Odpojeno",
-				"change": "Změnit síť",
-				"disconnect": "Odpojit",
-				"list": {
-					"title": "Dostupné sítě",
-					"scanning": "Vyhledávám...",
-					"refresh": "Obnovit",
-					"password": {
-						"title": "WiFi heslo",
-						"network": "Síť",
-						"secured": "Tato síť je zabezpečená",
-						"open": "Tato síť je otevřená",
-						"enter": "Zadejte heslo",
-						"placeholder": "Heslo",
-						"connect": "Připojit",
-						"error": "Připojení selhalo"
-					}
+			"title": "Nastavení peněženky",
+			"general": {
+				"button": "Obecné",
+				"title": "Obecná nastavení peněženky",
+				"fiat": {
+					"button": "Fiat měna: %1",
+					"title": "Výběr fiat měny"
 				}
-			},
-			"lora": {
-				"button": "LoRa",
-				"title": "LoRa nastavení"
-			},
-			"display": {
-				"button": "Displej",
-				"title": "Nastavení displeje",
-				"brightness": "Jas obrazovky"
-			},
-			"sound": {
-				"button": "Zvuk",
-				"title": "Nastavení zvuku",
-				"volume": "Hlasitost",
-				"mute": "Ztlumit",
-				"unmute": "Zrušit ztlumení"
-			},
-			"time": {
-				"button": "Datum a čas",
-				"title": "Nastavení data a času",
-				"set": "Nastavit manuálně",
-				"auto": "Automatická synchr. času",
-				"server": "NTP server",
-				"timezone": "Časové pásmo"
-			},
-			"language": {
-				"button": "Jazyk: %1",
-				"title": "Výběr jazyka",
-				"selectLanguage": "Vyberte jazyk"
-			},
-			"firewall": {
-				"button": "Firewall",
-				"title": "Nastavení firewallu",
-				"enable": "Povolit firewall",
-				"enabled": "Firewall je povolen",
-				"disabled": "Firewall je zakázán",
-				"exceptions": {
-					"title": "Přidat výjimku",
-					"port": "Číslo portu",
-					"portPlaceholder": "Zadejte číslo portu (1-65535)",
-					"description": "Popis (volitelné)",
-					"descriptionPlaceholder": "Zadejte popis portu",
-					"protocol": "Protokol",
-					"tcp": "TCP",
-					"udp": "UDP",
-					"both": "TCP a UDP",
-					"add": "Přidat port"
-				},
-				"ports": {
-					"title": "Povolené porty",
-					"port": "Port",
-					"description": "Popis",
-					"enabled": "Povoleno",
-					"allowed": "Povoleno",
-					"remove": "Odebrat",
-					"noPortsMessage": "Žádný port nebyl nakonfigurován",
-					"addException": "Přidat výjimku"
-				},
-				"errors": {
-					"invalidPort": "Neplatné číslo portu",
-					"portExists": "Port již existuje",
-					"addFailed": "Nepodařilo se přidat port",
-					"removeFailed": "Nepodařilo se odebrat port",
-					"enableFailed": "Nepodařilo se povolit firewall",
-					"disableFailed": "Nepodařilo se zakázat firewall"
-				},
-				"success": {
-					"portAdded": "Port přidán",
-					"portRemoved": "Port odebrán",
-					"firewallEnabled": "Firewall povolen",
-					"firewallDisabled": "Firewall zakázán"
+			}
+		}
+	},
+	"player": {
+		"button": "Přehrávač médií",
+		"title": "Přehrávač médií",
+		"local": "Místní soubor",
+		"network": "Síťový proud",
+		"storage": "Místní úložiště",
+		"select": "Vybrat soubor",
+		"url": "Zadejte URL",
+		"open": "Otevřít",
+		"back": "Zpět"
+	},
+	"calculator": {
+		"button": "Kalkulačka",
+		"title": "Kalkulačka"
+	},
+	"speedtest": {
+		"button": "Měření rychlosti",
+		"title": "Měření rychlosti internetu",
+		"download": "Stahování",
+		"upload": "Odesílání",
+		"ping": "Odezva",
+		"test_ready": "Připraveno k měření",
+		"test_start": "Zahajuji měření ...",
+		"test_download": "Měřím stahování ...",
+		"test_upload": "Měřím odesílání ...",
+		"test_ping": "Měřím odezvu ...",
+		"test_completed": "Měření dokončeno",
+		"start": "Spustit měření",
+		"network_error": "Chyba sítě",
+		"timeout": "Vypršel časový limit"
+	},
+	"settings": {
+		"button": "Nastavení",
+		"title": "Nastavení systému",
+		"wifi": {
+			"button": "WiFi",
+			"title": "Nastavení WiFi",
+			"connected": "Připojeno k",
+			"disconnected": "Odpojeno",
+			"change": "Změnit síť",
+			"disconnect": "Odpojit",
+			"list": {
+				"title": "Dostupné sítě",
+				"scanning": "Vyhledávám...",
+				"refresh": "Obnovit",
+				"password": {
+					"title": "WiFi heslo",
+					"network": "Síť",
+					"secured": "Tato síť je zabezpečená",
+					"open": "Tato síť je otevřená",
+					"enter": "Zadejte heslo",
+					"placeholder": "Heslo",
+					"connect": "Připojit",
+					"error": "Připojení selhalo"
 				}
+			}
+		},
+		"lora": {
+			"button": "LoRa",
+			"title": "LoRa nastavení"
+		},
+		"display": {
+			"button": "Displej",
+			"title": "Nastavení displeje",
+			"brightness": "Jas obrazovky"
+		},
+		"sound": {
+			"button": "Zvuk",
+			"title": "Nastavení zvuku",
+			"volume": "Hlasitost",
+			"mute": "Ztlumit",
+			"unmute": "Zrušit ztlumení"
+		},
+		"time": {
+			"button": "Datum a čas",
+			"title": "Nastavení data a času",
+			"set": "Nastavit manuálně",
+			"auto": "Automatická synchr. času",
+			"server": "NTP server",
+			"timezone": "Časové pásmo"
+		},
+		"language": {
+			"button": "Jazyk: %1",
+			"title": "Výběr jazyka",
+			"selectLanguage": "Vyberte jazyk"
+		},
+		"firewall": {
+			"button": "Firewall",
+			"title": "Nastavení firewallu",
+			"enable": "Povolit firewall",
+			"enabled": "Firewall je povolen",
+			"disabled": "Firewall je zakázán",
+			"exceptions": {
+				"title": "Přidat výjimku",
+				"port": "Číslo portu",
+				"portPlaceholder": "Zadejte číslo portu (1-65535)",
+				"description": "Popis (volitelné)",
+				"descriptionPlaceholder": "Zadejte popis portu",
+				"protocol": "Protokol",
+				"tcp": "TCP",
+				"udp": "UDP",
+				"both": "TCP a UDP",
+				"add": "Přidat port"
 			},
-			"update": {
-				"button": "Aktualizace",
-				"title": "Aktualizace systému",
-				"app": {
-					"current": "Verze vaší aplikace",
-					"latest": "Nejnovější verze aplikace",
-					"button": "Aktualizovat aplikaci"
-				},
-				"system": {
-					"current": "Verze vašeho systému",
-					"latest": "Nejnovější verze systému",
-					"button": "Aktualizovat systém"
-				}
+			"ports": {
+				"title": "Povolené porty",
+				"port": "Port",
+				"description": "Popis",
+				"enabled": "Povoleno",
+				"allowed": "Povoleno",
+				"remove": "Odebrat",
+				"noPortsMessage": "Žádný port nebyl nakonfigurován",
+				"addException": "Přidat výjimku"
+			},
+			"errors": {
+				"invalidPort": "Neplatné číslo portu",
+				"portExists": "Port již existuje",
+				"addFailed": "Nepodařilo se přidat port",
+				"removeFailed": "Nepodařilo se odebrat port",
+				"enableFailed": "Nepodařilo se povolit firewall",
+				"disableFailed": "Nepodařilo se zakázat firewall"
+			},
+			"success": {
+				"portAdded": "Port přidán",
+				"portRemoved": "Port odebrán",
+				"firewallEnabled": "Firewall povolen",
+				"firewallDisabled": "Firewall zakázán"
+			}
+		},
+		"update": {
+			"button": "Aktualizace",
+			"title": "Aktualizace systému",
+			"app": {
+				"current": "Verze vaší aplikace",
+				"latest": "Nejnovější verze aplikace",
+				"button": "Aktualizovat aplikaci"
+			},
+			"system": {
+				"current": "Verze vašeho systému",
+				"latest": "Nejnovější verze systému",
+				"button": "Aktualizovat systém"
 			}
 		}
 	},

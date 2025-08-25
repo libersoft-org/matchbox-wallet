@@ -7,7 +7,7 @@ import "../../utils/NodeUtils.js" as NodeUtils
 
 Item {
 	id: root
-	property string title: tr('menu.speedtest.title')
+	property string title: tr('speedtest.title')
 	property bool testRunning: false
 	property string currentStatus: ''
 	property string downloadSpeedText: '---'
@@ -35,7 +35,7 @@ Item {
 	}
 
 	function runPing() {
-		root.currentStatus = tr('menu.speedtest.test_ping');
+		root.currentStatus = tr('speedtest.test_ping');
 		//console.log('[SpeedTest] ping start');
 		NodeUtils.msg('speedPing', {}, function (res) {
 			//console.log('[SpeedTest] ping result', JSON.stringify(res));
@@ -49,7 +49,7 @@ Item {
 	}
 
 	function runDownload() {
-		root.currentStatus = tr('menu.speedtest.test_download');
+		root.currentStatus = tr('speedtest.test_download');
 		console.log('[SpeedTest] download start');
 		NodeUtils.msg('speedDownload', {
 			maxSeconds: 5
@@ -65,7 +65,7 @@ Item {
 	}
 
 	function runUpload() {
-		root.currentStatus = tr('menu.speedtest.test_upload');
+		root.currentStatus = tr('speedtest.test_upload');
 		//console.log('[SpeedTest] upload start');
 		NodeUtils.msg('speedUpload', {
 			maxSeconds: 5
@@ -76,7 +76,7 @@ Item {
 			} else {
 				uploadSpeedText = tr('common.error');
 			}
-			currentStatus = tr('menu.speedtest.test_completed');
+			currentStatus = tr('speedtest.test_completed');
 			testRunning = false;
 		});
 	}
@@ -85,7 +85,7 @@ Item {
 		if (testRunning)
 			return;
 		testRunning = true;
-		currentStatus = tr('menu.speedtest.test_start');
+		currentStatus = tr('speedtest.test_start');
 		downloadSpeedText = '---';
 		uploadSpeedText = '---';
 		pingLatencyText = '---';
@@ -104,7 +104,7 @@ Item {
 			Text {
 				id: statusLabel
 				anchors.centerIn: parent
-				text: currentStatus || tr('menu.speedtest.test_ready')
+				text: currentStatus || tr('speedtest.test_ready')
 				font.pixelSize: window.width * 0.04
 				font.bold: true
 				color: colors.primaryForeground
@@ -123,7 +123,7 @@ Item {
 
 				Text {
 					anchors.horizontalCenter: parent.horizontalCenter
-					text: tr('menu.speedtest.ping')
+					text: tr('speedtest.ping')
 					font.pixelSize: window.width * 0.04
 					font.bold: true
 					color: colors.primaryForeground
@@ -157,7 +157,7 @@ Item {
 
 					Text {
 						anchors.horizontalCenter: parent.horizontalCenter
-						text: tr('menu.speedtest.download')
+						text: tr('speedtest.download')
 						font.pixelSize: window.width * 0.04
 						font.bold: true
 						color: colors.primaryForeground
@@ -184,7 +184,7 @@ Item {
 
 					Text {
 						anchors.horizontalCenter: parent.horizontalCenter
-						text: tr('menu.speedtest.upload')
+						text: tr('speedtest.upload')
 						font.pixelSize: window.width * 0.04
 						font.bold: true
 						color: colors.primaryForeground
@@ -203,7 +203,7 @@ Item {
 
 		// Start test button
 		MenuButton {
-			text: tr('menu.speedtest.start')
+			text: tr('speedtest.start')
 			enabled: !testRunning
 			onClicked: startSpeedTest()
 		}

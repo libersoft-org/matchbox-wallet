@@ -5,7 +5,7 @@ import "../../components"
 
 ScrollableContainer {
 	id: root
-	property string title: tr("menu.wallet.balance.title")
+	property string title: tr("wallet.balance.title")
 
 	Column {
 		width: parent.width
