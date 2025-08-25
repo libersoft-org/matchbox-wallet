@@ -6,14 +6,14 @@ import "../../components"
 
 Item {
 	id: root
-	property string title: tr("player.local")
+	property string title: tr("player.folder")
 	property string currentPath: StandardPaths.standardLocations(StandardPaths.HomeLocation)[0]
 	property var pathHistory: []
 
 	Component.onCompleted: {
 		// Ensure we start in the home directory
 		var homeLocation = StandardPaths.standardLocations(StandardPaths.HomeLocation)[0];
-		console.log("PlayerLocal: Initializing with home directory:", homeLocation);
+		console.log("PlayerFolder: Initializing with home directory:", homeLocation);
 		root.currentPath = homeLocation;
 		folderModel.folder = "file://" + homeLocation;
 	}
@@ -21,7 +21,7 @@ Item {
 	FolderListModel {
 		id: folderModel
 		folder: "file://" + StandardPaths.standardLocations(StandardPaths.HomeLocation)[0]
-		//nameFilters: ["*.mp4", "*.avi", "*.mkv", "*.mov", "*.wmv", "*.flv", "*.webm", "*.m4v"]
+		nameFilters: ["*.mp4", "*.avi", "*.mkv", "*.mov", "*.wmv", "*.flv", "*.webm", "*.m4v", "*.mp3", "*.wav", "*.ogg", "*.flac", "*.aac"]
 		showDirs: true
 		showFiles: true
 		showDotAndDotDot: false
@@ -44,7 +44,7 @@ Item {
 
 	BaseMenu {
 		id: menu
-		title: tr("player.local")
+		title: tr("player.folder")
 		anchors.fill: parent
 
 		// Current path display
@@ -80,6 +80,23 @@ Item {
 			}
 		}
 
+		// Play all files in current folder button
+		MenuButton {
+			text: tr("player.all")
+			backgroundColor: colors.success
+			visible: getMediaFilesInCurrentFolder().length > 0
+			onClicked: {
+				var mediaFiles = getMediaFilesInCurrentFolder();
+				if (mediaFiles.length > 0) {
+					console.log("Playing folder with", mediaFiles.length, "files");
+					window.goPage('Player/PlayerVideo.qml', null, {
+						"playlist": mediaFiles,
+						"currentIndex": 0
+					});
+				}
+			}
+		}
+
 		// Directory and file entries
 		Repeater {
 			model: folderModel
@@ -101,14 +118,37 @@ Item {
 						root.pathHistory = newHistory;
 						root.currentPath = filePath;
 					} else {
-						// Play video file
-						console.log("Opening local video file:", filePath);
+						// Create playlist starting from this file
+						var mediaFiles = getMediaFilesInCurrentFolder();
+						var startIndex = 0;
+						for (var i = 0; i < mediaFiles.length; i++) {
+							if (mediaFiles[i] === "file://" + filePath) {
+								startIndex = i;
+								break;
+							}
+						}
+
+						console.log("Playing file in folder context:", filePath, "starting at index:", startIndex);
 						window.goPage('Player/PlayerVideo.qml', null, {
-							"singleSourceUrl": "file://" + filePath
+							"playlist": mediaFiles,
+							"currentIndex": startIndex
 						});
 					}
 				}
 			}
 		}
+	}
+
+	function getMediaFilesInCurrentFolder() {
+		var mediaFiles = [];
+		for (var i = 0; i < folderModel.count; i++) {
+			var item = folderModel.get(i, "fileIsDir");
+			var isDir = folderModel.get(i, "fileIsDir");
+			var fileUrl = folderModel.get(i, "fileURL");
+			if (!isDir) {
+				mediaFiles.push(fileUrl.toString());
+			}
+		}
+		return mediaFiles;
 	}
 }

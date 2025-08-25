@@ -5,11 +5,18 @@ import "../../components"
 
 Item {
 	id: root
+	property var playlist: []
+	property int currentIndex: 0
+	property string sourceUrl: {
+		if (playlist.length > 0 && currentIndex >= 0 && currentIndex < playlist.length)
+			return playlist[currentIndex];
+		return root.singleSourceUrl || "";
+	}
+	property string singleSourceUrl: "" // For single file playback
 	property string title: sourceUrl ? sourceUrl.substring(sourceUrl.lastIndexOf("/") + 1) : ""
 	property bool isVideoFullscreen: false
 	property bool isRotated: false  // true = 90° rotation, false = 0°
 	property bool controlsVisible: true
-	property string sourceUrl: "" // https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4
 
 	Rectangle {
 		anchors.fill: parent
@@ -31,6 +38,11 @@ Item {
 		MediaPlayer {
 			id: mediaPlayer
 			audioOutput: AudioOutput {}
+			onMediaStatusChanged: {
+				console.log("Media status changed:", mediaStatus);
+				if (mediaStatus === MediaPlayer.EndOfMedia && root.playlist.length > 1)
+					root.playNext();
+			}
 		}
 
 		VideoOutput {
@@ -168,7 +180,25 @@ Item {
 					// Left side buttons
 					Row {
 						anchors.left: parent.left
-						spacing: parent.width * 0.05
+						spacing: parent.width * 0.03
+
+						// Previous button
+						Icon {
+							width: window.width * 0.1
+							height: window.width * 0.1
+							img: "qrc:/WalletModule/src/img/previous.svg"
+							opacity: (root.playlist.length > 1 && root.currentIndex > 0) ? 1.0 : 0.4
+
+							MouseArea {
+								anchors.fill: parent
+								enabled: root.playlist.length > 1 && root.currentIndex > 0
+								onClicked: {
+									root.playPrevious();
+									root.controlsVisible = true;
+									hideTimer.restart();
+								}
+							}
+						}
 
 						// Play/Pause button
 						Icon {
@@ -204,12 +234,30 @@ Item {
 								}
 							}
 						}
+
+						// Next button
+						Icon {
+							width: window.width * 0.1
+							height: window.width * 0.1
+							img: "qrc:/WalletModule/src/img/next.svg"
+							opacity: (root.playlist.length > 1 && root.currentIndex < (root.playlist.length - 1)) ? 1.0 : 0.4
+
+							MouseArea {
+								anchors.fill: parent
+								enabled: root.playlist.length > 1 && root.currentIndex < (root.playlist.length - 1)
+								onClicked: {
+									root.playNext();
+									root.controlsVisible = true;
+									hideTimer.restart();
+								}
+							}
+						}
 					}
 
 					// Right side buttons
 					Row {
 						anchors.right: parent.right
-						spacing: parent.width * 0.05
+						spacing: parent.width * 0.03
 
 						// Rotate button
 						Icon {
@@ -270,12 +318,37 @@ Item {
 		}
 	}
 
+	function playPrevious() {
+		if (root.playlist.length > 1 && root.currentIndex > 0) {
+			root.currentIndex--;
+			loadCurrentMedia();
+		}
+	}
+
+	function playNext() {
+		if (root.playlist.length > 1 && root.currentIndex < (root.playlist.length - 1)) {
+			root.currentIndex++;
+			loadCurrentMedia();
+		}
+	}
+
+	function loadCurrentMedia() {
+		if (root.sourceUrl && root.sourceUrl.length > 0) {
+			console.log("Loading media:", root.sourceUrl);
+			mediaPlayer.source = root.sourceUrl;
+			mediaPlayer.play();
+		}
+	}
+
 	Component.onCompleted: {
 		console.log("PlayerVideo component completed with sourceUrl:", sourceUrl);
+		if (playlist.length > 0)
+			console.log("PlayerVideo playlist mode with", playlist.length, "items, starting at index:", currentIndex);
 		console.log("PlayerVideo component ID:", root);
-		if (sourceUrl && sourceUrl.length > 0)
+		if (sourceUrl && sourceUrl.length > 0) {
 			mediaPlayer.source = sourceUrl;
-		mediaPlayer.play();
+			mediaPlayer.play();
+		}
 		hideTimer.start();
 	}
 

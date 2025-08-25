@@ -21,7 +21,7 @@ BaseMenu {
 			onClicked: {
 				if (urlInput.text.length > 0) {
 					window.goPage('Player/PlayerVideo.qml', null, {
-						"sourceUrl": urlInput.text
+						"singleSourceUrl": urlInput.text
 					});
 				}
 			}
