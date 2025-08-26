@@ -249,39 +249,26 @@ Rectangle {
 			spacing: window.width * 0.05
 
 			// Play/Stop button
-			Rectangle {
+			Icon {
 				anchors.horizontalCenter: parent.horizontalCenter
 				width: window.width * 0.2
 				height: window.width * 0.2
-				color: isPlaying ? "#ff4444" : "#44aa44"
-				radius: width / 2
-				border.color: "#ffffff"
-				border.width: 3
-
-				Text {
-					anchors.centerIn: parent
-					text: isLoading ? "..." : (isPlaying ? "⏸" : "▶")
-					font.pixelSize: window.width * 0.08
-					color: "white"
-				}
-
-				MouseArea {
-					anchors.fill: parent
-					onClicked: {
-						if (isPlaying) {
-							stopStation();
-						} else {
-							playStation();
-						}
+				img: {
+					if (isLoading) {
+						return Qt.resolvedUrl("../../../img/refresh.svg");
+					} else if (isPlaying) {
+						return Qt.resolvedUrl("../../../img/stop.svg");
+					} else {
+						return Qt.resolvedUrl("../../../img/play.svg");
 					}
 				}
-			}
-
-			Text {
-				anchors.horizontalCenter: parent.horizontalCenter
-				text: isLoading ? window.tr("radio.player.loading") : ''
-				font.pixelSize: window.width * 0.04
-				color: colors.primaryForeground
+				onClicked: {
+					if (isPlaying) {
+						stopStation();
+					} else {
+						playStation();
+					}
+				}
 			}
 
 			// Favourite button
