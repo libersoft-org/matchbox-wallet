@@ -246,27 +246,10 @@ Rectangle {
 			}
 
 			// Favourite button
-			Rectangle {
-				anchors.horizontalCenter: parent.horizontalCenter
-				width: window.width * 0.6
-				height: window.height * 0.08
-				color: isFavourite ? colors.error : colors.success
-				radius: window.width * 0.02
-				border.color: "#ffffff"
-				border.width: 2
-
-				Text {
-					anchors.centerIn: parent
-					text: isFavourite ? window.tr("radio.player.favs_del") : window.tr("radio.player.favs_add")
-					font.pixelSize: window.width * 0.04
-					font.bold: true
-					color: "white"
-				}
-
-				MouseArea {
-					anchors.fill: parent
-					onClicked: toggleFavourite()
-				}
+			MenuButton {
+				backgroundColor: isFavourite ? colors.error : colors.success
+				text: isFavourite ? window.tr("radio.player.favs_del") : window.tr("radio.player.favs_add")
+				onClicked: toggleFavourite()
 			}
 		}
 	}
