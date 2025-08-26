@@ -1,12 +1,12 @@
 import QtQuick 6.8
+import "../../components"
 import "../../static"
 
-Rectangle {
+Item {
 	id: root
 	property string title: tr("radio.country.title")
-	width: parent.width
-	height: parent.height
-	color: colors.primaryBackground
+	width: window.width
+	height: window.height
 
 	Colors {
 		id: colors
@@ -36,13 +36,17 @@ Rectangle {
 						});
 						countries = response || [];
 						console.log("Countries loaded:", countries.length);
+						// Update the Repeater model
+						countryRepeater.model = countries;
 					} catch (e) {
 						console.error("Error parsing countries:", e);
 						countries = [];
+						countryRepeater.model = [];
 					}
 				} else {
 					console.error("Loading countries failed with status:", xhr.status);
 					countries = [];
+					countryRepeater.model = [];
 				}
 			}
 		};
@@ -59,72 +63,36 @@ Rectangle {
 		});
 	}
 
-	// Content
-	ListView {
-		id: countriesList
-		anchors.top: header.bottom
-		anchors.left: parent.left
-		anchors.right: parent.right
-		anchors.bottom: parent.bottom
-		anchors.margins: window.width * 0.02
-		spacing: window.width * 0.01
-		model: countries
+	BaseMenu {
+		anchors.fill: parent
 
-		delegate: Rectangle {
-			width: countriesList.width
-			height: window.height * 0.08
-			color: "#f0f0f0"
-			radius: window.width * 0.01
-			border.color: "#cccccc"
-			border.width: 1
+		// Create buttons for each country
+		Repeater {
+			id: countryRepeater
+			model: root.countries
 
-			MouseArea {
-				anchors.fill: parent
+			MenuButton {
+				text: modelData.name || ""
 				onClicked: {
-					loadStationsByCountry(modelData.iso_3166_1);
-				}
-			}
-
-			Row {
-				anchors.left: parent.left
-				anchors.right: parent.right
-				anchors.verticalCenter: parent.verticalCenter
-				anchors.leftMargin: window.width * 0.03
-				anchors.rightMargin: window.width * 0.03
-				spacing: window.width * 0.02
-
-				Text {
-					text: modelData.name || ""
-					font.pixelSize: window.width * 0.04
-					font.bold: true
-					color: "#333333"
-					width: parent.width * 0.7
-					elide: Text.ElideRight
-					anchors.verticalCenter: parent.verticalCenter
-				}
-
-				Text {
-					text: (modelData.stationcount || "0") + " stations"
-					font.pixelSize: window.width * 0.03
-					color: "#666666"
-					anchors.verticalCenter: parent.verticalCenter
+					root.loadStationsByCountry(modelData.iso_3166_1);
 				}
 			}
 		}
+	}
 
-		// Loading indicator
-		Rectangle {
+	// Loading indicator (overlay)
+	Rectangle {
+		anchors.centerIn: parent
+		visible: root.isLoading
+		width: parent.width * 0.8
+		height: window.height * 0.2
+		color: colors.primaryBackground
+
+		Text {
 			anchors.centerIn: parent
-			visible: isLoading
-			width: parent.width * 0.8
-			height: window.height * 0.2
-
-			Text {
-				anchors.centerIn: parent
-				text: tr("radio.player.loading")
-				font.pixelSize: window.width * 0.04
-				color: colors.primaryForeground
-			}
+			text: tr("radio.player.loading")
+			font.pixelSize: window.width * 0.04
+			color: colors.primaryForeground
 		}
 	}
 }
