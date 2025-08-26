@@ -227,20 +227,41 @@ Rectangle {
 			anchors.centerIn: parent
 			spacing: window.width * 0.05
 
-			// Play/stop button
-			Icon {
+			// Play/Stop/Loading button
+			Item {
 				anchors.horizontalCenter: parent.horizontalCenter
 				width: window.width * 0.2
 				height: window.width * 0.2
-				img: {
-					if (isLoading)
-						return Qt.resolvedUrl("../../../img/refresh.svg");
-					else if (isPlaying)
-						return Qt.resolvedUrl("../../../img/stop.svg");
-					else
-						return Qt.resolvedUrl("../../../img/play.svg");
+
+				// Show spinner when loading
+				Spinner {
+					anchors.centerIn: parent
+					width: parent.width
+					height: parent.height
+					visible: isLoading
 				}
-				onClicked: togglePlayPause()
+
+				// Show play/stop icon when not loading
+				Icon {
+					anchors.centerIn: parent
+					width: parent.width
+					height: parent.height
+					img: isPlaying ? Qt.resolvedUrl("../../../img/stop.svg") : Qt.resolvedUrl("../../../img/play.svg")
+					visible: !isLoading
+					onClicked: togglePlayPause()
+				}
+
+				// MouseArea for the entire button when loading
+				MouseArea {
+					anchors.fill: parent
+					enabled: isLoading
+					onClicked: {
+						if (isLoading) {
+							// Allow stopping during loading
+							stopStation()
+						}
+					}
+				}
 			}
 
 			// Favourite button
