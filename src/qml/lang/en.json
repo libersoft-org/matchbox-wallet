@@ -56,11 +56,54 @@
 		"button": "Calculator",
 		"title": "Calculator"
 	},
+	"radio": {
+		"button": "Internet radio",
+		"menu": {
+			"title": "Internet radio",
+			"favs": "My favourites",
+			"search": "Search",
+			"country": "List by country",
+			"language": "List by language"
+		},
+		"player": {
+			"title": "Radio player",
+			"favs_add": "Add to favourites",
+			"favs_del": "Remove from favourites",
+			"stop": "Stop",
+			"play": "Play",
+			"loading": "Loading..."
+		},
+		"search": {
+			"title": "Search stations",
+			"placeholder": "Enter station name...",
+			"no_results": "No stations found"
+		},
+		"country": {
+			"title": "Stations by country"
+		},
+		"language": {
+			"title": "Stations by language"
+		},
+		"favourites": {
+			"title": "My favourite stations",
+			"empty": "No favourite stations yet"
+		}
+	},
 	"speedtest": {
 		"button": "Speed test",
 		"title": "Internet speed test",
+		"download": "Download",
+		"upload": "Upload",
+		"ping": "Ping",
+		"test_ready": "Ready to test",
+		"test_start": "Starting test ...",
+		"test_download": "Testing download ...",
+		"test_upload": "Testing upload ...",
+		"test_ping": "Testing ping ...",
+		"test_completed": "Test completed",
 		"start": "Start test",
-		"progress": "Testing ..."
+		"network_error": "Network error",
+		"timeout": "Timeout"
 	},
 	"settings": {
 		"button": "Settings",

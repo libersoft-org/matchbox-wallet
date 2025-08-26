@@ -32,6 +32,11 @@ BaseMenu {
 	}
 
 	MenuButton {
+		text: tr("radio.button")
+		onClicked: window.goPage('Radio/RadioMenu.qml')
+	}
+
+	MenuButton {
 		text: "Camera test"
 		onClicked: window.goPage('CameraPreview.qml')
 	}
