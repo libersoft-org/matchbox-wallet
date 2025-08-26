@@ -106,9 +106,7 @@ Rectangle {
 			console.log("toggleFavourite called but no station provided");
 			return;
 		}
-
 		console.log("Toggling favourite for station:", station.name, "Currently favourite:", isFavourite);
-
 		if (isFavourite) {
 			// Remove from favourites
 			console.log("Removing from favourites, current list length:", favouriteStations.length);
@@ -164,6 +162,13 @@ Rectangle {
 		mediaPlayer.stop();
 		isPlaying = false;
 		isLoading = false;
+	}
+
+	function togglePlayPause() {
+		if (isPlaying)
+			stopStation();
+		else
+			playStation();
 	}
 
 	// Header with station info
@@ -228,27 +233,20 @@ Rectangle {
 				width: window.width * 0.2
 				height: window.width * 0.2
 				img: {
-					if (isLoading) {
+					if (isLoading)
 						return Qt.resolvedUrl("../../../img/refresh.svg");
-					} else if (isPlaying) {
+					else if (isPlaying)
 						return Qt.resolvedUrl("../../../img/stop.svg");
-					} else {
+					else
 						return Qt.resolvedUrl("../../../img/play.svg");
-					}
 				}
-				onClicked: {
-					if (isPlaying) {
-						stopStation();
-					} else {
-						playStation();
-					}
-				}
+				onClicked: togglePlayPause()
 			}
 
 			// Favourite button
 			MenuButton {
 				backgroundColor: isFavourite ? colors.error : colors.success
-				text: isFavourite ? window.tr("radio.player.favs_del") : window.tr("radio.player.favs_add")
+				text: isFavourite ? tr("radio.player.favs_del") : tr("radio.player.favs_add")
 				onClicked: toggleFavourite()
 			}
 		}
