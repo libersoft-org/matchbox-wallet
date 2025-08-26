@@ -56,6 +56,36 @@
 		"button": "Kalkulačka",
 		"title": "Kalkulačka"
 	},
+	"radio": {
+		"button": "Internetové rádio",
+		"menu": {
+			"title": "Internetové rádio",
+			"favs": "Moje oblíbené",
+			"search": "Hledat",
+			"country": "Seznam podle zemí",
+			"language": "Seznam podle jazyků"
+		},
+		"favourites": {
+			"title": "Moje oblíbené stanice",
+			"empty": "Zatím žádné oblíbené stanice"
+		},
+		"search": {
+			"title": "Hledat stanice",
+			"placeholder": "Zadejte název stanice...",
+			"no_results": "Žádné stanice nenalezeny"
+		},
+		"country": {
+			"title": "Stanice podle zemí"
+		},
+		"language": {
+			"title": "Stanice podle jazyků"
+		},
+		"player": {
+			"title": "Přehrávač rádia",
+			"favs_add": "Přidat do oblíbených",
+			"favs_del": "Odebrat z oblíbených"
+		}
+	},
 	"speedtest": {
 		"button": "Měření rychlosti",
 		"title": "Měření rychlosti internetu",
