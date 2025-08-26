@@ -5,7 +5,7 @@
       "name": "matchbox-wallet-js",
       "dependencies": {
         "ethers": "^6.15.0",
-        "libersoft-crypto": "https://github.com/libersoft-org/crypto-utils#eed97a6b8687a139a2f220cb01f38e9273cb13cb",
+        "libersoft-crypto": "https://github.com/libersoft-org/crypto-utils#dd91033d867b2f1367df08e8c53d813cba038696",
         "node-wifi": "^2.0.16",
         "systeminformation": "^5.27.7",
       },
@@ -551,7 +551,7 @@
 
     "keccak": ["keccak@3.0.4", "", { "dependencies": { "node-addon-api": "^2.0.0", "node-gyp-build": "^4.2.0", "readable-stream": "^3.6.0" } }, "sha512-3vKuW0jV8J3XNTzvfyicFR5qvxrSAGl7KIhvgOu5cmWwM7tZRj3fMbj/pfIf4be7aznbc+prBWGjywox/g2Y6Q=="],
 
-    "libersoft-crypto": ["libersoft-crypto@github:libersoft-org/crypto-utils#eed97a6", { "dependencies": { "@ledgerhq/hw-app-eth": "^6.0.0", "@ledgerhq/hw-transport-webhid": "^6.0.0", "@ledgerhq/hw-transport-webusb": "^6.0.0", "@trezor/connect": "^9.0.0", "@trezor/connect-web": "^9.0.0", "ethers": "^6.0.0", "node-localstorage": "^3.0.5" }, "peerDependencies": { "svelte": "5.20.0" } }, "libersoft-org-crypto-utils-eed97a6"],
+    "libersoft-crypto": ["libersoft-crypto@github:libersoft-org/crypto-utils#dd91033", { "dependencies": { "@ledgerhq/hw-app-eth": "^6.0.0", "@ledgerhq/hw-transport-webhid": "^6.0.0", "@ledgerhq/hw-transport-webusb": "^6.0.0", "@trezor/connect": "^9.0.0", "@trezor/connect-web": "^9.0.0", "ethers": "^6.0.0", "node-localstorage": "^3.0.5" }, "peerDependencies": { "svelte": "5.20.0" } }, "libersoft-org-crypto-utils-dd91033"],
 
     "locate-character": ["locate-character@3.0.0", "", {}, "sha512-SW13ws7BjaeJ6p7Q6CO2nchbYEc3X3J6WrmTTDto7yMPqVSZTUyY5Tjbid+Ab8gLnATtygYtiDIJGQRRn2ZOiA=="],
 
