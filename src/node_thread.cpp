@@ -352,7 +352,7 @@ void NodeThread::processMessages() {
 			m_messageCondition.wait(&m_messageMutex, 1 /* ms */);
 		}
 		// If you prefer no condition wait, at least:
-		// else QThread::msleep(0); // yield
+		else QThread::msleep(1); // yield
 	}
 }
 

@@ -67,7 +67,20 @@ else
     CMAKE_LIBRARY_ARCH=""
 fi
 
-cmake ../.. -DCMAKE_BUILD_TYPE=Release -DENABLE_NODEJS=ON $CMAKE_LIBRARY_ARCH
+# Configure CMake with optional Qt SDK path
+BUILD_TYPE=${CMAKE_BUILD_TYPE:-Release}
+echo "Build type: $BUILD_TYPE"
+CMAKE_ARGS="-DCMAKE_BUILD_TYPE=$BUILD_TYPE -DENABLE_NODEJS=ON $CMAKE_LIBRARY_ARCH"
+
+# If QT_DIR is set, use it to find Qt SDK instead of system Qt
+if [ -n "$QT_DIR" ]; then
+    echo "Using Qt SDK from: $QT_DIR"
+    CMAKE_ARGS="$CMAKE_ARGS -DCMAKE_PREFIX_PATH=$QT_DIR"
+else
+    echo "Using system Qt libraries"
+fi
+
+cmake ../.. $CMAKE_ARGS
 if [ $? -ne 0 ]; then
  echo "CMAKE configuration failed!"
  exit 1
