@@ -14,10 +14,15 @@ Item {
 	Image {
 		id: spinnerIcon
 		anchors.centerIn: parent
-		width: Math.min(parent.width, parent.height)
+		width: parent.width
 		height: width
 		source: Qt.resolvedUrl("../../img/spinner.svg")
 		fillMode: Image.PreserveAspectFit
+		sourceSize.width: width   // Render SVG at actual display size
+		sourceSize.height: height // Render SVG at actual display size
+		mipmap: true  // Better quality for SVG scaling
+		smooth: true  // Smooth rendering
+		antialiasing: true  // Anti-aliasing for better quality
 
 		RotationAnimation {
 			id: rotation
