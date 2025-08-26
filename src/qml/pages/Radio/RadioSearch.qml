@@ -4,6 +4,8 @@ import "../../static"
 Rectangle {
 	id: root
 	property string title: tr("radio.search.title")
+	property var searchResults: []
+	property bool isSearching: false
 	width: parent.width
 	height: parent.height
 	color: colors.primaryBackground
@@ -12,18 +14,13 @@ Rectangle {
 		id: colors
 	}
 
-	property var searchResults: []
-	property bool isSearching: false
-
 	function searchStations(query) {
 		if (query.trim() === "") {
 			searchResults = [];
 			return;
 		}
-
 		isSearching = true;
 		searchResults = [];
-
 		var xhr = new XMLHttpRequest();
 		xhr.onreadystatechange = function () {
 			if (xhr.readyState === XMLHttpRequest.DONE) {
