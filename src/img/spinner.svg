@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+	<g fill="#fd3">
+		<circle cx="12" cy="3" r="1.50" opacity="1.00"/>
+		<circle cx="12" cy="3" r="1.20" opacity="0.80" transform="rotate(-20 12 12)"/>
+		<circle cx="12" cy="3" r="0.96" opacity="0.64" transform="rotate(-40 12 12)"/>
+		<circle cx="12" cy="3" r="0.77" opacity="0.51" transform="rotate(-60 12 12)"/>
+		<circle cx="12" cy="3" r="0.62" opacity="0.41" transform="rotate(-80 12 12)"/>
+		<circle cx="12" cy="3" r="0.50" opacity="0.33" transform="rotate(-100 12 12)"/>
+	</g>
+</svg>

@@ -16,7 +16,7 @@ Item {
 		anchors.centerIn: parent
 		width: Math.min(parent.width, parent.height)
 		height: width
-		source: Qt.resolvedUrl("../../img/refresh.svg")
+		source: Qt.resolvedUrl("../../img/spinner.svg")
 		fillMode: Image.PreserveAspectFit
 
 		RotationAnimation {

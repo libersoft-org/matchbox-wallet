@@ -1,11 +1,12 @@
-import QtQuick 6.8
+import QtQuick 2.15
+import QtQuick.Controls 2.15
+import "../../components"
 import "../../static"
 
-Rectangle {
+Item {
 	id: root
-	width: parent.width
-	height: parent.height
-	color: colors.primaryBackground
+	width: window.width
+	height: window.height
 
 	Colors {
 		id: colors
@@ -51,6 +52,9 @@ Rectangle {
 						var response = JSON.parse(xhr.responseText);
 						stations = response || [];
 						console.log("Stations loaded:", stations.length);
+						
+						// Explicitly update the model for the Repeater
+						stationsRepeater.model = stations;
 					} catch (e) {
 						console.error("Error parsing stations:", e);
 						stations = [];
@@ -98,103 +102,70 @@ Rectangle {
 	}
 
 	// Content
-	ListView {
-		id: stationsList
+	BaseMenu {
+		id: stationsMenu
 		anchors.top: header.bottom
 		anchors.left: parent.left
 		anchors.right: parent.right
 		anchors.bottom: parent.bottom
 		anchors.margins: window.width * 0.02
-		spacing: window.width * 0.01
-		model: stations
 
-		delegate: Rectangle {
-			width: stationsList.width
-			height: window.height * 0.12
-			color: "#f0f0f0"
-			radius: window.width * 0.01
-			border.color: "#cccccc"
-			border.width: 1
-
-			MouseArea {
-				anchors.fill: parent
+		Repeater {
+			id: stationsRepeater
+			model: stations
+			delegate: MenuButton {
+				text: {
+					var stationText = modelData.name || "";
+					var details = [];
+					if (modelData.country) details.push(modelData.country);
+					if (modelData.language) details.push(modelData.language);
+					if (modelData.tags) details.push(modelData.tags);
+					if (details.length > 0) {
+						stationText += " (" + details.join(" • ") + ")";
+					}
+					return stationText;
+				}
 				onClicked: {
 					window.goPage('Radio/RadioPlayer.qml', null, {
 						station: modelData
 					});
 				}
 			}
-
-			Row {
-				anchors.left: parent.left
-				anchors.right: parent.right
-				anchors.verticalCenter: parent.verticalCenter
-				anchors.leftMargin: window.width * 0.02
-				anchors.rightMargin: window.width * 0.02
-				spacing: window.width * 0.02
-
-				Column {
-					width: parent.width - window.width * 0.04
-					anchors.verticalCenter: parent.verticalCenter
-
-					Text {
-						text: modelData.name || ""
-						font.pixelSize: window.width * 0.04
-						font.bold: true
-						color: "#333333"
-						width: parent.width
-						elide: Text.ElideRight
-					}
-
-					Text {
-						text: (modelData.country || "") + (modelData.country && modelData.language ? " • " : "") + (modelData.language || "")
-						font.pixelSize: window.width * 0.03
-						color: "#666666"
-						width: parent.width
-						elide: Text.ElideRight
-					}
-
-					Text {
-						text: modelData.tags || ""
-						font.pixelSize: window.width * 0.025
-						color: "#888888"
-						width: parent.width
-						elide: Text.ElideRight
-						visible: text.length > 0
-					}
-				}
-			}
 		}
+	}
 
-		// Loading indicator
-		Rectangle {
+	// Loading indicator (outside BaseMenu to avoid anchor conflicts)
+	Rectangle {
+		anchors.centerIn: parent
+		visible: isLoading
+		width: parent.width * 0.8
+		height: window.height * 0.2
+		color: "#4A4A4A"
+		radius: window.width * 0.02
+
+		Text {
 			anchors.centerIn: parent
-			visible: isLoading
-			width: parent.width * 0.8
-			height: window.height * 0.2
-
-			Text {
-				anchors.centerIn: parent
-				text: tr("radio.player.loading")
-				font.pixelSize: window.width * 0.04
-				color: colors.primaryForeground
-			}
+			text: tr("radio.player.loading")
+			font.pixelSize: window.width * 0.04
+			color: "#FFFFFF"
 		}
+	}
 
-		// No results message
-		Rectangle {
+	// No results message
+	Rectangle {
+		anchors.centerIn: parent
+		visible: !isLoading && stations.length === 0
+		width: parent.width * 0.8
+		height: window.height * 0.2
+		color: "#4A4A4A"
+		radius: window.width * 0.02
+
+		Text {
 			anchors.centerIn: parent
-			visible: !isLoading && stations.length === 0
-			width: parent.width * 0.8
-			height: window.height * 0.2
-
-			Text {
-				anchors.centerIn: parent
-				text: tr("radio.search.no_results")
-				font.pixelSize: window.width * 0.04
-				color: "#666666"
-				horizontalAlignment: Text.AlignHCenter
-			}
+			text: tr("radio.search.no_results")
+			font.pixelSize: window.width * 0.04
+			color: "#FFFFFF"
+			horizontalAlignment: Text.AlignHCenter
 		}
 	}
 }
