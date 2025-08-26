@@ -5,3 +5,7 @@ src/js/package-lock.json
 **/*-formatting-tmp.qml~
 *.log
 .dev_intention
+callgrind.out*
+cpu.svg
+out.folded
+perf.data
