@@ -31,6 +31,9 @@ Rectangle {
 						var response = JSON.parse(xhr.responseText);
 						searchResults = response || [];
 						console.log("Search results loaded:", searchResults.length, "stations");
+
+						// Explicitly update the model for the Repeater
+						searchRepeater.model = searchResults;
 					} catch (e) {
 						console.error("Error parsing search results:", e);
 						searchResults = [];
@@ -96,96 +99,48 @@ Rectangle {
 		}
 	}
 	// Content
-	ListView {
-		id: stationsList
+	BaseMenu {
+		id: stationsMenu
 		anchors.top: header.bottom
 		anchors.left: parent.left
 		anchors.right: parent.right
 		anchors.bottom: parent.bottom
 		anchors.margins: window.width * 0.02
-		spacing: window.width * 0.01
-		model: searchResults
 
-		delegate: Rectangle {
-			width: stationsList.width
-			height: window.height * 0.12
-			color: "#f0f0f0"
-			radius: window.width * 0.01
-			border.color: "#cccccc"
-			border.width: 1
-
-			MouseArea {
-				anchors.fill: parent
+		Repeater {
+			id: searchRepeater
+			model: searchResults
+			delegate: MenuButton {
+				text: modelData.name || ""
 				onClicked: {
-					window.goPage('Radio/RadioPlayer.qml', {
+					window.goPage('Radio/RadioPlayer.qml', null, {
 						station: modelData
 					});
 				}
 			}
-
-			Row {
-				anchors.left: parent.left
-				anchors.right: parent.right
-				anchors.verticalCenter: parent.verticalCenter
-				anchors.leftMargin: window.width * 0.02
-				anchors.rightMargin: window.width * 0.02
-				spacing: window.width * 0.02
-
-				Column {
-					width: parent.width - window.width * 0.04
-					anchors.verticalCenter: parent.verticalCenter
-
-					Text {
-						text: modelData.name || ""
-						font.pixelSize: window.width * 0.04
-						font.bold: true
-						color: "#333333"
-						width: parent.width
-						elide: Text.ElideRight
-					}
-
-					Text {
-						text: (modelData.country || "") + (modelData.country && modelData.language ? " • " : "") + (modelData.language || "")
-						font.pixelSize: window.width * 0.03
-						color: "#666666"
-						width: parent.width
-						elide: Text.ElideRight
-					}
-
-					Text {
-						text: modelData.tags || ""
-						font.pixelSize: window.width * 0.025
-						color: "#888888"
-						width: parent.width
-						elide: Text.ElideRight
-						visible: text.length > 0
-					}
-				}
-			}
 		}
+	}
 
-		// Loading indicator
-		Spinner {
+	// Loading indicator (outside BaseMenu to avoid anchor conflicts)
+	Spinner {
+		anchors.centerIn: parent
+		visible: isSearching
+		width: window.width * 0.15
+		height: width
+	}
+
+	// No results message
+	Frame {
+		anchors.centerIn: parent
+		visible: !isSearching && searchResults.length === 0 && searchInput.text.length > 0
+		width: parent.width * 0.8
+
+		Text {
 			anchors.centerIn: parent
-			visible: isSearching
-			width: window.width * 0.15
-			height: width
-		}
-
-		// No results message
-		Rectangle {
-			anchors.centerIn: parent
-			visible: !isSearching && searchResults.length === 0 && searchInput.text.length > 0
-			width: parent.width * 0.8
-			height: window.height * 0.2
-
-			Text {
-				anchors.centerIn: parent
-				text: tr("radio.search.no_results")
-				font.pixelSize: window.width * 0.04
-				color: "#666666"
-				horizontalAlignment: Text.AlignHCenter
-			}
+			text: tr("radio.search.no_results")
+			font.pixelSize: window.width * 0.04
+			color: colors.primaryForeground
+			horizontalAlignment: Text.AlignHCenter
 		}
 	}
 }
