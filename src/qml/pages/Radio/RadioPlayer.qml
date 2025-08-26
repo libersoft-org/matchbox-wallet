@@ -167,70 +167,44 @@ Rectangle {
 	}
 
 	// Header with station info
-	Rectangle {
+	Frame {
 		id: header
 		anchors.top: parent.top
 		anchors.left: parent.left
 		anchors.right: parent.right
-		height: window.height * 0.3
-		color: colors.primaryBackground
+		anchors.margins: window.width * 0.05
 
 		Column {
-			anchors.centerIn: parent
-			width: parent.width * 0.9
-			spacing: window.width * 0.03
+			width: parent.width
+			spacing: window.width * 0.02
 
 			Text {
-				anchors.horizontalCenter: parent.horizontalCenter
-				text: tr("radio.player.title")
+				text: station ? (station.name || "") : ""
 				font.pixelSize: window.width * 0.05
 				font.bold: true
 				color: colors.primaryForeground
+				width: parent.width
+				elide: Text.ElideRight
+				horizontalAlignment: Text.AlignHCenter
 			}
 
-			Rectangle {
-				anchors.horizontalCenter: parent.horizontalCenter
+			Text {
+				text: station ? ((station.country || "") + (station.country && station.language ? " • " : "") + (station.language || "")) : ""
+				font.pixelSize: window.width * 0.035
+				color: colors.primaryForeground
 				width: parent.width
-				height: window.height * 0.15
-				color: "#f0f0f0"
-				radius: window.width * 0.02
-				border.color: "#cccccc"
-				border.width: 1
+				elide: Text.ElideRight
+				horizontalAlignment: Text.AlignHCenter
+			}
 
-				Column {
-					anchors.centerIn: parent
-					width: parent.width * 0.9
-					spacing: window.width * 0.01
-
-					Text {
-						text: station ? (station.name || "") : ""
-						font.pixelSize: window.width * 0.05
-						font.bold: true
-						color: "#333333"
-						width: parent.width
-						elide: Text.ElideRight
-						horizontalAlignment: Text.AlignHCenter
-					}
-
-					Text {
-						text: station ? ((station.country || "") + (station.country && station.language ? " • " : "") + (station.language || "")) : ""
-						font.pixelSize: window.width * 0.035
-						color: "#666666"
-						width: parent.width
-						elide: Text.ElideRight
-						horizontalAlignment: Text.AlignHCenter
-					}
-
-					Text {
-						text: station ? (station.tags || "") : ""
-						font.pixelSize: window.width * 0.03
-						color: "#888888"
-						width: parent.width
-						elide: Text.ElideRight
-						horizontalAlignment: Text.AlignHCenter
-						visible: text.length > 0
-					}
-				}
+			Text {
+				text: station ? (station.tags || "") : ""
+				font.pixelSize: window.width * 0.03
+				color: colors.primaryForeground
+				width: parent.width
+				elide: Text.ElideRight
+				horizontalAlignment: Text.AlignHCenter
+				visible: text.length > 0
 			}
 		}
 	}
@@ -248,7 +222,7 @@ Rectangle {
 			anchors.centerIn: parent
 			spacing: window.width * 0.05
 
-			// Play/Stop button
+			// Play/stop button
 			Icon {
 				anchors.horizontalCenter: parent.horizontalCenter
 				width: window.width * 0.2
