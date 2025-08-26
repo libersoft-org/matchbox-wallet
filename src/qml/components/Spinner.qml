@@ -33,10 +33,10 @@ Item {
 	}
 
 	Component.onCompleted: {
-		rotation.start()
+		rotation.start();
 	}
 
 	Component.onDestruction: {
-		rotation.stop()
+		rotation.stop();
 	}
 }
