@@ -1,11 +1,11 @@
 import QtQuick 6.8
-import QtQuick.Controls 6.8
 import QtMultimedia 6.8
 import "../../components"
 import "../../static"
 
 Rectangle {
 	id: root
+	property string title: tr("radio.player.title")
 	width: parent.width
 	height: parent.height
 	color: colors.primaryBackground
@@ -182,7 +182,7 @@ Rectangle {
 
 			Text {
 				anchors.horizontalCenter: parent.horizontalCenter
-				text: window.tr("radio.player.title")
+				text: tr("radio.player.title")
 				font.pixelSize: window.width * 0.05
 				font.bold: true
 				color: colors.primaryForeground

@@ -65,13 +65,9 @@
 			"country": "List by country",
 			"language": "List by language"
 		},
-		"player": {
-			"title": "Radio player",
-			"favs_add": "Add to favourites",
-			"favs_del": "Remove from favourites",
-			"stop": "Stop",
-			"play": "Play",
-			"loading": "Loading..."
+		"favourites": {
+			"title": "My favourite stations",
+			"empty": "No favourite stations yet"
 		},
 		"search": {
 			"title": "Search stations",
@@ -84,9 +80,10 @@
 		"language": {
 			"title": "Stations by language"
 		},
-		"favourites": {
-			"title": "My favourite stations",
-			"empty": "No favourite stations yet"
+		"player": {
+			"title": "Radio player",
+			"favs_add": "Add to favourites",
+			"favs_del": "Remove from favourites"
 		}
 	},
 	"speedtest": {

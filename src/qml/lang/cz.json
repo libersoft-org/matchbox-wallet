@@ -65,13 +65,9 @@
 			"country": "Seznam podle zemí",
 			"language": "Seznam podle jazyků"
 		},
-		"player": {
-			"title": "Přehrávač rádia",
-			"favs_add": "Přidat do oblíbených",
-			"favs_del": "Odebrat z oblíbených",
-			"stop": "Zastavit",
-			"play": "Přehrát",
-			"loading": "Načítání..."
+		"favourites": {
+			"title": "Moje oblíbené stanice",
+			"empty": "Zatím žádné oblíbené stanice"
 		},
 		"search": {
 			"title": "Hledat stanice",
@@ -84,9 +80,10 @@
 		"language": {
 			"title": "Stanice podle jazyků"
 		},
-		"favourites": {
-			"title": "Moje oblíbené stanice",
-			"empty": "Zatím žádné oblíbené stanice"
+		"player": {
+			"title": "Přehrávač rádia",
+			"favs_add": "Přidat do oblíbených",
+			"favs_del": "Odebrat z oblíbených"
 		}
 	},
 	"speedtest": {
