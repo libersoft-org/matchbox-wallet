@@ -14,14 +14,17 @@ source "$SECRET_DEPLOY"
 : "${TARGET1_USER:?TARGET1_USER is required in $SECRET_DEPLOY}"
 : "${TARGET1_PASSWORD:?TARGET1_PASSWORD is required in $SECRET_DEPLOY}"
 
+# Optional TARGET_PORT for SSH (defaults to 22 if not set)
+TARGET_PORT="${TARGET_PORT:-22}"
+
 echo "Deploying to ${TARGET1_USER}@${TARGET1_HOST}..."
-sshpass -p "$TARGET1_PASSWORD" scp -v -o StrictHostKeyChecking=no ./build/linux/wallet "$TARGET1_USER@$TARGET1_HOST:/root/"
+sshpass -p "$TARGET1_PASSWORD" scp -v -P "$TARGET_PORT" -o StrictHostKeyChecking=no ./build/linux/wallet "$TARGET1_USER@$TARGET1_HOST:/root/"
 # If needed, deploy QML resources folder too
 # sshpass -p "$TARGET1_PASSWORD" scp -v -r -o StrictHostKeyChecking=no ./build/linux/WalletModule "$TARGET1_USER@$TARGET1_HOST:/root/"
 # No longer need to create src/js directory since JS files are bundled
 # JavaScript files are now bundled into the executable via Qt resources
-sshpass -p "$TARGET1_PASSWORD" scp -v -o StrictHostKeyChecking=no ./start.sh "$TARGET1_USER@$TARGET1_HOST:/root/"
-sshpass -p "$TARGET1_PASSWORD" ssh -o StrictHostKeyChecking=no "$TARGET1_USER@$TARGET1_HOST" "set -x; killall wallet || true; sed -i 's|./build/linux/wallet|./wallet|g; s|build/linux/wallet|wallet|g' /root/start.sh; chmod +x /root/start.sh; /root/start.sh "
+sshpass -p "$TARGET1_PASSWORD" scp -v -P "$TARGET_PORT" -o StrictHostKeyChecking=no ./start.sh "$TARGET1_USER@$TARGET1_HOST:/root/"
+sshpass -p "$TARGET1_PASSWORD" ssh -p "$TARGET_PORT" -o StrictHostKeyChecking=no "$TARGET1_USER@$TARGET1_HOST" "set -x; killall wallet || true; sed -i 's|./build/linux/wallet|./wallet|g; s|build/linux/wallet|wallet|g' /root/start.sh; chmod +x /root/start.sh; /root/start.sh "
 
 # Optional: Target 2 (enable if variables present)
 #if [[ -n "${TARGET2_HOST:-}" && -n "${TARGET2_USER:-}" && -n "${TARGET2_PASSWORD:-}" ]]; then
