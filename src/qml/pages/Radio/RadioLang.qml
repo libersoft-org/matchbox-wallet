@@ -78,18 +78,10 @@ Item {
 	}
 
 	// Loading indicator (overlay)
-	Rectangle {
+	Spinner {
 		anchors.centerIn: parent
 		visible: root.isLoading
-		width: parent.width * 0.8
-		height: window.height * 0.2
-		color: colors.primaryBackground
-
-		Text {
-			anchors.centerIn: parent
-			text: tr("radio.player.loading")
-			font.pixelSize: window.width * 0.04
-			color: colors.primaryForeground
-		}
+		width: window.width * 0.15
+		height: width
 	}
 }

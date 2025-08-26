@@ -1,4 +1,5 @@
 import QtQuick 6.8
+import "../../components"
 import "../../static"
 
 Rectangle {
@@ -61,43 +62,22 @@ Rectangle {
 			width: parent.width * 0.9
 			spacing: window.width * 0.02
 
-			Rectangle {
+			Row {
 				width: parent.width
-				height: window.height * 0.06
-				color: "white"
-				radius: window.width * 0.01
-				border.color: "#cccccc"
-				border.width: 1
+				spacing: window.width * 0.02
 
-				TextInput {
+				Input {
 					id: searchInput
-					anchors.left: parent.left
-					anchors.right: searchButton.left
-					anchors.verticalCenter: parent.verticalCenter
-					anchors.leftMargin: window.width * 0.03
-					anchors.rightMargin: window.width * 0.02
-					font.pixelSize: window.width * 0.04
-					color: "#333333"
-
-					Text {
-						anchors.left: parent.left
-						anchors.verticalCenter: parent.verticalCenter
-						text: tr("radio.search.placeholder")
-						color: "#999999"
-						font.pixelSize: parent.font.pixelSize
-						visible: searchInput.text.length === 0
-					}
-
-					onAccepted: searchStations(text)
+					width: parent.width - searchButton.width - parent.spacing
+					inputHeight: window.height * 0.06
+					inputPlaceholder: tr("radio.search.placeholder")
+					onInputReturnPressed: searchStations(text)
 				}
 
 				Rectangle {
 					id: searchButton
-					anchors.right: parent.right
-					anchors.verticalCenter: parent.verticalCenter
-					anchors.rightMargin: window.width * 0.01
 					width: window.width * 0.12
-					height: parent.height * 0.8
+					height: window.height * 0.06
 					color: colors.primaryForeground
 					radius: window.width * 0.005
 
@@ -185,18 +165,11 @@ Rectangle {
 		}
 
 		// Loading indicator
-		Rectangle {
+		Spinner {
 			anchors.centerIn: parent
 			visible: isSearching
-			width: parent.width * 0.8
-			height: window.height * 0.2
-
-			Text {
-				anchors.centerIn: parent
-				text: tr("radio.player.loading")
-				font.pixelSize: window.width * 0.04
-				color: colors.primaryForeground
-			}
+			width: window.width * 0.15
+			height: width
 		}
 
 		// No results message
