@@ -2,5 +2,5 @@ import "../../components"
 
 BaseMenu {
 	id: root
-	title: tr("wallet.receive.title")
+	property string title: tr("wallet.receive.title")
 }

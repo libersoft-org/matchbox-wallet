@@ -58,27 +58,25 @@
 	},
 	"radio": {
 		"button": "Internetové rádio",
-		"menu": {
-			"title": "Internetové rádio",
-			"favs": "Moje oblíbené",
-			"search": "Hledat",
-			"country": "Seznam podle zemí",
-			"language": "Seznam podle jazyků"
-		},
-		"favourites": {
+		"title": "Internetové rádio",
+		"favs": {
 			"title": "Moje oblíbené stanice",
-			"empty": "Zatím žádné oblíbené stanice"
+			"button": "Moje oblíbené",
+			"empty": "Nenalezeny žádné oblíbené stanice"
 		},
 		"search": {
 			"title": "Hledat stanice",
+			"button": "Hledat",
 			"placeholder": "Zadejte název stanice...",
-			"no_results": "Žádné stanice nenalezeny"
+			"no_results": "Nebyly nalezeny žádné stanice"
 		},
 		"country": {
-			"title": "Stanice podle zemí"
+			"title": "Stanice podle zemí",
+			"button": "Seznam podle zemí"
 		},
 		"language": {
-			"title": "Stanice podle jazyků"
+			"title": "Stanice podle jazyků",
+			"button": "Seznam podle jazyků"
 		},
 		"player": {
 			"title": "Přehrávač rádia",

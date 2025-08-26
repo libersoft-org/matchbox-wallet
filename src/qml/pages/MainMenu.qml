@@ -3,7 +3,7 @@ import "../components"
 
 BaseMenu {
 	id: root
-	title: applicationName
+	property string title: applicationName
 	property bool showBackButton: false
 
 	MenuButton {

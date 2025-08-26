@@ -4,7 +4,7 @@ import "../../utils/NodeUtils.js" as Node
 
 BaseMenu {
 	id: root
-	title: tr("settings.sound.title")
+	property string title: tr("settings.sound.title")
 	property int soundVolume: 0
 	property bool volumeLoaded: false
 	property bool updatingFromSystem: false  // Guard flag

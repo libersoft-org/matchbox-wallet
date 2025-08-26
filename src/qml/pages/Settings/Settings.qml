@@ -3,7 +3,7 @@ import "../../components"
 
 BaseMenu {
 	id: root
-	title: tr("settings.title")
+	property string title: tr("settings.title")
 	property string selectedLanguage: window.settingsManager ? window.settingsManager.selectedLanguage : "en"
 
 	function getLanguageDisplayName(langCode) {

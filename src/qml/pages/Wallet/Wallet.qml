@@ -3,7 +3,7 @@ import "../../components"
 
 BaseMenu {
 	id: root
-	title: tr("wallet.title")
+	property string title: tr("wallet.title")
 
 	function handleSettingsRequest() {
 		window.goPage('Wallet/WalletSettings.qml');

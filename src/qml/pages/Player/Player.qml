@@ -2,7 +2,7 @@ import "../../components"
 
 BaseMenu {
 	id: root
-	title: tr("player.title")
+	property string title: tr("player.title")
 
 	MenuButton {
 		text: tr("player.local")

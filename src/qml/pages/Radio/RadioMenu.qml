@@ -2,25 +2,25 @@ import "../../components"
 
 BaseMenu {
 	id: root
-	property string title: tr("radio.menu.title")
+	property string title: tr("radio.title")
 
 	MenuButton {
-		text: tr("radio.menu.favs")
+		text: tr("radio.favs.button")
 		onClicked: window.goPage('Radio/RadioFavs.qml')
 	}
 
 	MenuButton {
-		text: tr("radio.menu.search")
+		text: tr("radio.search.button")
 		onClicked: window.goPage('Radio/RadioSearch.qml')
 	}
 
 	MenuButton {
-		text: tr("radio.menu.country")
+		text: tr("radio.country.button")
 		onClicked: window.goPage('Radio/RadioCountry.qml')
 	}
 
 	MenuButton {
-		text: tr("radio.menu.language")
+		text: tr("radio.language.button")
 		onClicked: window.goPage('Radio/RadioLang.qml')
 	}
 }

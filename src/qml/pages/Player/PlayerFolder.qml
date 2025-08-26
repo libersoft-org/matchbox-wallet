@@ -44,7 +44,6 @@ Item {
 
 	BaseMenu {
 		id: menu
-		title: tr("player.folder")
 		anchors.fill: parent
 
 		// Current path display

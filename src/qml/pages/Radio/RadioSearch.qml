@@ -3,6 +3,7 @@ import "../../static"
 
 Rectangle {
 	id: root
+	property string title: tr("radio.search.title")
 	width: parent.width
 	height: parent.height
 	color: colors.primaryBackground
@@ -62,14 +63,6 @@ Rectangle {
 			anchors.centerIn: parent
 			width: parent.width * 0.9
 			spacing: window.width * 0.02
-
-			Text {
-				anchors.horizontalCenter: parent.horizontalCenter
-				text: tr("radio.search.title")
-				font.pixelSize: window.width * 0.06
-				font.bold: true
-				color: colors.primaryForeground
-			}
 
 			Rectangle {
 				width: parent.width

@@ -3,8 +3,7 @@ import "../../components"
 
 BaseMenu {
 	id: root
-	title: tr("wallet.settings.general.title")
-
+	property string title: tr("wallet.settings.general.title")
 	property string selectedCurrency: window.settingsManager ? window.settingsManager.selectedCurrency : "USD"
 
 	function handleCurrencySelectionRequest() {

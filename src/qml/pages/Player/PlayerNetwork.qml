@@ -3,7 +3,7 @@ import "../../components"
 
 BaseMenu {
 	id: root
-	title: tr("player.network")
+	property string title: tr("player.network")
 
 	Column {
 		width: parent.width

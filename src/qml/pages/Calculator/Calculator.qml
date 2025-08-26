@@ -5,9 +5,7 @@ import "../../components"
 
 BaseMenu {
 	id: root
-	title: tr("calculator.title")
-	property bool showBackButton: true
-
+	property string title: tr("calculator.title")
 	property string display: "0"
 	property string operation: ""
 	property real leftOperand: 0

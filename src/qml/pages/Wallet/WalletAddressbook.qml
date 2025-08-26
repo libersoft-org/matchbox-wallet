@@ -207,7 +207,7 @@ Rectangle {
 		anchors.centerIn: parent
 		width: Math.min(400, parent.width - 40)
 		height: 300
-		title: tr("wallet.addressbook.add.title")
+		property string title: tr("wallet.addressbook.add.title")
 		visible: showAddDialog
 
 		property string nameField: ""
@@ -300,7 +300,7 @@ Rectangle {
 		anchors.centerIn: parent
 		width: Math.min(400, parent.width - 40)
 		height: 300
-		title: tr("wallet.addressbook.edit.title")
+		property string title: tr("wallet.addressbook.edit.title")
 		visible: showEditDialog
 
 		property string nameField: ""
@@ -392,7 +392,7 @@ Rectangle {
 		anchors.centerIn: parent
 		width: Math.min(350, parent.width - 40)
 		height: 200
-		title: tr("wallet.addressbook.delete.title")
+		property string title: tr("wallet.addressbook.delete.title")
 		visible: showDeleteDialog
 
 		onClosed: {

@@ -3,7 +3,7 @@ import "../components"
 
 BaseMenu {
 	id: root
-	title: tr("power.title")
+	property string title: tr("power.title")
 	property bool showPowerButton: false
 
 	MenuButton {

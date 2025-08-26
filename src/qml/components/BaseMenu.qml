@@ -2,7 +2,6 @@ import QtQuick 6.8
 
 ScrollableContainer {
 	id: root
-	property string title: ""
 	default property alias buttons: buttonsContainer.children
 	signal backRequested
 

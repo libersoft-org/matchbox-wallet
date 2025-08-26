@@ -3,6 +3,7 @@ import "../../static"
 
 Rectangle {
 	id: root
+	property string title: tr("radio.country.title")
 	width: parent.width
 	height: parent.height
 	color: colors.primaryBackground
@@ -48,24 +49,6 @@ Rectangle {
 
 		xhr.open("GET", "http://de1.api.radio-browser.info/json/countries?order=stationcount&reverse=true", true);
 		xhr.send();
-	}
-
-	// Header
-	Rectangle {
-		id: header
-		anchors.top: parent.top
-		anchors.left: parent.left
-		anchors.right: parent.right
-		height: window.height * 0.1
-		color: colors.primaryBackground
-
-		Text {
-			anchors.centerIn: parent
-			text: tr("radio.country.title")
-			font.pixelSize: window.width * 0.06
-			font.bold: true
-			color: colors.primaryForeground
-		}
 	}
 
 	function loadStationsByCountry(countryCode) {

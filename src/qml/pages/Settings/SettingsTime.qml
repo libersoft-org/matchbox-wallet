@@ -6,7 +6,7 @@ import "../../utils/NodeUtils.js" as NodeUtils
 
 BaseMenu {
 	id: root
-	title: tr("settings.time.title")
+	property string title: tr("settings.time.title")
 	signal timezoneChanged
 	property date displayTime: new Date()  // Time shown in the top display
 	property date spinBoxTime: new Date()  // Independent time for spinboxes

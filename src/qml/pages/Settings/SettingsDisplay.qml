@@ -4,7 +4,7 @@ import "../../utils/NodeUtils.js" as Node
 
 BaseMenu {
 	id: root
-	title: tr("settings.display.title")
+	property string title: tr("settings.display.title")
 	property int displayBrightness: 50
 	property bool brightnessLoaded: false
 	property bool updatingFromSystem: false  // Guard flag
