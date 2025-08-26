@@ -5,15 +5,14 @@ import "../../static"
 Item {
 	id: root
 	property string title: tr("radio.country.title")
+	property var countries: []
+	property bool isLoading: false
 	width: window.width
 	height: window.height
 
 	Colors {
 		id: colors
 	}
-
-	property var countries: []
-	property bool isLoading: false
 
 	Component.onCompleted: {
 		loadCountries();
@@ -22,7 +21,6 @@ Item {
 	function loadCountries() {
 		isLoading = true;
 		countries = [];
-
 		var xhr = new XMLHttpRequest();
 		xhr.onreadystatechange = function () {
 			if (xhr.readyState === XMLHttpRequest.DONE) {
@@ -50,7 +48,6 @@ Item {
 				}
 			}
 		};
-
 		xhr.open("GET", "http://de1.api.radio-browser.info/json/countries?order=stationcount&reverse=true", true);
 		xhr.send();
 	}

@@ -5,15 +5,14 @@ import "../../static"
 Item {
 	id: root
 	property string title: tr("radio.language.title")
+	property var languages: []
+	property bool isLoading: false
 	width: window.width
 	height: window.height
 
 	Colors {
 		id: colors
 	}
-
-	property var languages: []
-	property bool isLoading: false
 
 	Component.onCompleted: {
 		loadLanguages();
@@ -22,7 +21,6 @@ Item {
 	function loadLanguages() {
 		isLoading = true;
 		languages = [];
-
 		var xhr = new XMLHttpRequest();
 		xhr.onreadystatechange = function () {
 			if (xhr.readyState === XMLHttpRequest.DONE) {
@@ -50,7 +48,6 @@ Item {
 				}
 			}
 		};
-
 		xhr.open("GET", "http://de1.api.radio-browser.info/json/languages?order=stationcount&reverse=true", true);
 		xhr.send();
 	}
