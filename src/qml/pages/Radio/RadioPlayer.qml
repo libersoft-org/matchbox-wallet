@@ -258,7 +258,7 @@ Rectangle {
 					onClicked: {
 						if (isLoading) {
 							// Allow stopping during loading
-							stopStation()
+							stopStation();
 						}
 					}
 				}
