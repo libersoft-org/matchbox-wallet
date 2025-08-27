@@ -1,4 +1,7 @@
-// #include <FelgoHotReload>
+#ifdef ENABLE_FELGO_LIVE
+#include <FelgoHotReload>
+#include <FelgoLiveClient>
+#endif
 #include <QGuiApplication>
 #include <QIcon>
 #include <QQmlApplicationEngine>
@@ -70,6 +73,12 @@ int main(int argc, char *argv[]) {
 
 	QQmlApplicationEngine engine;
 
+#ifdef ENABLE_FELGO_LIVE
+	qInfo() << "Felgo Live integration: ENABLED - hot reload available";
+#else
+	qInfo() << "Felgo Live integration: DISABLED - standard QML loading";
+#endif
+
 #ifdef ENABLE_NODEJS
 	// Initialize Node.js
 	if (!nodeJS->initialize()) {
@@ -107,6 +116,14 @@ int main(int argc, char *argv[]) {
 	engine.rootContext()->setContextProperty("wifiStrengthUpdateInterval", wifiInterval);
 	engine.rootContext()->setContextProperty("batteryStatusUpdateInterval", batteryInterval);
 	engine.rootContext()->setContextProperty("eventsPollInterval", eventsInterval);
+	
+#ifdef ENABLE_FELGO_LIVE
+	// Initialize Felgo Live Client for hot reload
+	FelgoLiveClient liveClient(&engine);
+	Q_UNUSED(liveClient);
+	qInfo() << "✓ Felgo Live Client initialized successfully";
+#else
+	// Standard QML loading
 	const QUrl url(QStringLiteral("qrc:/WalletModule/src/qml/Main.qml"));
 	QObject::connect(
 		&engine, &QQmlApplicationEngine::objectCreated, &app,
@@ -115,5 +132,6 @@ int main(int argc, char *argv[]) {
 		},
 		Qt::QueuedConnection);
 	engine.load(url);
+#endif
 	return app.exec();
 }

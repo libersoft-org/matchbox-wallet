@@ -6,8 +6,29 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Option to enable/disable Node.js integration
 option(ENABLE_NODEJS "Enable Node.js integration" ON)
 
+# Option to enable/disable Felgo Live integration
+option(ENABLE_FELGO_LIVE "Enable Felgo Live for hot reload" OFF)
+
 find_package(Qt6 REQUIRED COMPONENTS Core Quick Svg)
 find_package(Qt6 QUIET COMPONENTS Multimedia VirtualKeyboard)
+
+# Felgo Live integration (conditional)
+if(ENABLE_FELGO_LIVE)
+  # Try to find Felgo SDK
+  find_package(FelgoLive QUIET)
+  if(NOT FelgoLive_FOUND)
+    find_package(FelgoHotReload QUIET)
+  endif()
+  
+  if(FelgoLive_FOUND OR FelgoHotReload_FOUND)
+    message(STATUS "Felgo Live support enabled")
+    add_compile_definitions(ENABLE_FELGO_LIVE)
+  else()
+    message(WARNING "Felgo Live requested but Felgo SDK not found. Install Felgo SDK or disable ENABLE_FELGO_LIVE")
+  endif()
+else()
+  message(STATUS "Felgo Live support disabled")
+endif()
 
 
 
@@ -162,9 +183,7 @@ endif()
 
 
 
-# TODO: Felgo doesnt work on ARM
-#find_package(FelgoHotReload REQUIRED)
-#target_link_libraries(appCppBackendCharts PRIVATE FelgoHotReload)
+# Felgo integration is now handled conditionally above
 
 set(QT_QML_GENERATE_QMLLS_INI ON)
 qt_standard_project_setup()
@@ -259,6 +278,15 @@ if(TARGET Qt6::VirtualKeyboard)
 	message(STATUS "Qt6VirtualKeyboard found - virtual keyboard support enabled")
 else()
 	message(WARNING "Qt6VirtualKeyboard not found - virtual keyboard support disabled")
+endif()
+
+# Link Felgo libraries conditionally
+if(ENABLE_FELGO_LIVE)
+  if(FelgoLive_FOUND)
+    target_link_libraries(Wallet PRIVATE FelgoLive)
+  elseif(FelgoHotReload_FOUND)
+    target_link_libraries(Wallet PRIVATE FelgoHotReload)
+  endif()
 endif()
 # Platform specific settings
 if(WIN32)

@@ -67,6 +67,8 @@ if [ -f "build/linux/wallet" ]; then
 	./build/linux/wallet
 else
 	echo "Error: Application not found. Please build the project first by running:"
-	echo "./build.sh or ./build-with-qt-sdk.sh"
+	echo "  ./build.sh                    # Standard build"
+	echo "  ./build-with-qt-sdk.sh        # Build with Qt SDK"
+	echo "  ./build-with-felgo-live.sh    # Build with Felgo Live support"
 	exit 1
 fi
