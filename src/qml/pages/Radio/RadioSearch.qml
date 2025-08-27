@@ -2,14 +2,12 @@ import QtQuick 6.8
 import "../../components"
 import "../../static"
 
-Rectangle {
+Item {
 	id: root
 	property string title: tr("radio.search.title")
 	property var searchResults: []
 	property bool isSearching: false
-	width: parent.width
-	height: parent.height
-	color: colors.primaryBackground
+	property bool hasSearched: false
 
 	Colors {
 		id: colors
@@ -24,9 +22,11 @@ Rectangle {
 	function searchStations(query) {
 		if (query.trim() === "") {
 			searchResults = [];
+			hasSearched = false;
 			return;
 		}
 		isSearching = true;
+		hasSearched = true;
 		searchResults = [];
 		var xhr = new XMLHttpRequest();
 		xhr.onreadystatechange = function () {
@@ -56,6 +56,8 @@ Rectangle {
 	}
 
 	Column {
+		id: header
+		anchors.top: parent.top
 		anchors.horizontalCenter: parent.horizontalCenter
 		width: parent.width * 0.9
 		spacing: window.width * 0.02
@@ -75,14 +77,6 @@ Rectangle {
 		}
 	}
 
-	// Loading indicator
-	Spinner {
-		anchors.centerIn: parent
-		visible: isSearching
-		width: window.width * 0.5
-		height: width
-	}
-
 	// Search results
 	BaseMenu {
 		id: stationsMenu
@@ -91,6 +85,7 @@ Rectangle {
 		anchors.right: parent.right
 		anchors.bottom: parent.bottom
 		anchors.margins: window.width * 0.02
+		visible: !isSearching && searchResults.length > 0
 
 		Repeater {
 			id: searchRepeater
@@ -108,8 +103,10 @@ Rectangle {
 
 	// No results
 	Frame {
-		anchors.centerIn: parent
-		visible: !isSearching && searchResults.length === 0 && searchInput.text.length > 0
+		anchors.top: header.bottom
+		anchors.horizontalCenter: parent.horizontalCenter
+		anchors.margins: window.width * 0.02
+		visible: !isSearching && searchResults.length === 0 && hasSearched
 		width: parent.width * 0.8
 
 		Text {
@@ -119,5 +116,13 @@ Rectangle {
 			color: colors.primaryForeground
 			horizontalAlignment: Text.AlignHCenter
 		}
+	}
+
+	// Loading indicator
+	Spinner {
+		anchors.centerIn: parent
+		visible: isSearching
+		width: window.width * 0.5
+		height: width
 	}
 }
