@@ -15,6 +15,12 @@ Rectangle {
 		id: colors
 	}
 
+	Component.onCompleted: {
+		Qt.callLater(function () {
+			searchInput.forceActiveFocus();
+		});
+	}
+
 	function searchStations(query) {
 		if (query.trim() === "") {
 			searchResults = [];
@@ -31,7 +37,6 @@ Rectangle {
 						var response = JSON.parse(xhr.responseText);
 						searchResults = response || [];
 						console.log("Search results loaded:", searchResults.length, "stations");
-
 						// Explicitly update the model for the Repeater
 						searchRepeater.model = searchResults;
 					} catch (e) {
@@ -44,61 +49,41 @@ Rectangle {
 				}
 			}
 		};
-
 		var encodedQuery = encodeURIComponent(query);
-		var url = "http://de1.api.radio-browser.info/json/stations/byname/" + encodedQuery + "?limit=50";
+		var url = "http://de1.api.radio-browser.info/json/stations/byname/" + encodedQuery + "?limit=200";
 		xhr.open("GET", url, true);
 		xhr.send();
 	}
 
-	// Header
-	Rectangle {
-		id: header
-		anchors.top: parent.top
-		anchors.left: parent.left
-		anchors.right: parent.right
-		height: window.height * 0.15
-		color: colors.primaryBackground
+	Column {
+		anchors.horizontalCenter: parent.horizontalCenter
+		width: parent.width * 0.9
+		spacing: window.width * 0.02
+		visible: !isSearching
 
-		Column {
-			anchors.centerIn: parent
-			width: parent.width * 0.9
-			spacing: window.width * 0.02
+		Input {
+			id: searchInput
+			width: parent.width
+			inputHeight: window.height * 0.06
+			inputPlaceholder: tr("radio.search.placeholder")
+			onInputReturnPressed: searchStations(text)
+		}
 
-			Row {
-				width: parent.width
-				spacing: window.width * 0.02
-
-				Input {
-					id: searchInput
-					width: parent.width - searchButton.width - parent.spacing
-					inputHeight: window.height * 0.06
-					inputPlaceholder: tr("radio.search.placeholder")
-					onInputReturnPressed: searchStations(text)
-				}
-
-				Rectangle {
-					id: searchButton
-					width: window.width * 0.12
-					height: window.height * 0.06
-					color: colors.primaryForeground
-					radius: window.width * 0.005
-
-					Text {
-						anchors.centerIn: parent
-						text: "🔍"
-						font.pixelSize: window.width * 0.04
-					}
-
-					MouseArea {
-						anchors.fill: parent
-						onClicked: searchStations(searchInput.text)
-					}
-				}
-			}
+		MenuButton {
+			text: tr("radio.search.button")
+			onClicked: searchStations(searchInput.text)
 		}
 	}
-	// Content
+
+	// Loading indicator
+	Spinner {
+		anchors.centerIn: parent
+		visible: isSearching
+		width: window.width * 0.5
+		height: width
+	}
+
+	// Search results
 	BaseMenu {
 		id: stationsMenu
 		anchors.top: header.bottom
@@ -121,15 +106,7 @@ Rectangle {
 		}
 	}
 
-	// Loading indicator (outside BaseMenu to avoid anchor conflicts)
-	Spinner {
-		anchors.centerIn: parent
-		visible: isSearching
-		width: window.width * 0.15
-		height: width
-	}
-
-	// No results message
+	// No results
 	Frame {
 		anchors.centerIn: parent
 		visible: !isSearching && searchResults.length === 0 && searchInput.text.length > 0
