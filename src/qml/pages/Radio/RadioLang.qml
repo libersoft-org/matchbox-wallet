@@ -70,9 +70,7 @@ Item {
 
 			MenuButton {
 				text: modelData.name || ""
-				onClicked: {
-					root.loadStationsByLanguage(modelData.name);
-				}
+				onClicked: root.loadStationsByLanguage(modelData.name)
 			}
 		}
 	}
