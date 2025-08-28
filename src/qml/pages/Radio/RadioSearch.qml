@@ -2,25 +2,31 @@ import QtQuick 6.4
 import "../../components"
 import "../../static"
 
-Rectangle {
+Item {
 	id: root
 	property string title: tr("radio.search.title")
 	property var searchResults: []
 	property bool isSearching: false
-	width: parent.width
-	height: parent.height
-	color: colors.primaryBackground
+	property bool hasSearched: false
 
 	Colors {
 		id: colors
 	}
 
+	Component.onCompleted: {
+		Qt.callLater(function () {
+			searchInput.forceActiveFocus();
+		});
+	}
+
 	function searchStations(query) {
 		if (query.trim() === "") {
 			searchResults = [];
+			hasSearched = false;
 			return;
 		}
 		isSearching = true;
+		hasSearched = true;
 		searchResults = [];
 		var xhr = new XMLHttpRequest();
 		xhr.onreadystatechange = function () {
@@ -31,7 +37,6 @@ Rectangle {
 						var response = JSON.parse(xhr.responseText);
 						searchResults = response || [];
 						console.log("Search results loaded:", searchResults.length, "stations");
-
 						// Explicitly update the model for the Repeater
 						searchRepeater.model = searchResults;
 					} catch (e) {
@@ -44,61 +49,35 @@ Rectangle {
 				}
 			}
 		};
-
 		var encodedQuery = encodeURIComponent(query);
-		var url = "http://de1.api.radio-browser.info/json/stations/byname/" + encodedQuery + "?limit=50";
+		var url = "http://de1.api.radio-browser.info/json/stations/byname/" + encodedQuery + "?limit=200";
 		xhr.open("GET", url, true);
 		xhr.send();
 	}
 
-	// Header
-	Rectangle {
+	Column {
 		id: header
 		anchors.top: parent.top
-		anchors.left: parent.left
-		anchors.right: parent.right
-		height: window.height * 0.15
-		color: colors.primaryBackground
+		anchors.horizontalCenter: parent.horizontalCenter
+		width: parent.width * 0.9
+		spacing: window.width * 0.02
+		visible: !isSearching
 
-		Column {
-			anchors.centerIn: parent
-			width: parent.width * 0.9
-			spacing: window.width * 0.02
+		Input {
+			id: searchInput
+			width: parent.width
+			inputHeight: window.height * 0.06
+			inputPlaceholder: tr("radio.search.placeholder")
+			onInputReturnPressed: searchStations(text)
+		}
 
-			Row {
-				width: parent.width
-				spacing: window.width * 0.02
-
-				Input {
-					id: searchInput
-					width: parent.width - searchButton.width - parent.spacing
-					inputHeight: window.height * 0.06
-					inputPlaceholder: tr("radio.search.placeholder")
-					onInputReturnPressed: searchStations(text)
-				}
-
-				Rectangle {
-					id: searchButton
-					width: window.width * 0.12
-					height: window.height * 0.06
-					color: colors.primaryForeground
-					radius: window.width * 0.005
-
-					Text {
-						anchors.centerIn: parent
-						text: "🔍"
-						font.pixelSize: window.width * 0.04
-					}
-
-					MouseArea {
-						anchors.fill: parent
-						onClicked: searchStations(searchInput.text)
-					}
-				}
-			}
+		MenuButton {
+			text: tr("radio.search.button")
+			onClicked: searchStations(searchInput.text)
 		}
 	}
-	// Content
+
+	// Search results
 	BaseMenu {
 		id: stationsMenu
 		anchors.top: header.bottom
@@ -106,6 +85,7 @@ Rectangle {
 		anchors.right: parent.right
 		anchors.bottom: parent.bottom
 		anchors.margins: window.width * 0.02
+		visible: !isSearching && searchResults.length > 0
 
 		Repeater {
 			id: searchRepeater
@@ -121,18 +101,12 @@ Rectangle {
 		}
 	}
 
-	// Loading indicator (outside BaseMenu to avoid anchor conflicts)
-	Spinner {
-		anchors.centerIn: parent
-		visible: isSearching
-		width: window.width * 0.15
-		height: width
-	}
-
-	// No results message
+	// No results
 	Frame {
-		anchors.centerIn: parent
-		visible: !isSearching && searchResults.length === 0 && searchInput.text.length > 0
+		anchors.top: header.bottom
+		anchors.horizontalCenter: parent.horizontalCenter
+		anchors.margins: window.width * 0.02
+		visible: !isSearching && searchResults.length === 0 && hasSearched
 		width: parent.width * 0.8
 
 		Text {
@@ -142,5 +116,13 @@ Rectangle {
 			color: colors.primaryForeground
 			horizontalAlignment: Text.AlignHCenter
 		}
+	}
+
+	// Loading indicator
+	Spinner {
+		anchors.centerIn: parent
+		visible: isSearching
+		width: window.width * 0.5
+		height: width
 	}
 }

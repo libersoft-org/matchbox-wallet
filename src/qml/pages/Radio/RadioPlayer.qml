@@ -194,12 +194,23 @@ Rectangle {
 			}
 
 			Text {
-				text: station ? ((station.country || "") + (station.country && station.language ? " • " : "") + (station.language || "")) : ""
+				text: station?.country || ""
 				font.pixelSize: window.width * 0.035
 				color: colors.primaryForeground
 				width: parent.width
 				elide: Text.ElideRight
 				horizontalAlignment: Text.AlignHCenter
+				visible: station?.country
+			}
+
+			Text {
+				text: station?.language || ""
+				font.pixelSize: window.width * 0.035
+				color: colors.primaryForeground
+				width: parent.width
+				elide: Text.ElideRight
+				horizontalAlignment: Text.AlignHCenter
+				visible: station?.language
 			}
 
 			Text {
@@ -258,7 +269,7 @@ Rectangle {
 					onClicked: {
 						if (isLoading) {
 							// Allow stopping during loading
-							stopStation()
+							stopStation();
 						}
 					}
 				}

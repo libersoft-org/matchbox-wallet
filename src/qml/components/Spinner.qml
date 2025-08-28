@@ -16,18 +16,18 @@ Item {
 		anchors.centerIn: parent
 		width: parent.width
 		height: width
-		source: Qt.resolvedUrl("../../img/spinner.svg")
+		source: Qt.resolvedUrl('../../img/spinner.svg')
 		fillMode: Image.PreserveAspectFit
-		sourceSize.width: width   // Render SVG at actual display size
+		sourceSize.width: width // Render SVG at actual display size
 		sourceSize.height: height // Render SVG at actual display size
-		mipmap: true  // Better quality for SVG scaling
-		smooth: true  // Smooth rendering
-		antialiasing: true  // Anti-aliasing for better quality
+		mipmap: true // Better quality for SVG scaling
+		smooth: true // Smooth rendering
+		antialiasing: true // Anti-aliasing for better quality
 
 		RotationAnimation {
 			id: rotation
 			target: spinnerIcon
-			property: "rotation"
+			property: 'rotation'
 			from: 0
 			to: 360
 			duration: 1000

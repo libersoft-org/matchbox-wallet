@@ -4,15 +4,8 @@ import "../static"
 
 Item {
 	id: root
-
-	// Colors instance
-	Colors {
-		id: colors
-	}
-
 	// Custom signal for enter
 	signal inputReturnPressed
-
 	// Accessible properties for external configuration
 	property real inputWidth: parent.width
 	property real inputHeight: window.width * 0.12
@@ -20,46 +13,44 @@ Item {
 	property string inputPlaceholder: ""
 	property int inputEchoMode: TextInput.Normal
 	property bool inputAutoFocus: false
-
 	// Input method hints for different input types
 	property int inputMethodHints: Qt.ImhPreferLowercase
 	property string inputType: "text" // "text", "password", "number", "email", "multiline"
 	property bool inputMultiline: false
-
 	// Styling properties
 	property color inputTextColor: colors.primaryForeground
 	property color inputBackgroundColor: colors.primaryBackground
 	property color inputBorderColor: colors.primaryForeground
 	property real inputBorderWidth: 2
 	property real inputBorderRadius: inputHeight * 0.3
-
 	// Text property to access content
 	property string text: inputMultiline ? textArea.text : textField.text
-
 	// Active focus property for external tracking
 	readonly property bool inputHasFocus: inputMultiline ? textArea.activeFocus : textField.activeFocus
+	// Apply properties
+	width: inputWidth
+	height: inputHeight
+
+	// Colors instance
+	Colors {
+		id: colors
+	}
 
 	// Method to focus the input
 	function forceActiveFocus() {
-		if (inputMultiline) {
+		if (inputMultiline)
 			textArea.forceActiveFocus();
-		} else {
+		else
 			textField.forceActiveFocus();
-		}
 	}
 
 	// Method to clear focus
 	function clearFocus() {
-		if (inputMultiline) {
+		if (inputMultiline)
 			textArea.focus = false;
-		} else {
+		else
 			textField.focus = false;
-		}
 	}
-
-	// Apply properties
-	width: inputWidth
-	height: inputHeight
 
 	// Single-line TextField
 	TextField {
@@ -72,10 +63,7 @@ Item {
 		color: root.inputTextColor
 		background: Item {} // No background - using parent's
 		activeFocusOnPress: true
-
-		Keys.onReturnPressed: {
-			root.inputReturnPressed();
-		}
+		Keys.onReturnPressed: root.inputReturnPressed()
 	}
 
 	// Multi-line TextArea
@@ -96,9 +84,8 @@ Item {
 			activeFocusOnPress: true
 
 			Keys.onReturnPressed: function (event) {
-				if (event.modifiers & Qt.ControlModifier) {
+				if (event.modifiers & Qt.ControlModifier)
 					root.inputReturnPressed();
-				}
 			}
 		}
 	}
@@ -148,14 +135,10 @@ Item {
 				textArea.inputMethodHints = Qt.ImhPreferLowercase;
 			}
 		}
-
 		// Set wrapMode for multiline inputs
-		if (inputMultiline && textArea) {
+		if (inputMultiline && textArea)
 			textArea.wrapMode = TextArea.Wrap;
-		}
-
-		if (inputAutoFocus) {
+		if (inputAutoFocus)
 			root.forceActiveFocus();
-		}
 	}
 }
