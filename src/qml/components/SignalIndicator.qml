@@ -35,7 +35,7 @@ Rectangle {
 			id: typeText
 			text: root.signalType
 			color: colors.primaryForeground
-			font.pixelSize: parent.height*2
+			font.pixelSize: parent.height
 			font.bold: true
 			anchors.left: parent.left
 			anchors.verticalCenter: parent.verticalCenter
