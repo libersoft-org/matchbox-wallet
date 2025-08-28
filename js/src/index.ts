@@ -40,6 +40,13 @@ interface ErrorResult {
 declare global {
 	var handleMessage: (message: Message, callback?: any) => Promise<void>;
 	var __nativeCallback: (messageId: string, result: any) => void;
+	var __nativeRequire: (module: string) => any;
+	var NodeJS: any;
+	var applicationName: any;
+	var applicationVersion: any;
+	var wifiStrengthUpdateInterval: any;
+	var batteryStatusUpdateInterval: any;
+	var eventsPollInterval: any;
 }
 const wifiManager = new WifiManager();
 const batteryManager = new BatteryManager();

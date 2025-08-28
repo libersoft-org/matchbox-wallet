@@ -1,4 +1,4 @@
-import QtQuick 6.8
+import QtQuick 6.4
 
 QtObject {
 	readonly property color primaryBackground: "#222"

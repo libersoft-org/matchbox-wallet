@@ -4,9 +4,9 @@
 		const module = require('module');
 		const path = require('path');
 
-		// Set up standard Node.js require for src/js directory
+		// Set up standard Node.js require for js directory
 		// Create require context pointing to the actual source directory
-		// Go up from build directory to find src/js
+		// Go up from build directory to find js
 		const buildDir = process.cwd();
 		const srcJsPath = path.resolve(buildDir, '..', '..', 'src', 'js', 'index.js');
 		const publicRequire = module.createRequire(srcJsPath);

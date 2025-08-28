@@ -17,14 +17,33 @@ fi
 echo "Building with Felgo Live support"
 echo "Felgo SDK: $FELGO_SDK_ROOT"
 
-# Add Felgo paths
-export CMAKE_PREFIX_PATH="$FELGO_SDK_ROOT:$CMAKE_PREFIX_PATH"
+# Add Felgo paths - point to the gcc_64 subdirectory where CMake files are located
+FELGO_CMAKE_PATH="$FELGO_SDK_ROOT/Felgo/gcc_64"
+export CMAKE_PREFIX_PATH="$FELGO_CMAKE_PATH:$CMAKE_PREFIX_PATH"
 export PATH="$FELGO_SDK_ROOT/bin:$PATH"
 
+# Set Felgo Hot Reload environment variables
+export FELGO_HOT_RELOAD_PATH="$FELGO_CMAKE_PATH"
+export FELGO_PROJECT_PATH="$(pwd)"
+
+echo "Felgo CMake path: $FELGO_CMAKE_PATH"
+
 # Enable Felgo Live in CMake
-export CMAKE_ARGS="-DENABLE_FELGO_LIVE=ON -DCMAKE_PREFIX_PATH=$FELGO_SDK_ROOT:$CMAKE_PREFIX_PATH $CMAKE_ARGS"
+export CMAKE_ARGS="-DENABLE_FELGO_LIVE=ON $CMAKE_ARGS"
 
 echo "CMake arguments: $CMAKE_ARGS"
 
 # Run the main build script with Felgo Live enabled
 ./build.sh
+
+# Setup QML sources for Felgo Hot Reload
+echo "Setting up QML sources for Felgo Live..."
+
+# Create symlink so the app can find sources from its working directory  
+ln -sf ../../src build/linux/src
+
+# Replace CMake's copied sources with symlinks to originals in WalletModule
+rm -rf build/linux/WalletModule/src
+ln -sf "$(pwd)/src" build/linux/WalletModule/src
+
+echo "✅ QML sources symlinked - Felgo will hot reload original source files"

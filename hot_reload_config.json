@@ -1,0 +1,16 @@
+{
+  "main_qml_file": "src/qml/Main.qml",
+  "qml_module_paths": [
+    "src/qml",
+    "src/qml/components",
+    "src/qml/pages", 
+    "src/qml/static",
+    "src/qml/utils"
+  ],
+  "exclude_paths": [
+    "js",
+    "node_modules",
+    "build",
+    ".git"
+  ]
+}

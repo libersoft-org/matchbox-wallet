@@ -1,5 +1,5 @@
-import QtQuick 6.8
-import QtQuick.Controls 6.8
+import QtQuick 6.4
+import QtQuick.Controls 6.4
 import QtQuick.Layouts 1.15
 import "../../components"
 import "../../utils/NodeUtils.js" as NodeUtils

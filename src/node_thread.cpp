@@ -163,7 +163,7 @@ bool NodeThread::loadJSEntryPoint() {
 	v8::Context::Scope context_scope(m_setup->context());
 
 	// Load bundle file from Qt resources
-	QFile bundleFile(":/js/src/js/dist/bundle.cjs");
+	QFile bundleFile(":/js/js/dist/bundle.cjs");
 	if (!bundleFile.exists()) {
 		qCritical() << "NodeThread: Bundle file not found in resources";
 		return false;

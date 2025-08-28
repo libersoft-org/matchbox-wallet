@@ -21,7 +21,7 @@ echo "Deploying to ${TARGET1_USER}@${TARGET1_HOST}..."
 sshpass -p "$TARGET1_PASSWORD" scp -v -P "$TARGET_PORT" -o StrictHostKeyChecking=no ./build/linux/wallet "$TARGET1_USER@$TARGET1_HOST:/root/"
 # If needed, deploy QML resources folder too
 # sshpass -p "$TARGET1_PASSWORD" scp -v -r -o StrictHostKeyChecking=no ./build/linux/WalletModule "$TARGET1_USER@$TARGET1_HOST:/root/"
-# No longer need to create src/js directory since JS files are bundled
+# No longer need to create js directory since JS files are bundled
 # JavaScript files are now bundled into the executable via Qt resources
 sshpass -p "$TARGET1_PASSWORD" scp -v -P "$TARGET_PORT" -o StrictHostKeyChecking=no ./start.sh "$TARGET1_USER@$TARGET1_HOST:/root/"
 sshpass -p "$TARGET1_PASSWORD" ssh -p "$TARGET_PORT" -o StrictHostKeyChecking=no "$TARGET1_USER@$TARGET1_HOST" "set -x; killall wallet || true; sed -i 's|./build/linux/wallet|./wallet|g; s|build/linux/wallet|wallet|g' /root/start.sh; chmod +x /root/start.sh; /root/start.sh "
@@ -30,7 +30,7 @@ sshpass -p "$TARGET1_PASSWORD" ssh -p "$TARGET_PORT" -o StrictHostKeyChecking=no
 #if [[ -n "${TARGET2_HOST:-}" && -n "${TARGET2_USER:-}" && -n "${TARGET2_PASSWORD:-}" ]]; then
 #	echo "Deploying to ${TARGET2_USER}@${TARGET2_HOST}..."
 #	sshpass -p "$TARGET2_PASSWORD" scp -v -o StrictHostKeyChecking=no ./build/linux/wallet "$TARGET2_USER@$TARGET2_HOST:/root/"
-#	# No longer need to create src/js directory since JS files are bundled
+#	# No longer need to create js directory since JS files are bundled
 #	# JavaScript files are now bundled into the executable via Qt resources
 #	sshpass -p "$TARGET2_PASSWORD" scp -v -o StrictHostKeyChecking=no ./start.sh "$TARGET2_USER@$TARGET2_HOST:/root/"
 #	sshpass -p "$TARGET2_PASSWORD" ssh -o StrictHostKeyChecking=no "$TARGET2_USER@$TARGET2_HOST" "set -x; killall wallet || true; sed -i 's|./build/linux/wallet|./wallet|g; s|build/linux/wallet|wallet|g' /root/start.sh; chmod +x /root/start.sh; /root/start.sh "

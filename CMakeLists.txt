@@ -9,22 +9,29 @@ option(ENABLE_NODEJS "Enable Node.js integration" ON)
 # Option to enable/disable Felgo Live integration
 option(ENABLE_FELGO_LIVE "Enable Felgo Live for hot reload" OFF)
 
+# Option to enable hot reload with filesystem loading (disables QRC bundling)
+option(ENABLE_HOT_RELOAD "Enable hot reload with filesystem sources" OFF)
+
 find_package(Qt6 REQUIRED COMPONENTS Core Quick Svg)
 find_package(Qt6 QUIET COMPONENTS Multimedia VirtualKeyboard)
 
 # Felgo Live integration (conditional)
 if(ENABLE_FELGO_LIVE)
-  # Try to find Felgo SDK
-  find_package(FelgoLive QUIET)
-  if(NOT FelgoLive_FOUND)
-    find_package(FelgoHotReload QUIET)
-  endif()
+  # Try to find Felgo SDK components
+  find_package(Felgo QUIET)
+  find_package(FelgoHotReload QUIET)
   
-  if(FelgoLive_FOUND OR FelgoHotReload_FOUND)
+  if(Felgo_FOUND AND FelgoHotReload_FOUND)
     message(STATUS "Felgo Live support enabled")
     add_compile_definitions(ENABLE_FELGO_LIVE)
   else()
     message(WARNING "Felgo Live requested but Felgo SDK not found. Install Felgo SDK or disable ENABLE_FELGO_LIVE")
+    if(NOT Felgo_FOUND)
+      message(WARNING "  - Felgo core not found")
+    endif()
+    if(NOT FelgoHotReload_FOUND)
+      message(WARNING "  - FelgoHotReload not found")
+    endif()
   endif()
 else()
   message(STATUS "Felgo Live support disabled")
@@ -193,6 +200,8 @@ set(WALLET_SOURCES
 	src/main.cpp
 	src/include/node.h
 	src/node.cpp
+	src/include/hotreload.h
+	src/hotreload.cpp
 )
 if(ENABLE_NODEJS)
 	list(APPEND WALLET_SOURCES 
@@ -223,26 +232,66 @@ file(GLOB_RECURSE SVG_FILES_LIST RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "src/img
 file(GLOB_RECURSE JSON_FILES_LIST RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "src/qml/lang/*.json")
 
 # Add QML module to the executable
-qt_add_qml_module(Wallet
-	URI WalletModule
-	VERSION 1.0
-	NO_GENERATE_QMLTYPES
-	NO_CACHEGEN
-	NO_LINT
-	QML_FILES ${QML_FILES_LIST}
-	RESOURCES ${SVG_FILES_LIST} ${JSON_FILES_LIST} ${JS_FILES_LIST}
-)
+if(ENABLE_HOT_RELOAD)
+	# Hot reload mode: don't bundle QML files into QRC, use filesystem with symlinks
+	message(STATUS "Hot reload enabled - QML files will be loaded from filesystem via symlinks")
+	qt_add_qml_module(Wallet
+		URI WalletModule
+		VERSION 1.0
+		NO_GENERATE_QMLTYPES
+		NO_CACHEGEN
+		NO_LINT
+		RESOURCES ${SVG_FILES_LIST} ${JSON_FILES_LIST} ${JS_FILES_LIST}
+		# QML_FILES intentionally omitted - no QRC bundling
+	)
+	
+	# Create symlinks for individual QML files to preserve module structure
+	foreach(qml_file ${QML_FILES_LIST})
+		get_filename_component(qml_dir ${qml_file} DIRECTORY)
+		file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/WalletModule/${qml_dir})
+		
+		set(source_file ${CMAKE_SOURCE_DIR}/${qml_file})
+		set(target_file ${CMAKE_BINARY_DIR}/WalletModule/${qml_file})
+		
+		# Create symlink at configure time
+		if(NOT EXISTS ${target_file})
+			execute_process(
+				COMMAND ${CMAKE_COMMAND} -E create_symlink ${source_file} ${target_file}
+				RESULT_VARIABLE symlink_result
+			)
+			if(symlink_result EQUAL 0)
+				message(STATUS "Symlinked: ${qml_file}")
+			else()
+				message(WARNING "Failed to symlink ${qml_file}")
+			endif()
+		endif()
+	endforeach()
+	
+	add_compile_definitions(ENABLE_HOT_RELOAD)
+else()
+	# Production mode: bundle QML files into QRC as usual
+	message(STATUS "Production mode - QML files bundled into QRC")
+	qt_add_qml_module(Wallet
+		URI WalletModule
+		VERSION 1.0
+		NO_GENERATE_QMLTYPES
+		NO_CACHEGEN
+		NO_LINT
+		QML_FILES ${QML_FILES_LIST}
+		RESOURCES ${SVG_FILES_LIST} ${JSON_FILES_LIST} ${JS_FILES_LIST}
+	)
+endif()
 
 # Add Qt resource file for JavaScript files
 qt_add_resources(Wallet "js_resources"
 	PREFIX "/js"
 	FILES
-		src/js/bootstrap.js
-		src/js/dist/bundle.cjs
+		js/bootstrap.js
+		js/dist/bundle.cjs
 )
 
 # Find Node.js entry files and include all node_modules
-file(GLOB_RECURSE NODE_MODULES_FILES_LIST RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "src/js/node_modules/**/*.js")
+file(GLOB_RECURSE NODE_MODULES_FILES_LIST RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "js/node_modules/**/*.js")
 
 # Basic Qt libraries
 target_link_libraries(Wallet PRIVATE
@@ -282,10 +331,8 @@ endif()
 
 # Link Felgo libraries conditionally
 if(ENABLE_FELGO_LIVE)
-  if(FelgoLive_FOUND)
-    target_link_libraries(Wallet PRIVATE FelgoLive)
-  elseif(FelgoHotReload_FOUND)
-    target_link_libraries(Wallet PRIVATE FelgoHotReload)
+  if(Felgo_FOUND AND FelgoHotReload_FOUND)
+    target_link_libraries(Wallet PRIVATE Felgo FelgoHotReload)
   endif()
 endif()
 # Platform specific settings

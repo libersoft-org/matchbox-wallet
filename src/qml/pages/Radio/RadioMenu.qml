@@ -9,6 +9,7 @@ BaseMenu {
 		onClicked: window.goPage('Radio/RadioFavs.qml')
 	}
 
+
 	MenuButton {
 		text: tr("radio.search.button")
 		onClicked: window.goPage('Radio/RadioSearch.qml')

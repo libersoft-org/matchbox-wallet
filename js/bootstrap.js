@@ -6,8 +6,8 @@
         // Use Node.js require() to load our bundled CommonJS module
         // The bundle will set up global.handleMessage
         // Use absolute path since relative paths are problematic in embedded context
-        console.log('Bootstrap: Attempting to require bundle from: ../../src/js/dist/bundle.cjs');
-        require('../../src/js/dist/bundle.cjs');
+        console.log('Bootstrap: Attempting to require bundle from: ../../js/dist/bundle.cjs');
+        require('../../js/dist/bundle.cjs');
         console.log('Bootstrap: CommonJS bundle loaded successfully');
     } catch (error) {
         console.error('Bootstrap: Failed to require bundle:', error.message);

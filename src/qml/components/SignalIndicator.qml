@@ -1,4 +1,4 @@
-import QtQuick 6.8
+import QtQuick 6.4
 
 Rectangle {
 	id: root
@@ -35,7 +35,7 @@ Rectangle {
 			id: typeText
 			text: root.signalType
 			color: colors.primaryForeground
-			font.pixelSize: parent.height
+			font.pixelSize: parent.height*2
 			font.bold: true
 			anchors.left: parent.left
 			anchors.verticalCenter: parent.verticalCenter

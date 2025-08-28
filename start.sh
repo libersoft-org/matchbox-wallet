@@ -47,6 +47,13 @@ fi
 if [ -f "build/linux/wallet" ]; then
 	echo "Starting the application..."
 	
+	# Set Felgo environment variables if config exists
+	if [ -f "hot_reload_config.json" ]; then
+		export FELGO_PROJECT_PATH="$(pwd)"
+		export FELGO_HOT_RELOAD_PATH="$(pwd)"
+		echo "Felgo project path: $FELGO_PROJECT_PATH"
+	fi
+	
 	# Detect which Qt version the binary is actually linked against
 	QT_LINKED_VERSION=$(ldd build/linux/wallet 2>/dev/null | grep -o 'libQt6Core\.so\.[0-9]*' | head -1)
 	if [ -n "$QT_LINKED_VERSION" ]; then

@@ -1,4 +1,4 @@
-import QtQuick 6.8
+import QtQuick 6.4
 import "../../components"
 
 BaseMenu {
@@ -9,6 +9,10 @@ BaseMenu {
 		window.goPage('Wallet/WalletSettings.qml');
 	}
 
+	MenuButton {
+		text: tr("wallet.balance.button")
+		onClicked: window.goPage('Wallet/WalletBalance.qml')
+	}
 	MenuButton {
 		text: tr("wallet.balance.button")
 		onClicked: window.goPage('Wallet/WalletBalance.qml')

@@ -1,7 +1,8 @@
-import QtQuick 6.8
-import QtQuick.Window 6.8
-import QtQuick.Controls 6.8
-import QtQuick.VirtualKeyboard 6.8
+import QtQuick 6.4
+import QtQuick.Window 6.4
+import QtQuick.Controls 6.4
+import QtQuick.VirtualKeyboard 6.4
+import WalletModule 1.0
 import "static"
 import "components"
 
@@ -10,7 +11,7 @@ ApplicationWindow {
 	width: 480
 	height: 640
 	visible: true
-	title: applicationName
+	title: AppContext.applicationName
 	font.family: "Droid Sans"
 	property string iconSource: Qt.resolvedUrl("../img/wallet.svg")
 	readonly property int animationDuration: 500
@@ -30,6 +31,8 @@ ApplicationWindow {
 	property bool isFullscreen: false
 	signal wifiConnectionChanged
 	signal wifiStatusUpdated
+	
+	// Hot reload navigation state preservation is now handled by C++ HotReloadServer
 
 	// Global translation function - available to all child components
 	function tr(key) {
@@ -44,7 +47,13 @@ ApplicationWindow {
 	}
 
 	function goPage(componentName, pageId, properties) {
+		console.log("goPage() called with:", componentName, pageId, properties);
 		if (stackView) {
+			// Save navigation state to C++ side for hot reload persistence
+			if (typeof HotReloadServer !== 'undefined') {
+				HotReloadServer.saveNavigationState(componentName, pageId || "", properties || {});
+			}
+			
 			var fullPath = componentName.startsWith('pages/') ? componentName : 'pages/' + componentName;
 			var component = Qt.createComponent(fullPath);
 			if (component.status === Component.Error) {
@@ -60,10 +69,15 @@ ApplicationWindow {
 				stackView.push(componentInstance);
 				if (pageId)
 					window.currentPageId = pageId;
+				console.log("Successfully navigated to:", fullPath);
 			} else
 				console.error("Failed to create component instance:", fullPath);
+		} else {
+			console.error("goPage() called but stackView is null");
 		}
 	}
+	
+	// Hot reload navigation restoration is now handled by C++ HotReloadServer
 
 	function goBack() {
 		stackView.pop();
@@ -86,6 +100,10 @@ ApplicationWindow {
 
 	Colors {
 		id: colors
+	}
+
+	Cpp {
+		id: cpp
 	}
 
 	SettingsManager {

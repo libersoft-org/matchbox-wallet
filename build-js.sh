@@ -11,21 +11,21 @@ if ! command -v bun >/dev/null 2>&1; then
 fi
 
 # Build JavaScript bundle for embedded Node runtime
-if [ -d "src/js" ]; then
+if [ -d "js" ]; then
  echo "Building JavaScript/TypeScript bundle..."
- (cd src/js && bun install --frozen-lockfile) || {
-  echo "bun install failed in src/js"
+ (cd js && bun install --frozen-lockfile) || {
+  echo "bun install failed in js"
   exit 1
  }
- (cd src/js && bun run build) || {
+ (cd js && bun run build) || {
   echo "JavaScript build failed"
   exit 1
  }
  # Verify bundle was created
- if [ ! -f "src/js/dist/bundle.cjs" ]; then
+ if [ ! -f "js/dist/bundle.cjs" ]; then
   echo "ERROR: JavaScript bundle was not created!"
   exit 1
  fi
- BUNDLE_SIZE=$(du -h src/js/dist/bundle.cjs | cut -f1)
- echo "✅ JavaScript bundle created: src/js/dist/bundle.cjs ($BUNDLE_SIZE)"
+ BUNDLE_SIZE=$(du -h js/dist/bundle.cjs | cut -f1)
+ echo "✅ JavaScript bundle created: js/dist/bundle.cjs ($BUNDLE_SIZE)"
 fi

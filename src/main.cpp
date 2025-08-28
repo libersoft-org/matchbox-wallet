@@ -1,6 +1,6 @@
 #ifdef ENABLE_FELGO_LIVE
+#include <FelgoApplication>
 #include <FelgoHotReload>
-#include <FelgoLiveClient>
 #endif
 #include <QGuiApplication>
 #include <QIcon>
@@ -14,8 +14,8 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QProcess>
-
 #include "include/node.h"
+#include "include/hotreload.h"
 
 int main(int argc, char *argv[]) {
 #ifdef ENABLE_NODEJS
@@ -74,6 +74,9 @@ int main(int argc, char *argv[]) {
 	QQmlApplicationEngine engine;
 
 #ifdef ENABLE_FELGO_LIVE
+	// Initialize Felgo for hot reload support
+	FelgoApplication felgo;
+	felgo.initialize(&engine);
 	qInfo() << "Felgo Live integration: ENABLED - hot reload available";
 #else
 	qInfo() << "Felgo Live integration: DISABLED - standard QML loading";
@@ -118,12 +121,29 @@ int main(int argc, char *argv[]) {
 	engine.rootContext()->setContextProperty("eventsPollInterval", eventsInterval);
 	
 #ifdef ENABLE_FELGO_LIVE
-	// Initialize Felgo Live Client for hot reload
-	FelgoLiveClient liveClient(&engine);
-	Q_UNUSED(liveClient);
-	qInfo() << "✓ Felgo Live Client initialized successfully";
+	// Use Felgo Hot Reload for live development
+	// Set the source directory so Felgo can find our QML files  
+	// Use relative path so it works from the project root
+	QString qmlSourcePath = "src/qml/Main.qml";
+	felgo.setMainQmlFileName(qmlSourcePath);
+	qInfo() << "Setting Felgo source path:" << qmlSourcePath;
+	
+	FelgoHotReload felgoHotReload(&engine);
+	Q_UNUSED(felgoHotReload);
+	qInfo() << "✓ Felgo Hot Reload initialized - ready for live updates";
+#elif defined(ENABLE_HOT_RELOAD)
+	// Hot reload mode: load from filesystem (symlinked sources)
+	const QUrl url(QStringLiteral("file:///") + QCoreApplication::applicationDirPath() + "/WalletModule/src/qml/Main.qml");
+	QObject::connect(
+		&engine, &QQmlApplicationEngine::objectCreated, &app,
+		[url](QObject *obj, const QUrl &objUrl) {
+			if (!obj && url == objUrl) QCoreApplication::exit(-1);
+		},
+		Qt::QueuedConnection);
+	qInfo() << "Hot reload mode: Loading from filesystem:" << url.toString();
+	engine.load(url);
 #else
-	// Standard QML loading
+	// Standard QML loading from QRC
 	const QUrl url(QStringLiteral("qrc:/WalletModule/src/qml/Main.qml"));
 	QObject::connect(
 		&engine, &QQmlApplicationEngine::objectCreated, &app,
@@ -131,7 +151,16 @@ int main(int argc, char *argv[]) {
 			if (!obj && url == objUrl) QCoreApplication::exit(-1);
 		},
 		Qt::QueuedConnection);
+	qInfo() << "Production mode: Loading from QRC:" << url.toString();
 	engine.load(url);
 #endif
+
+	// Initialize hot reload server for development
+	HotReloadServer hotReloadServer(&engine, &app);
+	hotReloadServer.startServer();
+	
+	// Expose hot reload server to QML for navigation state saving
+	engine.rootContext()->setContextProperty("HotReloadServer", &hotReloadServer);
+
 	return app.exec();
 }

@@ -1,4 +1,4 @@
-import QtQuick 6.8
+import QtQuick 6.4
 import "../../components"
 import "../../utils/NodeUtils.js" as NodeUtils
 

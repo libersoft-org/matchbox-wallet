@@ -9,9 +9,6 @@ apt update
 apt -y upgrade
 apt -y install git openssl
 git clone https://github.com/libersoft-org/matchbox-wallet.git
-cd matchbox-wallet/src/js
-npm i
-cd ../../
 ```
 
 ## 2. Build the software from source codes

@@ -1,0 +1,8 @@
+js/
+node_modules/
+build/
+.git/
+*.log
+*.tmp
+.vscode/
+.idea/
