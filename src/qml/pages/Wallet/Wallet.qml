@@ -13,10 +13,6 @@ BaseMenu {
 		text: tr("wallet.balance.button")
 		onClicked: window.goPage('Wallet/WalletBalance.qml')
 	}
-	MenuButton {
-		text: tr("wallet.balance.button")
-		onClicked: window.goPage('Wallet/WalletBalance.qml')
-	}
 
 	MenuButton {
 		text: tr("wallet.send.button")
