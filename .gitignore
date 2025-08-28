@@ -1,4 +1,5 @@
 build/
+**/node_modules
 .secret_git
 .secret_deploy
 js/package-lock.json
