@@ -6,8 +6,7 @@ import "../../static"
 Rectangle {
 	id: root
 	property string title: tr("radio.player.title")
-	width: parent.width
-	height: parent.height
+	anchors.fill: parent
 	color: colors.primaryBackground
 
 	Colors {
@@ -195,7 +194,7 @@ Rectangle {
 
 			Text {
 				text: station?.country || ""
-				font.pixelSize: window.width * 0.035
+				font.pixelSize: window.width * 0.05
 				color: colors.primaryForeground
 				width: parent.width
 				elide: Text.ElideRight
@@ -205,7 +204,7 @@ Rectangle {
 
 			Text {
 				text: station?.language || ""
-				font.pixelSize: window.width * 0.035
+				font.pixelSize: window.width * 0.05
 				color: colors.primaryForeground
 				width: parent.width
 				elide: Text.ElideRight
