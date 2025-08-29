@@ -2,48 +2,46 @@ import QtQuick 6.4
 import "../components"
 
 BaseMenu {
-    id: root
-    property string title: applicationName
-    property bool showBackButton: false
+	id: root
+	property string title: applicationName
+	property bool showBackButton: false
 
+	MenuButton {
+		text: tr("wallet.button")
+		onClicked: window.goPage('Wallet/Wallet.qml')
+	}
 
-    MenuButton {
-        text: tr("wallet.button")
-        onClicked: window.goPage('Wallet/Wallet.qml')
-    }
+	MenuButton {
+		text: tr("player.button")
+		onClicked: window.goPage('Player/Player.qml')
+	}
 
+	MenuButton {
+		text: tr("calculator.button")
+		onClicked: window.goPage('Calculator/Calculator.qml')
+	}
 
-    MenuButton {
-        text: tr("player.button")
-        onClicked: window.goPage('Player/Player.qml')
-    }
+	MenuButton {
+		text: tr("speedtest.button")
+		onClicked: window.goPage('SpeedTest/SpeedTest.qml')
+	}
 
-    MenuButton {
-        text: tr("calculator.button")
-        onClicked: window.goPage('Calculator/Calculator.qml')
-    }
+	MenuButton {
+		text: tr("settings.button")
+		onClicked: window.goPage('Settings/Settings.qml')
+	}
 
-    MenuButton {
-        text: tr("speedtest.button")
-        onClicked: window.goPage('SpeedTest/SpeedTest.qml')
-    }
+	MenuButton {
+		text: tr("radio.button")
+		onClicked: window.goPage('Radio/RadioMenu.qml')
+	}
 
-    MenuButton {
-        text: tr("settings.button")
-        onClicked: window.goPage('Settings/Settings.qml')
-    }
+	MenuButton {
+		text: "Camera test"
+		onClicked: window.goPage('CameraPreview.qml')
+	}
 
-    MenuButton {
-        text: tr("radio.button")
-        onClicked: window.goPage('Radio/RadioMenu.qml')
-    }
-
-    MenuButton {
-        text: "Camera test"
-        onClicked: window.goPage('CameraPreview.qml')
-    }
-
-    /*
+	/*
     MenuButton {
         text: "Test ping"
         onClicked: {
