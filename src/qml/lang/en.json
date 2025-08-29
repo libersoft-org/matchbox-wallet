@@ -226,10 +226,21 @@
 		"yes": "Yes",
 		"no": "No",
 		"loading": "Loading...",
+		"save": "Save",
 		"error": "Error",
 		"languages": {
 			"english": "English",
 			"czech": "Czech"
+		}
+	},
+	"ai": {
+		"button": "AI assistant",
+		"title": "AI assistant",
+		"start": "Start conversation",
+		"settings": {
+			"button": "Settings",
+			"title": "AI assistant Settings",
+			"apikey": "OpenAI API key"
 		}
 	}
 }
