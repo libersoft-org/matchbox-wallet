@@ -19,7 +19,7 @@ is_installed() {
 # Packages that should have architecture suffix
 ARCH_PACKAGES=("qt6-base-dev" "qt6-declarative-dev" "qt6-multimedia-dev" "qt6-svg-dev" "qt6-tools-dev" "libnode-dev")
 # Packages that don't need architecture suffix
-BASE_PACKAGES=("build-essential" "cmake" "qt6-declarative-dev-tools" "qml6-module-qtquick" "qml6-module-qtmultimedia" "curl" "unzip")
+BASE_PACKAGES=("build-essential" "cmake" "qt6-declarative-dev-tools" "qml6-module-qtquick" "qml6-module-qtmultimedia" "curl" "unzip" "python3-watchdog")
 
 PACKAGES=("${BASE_PACKAGES[@]}")
 if [ -n "$ARCH_SUFFIX" ]; then
