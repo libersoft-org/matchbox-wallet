@@ -15,7 +15,7 @@ class QMLReloadHandler(FileSystemEventHandler):
     def __init__(self, socket_path):
         self.socket_path = socket_path
         self.last_reload = {}  # Track last reload time per file
-        self.debounce_time = 1.0  # 1 second debounce
+        self.debounce_time = 0.3
         
     def _handle_qml_change(self, event, event_type):
         if event.is_directory:
@@ -86,47 +86,23 @@ def main():
     print(f"Socket path: {socket_path}")
     print("🔄 Running in continuous loop - will keep trying to connect")
     
-    observer = None
+    # Set up observer once
+    event_handler = QMLReloadHandler(socket_path)
+    observer = Observer()
+    observer.schedule(event_handler, qml_dir, recursive=True)
+    observer.start()
+    print("🔥 Hot reload watcher started - monitoring QML files")
+    print("💡 Connection status will be shown when QML files are changed")
     
     try:
+        # Just wait for KeyboardInterrupt
         while True:
-            # Test connection to Qt app
-            try:
-                test_sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-                test_sock.settimeout(20.0)
-                test_sock.connect(socket_path)
-                print("✅ Successfully connected to Qt app!")
-                test_sock.close()
-                
-                # Start observer if not already running
-                if observer is None or not observer.is_alive():
-                    if observer is not None:
-                        observer.stop()
-                        observer.join()
-                    
-                    event_handler = QMLReloadHandler(socket_path)
-                    observer = Observer()
-                    observer.schedule(event_handler, qml_dir, recursive=True)
-                    observer.start()
-                    print("🔥 Hot reload watcher active - edit QML files to trigger reloads")
-                
-            except Exception as e:
-                if observer is not None and observer.is_alive():
-                    print(f"❌ Lost connection to Qt app: {e}")
-                    observer.stop()
-                    observer.join()
-                    observer = None
-                    print("📱 Waiting for Qt app to restart...")
-                else:
-                    print(f"⏳ Waiting for Qt app to start... ({e})")
-            
-            time.sleep(5)  # Check every 5 seconds
+            time.sleep(1)
             
     except KeyboardInterrupt:
         print("\nStopping hot reload watcher...")
-        if observer is not None and observer.is_alive():
-            observer.stop()
-            observer.join()
+        observer.stop()
+        observer.join()
 
 if __name__ == "__main__":
     main()

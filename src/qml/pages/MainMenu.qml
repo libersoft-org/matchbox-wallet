@@ -10,14 +10,6 @@ BaseMenu {
 		text: tr("wallet.button")
 		onClicked: window.goPage('Wallet/Wallet.qml')
 	}
-	MenuButton {
-		text: tr("wallet.button")
-		onClicked: window.goPage('Wallet/Wallet.qml')
-	}
-	MenuButton {
-		text: tr("wallet.button")
-		onClicked: window.goPage('Wallet/Wallet.qml')
-	}
 
 	MenuButton {
 		text: tr("player.button")

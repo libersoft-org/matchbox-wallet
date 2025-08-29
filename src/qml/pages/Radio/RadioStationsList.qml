@@ -45,7 +45,7 @@ Item {
 		var xhr = new XMLHttpRequest();
 		xhr.onreadystatechange = function () {
 
-			if (HOT && !xhr) return;
+			if (xhr.readyState < 3) return;
 
 			console.log('xhr:', xhr);
 			console.log('xhr.readyState:', xhr.readyState);
@@ -127,6 +127,7 @@ Item {
 		anchors.centerIn: parent
 		visible: !isLoading && stations.length === 0
 		width: parent.width * 0.8
+		height: window.width * 0.2
 
 		Text {
 			anchors.centerIn: parent

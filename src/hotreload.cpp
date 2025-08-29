@@ -31,6 +31,11 @@ bool HotReloadServer::isPropertiesSafe(const QVariantMap& properties) {
     for (auto it = properties.begin(); it != properties.end(); ++it) {
         const QVariant& value = it.value();
         
+        // Handle null/invalid variants (JavaScript null)
+        if (!value.isValid() || value.isNull()) {
+            continue; // Null values are safe to preserve
+        }
+        
         // Check for unsafe types
         if (value.userType() >= QMetaType::User) {
             return false; // Custom QML types, component instances
@@ -39,9 +44,17 @@ bool HotReloadServer::isPropertiesSafe(const QVariantMap& properties) {
         switch (value.typeId()) {
             case QMetaType::QString:
             case QMetaType::Int:
+            case QMetaType::UInt:
+            case QMetaType::LongLong:
+            case QMetaType::ULongLong:
             case QMetaType::Double:
+            case QMetaType::Float:
             case QMetaType::Bool:
-                continue; // Safe
+            case QMetaType::QDateTime:
+            case QMetaType::QDate:
+            case QMetaType::QTime:
+            case QMetaType::QUrl:
+                continue; // Safe atomic types
                 
             case QMetaType::QStringList:
                 continue; // Safe
@@ -63,6 +76,8 @@ bool HotReloadServer::isPropertiesSafe(const QVariantMap& properties) {
             }
             
             default:
+                qWarning() << "Hot Reload: Unsafe property type detected:" << QMetaType(value.typeId()).name() 
+                          << "for key:" << it.key() << "value:" << value;
                 return false; // Unknown or complex type
         }
     }
@@ -77,12 +92,15 @@ void HotReloadServer::saveNavigationState(const QString& componentName, const QS
     if (properties.isEmpty()) {
         m_lastProperties.clear();
         qInfo() << "Hot Reload: Saved navigation state -" << componentName << pageId << "(no properties)";
-    } else if (isPropertiesSafe(properties)) {
-        m_lastProperties = properties;
-        qInfo() << "Hot Reload: Saved navigation state -" << componentName << pageId << "(with safe properties)";
     } else {
-        m_lastProperties.clear();
-        qWarning() << "Hot Reload: Saved navigation state -" << componentName << pageId << "(properties not preservable)";
+        qInfo() << "Hot Reload: Evaluating properties safety for" << properties.keys().size() << "properties:" << properties.keys();
+        if (isPropertiesSafe(properties)) {
+            m_lastProperties = properties;
+            qInfo() << "Hot Reload: Saved navigation state -" << componentName << pageId << "(with safe properties)";
+        } else {
+            m_lastProperties.clear();
+            qWarning() << "Hot Reload: Saved navigation state -" << componentName << pageId << "(properties not preservable)";
+        }
     }
 }
 
