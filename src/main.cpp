@@ -119,7 +119,7 @@ int main(int argc, char *argv[]) {
 	engine.rootContext()->setContextProperty("wifiStrengthUpdateInterval", wifiInterval);
 	engine.rootContext()->setContextProperty("batteryStatusUpdateInterval", batteryInterval);
 	engine.rootContext()->setContextProperty("eventsPollInterval", eventsInterval);
-	
+
 	// Set HOT flag based on hot reload compilation
 #if defined(ENABLE_HOT_RELOAD) || defined(ENABLE_FELGO_LIVE)
 	engine.rootContext()->setContextProperty("HOT", true);
@@ -159,7 +159,6 @@ int main(int argc, char *argv[]) {
 
 	// Expose hot reload server to QML for navigation state saving
 	engine.rootContext()->setContextProperty("HotReloadServer", &hotReloadServer);
-
 
 #else
 	// Standard QML loading from QRC

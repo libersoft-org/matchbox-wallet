@@ -1,7 +1,11 @@
+import QtQuick 6.4
 import "../../components"
 
 BaseMenu {
-	anchors.fill: parent
+	id: root
+	property string title: tr("ai.title")
+	property bool hasError: false
+	property string errorMessage: ""
 
 	function startConversation() {
 		console.log('TODO');
