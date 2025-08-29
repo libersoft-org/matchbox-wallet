@@ -44,7 +44,13 @@ Item {
 
 		var xhr = new XMLHttpRequest();
 		xhr.onreadystatechange = function () {
+
 			if (HOT && !xhr) return;
+
+			console.log('xhr:', xhr);
+			console.log('xhr.readyState:', xhr.readyState);
+			console.log('xhr.status:', xhr.status);
+
 			console.log("XHR state changed:", xhr.readyState, "status:", xhr.status);
 			if (xhr.readyState === XMLHttpRequest.DONE) {
 				isLoading = false;

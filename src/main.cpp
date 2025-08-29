@@ -120,6 +120,13 @@ int main(int argc, char *argv[]) {
 	engine.rootContext()->setContextProperty("batteryStatusUpdateInterval", batteryInterval);
 	engine.rootContext()->setContextProperty("eventsPollInterval", eventsInterval);
 	
+	// Set HOT flag based on hot reload compilation
+#if defined(ENABLE_HOT_RELOAD) || defined(ENABLE_FELGO_LIVE)
+	engine.rootContext()->setContextProperty("HOT", true);
+#else
+	engine.rootContext()->setContextProperty("HOT", false);
+#endif
+	
 #ifdef ENABLE_FELGO_LIVE
 	// Use Felgo Hot Reload for live development
 	// Set the source directory so Felgo can find our QML files  
