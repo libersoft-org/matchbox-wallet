@@ -17,8 +17,8 @@ HotReloadServer::HotReloadServer(QQmlApplicationEngine* engine, QObject* parent)
     , m_fileWatcher(new QFileSystemWatcher(this))
     , m_projectRoot(QDir::currentPath())
 {
-    connect(m_fileWatcher, &QFileSystemWatcher::fileChanged,
-            this, &HotReloadServer::handleFileChanged);
+    /*connect(m_fileWatcher, &QFileSystemWatcher::fileChanged,
+            this, &HotReloadServer::handleFileChanged);*/
             
     // Watch all QML files recursively
     QDir qmlDir(m_projectRoot + "/src/qml");
@@ -198,7 +198,12 @@ void HotReloadServer::handleNewConnection() {
     connect(m_currentClient, &QLocalSocket::readyRead,
             this, &HotReloadServer::handleClientMessage);
     connect(m_currentClient, &QLocalSocket::disconnected,
-            m_currentClient, &QLocalSocket::deleteLater);
+            this, [this]() {
+                if (m_currentClient) {
+                    m_currentClient->deleteLater();
+                    m_currentClient = nullptr;
+                }
+            });
     
     qInfo() << "Hot Reload: Client connected";
 }
@@ -216,8 +221,9 @@ void HotReloadServer::handleClientMessage() {
 }
 
 void HotReloadServer::handleFileChanged(const QString& path) {
+	qInfo() << "Hot Reload: Detected change in" << path;
     // Add delay to ensure file write is complete, then reload
-    QTimer::singleShot(100, [this, path]() {
+    QTimer::singleShot(330, [this, path]() {
         reloadComponent(path);
     });
 }

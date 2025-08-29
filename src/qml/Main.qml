@@ -8,15 +8,15 @@ import "components"
 
 ApplicationWindow {
 	id: window
-	width: 480
+	width: 481
 	height: 640
 	visible: true
-	title: AppContext.applicationName
+	title: applicationName
 	font.family: "Droid Sans"
 	property string iconSource: Qt.resolvedUrl("../img/wallet.svg")
 	readonly property int animationDuration: 500
 	readonly property var animationEasing: Easing.OutCubic
-	property bool showSplashScreen: true
+	property bool showSplashScreen: false
 	property var colors: colors
 	property var settingsManager: settingsManagerObj
 	property var translationManager: translationManagerObj
@@ -47,7 +47,7 @@ ApplicationWindow {
 	}
 
 	function goPage(componentName, pageId, properties) {
-		console.log("goPage() called with:", componentName, pageId, properties);
+		console.log("goPage() called with:", componentName, pageId, JSON.stringify(properties));
 		if (stackView) {
 			// Save navigation state to C++ side for hot reload persistence
 			if (typeof HotReloadServer !== 'undefined') {

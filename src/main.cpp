@@ -131,36 +131,44 @@ int main(int argc, char *argv[]) {
 	FelgoHotReload felgoHotReload(&engine);
 	Q_UNUSED(felgoHotReload);
 	qInfo() << "✓ Felgo Hot Reload initialized - ready for live updates";
+
 #elif defined(ENABLE_HOT_RELOAD)
+
 	// Hot reload mode: load from filesystem (symlinked sources)
 	const QUrl url(QStringLiteral("file:///") + QCoreApplication::applicationDirPath() + "/WalletModule/src/qml/Main.qml");
+
 	QObject::connect(
 		&engine, &QQmlApplicationEngine::objectCreated, &app,
 		[url](QObject *obj, const QUrl &objUrl) {
 			if (!obj && url == objUrl) QCoreApplication::exit(-1);
 		},
 		Qt::QueuedConnection);
+
 	qInfo() << "Hot reload mode: Loading from filesystem:" << url.toString();
 	engine.load(url);
-#else
-	// Standard QML loading from QRC
-	const QUrl url(QStringLiteral("qrc:/WalletModule/src/qml/Main.qml"));
-	QObject::connect(
-		&engine, &QQmlApplicationEngine::objectCreated, &app,
-		[url](QObject *obj, const QUrl &objUrl) {
-			if (!obj && url == objUrl) QCoreApplication::exit(-1);
-		},
-		Qt::QueuedConnection);
-	qInfo() << "Production mode: Loading from QRC:" << url.toString();
-	engine.load(url);
-#endif
 
 	// Initialize hot reload server for development
 	HotReloadServer hotReloadServer(&engine, &app);
 	hotReloadServer.startServer();
-	
+
 	// Expose hot reload server to QML for navigation state saving
 	engine.rootContext()->setContextProperty("HotReloadServer", &hotReloadServer);
+
+
+#else
+	// Standard QML loading from QRC
+	const QUrl url(QStringLiteral("qrc:/WalletModule/src/qml/Main.qml"));
+
+	QObject::connect(
+		&engine, &QQmlApplicationEngine::objectCreated, &app,
+		[url](QObject *obj, const QUrl &objUrl) {
+			if (!obj && url == objUrl) QCoreApplication::exit(-1);
+		},
+		Qt::QueuedConnection);
+
+	qInfo() << "Production mode: Loading from QRC:" << url.toString();
+	engine.load(url);
+#endif
 
 	return app.exec();
 }

@@ -10,6 +10,11 @@ BaseMenu {
 	}
 
 	MenuButton {
+		text: tr("player.local")
+		onClicked: window.goPage('Player/PlayerLocal.qml')
+	}
+
+	MenuButton {
 		text: tr("player.folder")
 		onClicked: window.goPage('Player/PlayerFolder.qml')
 	}

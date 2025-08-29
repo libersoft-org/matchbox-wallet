@@ -65,3 +65,33 @@
    obj:*/libQt6Gui.so*
    fun:*createPlatformIntegration*
 }
+
+{
+   Qt6_QML_StringRemove_Bug
+   Memcheck:Addr16
+   fun:*
+   ...
+   fun:*QmlIR*IRBuilder*signalNameFromSignalPropertyName*
+   ...
+   fun:*QQmlTypeLoader*
+}
+
+{
+   Qt6_QML_StringTableGenerator_Bug  
+   Memcheck:Addr16
+   fun:*
+   ...
+   fun:*QV4*Compiler*StringTableGenerator*registerString*
+   ...
+   fun:*QQmlTypeLoader*
+}
+
+{
+   Duktape_Realloc_Zero_Size
+   Memcheck:Addr8
+   fun:realloc
+   obj:*/libduktape.so*
+   ...
+   obj:*/libproxy*
+}
+

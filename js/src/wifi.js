@@ -389,7 +389,7 @@ class WifiManager {
 			//console.log('About to call wifi.getCurrentConnections...');
 			const currentConnections = await wifi.getCurrentConnections();
 			//console.log('wifi.getCurrentConnections returned:', currentConnections);
-			console.log('Updating WiFi connection status');
+			//console.log('Updating WiFi connection status');
 			if (currentConnections && currentConnections.length > 0) {
 				const connection = currentConnections[0];
 				return {
