@@ -22,6 +22,11 @@ BaseMenu {
 	}
 
 	MenuButton {
+		text: tr("radio.button")
+		onClicked: window.goPage('Radio/RadioMenu.qml')
+	}
+
+	MenuButton {
 		text: tr("calculator.button")
 		onClicked: window.goPage('Calculator/Calculator.qml')
 	}
@@ -34,11 +39,6 @@ BaseMenu {
 	MenuButton {
 		text: tr("settings.button")
 		onClicked: window.goPage('Settings/Settings.qml')
-	}
-
-	MenuButton {
-		text: tr("radio.button")
-		onClicked: window.goPage('Radio/RadioMenu.qml')
 	}
 
 	MenuButton {
