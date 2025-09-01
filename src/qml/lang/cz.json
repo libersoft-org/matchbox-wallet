@@ -226,10 +226,21 @@
 		"yes": "Ano",
 		"no": "Ne",
 		"loading": "Načítání...",
+		"save": "Uložit",
 		"error": "Chyba",
 		"languages": {
 			"english": "Angličtina",
 			"czech": "Čeština"
+		}
+	},
+	"ai": {
+		"button": "AI asistent",
+		"title": "AI asistent",
+		"start": "Začít konverzaci",
+		"settings": {
+			"button": "Nastavení",
+			"title": "Nastavení AI asistenta",
+			"apikey": "OpenAI API klíč"
 		}
 	}
 }

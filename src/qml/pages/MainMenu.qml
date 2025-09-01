@@ -12,6 +12,11 @@ BaseMenu {
 	}
 
 	MenuButton {
+		text: tr("ai.button")
+		onClicked: window.goPage('AI/AI.qml')
+	}
+
+	MenuButton {
 		text: tr("player.button")
 		onClicked: window.goPage('Player/Player.qml')
 	}

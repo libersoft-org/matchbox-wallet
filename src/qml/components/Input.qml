@@ -27,6 +27,14 @@ Item {
 	property string text: inputMultiline ? textArea.text : textField.text
 	// Active focus property for external tracking
 	readonly property bool inputHasFocus: inputMultiline ? textArea.activeFocus : textField.activeFocus
+
+	// Method to get current text value
+	function getText() {
+		if (inputMultiline)
+			return textArea.text;
+		else
+			return textField.text;
+	}
 	// Apply properties
 	width: inputWidth
 	height: inputHeight
@@ -50,6 +58,14 @@ Item {
 			textArea.focus = false;
 		else
 			textField.focus = false;
+	}
+
+	// Method to set text programmatically
+	function setText(newText) {
+		if (inputMultiline)
+			textArea.text = newText;
+		else
+			textField.text = newText;
 	}
 
 	// Single-line TextField

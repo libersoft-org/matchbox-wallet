@@ -9,13 +9,13 @@
 #include <QtQml>
 
 // Added for environment/platform setup
+#include "include/hotreload.h"
+#include "include/node.h"
 #include <QDebug>
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
 #include <QProcess>
-#include "include/node.h"
-#include "include/hotreload.h"
 
 int main(int argc, char *argv[]) {
 #ifdef ENABLE_NODEJS
@@ -119,22 +119,21 @@ int main(int argc, char *argv[]) {
 	engine.rootContext()->setContextProperty("wifiStrengthUpdateInterval", wifiInterval);
 	engine.rootContext()->setContextProperty("batteryStatusUpdateInterval", batteryInterval);
 	engine.rootContext()->setContextProperty("eventsPollInterval", eventsInterval);
-	
+
 	// Set HOT flag based on hot reload compilation
 #if defined(ENABLE_HOT_RELOAD) || defined(ENABLE_FELGO_LIVE)
 	engine.rootContext()->setContextProperty("HOT", true);
 #else
 	engine.rootContext()->setContextProperty("HOT", false);
 #endif
-	
 #ifdef ENABLE_FELGO_LIVE
 	// Use Felgo Hot Reload for live development
-	// Set the source directory so Felgo can find our QML files  
+	// Set the source directory so Felgo can find our QML files
 	// Use relative path so it works from the project root
 	QString qmlSourcePath = "src/qml/Main.qml";
 	felgo.setMainQmlFileName(qmlSourcePath);
 	qInfo() << "Setting Felgo source path:" << qmlSourcePath;
-	
+
 	FelgoHotReload felgoHotReload(&engine);
 	Q_UNUSED(felgoHotReload);
 	qInfo() << "✓ Felgo Hot Reload initialized - ready for live updates";
@@ -160,7 +159,6 @@ int main(int argc, char *argv[]) {
 
 	// Expose hot reload server to QML for navigation state saving
 	engine.rootContext()->setContextProperty("HotReloadServer", &hotReloadServer);
-
 
 #else
 	// Standard QML loading from QRC
