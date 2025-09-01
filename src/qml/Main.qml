@@ -126,14 +126,45 @@ ApplicationWindow {
 		id: eventManagerObj
 	}
 
+	WindowSettings {
+		id: windowSettings
+	}
+
+	Connections {
+		target: window
+		function onXChanged() { windowSettings.x = window.x; }
+		function onYChanged() { windowSettings.y = window.y; }
+		function onWidthChanged() { windowSettings.width = window.width; }
+		function onHeightChanged() { windowSettings.height = window.height; }
+	}
+
 	background: Rectangle {
 		color: colors.primaryBackground
 	}
 
 	Component.onCompleted: {
-		x = (Screen.width - width) / 2;
-		y = (Screen.height - height) / 2;
-		//console.log("ApplicationWindow completed");
+		// Restore geometry from settings
+		if (windowSettings.width > 0 && windowSettings.height > 0) {
+			window.width = windowSettings.width;
+			window.height = windowSettings.height;
+		}
+		if (windowSettings.x !== 0 || windowSettings.y !== 0) {
+			window.x = windowSettings.x;
+			window.y = windowSettings.y;
+		} else {
+			// If no saved position exists, center the window
+			x = (Screen.width - width) / 2;
+			y = (Screen.height - height) / 2;
+		}
+	}
+
+	onClosing: {
+		// Save window position and size explicitly
+		windowSettings.x = x;
+		windowSettings.y = y;
+		windowSettings.width = width;
+		windowSettings.height = height;
+		windowSettings.save();
 	}
 
 	// Status bar at the very top

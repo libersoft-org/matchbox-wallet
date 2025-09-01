@@ -11,6 +11,7 @@
 // Added for environment/platform setup
 #include "include/hotreload.h"
 #include "include/node.h"
+#include "include/windowsettings.h"
 #include <QDebug>
 #include <QDir>
 #include <QFile>
@@ -112,7 +113,10 @@ int main(int argc, char *argv[]) {
 	// qDebug() << "Battery status update interval:" << batteryInterval << "ms";
 	// qDebug() << "Events poll interval:" << eventsInterval << "ms";
 
-	// Register context properties instead of QML types
+	// Register QML types
+	qmlRegisterType<WindowSettings>("WalletModule", 1, 0, "WindowSettings");
+
+	// Register context properties
 	engine.rootContext()->setContextProperty("NodeJS", nodeJS);
 	engine.rootContext()->setContextProperty("applicationName", app.applicationName());
 	engine.rootContext()->setContextProperty("applicationVersion", app.applicationVersion());

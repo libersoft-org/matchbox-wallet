@@ -202,6 +202,8 @@ set(WALLET_SOURCES
 	src/node.cpp
 	src/include/hotreload.h
 	src/hotreload.cpp
+	src/include/windowsettings.h
+	src/windowsettings.cpp
 )
 if(ENABLE_NODEJS)
 	list(APPEND WALLET_SOURCES 
