@@ -8,7 +8,7 @@ BaseMenu {
 	property string errorMessage: ""
 
 	function startConversation() {
-		console.log('TODO - start conversa');
+		console.log('TODO - start conversation');
 	}
 
 	MenuButton {

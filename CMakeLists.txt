@@ -267,6 +267,30 @@ if(ENABLE_HOT_RELOAD)
 		endif()
 	endforeach()
 	
+	# Replace the generated qmldir file with our hot reload version (without QRC preference)
+	file(WRITE ${CMAKE_BINARY_DIR}/qmldir_hotreload.txt "module WalletModule\n")
+	
+	# Add QML files to the qmldir for hot reload
+	foreach(qml_file ${QML_FILES_LIST})
+		get_filename_component(qml_filename ${qml_file} NAME_WE)
+		get_filename_component(qml_dir ${qml_file} DIRECTORY)
+		get_filename_component(qml_ext ${qml_file} EXT)
+		
+		if("${qml_ext}" STREQUAL ".qml")
+			string(REPLACE "src/qml/" "" rel_path "${qml_file}")
+			string(REPLACE "/" "." qml_type "${rel_path}")
+			string(REPLACE ".qml" "" qml_type "${qml_type}")
+			# Use the relative path for the actual file location in qmldir
+			file(APPEND ${CMAKE_BINARY_DIR}/qmldir_hotreload.txt "${qml_type} 1.0 src/qml/${rel_path}\n")
+		endif()
+	endforeach()
+	
+	add_custom_target(fix_qmldir ALL
+		COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/qmldir_hotreload.txt ${CMAKE_BINARY_DIR}/WalletModule/qmldir
+		DEPENDS Wallet
+		COMMENT "Creating hot reload qmldir file without QRC preference"
+	)
+	
 	add_compile_definitions(ENABLE_HOT_RELOAD)
 else()
 	# Production mode: bundle QML files into QRC as usual

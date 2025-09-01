@@ -141,7 +141,9 @@ int main(int argc, char *argv[]) {
 #elif defined(ENABLE_HOT_RELOAD)
 
 	// Hot reload mode: load from filesystem (symlinked sources)
-	const QUrl url(QStringLiteral("file:///") + QCoreApplication::applicationDirPath() + "/WalletModule/src/qml/Main.qml");
+	QString buildDir = QCoreApplication::applicationDirPath();
+	engine.addImportPath(buildDir);
+	const QUrl url(QStringLiteral("file:///") + buildDir + "/WalletModule/src/qml/Main.qml");
 
 	QObject::connect(
 		&engine, &QQmlApplicationEngine::objectCreated, &app,
