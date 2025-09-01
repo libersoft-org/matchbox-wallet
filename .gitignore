@@ -10,3 +10,4 @@ callgrind.out*
 cpu.svg
 out.folded
 perf.data
+.qmlls.ini
