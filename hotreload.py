@@ -16,6 +16,9 @@ class QMLReloadHandler(FileSystemEventHandler):
 		self.socket_path = socket_path
 		self.last_reload = {}  # Track last reload time per file
 		self.debounce_time = 0.3
+		self.build_running = False
+		self.build_pending = False
+		self.last_affected_file = None  # Remembers last affected file for reload
 
 	def _handle_qml_change(self, event, event_type):
 		if event.is_directory:
@@ -38,11 +41,23 @@ class QMLReloadHandler(FileSystemEventHandler):
 
 		self.last_reload[event.src_path] = current_time
 		print(f"QML file {event_type}: {event.src_path}")
+		self.last_affected_file = event.src_path  # Remember last affected file
 
+		if self.build_running:
+			self.build_pending = True
+			return
+
+		self._run_build_and_reload()
+
+	def _run_build_and_reload(self):
+		self.build_running = True
 		os.system('CMAKE_ARGS="-DENABLE_HOT_RELOAD=ON" cmake -B build/linux')
-		os.system('cmake --build build/linux&')
-
-		self.send_reload_signal(event.src_path)
+		self.send_reload_signal(self.last_affected_file)
+		os.system('cmake --build build/linux')
+		self.build_running = False
+		if self.build_pending:
+			self.build_pending = False
+			self._run_build_and_reload()
 
 	def on_modified(self, event):
 		self._handle_qml_change(event, "modified")
@@ -58,13 +73,21 @@ class QMLReloadHandler(FileSystemEventHandler):
 			self._handle_qml_change(MockEvent(event.dest_path), "moved")
 
 	def send_reload_signal(self, file_path):
+		"""
+		Sends reload signal to Qt app. Only the last affected file is used for reload.
+		This may swallow change information if multiple files are changed rapidly,
+		but our current hot reload implementation always does a full reload, so this is fine.
+		"""
 		try:
 			sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
 			sock.settimeout(5.0)  # 5 second timeout
 			sock.connect(self.socket_path)
 
 			# Send file path for potential smart reloading
-			message = f"file:{file_path}".encode('utf-8')
+			if file_path:
+				message = f"file:{file_path}".encode('utf-8')
+			else:
+				message = b"reload"
 			sock.send(message)
 
 			response = sock.recv(1024)
