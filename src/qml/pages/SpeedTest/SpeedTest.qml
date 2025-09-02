@@ -105,13 +105,12 @@ Item {
 
 		// Ping latency (spans both columns)
 		Frame {
-			FrameColumn {
+			Column {
 				id: pingColumn
+				width: parent.width
 
-				FrameText {
-					horizontalAlignment: Text.AlignHCenter
+				FrameHeader {
 					text: tr('speedtest.ping')
-					font.bold: true
 				}
 
 				FrameText {
@@ -131,13 +130,12 @@ Item {
 			Frame {
 				width: (parent.width - parent.spacing) / 2
 
-				FrameColumn {
+				Column {
 					id: downloadColumn
+					width: parent.width
 
-					FrameText {
-						horizontalAlignment: Text.AlignHCenter
+					FrameHeader {
 						text: tr('speedtest.download')
-						font.bold: true
 					}
 
 					FrameText {
@@ -152,13 +150,12 @@ Item {
 			Frame {
 				width: (parent.width - parent.spacing) / 2
 
-				FrameColumn {
+				Column {
 					id: uploadColumn
+					width: parent.width
 
-					FrameText {
-						horizontalAlignment: Text.AlignHCenter
+					FrameHeader {
 						text: tr('speedtest.upload')
-						font.bold: true
 					}
 
 					FrameText {

@@ -8,9 +8,8 @@ Rectangle {
 	property color backgroundColor: "transparent"
 	property color borderColor: colors.primaryForeground
 	property real borderWidth: window.width * 0.005
-	property real padding: window.width * 0.03
 	width: parent.width
-	height: contentContainer.childrenRect.height + (padding * 2)
+	height: contentContainer.childrenRect.height
 	color: backgroundColor
 	radius: borderRadius
 	border.color: borderColor
@@ -24,7 +23,6 @@ Rectangle {
 	Item {
 		id: contentContainer
 		anchors.fill: parent
-		anchors.margins: root.padding
 	}
 
 	// Default child property - items added to Frame will go into contentContainer
