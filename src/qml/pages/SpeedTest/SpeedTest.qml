@@ -106,7 +106,7 @@ Item {
 
 		Frame {
 			FrameText {
-				text: 'i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o'
+				text: 'iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii'
 			}
 		}
 
@@ -131,7 +131,6 @@ Item {
 			}
 		}
 
-		// Results grid
 		// Results row
 		Row {
 			width: parent.width
