@@ -14,16 +14,10 @@ HotReloadServer::HotReloadServer(QQmlApplicationEngine* engine, QObject* parent)
     , m_server(new QLocalServer(this))
     , m_currentClient(nullptr)
     , m_engine(engine)
-    , m_fileWatcher(new QFileSystemWatcher(this))
     , m_projectRoot(QDir::currentPath())
 {
-    /*connect(m_fileWatcher, &QFileSystemWatcher::fileChanged,
-            this, &HotReloadServer::handleFileChanged);*/
-            
     // Watch all QML files recursively
     QDir qmlDir(m_projectRoot + "/src/qml");
-    addDirectoryToWatcher(qmlDir);
-    
     qInfo() << "Hot Reload: Initialized, watching QML files";
 }
 
@@ -108,23 +102,6 @@ HotReloadServer::~HotReloadServer() {
     stopServer();
 }
 
-void HotReloadServer::addDirectoryToWatcher(const QDir& dir) {
-    QStringList nameFilters;
-    nameFilters << "*.qml";
-    
-    // Add all QML files in this directory
-    QStringList files = dir.entryList(nameFilters, QDir::Files);
-    for (const QString& file : files) {
-        m_fileWatcher->addPath(dir.absoluteFilePath(file));
-    }
-    
-    // Recursively add subdirectories  
-    QStringList subDirs = dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
-    for (const QString& subDir : subDirs) {
-        QDir subDirectory(dir.absoluteFilePath(subDir));
-        addDirectoryToWatcher(subDirectory);
-    }
-}
 
 bool HotReloadServer::findAndReloadInObject(QObject* obj, const QString& componentName) {
     if (!obj) return false;
