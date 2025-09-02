@@ -39,11 +39,10 @@ Item {
 		//console.log('[SpeedTest] ping start');
 		NodeUtils.msg('speedPing', {}, function (res) {
 			//console.log('[SpeedTest] ping result', JSON.stringify(res));
-			if (res.status === 'success') {
+			if (res.status === 'success')
 				pingLatencyText = formatPing(res.latencyMs);
-			} else {
+			else
 				pingLatencyText = tr('common.error');
-			}
 			runDownload();
 		});
 	}
@@ -55,11 +54,10 @@ Item {
 			maxSeconds: 5
 		}, function (res) {
 			console.log('[SpeedTest] download result', JSON.stringify(res));
-			if (res.status === 'success') {
+			if (res.status === 'success')
 				root.downloadSpeedText = formatSpeed(res.bytes, res.duration);
-			} else {
+			else
 				root.downloadSpeedText = tr('common.error');
-			}
 			runUpload();
 		});
 	}
@@ -71,11 +69,10 @@ Item {
 			maxSeconds: 5
 		}, function (res) {
 			//console.log('[SpeedTest] upload result', JSON.stringify(res));
-			if (res.status === 'success') {
+			if (res.status === 'success')
 				uploadSpeedText = formatSpeed(res.bytes, res.duration);
-			} else {
+			else
 				uploadSpeedText = tr('common.error');
-			}
 			currentStatus = tr('speedtest.test_completed');
 			testRunning = false;
 		});
@@ -99,103 +96,89 @@ Item {
 
 		// Status
 		Frame {
-			width: parent.width
-
-			Text {
+			FrameText {
 				id: statusLabel
 				anchors.centerIn: parent
 				text: currentStatus || tr('speedtest.test_ready')
-				font.pixelSize: window.width * 0.04
 				font.bold: true
-				color: colors.primaryForeground
-				wrapMode: Text.WordWrap
+			}
+		}
+
+		Frame {
+			FrameText {
+				text: 'i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o i o'
 			}
 		}
 
 		// Ping latency (spans both columns)
 		Frame {
-			width: parent.width
-
 			Column {
 				id: pingColumn
 				anchors.centerIn: parent
 				spacing: window.width * 0.01
 
-				Text {
+				FrameText {
 					anchors.horizontalCenter: parent.horizontalCenter
 					text: tr('speedtest.ping')
-					font.pixelSize: window.width * 0.04
 					font.bold: true
-					color: colors.primaryForeground
 				}
 
-				Text {
+				FrameText {
 					anchors.horizontalCenter: parent.horizontalCenter
 					text: pingLatencyText
-					font.pixelSize: window.width * 0.06
 					font.bold: true
-					color: colors.primaryForeground
 				}
 			}
 		}
 
 		// Results grid
-		GridLayout {
+		// Results row
+		Row {
 			width: parent.width
-			columns: 2
-			rowSpacing: window.width * 0.03
-			columnSpacing: window.width * 0.03
+			spacing: window.width * 0.03
 
 			// Download speed
 			Frame {
-				Layout.fillWidth: true
+				width: (parent.width - parent.spacing) / 2
 
 				Column {
 					id: downloadColumn
 					anchors.centerIn: parent
 					spacing: window.width * 0.01
 
-					Text {
+					FrameText {
 						anchors.horizontalCenter: parent.horizontalCenter
 						text: tr('speedtest.download')
-						font.pixelSize: window.width * 0.04
 						font.bold: true
-						color: colors.primaryForeground
 					}
 
-					Text {
+					FrameText {
 						anchors.horizontalCenter: parent.horizontalCenter
 						text: downloadSpeedText
-						font.pixelSize: window.width * 0.06
 						font.bold: true
-						color: colors.primaryForeground
 					}
 				}
 			}
 
 			// Upload speed
 			Frame {
-				Layout.fillWidth: true
+				width: (parent.width - parent.spacing) / 2
 
 				Column {
 					id: uploadColumn
 					anchors.centerIn: parent
 					spacing: window.width * 0.01
 
-					Text {
+					FrameText {
 						anchors.horizontalCenter: parent.horizontalCenter
 						text: tr('speedtest.upload')
-						font.pixelSize: window.width * 0.04
 						font.bold: true
-						color: colors.primaryForeground
 					}
 
-					Text {
+					FrameText {
 						anchors.horizontalCenter: parent.horizontalCenter
 						text: uploadSpeedText
-						font.pixelSize: window.width * 0.06
 						font.bold: true
-						color: colors.primaryForeground
 					}
 				}
 			}
