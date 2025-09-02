@@ -335,6 +335,12 @@ void HotReloadServer::reloadEngine() {
         QString mainQmlPath = QCoreApplication::applicationDirPath() + "/WalletModule/src/qml/Main.qml";
         QUrl mainQmlUrl = QUrl::fromLocalFile(mainQmlPath);
         
+        // Refresh import paths to pick up new qmldir changes (new components)
+        QStringList importPaths = m_engine->importPathList();
+        m_engine->setImportPathList(QStringList());
+        m_engine->setImportPathList(importPaths);
+        qInfo() << "Hot Reload: Refreshed import paths for new components";
+        
         qInfo() << "Hot Reload: Loading from filesystem:" << mainQmlUrl;
         m_engine->load(mainQmlUrl);
         
