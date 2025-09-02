@@ -9,6 +9,7 @@ Rectangle {
 	property color borderColor: colors.primaryForeground
 	property real borderWidth: window.width * 0.005
 	property real padding: window.width * 0.03
+	width: parent.width
 	height: contentContainer.childrenRect.height + (padding * 2)
 	color: backgroundColor
 	radius: borderRadius
