@@ -129,11 +129,10 @@ Item {
 		width: parent.width * 0.8
 		height: window.width * 0.2
 
-		Text {
+		FrameText {
 			anchors.centerIn: parent
 			text: tr("radio.search.no_results")
 			font.pixelSize: window.width * 0.04
-			color: colors.primaryForeground
 			horizontalAlignment: Text.AlignHCenter
 		}
 	}

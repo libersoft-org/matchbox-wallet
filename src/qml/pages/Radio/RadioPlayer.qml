@@ -182,40 +182,36 @@ Rectangle {
 			width: parent.width
 			spacing: window.width * 0.02
 
-			Text {
+			FrameText {
 				text: station ? (station.name || "") : ""
 				font.pixelSize: window.width * 0.05
 				font.bold: true
-				color: colors.primaryForeground
 				width: parent.width
 				elide: Text.ElideRight
 				horizontalAlignment: Text.AlignHCenter
 			}
 
-			Text {
+			FrameText {
 				text: station?.country || ""
 				font.pixelSize: window.width * 0.05
-				color: colors.primaryForeground
 				width: parent.width
 				elide: Text.ElideRight
 				horizontalAlignment: Text.AlignHCenter
 				visible: station?.country
 			}
 
-			Text {
+			FrameText {
 				text: station?.language || ""
 				font.pixelSize: window.width * 0.05
-				color: colors.primaryForeground
 				width: parent.width
 				elide: Text.ElideRight
 				horizontalAlignment: Text.AlignHCenter
 				visible: station?.language
 			}
 
-			Text {
+			FrameText {
 				text: station ? (station.tags || "") : ""
 				font.pixelSize: window.width * 0.03
-				color: colors.primaryForeground
 				width: parent.width
 				elide: Text.ElideRight
 				horizontalAlignment: Text.AlignHCenter

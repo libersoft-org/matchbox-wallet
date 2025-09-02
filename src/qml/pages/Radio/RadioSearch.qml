@@ -109,11 +109,9 @@ Item {
 		visible: !isSearching && searchResults.length === 0 && hasSearched
 		width: parent.width * 0.8
 
-		Text {
+		FrameText {
 			anchors.centerIn: parent
 			text: tr("radio.search.no_results")
-			font.pixelSize: window.width * 0.04
-			color: colors.primaryForeground
 			horizontalAlignment: Text.AlignHCenter
 		}
 	}

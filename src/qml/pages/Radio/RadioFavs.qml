@@ -40,13 +40,12 @@ Item {
 			width: parent.width
 			visible: favouriteStations.length === 0
 
-			Text {
+			FrameText {
 				anchors.centerIn: parent
 				width: parent.width - parent.width * 0.1
 				text: tr('radio.favs.empty')
 				font.pixelSize: window.width * 0.06
 				font.bold: true
-				color: colors.primaryForeground
 				horizontalAlignment: Text.AlignHCenter
 				wrapMode: Text.WordWrap
 			}

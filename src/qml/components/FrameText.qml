@@ -6,7 +6,7 @@ Text {
 	width: parent.width
 	font.pixelSize: window.width * 0.04
 	color: colors.primaryForeground
-	wrapMode: Text.WrapAnywhere
+	wrapMode: Text.Wrap
 	padding: window.width * 0.02
 
 	Colors {
