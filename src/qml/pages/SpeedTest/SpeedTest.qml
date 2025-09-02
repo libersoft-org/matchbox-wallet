@@ -1,6 +1,5 @@
 import QtQuick 6.4
 import QtQuick.Controls 6.4
-import QtQuick.Layouts 1.15
 import QtQuick.Controls.Material
 import "../../components"
 import "../../utils/NodeUtils.js" as NodeUtils
@@ -98,15 +97,9 @@ Item {
 		Frame {
 			FrameText {
 				id: statusLabel
-				anchors.centerIn: parent
+				horizontalAlignment: Text.AlignHCenter
 				text: currentStatus || tr('speedtest.test_ready')
 				font.bold: true
-			}
-		}
-
-		Frame {
-			FrameText {
-				text: 'iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii'
 			}
 		}
 
@@ -114,17 +107,14 @@ Item {
 		Frame {
 			Column {
 				id: pingColumn
-				anchors.centerIn: parent
-				spacing: window.width * 0.01
+				width: parent.width
 
-				FrameText {
-					anchors.horizontalCenter: parent.horizontalCenter
+				FrameHeader {
 					text: tr('speedtest.ping')
-					font.bold: true
 				}
 
 				FrameText {
-					anchors.horizontalCenter: parent.horizontalCenter
+					horizontalAlignment: Text.AlignHCenter
 					text: pingLatencyText
 					font.bold: true
 				}
@@ -142,17 +132,14 @@ Item {
 
 				Column {
 					id: downloadColumn
-					anchors.centerIn: parent
-					spacing: window.width * 0.01
+					width: parent.width
 
-					FrameText {
-						anchors.horizontalCenter: parent.horizontalCenter
+					FrameHeader {
 						text: tr('speedtest.download')
-						font.bold: true
 					}
 
 					FrameText {
-						anchors.horizontalCenter: parent.horizontalCenter
+						horizontalAlignment: Text.AlignHCenter
 						text: downloadSpeedText
 						font.bold: true
 					}
@@ -165,17 +152,14 @@ Item {
 
 				Column {
 					id: uploadColumn
-					anchors.centerIn: parent
-					spacing: window.width * 0.01
+					width: parent.width
 
-					FrameText {
-						anchors.horizontalCenter: parent.horizontalCenter
+					FrameHeader {
 						text: tr('speedtest.upload')
-						font.bold: true
 					}
 
 					FrameText {
-						anchors.horizontalCenter: parent.horizontalCenter
+						horizontalAlignment: Text.AlignHCenter
 						text: uploadSpeedText
 						font.bold: true
 					}
