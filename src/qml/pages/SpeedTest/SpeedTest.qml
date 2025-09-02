@@ -1,6 +1,5 @@
 import QtQuick 6.4
 import QtQuick.Controls 6.4
-import QtQuick.Layouts 1.15
 import QtQuick.Controls.Material
 import "../../components"
 import "../../utils/NodeUtils.js" as NodeUtils
@@ -98,7 +97,7 @@ Item {
 		Frame {
 			FrameText {
 				id: statusLabel
-				anchors.centerIn: parent
+				horizontalAlignment: Text.AlignHCenter
 				text: currentStatus || tr('speedtest.test_ready')
 				font.bold: true
 			}
@@ -112,19 +111,17 @@ Item {
 
 		// Ping latency (spans both columns)
 		Frame {
-			Column {
+			FrameColumn {
 				id: pingColumn
-				anchors.centerIn: parent
-				spacing: window.width * 0.01
 
 				FrameText {
-					anchors.horizontalCenter: parent.horizontalCenter
+					horizontalAlignment: Text.AlignHCenter
 					text: tr('speedtest.ping')
 					font.bold: true
 				}
 
 				FrameText {
-					anchors.horizontalCenter: parent.horizontalCenter
+					horizontalAlignment: Text.AlignHCenter
 					text: pingLatencyText
 					font.bold: true
 				}
@@ -140,19 +137,17 @@ Item {
 			Frame {
 				width: (parent.width - parent.spacing) / 2
 
-				Column {
+				FrameColumn {
 					id: downloadColumn
-					anchors.centerIn: parent
-					spacing: window.width * 0.01
 
 					FrameText {
-						anchors.horizontalCenter: parent.horizontalCenter
+						horizontalAlignment: Text.AlignHCenter
 						text: tr('speedtest.download')
 						font.bold: true
 					}
 
 					FrameText {
-						anchors.horizontalCenter: parent.horizontalCenter
+						horizontalAlignment: Text.AlignHCenter
 						text: downloadSpeedText
 						font.bold: true
 					}
@@ -163,19 +158,17 @@ Item {
 			Frame {
 				width: (parent.width - parent.spacing) / 2
 
-				Column {
+				FrameColumn {
 					id: uploadColumn
-					anchors.centerIn: parent
-					spacing: window.width * 0.01
 
 					FrameText {
-						anchors.horizontalCenter: parent.horizontalCenter
+						horizontalAlignment: Text.AlignHCenter
 						text: tr('speedtest.upload')
 						font.bold: true
 					}
 
 					FrameText {
-						anchors.horizontalCenter: parent.horizontalCenter
+						horizontalAlignment: Text.AlignHCenter
 						text: uploadSpeedText
 						font.bold: true
 					}
