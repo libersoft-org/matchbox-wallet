@@ -39,8 +39,8 @@ class QMLReloadHandler(FileSystemEventHandler):
 		self.last_reload[event.src_path] = current_time
 		print(f"QML file {event_type}: {event.src_path}")
 
-		os.system('cmake -DENABLE_HOT_RELOAD=ON -B build')
-		os.system('cmake --build build&')
+		os.system('CMAKE_ARGS="-DENABLE_HOT_RELOAD=ON" cmake -B build/linux')
+		os.system('cmake --build build/linux&')
 
 		self.send_reload_signal(event.src_path)
 

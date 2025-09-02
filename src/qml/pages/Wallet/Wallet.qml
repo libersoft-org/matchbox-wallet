@@ -9,29 +9,6 @@ BaseMenu {
 		window.goPage('Wallet/WalletSettings.qml');
 	}
 
-
-	MenuButton {
-		text: "bla"
-		onClicked: window.goPage('Wallet/Bla.qml')
-	}
-
-	MenuButton {
-		text: "ble"
-		onClicked: window.goPage('Wallet/Ble.qml')
-	}
-	MenuButton {
-		text: "bli"
-		onClicked: window.goPage('Wallet/Bli.qml')
-	}
-	MenuButton {
-		text: "blu"
-		onClicked: window.goPage('Wallet/Blu.qml')
-	}
-	MenuButton {
-		text: "blf"
-		onClicked: window.goPage('Wallet/Blf.qml')
-	}
-
 	MenuButton {
 		text: tr("wallet.balance.button")
 		onClicked: window.goPage('Wallet/WalletBalance.qml')
