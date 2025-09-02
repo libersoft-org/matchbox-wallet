@@ -44,10 +44,8 @@ Item {
 				anchors.centerIn: parent
 				width: parent.width - parent.width * 0.1
 				text: tr('radio.favs.empty')
-				font.pixelSize: window.width * 0.06
 				font.bold: true
 				horizontalAlignment: Text.AlignHCenter
-				wrapMode: Text.WordWrap
 			}
 		}
 
