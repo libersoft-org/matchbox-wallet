@@ -1,6 +1,6 @@
 pragma ComponentBehavior: Bound
-import QtQuick 6.4
-import QtQuick.Controls 6.4
+import QtQuick 6.8
+import QtQuick.Controls 6.8
 import "../../components"
 import "../../static"
 import "../../utils/NodeUtils.js" as NodeUtils

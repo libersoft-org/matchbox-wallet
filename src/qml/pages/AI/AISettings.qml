@@ -1,5 +1,5 @@
-import QtQuick 6.4
-import QtQuick.LocalStorage 6.4
+import QtQuick 6.8
+import QtQuick.LocalStorage 6.8
 import "../../components"
 
 BaseMenu {

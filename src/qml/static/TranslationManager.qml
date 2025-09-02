@@ -1,4 +1,4 @@
-import QtQuick 6.4
+import QtQuick 6.8
 
 QtObject {
 	id: root
@@ -67,12 +67,12 @@ QtObject {
 	function tr(key) {
 		// This property access ensures binding updates when translations change
 		var dummy = languageVersion;
-		
+
 		// Return "loading..." if translations is empty
 		if (Object.keys(translations).length === 0) {
 			return "loading...";
 		}
-		
+
 		var parts = key.split('.');
 		if (parts.length < 2) {
 			console.log("Invalid translation key format:", key);

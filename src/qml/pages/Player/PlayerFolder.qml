@@ -1,7 +1,7 @@
 pragma ComponentBehavior: Bound
-import QtQuick 6.4
+import QtQuick 6.8
 import QtCore
-import Qt.labs.folderlistmodel 6.4
+import Qt.labs.folderlistmodel 6.8
 import "../../components"
 
 Item {

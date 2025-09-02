@@ -1,7 +1,7 @@
-import QtQuick 6.4
-import QtQuick.Window 6.4
-import QtQuick.Controls 6.4
-import QtQuick.VirtualKeyboard 6.4
+import QtQuick 6.8
+import QtQuick.Window 6.8
+import QtQuick.Controls 6.8
+import QtQuick.VirtualKeyboard 6.8
 import WalletModule 1.0
 import "static"
 import "components"
@@ -31,7 +31,7 @@ ApplicationWindow {
 	property bool isFullscreen: false
 	signal wifiConnectionChanged
 	signal wifiStatusUpdated
-	
+
 	// Hot reload navigation state preservation is now handled by C++ HotReloadServer
 
 	// Global translation function - available to all child components
@@ -53,7 +53,7 @@ ApplicationWindow {
 			if (typeof HotReloadServer !== 'undefined') {
 				HotReloadServer.saveNavigationState(componentName, pageId || "", properties || {});
 			}
-			
+
 			var fullPath = componentName.startsWith('pages/') ? componentName : 'pages/' + componentName;
 			var component = Qt.createComponent(fullPath);
 			if (component.status === Component.Error) {
@@ -76,7 +76,7 @@ ApplicationWindow {
 			console.error("goPage() called but stackView is null");
 		}
 	}
-	
+
 	// Hot reload navigation restoration is now handled by C++ HotReloadServer
 
 	function goBack() {
@@ -132,10 +132,18 @@ ApplicationWindow {
 
 	Connections {
 		target: window
-		function onXChanged() { windowSettings.x = window.x; }
-		function onYChanged() { windowSettings.y = window.y; }
-		function onWidthChanged() { windowSettings.width = window.width; }
-		function onHeightChanged() { windowSettings.height = window.height; }
+		function onXChanged() {
+			windowSettings.x = window.x;
+		}
+		function onYChanged() {
+			windowSettings.y = window.y;
+		}
+		function onWidthChanged() {
+			windowSettings.width = window.width;
+		}
+		function onHeightChanged() {
+			windowSettings.height = window.height;
+		}
 	}
 
 	background: Rectangle {
